@@ -41,7 +41,10 @@ RBRACK : ']';
 SEMI   : ';';
 COMMA  : ',';
 DOT    : '.';
+WITH   : 'with';
+AT     : 'at';
 
+TYPE: 'int' | 'float' | 'point';
 
 // ensure no lexical errors
 ERROR: .;
