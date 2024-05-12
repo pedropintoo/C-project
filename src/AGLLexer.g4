@@ -32,19 +32,27 @@ COMMENT: '#(' .*? ')#' -> skip;
 
 // Separators
 
-LPAREN : '(';
-RPAREN : ')';
-LBRACE : '{';
-RBRACE : '}';
-LBRACK : '[';
-RBRACK : ']';
-SEMI   : ';';
-COMMA  : ',';
-DOT    : '.';
-WITH   : 'with';
-AT     : 'at';
+LPAREN  : '(';
+RPAREN  : ')';
+LBRACE  : '{';
+RBRACE  : '}';
+LBRACK  : '[';
+RBRACK  : ']';
+COLON   : ':';
+EQUAL   : '=';
+SEMI    : ';';
+COMMA   : ',';
+DOT     : '.';
+WITH    : 'with';
+AT      : 'at';
 
-TYPE: 'int' | 'float' | 'point';
+// Types
+
+INTEGER: 'Integer';
+NUMBER: 'Number';
+STRING_: 'String';
+POINT: 'Point';
+VECTOR: 'Vector';
 
 // ensure no lexical errors
 ERROR: .;
