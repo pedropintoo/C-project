@@ -5,41 +5,76 @@ options {
 }
 
 program
-    : stat* EOF;
+    : stat* EOF
+    ;
 
 stat
     : instantiation
-    | expression
+    | blockStatement
+    | command
     ;
 
 instantiation
-    : ID ':' (simpleStatement | expression)
+    : ID ':' (simpleStatement | blockStatement)
     ;
 
 simpleStatement
     : typeID (assignment)? ';'
     ;
 
-expression
-    : typeID ('at' position)? 'with' '{' propertiesAssignment '}'
+blockStatement
+    : typeID ('at' expression)? 'with' '{' propertiesAssignment '}'
     ;
 
 propertiesAssignment
-    : ID assignment ( ';' ID assignment)* ';'?
+    : propertiy ( ';' propertiy)* ';'?
+    ;
+
+propertiy
+    : ID assignment
     ;
 
 assignment
-    : '=' value
+    : '=' expression
     ;
 
+expression
+    : sign? '(' expression ')'                  #ExprParenthesis
+    | expression op=('*' | '/') expression      #ExprAddSubMultDiv
+    | expression op=('+' | '-') expression      #ExprAddSubMultDiv
+    | sign? point                               #ExprPoint
+    | sign? number                              #ExprNumber                  
+    | STRING                                    #ExprString                              
+    | sign? ID                                  #ExprID
+    | waitFor                                   #ExprWaitFor
+    ;
 
-value: number | point | STRING | ID;
+command
+    : 'refresh' ID ';'
+    | 'print' expression ';'
+    | 'close' ID ';'
+    ;
 
-number: INT | FLOAT;
+waitFor
+    : 'wait' eventTrigger
+    ;    
 
-point: '(' x=number ',' y=number ')';
+eventTrigger
+    : 'mouse' mouseTrigger
+    ;
 
-position: point | ID;
+mouseTrigger
+    : 'click'
+    ;    
+
+number
+    : INT 
+    | FLOAT
+    ;
+
+point
+    : '(' x=expression ',' y=expression ')'
+    ;
 
 typeID
     : ID 
@@ -53,6 +88,23 @@ primitiveType
     | 'Point'
     | 'Vector'
     ;
+
+operator
+    : '+' 
+    | '-' 
+    | '*' 
+    | '/'
+    ;
+
+sign
+    : '+' 
+    | '-'
+    ;
+
+
+
+
+// RAW
 
 //expression: TYPE ( (('=' value)? ';') | ( ('at' position)? 'with' '{' assignment '}' ) );  // line 9 and line 19 ex01.
 

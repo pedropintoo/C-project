@@ -13,8 +13,6 @@ EQUAL   : '=';
 SEMI    : ';';
 COMMA   : ',';
 DOT     : '.';
-WITH    : 'with';
-AT      : 'at';
 
 // Types
 INTEGER : 'Integer';    
@@ -23,6 +21,21 @@ STRING_  : 'String';
 POINT   : 'Point';
 VECTOR  : 'Vector';
 
+// Keywords
+WITH    : 'with';
+AT      : 'at';
+PRINT   : 'print';
+REFRESH : 'refresh';
+CLOSE   : 'close';
+MOUSE   : 'mouse';
+CLICK   : 'click';
+WAIT    : 'wait';
+
+// Operators
+PLUS    : '+';
+MINUS   : '-';
+MUL     : '*';
+DIV     : '/';
 
 
 // Identifier names
