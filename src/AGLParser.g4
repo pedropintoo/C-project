@@ -17,11 +17,11 @@ instantiation
     ;
 
 simpleStatement
-    : type (assignment)? ';'
+    : typeID (assignment)? ';'
     ;
 
 expression
-    : type ('at' position)? 'with' '{' propertiesAssignment '}'
+    : typeID ('at' position)? 'with' '{' propertiesAssignment '}'
     ;
 
 propertiesAssignment
@@ -30,14 +30,6 @@ propertiesAssignment
 
 assignment
     : '=' value
-    ;
-
-type
-    : 'Integer' 
-    | 'Number' 
-    | 'String'
-    | 'Point'
-    | 'Vector'
     ;
 
 
@@ -49,8 +41,18 @@ point: '(' x=number ',' y=number ')';
 
 position: point | ID;
 
+typeID
+    : ID 
+    | primitiveType
+    ;
 
-
+primitiveType
+    : 'Integer'
+    | 'Number'
+    | 'String'
+    | 'Point'
+    | 'Vector'
+    ;
 
 //expression: TYPE ( (('=' value)? ';') | ( ('at' position)? 'with' '{' assignment '}' ) );  // line 9 and line 19 ex01.
 
