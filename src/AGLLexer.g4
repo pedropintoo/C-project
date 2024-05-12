@@ -1,14 +1,41 @@
 lexer grammar AGLLexer;
 
-/*
-    In AGL (animated graphics language) we need primitive data types (with default values).
-    - Integer [0] - integer number
-    - Number [0.0] - integer or real number
-    - String [""] - sequence of characters
-    - Point [(0.0,0.0)] - a point in canvas coordinates
-    - Vector [(0.0,0.0)] - the difference between two points
-    - Vector [(0:1)] - a vector may also be defined using polar coordinates (angle:length).
- */
+// Separators
+
+LPAREN  : '(';
+RPAREN  : ')';
+LBRACE  : '{';
+RBRACE  : '}';
+LBRACK  : '[';
+RBRACK  : ']';
+COLON   : ':';
+EQUAL   : '=';
+SEMI    : ';';
+COMMA   : ',';
+DOT     : '.';
+
+// Types
+INTEGER : 'Integer';    
+NUMBER  : 'Number';
+STRING_  : 'String';
+POINT   : 'Point';
+VECTOR  : 'Vector';
+
+// Keywords
+WITH    : 'with';
+AT      : 'at';
+PRINT   : 'print';
+REFRESH : 'refresh';
+CLOSE   : 'close';
+MOUSE   : 'mouse';
+CLICK   : 'click';
+WAIT    : 'wait';
+
+// Operators
+PLUS    : '+';
+MINUS   : '-';
+MUL     : '*';
+DIV     : '/';
 
 
 // Identifier names
@@ -25,26 +52,11 @@ fragment LETTER: [a-zA-Z_\u00C0-\u00FF];
 fragment DIGIT: [0-9];
 fragment ESC: '\\"' | '\\\\';
 
-WS: [ \t\n\r]+ -> skip;
+
+
 LINE_COMMENT: '#' .*? '\n' -> skip;
-COMMENT: '#(' .*? ')#' -> skip;
-
-
-// Separators
-
-LPAREN : '(';
-RPAREN : ')';
-LBRACE : '{';
-RBRACE : '}';
-LBRACK : '[';
-RBRACK : ']';
-SEMI   : ';';
-COMMA  : ',';
-DOT    : '.';
-WITH   : 'with';
-AT     : 'at';
-
-TYPE: 'int' | 'float' | 'point';
+COMMENT: '#(' (COMMENT | .)*? '#)' -> skip; // alow nested comments
+WS: [ \t\n\r]+ -> skip;
 
 // ensure no lexical errors
 ERROR: .;

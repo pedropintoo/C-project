@@ -4,24 +4,113 @@ options {
     tokenVocab = AGLLexer; // join lexer
 }
 
-program: stat* EOF;
+program
+    : stat* EOF
+    ;
 
-stat: instantiation
-    | '{' stat '}';
+stat
+    : instantiation
+    | blockStatement
+    | command
+    ;
 
-number: INT | FLOAT;
+instantiation
+    : ID ':' (simpleStatement | blockStatement)
+    ;
 
-point: '(' x=number ',' y=number ')';
+simpleStatement
+    : typeID (assignment)? ';'
+    ;
 
-position: point | ID;
+blockStatement
+    : typeID ('at' expression)? 'with' '{' propertiesAssignment '}'
+    ;
 
-instantiation: ID ':' expression;    // line 42 ex01.agl
-assignment: ID '=' value ';';
+propertiesAssignment
+    : propertiy ( ';' propertiy)* ';'?
+    ;
 
-value: number | point | STRING;
+propertiy
+    : ID assignment
+    ;
 
-expression: TYPE ( (('=' value)? ';') | ( ('at' position)? 'with' '{' assignment '}' ) );  // line 9 and line 19 ex01.
+assignment
+    : '=' expression
+    ;
 
-p,a,d : Point
+expression
+    : sign? '(' expression ')'                  #ExprParenthesis
+    | expression op=('*' | '/') expression      #ExprAddSubMultDiv
+    | expression op=('+' | '-') expression      #ExprAddSubMultDiv
+    | sign? point                               #ExprPoint
+    | sign? number                              #ExprNumber                  
+    | STRING                                    #ExprString                              
+    | sign? ID                                  #ExprID
+    | waitFor                                   #ExprWaitFor
+    ;
 
-refresh a; refresh a;
+command
+    : 'refresh' ID ';'
+    | 'print' expression ';'
+    | 'close' ID ';'
+    ;
+
+waitFor
+    : 'wait' eventTrigger
+    ;    
+
+eventTrigger
+    : 'mouse' mouseTrigger
+    ;
+
+mouseTrigger
+    : 'click'
+    ;    
+
+number
+    : INT 
+    | FLOAT
+    ;
+
+point
+    : '(' x=expression ',' y=expression ')'
+    ;
+
+typeID
+    : ID 
+    | primitiveType
+    ;
+
+primitiveType
+    : 'Integer'
+    | 'Number'
+    | 'String'
+    | 'Point'
+    | 'Vector'
+    ;
+
+operator
+    : '+' 
+    | '-' 
+    | '*' 
+    | '/'
+    ;
+
+sign
+    : '+' 
+    | '-'
+    ;
+
+
+
+
+// RAW
+
+//expression: TYPE ( (('=' value)? ';') | ( ('at' position)? 'with' '{' assignment '}' ) );  // line 9 and line 19 ex01.
+
+// p,a,d : Point
+
+// refresh a; refresh a;
+
+//instantiation: ID ':' expression;    // line 42 ex01.agl
+//assignment: ID '=' value ';';
