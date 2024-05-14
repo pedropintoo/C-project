@@ -18,26 +18,6 @@ property(field) ::= <<
 "<if(field)><field; separator=","><endif>"
 >>
 
-
-assign(stat,var,value) ::= <<
-<stats(stat)>
-<var> = <value>;
->>
-
-init(value) ::= "<if(value)> = <value><endif>"
-decl(var, value) ::= "<var><init(value)>"
-
-binaryExpression(stat,var,e1,op,e2) ::= <<
-<stats(stat)>
-<decl(var,[e1," ",op," ",e2])>
->>
-
-unaryExpression(stat,var,op,e1) ::= <<
-<stats(stat)>
-<decl(var,[op," ",e1])>
->>
-
-
 refresh(view) ::= <<
 <view>.pack()
 >>
@@ -56,3 +36,25 @@ for <value> in <sequence>:
 >>
 
 range(start, end, step) ::= "range(<start>, <end>, <step>)"
+
+
+
+<-- Expressions & Maths -->
+
+assign(stat,var,value) ::= <<
+<stats(stat)>
+<if(value)><var> = <value><endif>;
+>>
+
+init(value) ::= "<if(value)> = <value><endif>"
+decl(var, value) ::= "<var><init(value)>"
+
+binaryExpression(stat,var,e1,op,e2) ::= <<
+<stats(stat)>
+<decl(var,[e1," ",op," ",e2])>
+>>
+
+unaryExpression(stat,var,op,e1) ::= <<
+<stats(stat)>
+<decl(var,[op," ",e1])>
+>>

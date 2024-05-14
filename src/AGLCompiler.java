@@ -79,7 +79,10 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
 
       res.add("stat", stat.render()); // render the return value!
       res.add("var", id);
-      res.add("value", value);
+      if (value != null) {
+         res.add("value", value); // blockStatement can be uninitialized
+      }
+      
 
       return res;
    }
@@ -109,7 +112,7 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
    
 //* blockStatement
    @Override public ST visitBlockStatement(AGLParser.BlockStatementContext ctx) {
-      ST res = null;
+      ST res = templates.getInstanceOf("assign");
       String type = visit(ctx.typeID()).render();
 
       if (type.equals("View")) {
@@ -137,9 +140,10 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
       String id = newVarName();
       ctx.varName = id;
 
+      // TODO: 'at' expression
+
       res.add("stat", visit(ctx.expression()).render()); // render the return value!
       res.add("var", id);
-      System.out.println("value: " + ctx.expression().varName);
       res.add("value", ctx.expression().varName); // assign the value to current variable
 
       return res;
@@ -164,15 +168,8 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
    }
 
    @Override public ST visitExprParenthesis(AGLParser.ExprParenthesisContext ctx) {
-      ST res = templates.getInstanceOf("parenthesis");
-      
-      String id = newVarName();
-      ctx.varName = id;
-
-      res.add("stat", visit(ctx.expression()).render()); // render the return value!
-      res.add("var", id);
-      res.add("value", ctx.expression().varName); // assign the value to current variable
-      
+      ST res = visit(ctx.expression());
+      ctx.varName = ctx.expression().varName;
       return res;
    }
 
