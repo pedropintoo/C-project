@@ -1,5 +1,14 @@
 parser grammar AGLParser;
 
+@parser::header {
+import java.util.Map;
+import java.util.HashMap;
+}
+
+@parser::members {
+static protected Map<String,Number> symbolTable = new HashMap<>();
+}
+
 options {
     tokenVocab = AGLLexer; // join lexer
 }
@@ -20,37 +29,38 @@ instantiation
     : ID ':' (simpleStatement | blockStatement)
     ;
 
-simpleStatement
+simpleStatement returns [String varName]
     : typeID (assignment)? ';'
     ;
 
-blockStatement
+blockStatement returns [String varName]
     : typeID ('at' expression)? 'with' '{' propertiesAssignment '}'
     | (typeID '.' propertie ';')+ // to change a single property, the dot (.) may be used instead of the 'with' construction
     | (command)+
     ;
 
 propertiesAssignment
-    : propertie ( ';' propertie)* ';'?
+    : property ( ';' property)* ';'?
     ;
 
-propertie
+property
     : ID assignment
     ;
 
-assignment
+assignment returns [String varName]
     : '=' expression
     ;
 
-expression
-    : sign? '(' expression ')'                  #ExprParenthesis
+expression returns [String varName]
+    : sign=('+'|'-') expression                 #ExprUnary
+    | '(' expression ')'                        #ExprParenthesis
     | expression op=('*' | '/') expression      #ExprAddSubMultDiv
     | expression op=('+' | '-') expression      #ExprAddSubMultDiv
-    | sign? point                               #ExprPoint
-    | sign? number                              #ExprNumber                  
+    | '(' x=expression ',' y=expression ')'     #ExprPoint
+    | number=(INT | FLOAT)                      #ExprNumber                  
     | STRING                                    #ExprString                              
-    | sign? ID                                  #ExprID
-    | waitFor                                   #ExprWaitFor
+    | ID                                        #ExprID
+    | 'wait' eventTrigger                       #ExprWait
     ;
 
 command
@@ -58,10 +68,6 @@ command
     | 'print' expression ';'                    #CommandPrint
     | 'close' ID ';'                            #CommandClose
     ;
-
-waitFor
-    : 'wait' eventTrigger
-    ;    
 
 eventTrigger
     : 'mouse' mouseTrigger
@@ -75,30 +81,10 @@ for_loop
     : 'for' ID 'in' NUMBER_RANGE // 'do' '{' blockStatement '}' 
     ;
 
-number
-    : INT 
-    | FLOAT
-    ;
-
-point
-    : '(' x=expression ',' y=expression ')'
-    ;
-
 typeID
     : type=(PRIMITIVE_TYPE | ID)
     ;
 
-operator
-    : '+' 
-    | '-' 
-    | '*' 
-    | '/'
-    ;
-
-sign
-    : '+' 
-    | '-'
-    ;
 
 
 
