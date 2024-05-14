@@ -22,9 +22,9 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
       res.add("stat", e1Stats);
       res.add("stat", e2Stats);
       res.add("var", var);
-      res.add("e1", e1Var);
+      res.add("e1", (op=="," ? "(" : "")+e1Var);
       res.add("op", op);
-      res.add("e2", e2Var);
+      res.add("e2", e2Var+(op=="," ? ")" : ""));
       return res;
    }
 
@@ -92,16 +92,16 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
    @Override public ST visitSimpleStatement(AGLParser.SimpleStatementContext ctx) {
       ST res = templates.getInstanceOf("assign");
       
-      String id = newVarName();
-      ctx.varName = id;
-
       String value;
       if (ctx.assignment() != null) {
          res.add("stat", visit(ctx.assignment()).render()); // render the return value!
          value = ctx.assignment().varName;
       } else { 
          value = "DEFAULT_VALUE";  // TODO: TO_BE_IMPLEMENTED
-      }
+      } 
+
+      String id = newVarName();
+      ctx.varName = id;
 
       res.add("var", id);
       res.add("value", value);   // assign the value to current variable
@@ -137,12 +137,13 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
    @Override public ST visitAssignment(AGLParser.AssignmentContext ctx) {
       ST res = templates.getInstanceOf("assign");
       
-      String id = newVarName();
-      ctx.varName = id;
-
       // TODO: 'at' expression
 
       res.add("stat", visit(ctx.expression()).render()); // render the return value!
+      
+      String id = newVarName();
+      ctx.varName = id;
+
       res.add("var", id);
       res.add("value", ctx.expression().varName); // assign the value to current variable
 
@@ -154,11 +155,10 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
    @Override public ST visitExprUnary(AGLParser.ExprUnaryContext ctx) {
       ST res = templates.getInstanceOf("unaryExpression");
 
-      String id = newVarName();
-      ctx.varName = id;
-
       res.add("stat", visit(ctx.expression()).render()); // render the return value!
       
+      String id = newVarName();
+      ctx.varName = id;
       // id = op=('+' | '-') e1
       res.add("var", id);
       res.add("op", ctx.sign.getText()); // ('+' | '-')
@@ -174,15 +174,13 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
    }
 
    @Override public ST visitExprAddSubMultDiv(AGLParser.ExprAddSubMultDivContext ctx) {
-      ST res = templates.getInstanceOf("binaryExpression");
       ctx.varName = newVarName();
-      return binaryExpression(visit(ctx.expression(0)).render(), visit(ctx.expression(1)).render(), newVarName(), ctx.expression(0).varName, ctx.op.getText(), ctx.expression(1).varName);
+      return binaryExpression(visit(ctx.expression(0)).render(), visit(ctx.expression(1)).render(), ctx.varName, ctx.expression(0).varName, ctx.op.getText(), ctx.expression(1).varName);
    }
 
    @Override public ST visitExprPoint(AGLParser.ExprPointContext ctx) {
-      ST res = templates.getInstanceOf("binaryExpression");
       ctx.varName = newVarName();
-      return binaryExpression(visit(ctx.x).render(), visit(ctx.y).render(), newVarName(), ctx.x.varName, ",", ctx.y.varName);
+      return binaryExpression(visit(ctx.x).render(), visit(ctx.y).render(), ctx.varName, ctx.x.varName, ",", ctx.y.varName);
    }
 
    @Override public ST visitExprNumber(AGLParser.ExprNumberContext ctx) {

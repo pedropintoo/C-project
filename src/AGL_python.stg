@@ -38,12 +38,9 @@ for <value> in <sequence>:
 range(start, end, step) ::= "range(<start>, <end>, <step>)"
 
 
-
-<-- Expressions & Maths -->
-
 assign(stat,var,value) ::= <<
 <stats(stat)>
-<if(value)><var> = <value><endif>;
+<if(value)><var> = <value><endif>
 >>
 
 init(value) ::= "<if(value)> = <value><endif>"
