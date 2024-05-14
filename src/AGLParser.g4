@@ -54,9 +54,9 @@ expression
     ;
 
 command
-    : 'refresh' ID ';' | 'refresh' ID 'after' number 'ms' ';'
-    | 'print' expression ';'
-    | 'close' ID ';'
+    : 'refresh' ID ('after' number 'ms')? ';'   #CommandRefresh
+    | 'print' expression ';'                    #CommandPrint
+    | 'close' ID ';'                            #CommandClose
     ;
 
 waitFor

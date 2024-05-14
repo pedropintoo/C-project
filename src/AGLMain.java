@@ -1,6 +1,8 @@
 import java.io.IOException;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
+import org.stringtemplate.v4.*;
+
 
 public class AGLMain {
    public static void main(String[] args) {
@@ -14,22 +16,23 @@ public class AGLMain {
          // create a parser that feeds off the tokens buffer:
          AGLParser parser = new AGLParser(tokens);
          // replace error listener:
-         // parser.removeErrorListeners(); // remove ConsoleErrorListener
-         // parser.addErrorListener(new ErrorHandlingListener());
+         //parser.removeErrorListeners(); // remove ConsoleErrorListener
+         //parser.addErrorListener(new ErrorHandlingListener());
          // begin parsing at program rule:
          ParseTree tree = parser.program();
          if (parser.getNumberOfSyntaxErrors() == 0) {
             // print LISP-style tree:
-            // System.out.println(tree.toStringTree(parser));
-            // create a visitor:
-            AGLSemAna visitor1 = new AGLSemAna();
-            // traverse the tree using this visitor:
-            visitor1.visit(tree);
+            System.out.println(tree.toStringTree(parser));
+            AGLCompiler compiler = new AGLCompiler();
+            ST result = compiler.visit(tree);
+            System.out.println(result.render());
          }
-      } catch (IOException e) {
+      }
+      catch(IOException e) {
          e.printStackTrace();
          System.exit(1);
-      } catch (RecognitionException e) {
+      }
+      catch(RecognitionException e) {
          e.printStackTrace();
          System.exit(1);
       }

@@ -14,7 +14,9 @@ root.title('<title>')
 <view> = Canvas(root, <property(field)>)
 >>
 
-property(field) ::= "<if(field)><field; separator=","><endif>"
+property(field) ::= << 
+"<if(field)><field; separator=","><endif>"
+>>
 
 assign(var, value) ::= <<
 <var> = <value>
