@@ -4,6 +4,7 @@ options {
     tokenVocab = AGLLexer; // join lexer
 }
 
+
 program
     : stat* EOF
     ;
@@ -12,6 +13,7 @@ stat
     : instantiation
     | blockStatement
     | command
+    | for_loop
     ;
 
 instantiation
@@ -24,13 +26,15 @@ simpleStatement
 
 blockStatement
     : typeID ('at' expression)? 'with' '{' propertiesAssignment '}'
+    | (typeID '.' propertie ';')+ // to change a single property, the dot (.) may be used instead of the 'with' construction
+    | (command)+
     ;
 
 propertiesAssignment
-    : propertiy ( ';' propertiy)* ';'?
+    : propertie ( ';' propertie)* ';'?
     ;
 
-propertiy
+propertie
     : ID assignment
     ;
 
@@ -50,7 +54,7 @@ expression
     ;
 
 command
-    : 'refresh' ID ';'
+    : 'refresh' ID ';' | 'refresh' ID 'after' number 'ms' ';'
     | 'print' expression ';'
     | 'close' ID ';'
     ;
@@ -66,6 +70,10 @@ eventTrigger
 mouseTrigger
     : 'click'
     ;    
+
+for_loop
+    : 'for' ID 'in' NUMBER_RANGE // 'do' '{' blockStatement '}' 
+    ;
 
 number
     : INT 
@@ -114,3 +122,4 @@ sign
 
 //instantiation: ID ':' expression;    // line 42 ex01.agl
 //assignment: ID '=' value ';';
+

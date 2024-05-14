@@ -12,7 +12,9 @@ COLON   : ':';
 EQUAL   : '=';
 SEMI    : ';';
 COMMA   : ',';
+TWODOTS : '..';
 DOT     : '.';
+
 
 // Types
 INTEGER : 'Integer';    
@@ -30,6 +32,11 @@ CLOSE   : 'close';
 MOUSE   : 'mouse';
 CLICK   : 'click';
 WAIT    : 'wait';
+FOR     : 'for';
+IN      : 'in';
+DO      : 'do';
+AFTER   : 'after';
+MS      : 'ms';
 
 // Operators
 PLUS    : '+';
@@ -45,14 +52,15 @@ ID      : LETTER (LETTER | DIGIT)*;
 INT     : DIGIT+;
 FLOAT: DIGIT* [.] DIGIT+ ([eE][+-]?DIGIT+)? | DIGIT+ [.] DIGIT* ([eE][+-]?DIGIT+)?;
 
+// For loop
+NUMBER_RANGE : DIGIT+ '..' DIGIT+;
+
 // Characters
 STRING  : '"' (ESC | .)*? '"';
 
 fragment LETTER: [a-zA-Z_\u00C0-\u00FF];
 fragment DIGIT: [0-9];
 fragment ESC: '\\"' | '\\\\';
-
-
 
 LINE_COMMENT: '#' .*? '\n' -> skip;
 COMMENT: '#(' (COMMENT | .)*? '#)' -> skip; // alow nested comments
