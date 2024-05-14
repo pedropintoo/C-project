@@ -10,14 +10,14 @@ program
     ;
 
 stat
-    : instantiation
-    | blockStatement
-    | command
-    | for_loop
+    : instantiation                             #StatInstantiation
+    | blockStatement                            #StatBlockStatement
+    | command                                   #StatCommand
+    | for_loop                                  #StatForLoop
     ;
 
 instantiation
-    : ID ':' (simpleStatement | blockStatement)
+    : ID ':' statement=(simpleStatement | blockStatement)
     ;
 
 simpleStatement
@@ -85,16 +85,8 @@ point
     ;
 
 typeID
-    : ID 
-    | primitiveType
-    ;
-
-primitiveType
-    : 'Integer'
-    | 'Number'
-    | 'String'
-    | 'Point'
-    | 'Vector'
+    : PRIMITIVE_TYPE 
+    | ID
     ;
 
 operator

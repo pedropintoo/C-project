@@ -1,5 +1,9 @@
 import org.stringtemplate.v4.*;
 
+import .antlr.AGLParser;
+
+import .antlr.AGLParser;
+
 
 @SuppressWarnings("CheckReturnValue")
 public class AGLCompiler extends AGLParserBaseVisitor<ST> {
@@ -20,13 +24,24 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
       return res;
    }
 
-   @Override public ST visitStat(AGLParser.StatContext ctx) {
-      ST res = templates.getInstanceOf("print");
-      res.add("output", "adasda");
-      return res;
+   @Override public ST visitStatInstantiation(AGLParser.StatInstantiationContext ctx) {
+      return visit(ctx.instantiantion());
    }
 
    @Override public ST visitInstantiation(AGLParser.InstantiationContext ctx) {
+      String id = ctx.ID().getText();
+      
+      return visit(ctx.statement);
+   }
+
+   @Override public ST visitStatBlockStatement(AGLParser.StatBlockStatementContext ctx) {
+      // ST res = templates.getInstanceOf("stat");
+      
+      // res.add("output", "adasda");
+      return visit(ctx.blockStatement());
+   }
+
+   @Override public ST visitBlockStatement(AGLParser.BlockStatementContext ctx) {
       ST res = null;
       return visitChildren(ctx);
       //return res;
@@ -38,10 +53,8 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
       //return res;
    }
 
-   @Override public ST visitBlockStatement(AGLParser.BlockStatementContext ctx) {
-      ST res = null;
-      return visitChildren(ctx);
-      //return res;
+   @Override public ST visitStatCommand(AGLParser.StatCommandContext ctx) {
+      return visit(ctx.command());
    }
 
    @Override public ST visitPropertiesAssignment(AGLParser.PropertiesAssignmentContext ctx) {
@@ -105,21 +118,17 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
    }
 
    @Override public ST visitCommandRefresh(AGLParser.CommandRefreshContext ctx) {
-      ST res = null;
-      return visitChildren(ctx);
-      //return res;
+      return null;
    }
 
    @Override public ST visitCommandPrint(AGLParser.CommandPrintContext ctx) {
       ST res = null;
       return visitChildren(ctx);
-      //return res;
    }
 
    @Override public ST visitCommandClose(AGLParser.CommandCloseContext ctx) {
       ST res = null;
       return visitChildren(ctx);
-      //return res;
    }
 
    @Override public ST visitWaitFor(AGLParser.WaitForContext ctx) {
@@ -153,9 +162,13 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
    }
 
    @Override public ST visitTypeID(AGLParser.TypeIDContext ctx) {
-      ST res = null;
-      return visitChildren(ctx);
-      //return res;
+      ST res = templates.getInstanceOf("typeID");
+      if (ctx.ID != null) {
+         res.add("type", ctx.ID());
+      } else {
+         res.add("type", visit(ctx.primitiveType()));
+      }
+      return res;
    }
 
    @Override public ST visitPrimitiveType(AGLParser.PrimitiveTypeContext ctx) {
