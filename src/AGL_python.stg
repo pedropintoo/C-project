@@ -22,6 +22,10 @@ assign(var, value) ::= <<
 <var> = <value>
 >>
 
+value(value) ::= <<
+<value>
+>>
+
 refresh(view) ::= <<
 <view>.pack()
 >>

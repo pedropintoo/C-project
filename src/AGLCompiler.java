@@ -14,11 +14,10 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
    @Override public ST visitProgram(AGLParser.ProgramContext ctx) {
       ST res = templates.getInstanceOf("module");
       
+      // iterate all stat*
       for (AGLParser.StatContext stat : ctx.stat()){
          ST statRes = visit(stat);
-         if (statRes != null) {
-            res.add("stat", statRes).render(); // write the response
-         }
+         res.add("stat", statRes).render(); // render the return value!
       }
 
       return res;
@@ -42,10 +41,18 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
 //% instantiation
    @Override public ST visitInstantiation(AGLParser.InstantiationContext ctx) {
       ST res = templates.getInstanceOf("assign");
+      
       String id = ctx.ID().getText();
+      ST value = null;
+
+      if (ctx.simpleStatement() != null) {
+         value = visit(ctx.simpleStatement());
+      } else {
+         value = visit(ctx.blockStatement());
+      }
 
       res.add("var", id);
-      res.add("value", 777);
+      res.add("value", value.render()); // render the return value!
 
       return res;
    }
@@ -53,12 +60,30 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
 
 //* simpleStatement
    @Override public ST visitSimpleStatement(AGLParser.SimpleStatementContext ctx) {
-      return null;
+      ST res = templates.getInstanceOf("value");
+      
+      if (ctx.assignment() == null) {
+         // default value
+         res.add("value", "TO_BE_IMPLEMENTED");
+      } else {
+         res.add("value", visit(ctx.assignment()).render()); // render the return value!
+      } 
+
+      return res;
    }
 
    
 //* blockStatement
    @Override public ST visitBlockStatement(AGLParser.BlockStatementContext ctx) {
+      ST res = null;
+      String type = visit(ctx.typeID()).render();
+
+      if (type.equals("View")) {
+         res = templates.getInstanceOf("canvas");
+         res.add("view", type);
+         res.add("title", ctx.titl)
+      }
+
       return null;
    }
 
@@ -70,111 +95,98 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
 
 //* property
    @Override public ST visitPropertiy(AGLParser.PropertiyContext ctx) {
-      ST res = null;
-      return visitChildren(ctx);
+      return null;
    }
 
    @Override public ST visitAssignment(AGLParser.AssignmentContext ctx) {
-      ST res = null;
-      return visitChildren(ctx);
-      //return res;
+      ST res = templates.getInstanceOf("value");
+      
+      res.add("value", visit(ctx.expression()).render()); // render the return value!
+      
+      return res;
    }
 
-   @Override public ST visitExprString(AGLParser.ExprStringContext ctx) {
-      ST res = null;
-      return visitChildren(ctx);
-      //return res;
-   }
 
-   @Override public ST visitExprWaitFor(AGLParser.ExprWaitForContext ctx) {
-      ST res = null;
-      return visitChildren(ctx);
-      //return res;
-   }
-
-   @Override public ST visitExprPoint(AGLParser.ExprPointContext ctx) {
-      ST res = null;
-      return visitChildren(ctx);
-      //return res;
-   }
-
-   @Override public ST visitExprNumber(AGLParser.ExprNumberContext ctx) {
-      ST res = null;
-      return visitChildren(ctx);
-      //return res;
-   }
-
+//* expression  
    @Override public ST visitExprParenthesis(AGLParser.ExprParenthesisContext ctx) {
-      ST res = null;
-      return visitChildren(ctx);
-      //return res;
-   }
-
-   @Override public ST visitExprID(AGLParser.ExprIDContext ctx) {
-      ST res = null;
-      return visitChildren(ctx);
-      //return res;
+      return null;
    }
 
    @Override public ST visitExprAddSubMultDiv(AGLParser.ExprAddSubMultDivContext ctx) {
-      ST res = null;
-      return visitChildren(ctx);
-      //return res;
+      return null;
    }
 
+   @Override public ST visitExprPoint(AGLParser.ExprPointContext ctx) {
+      return null;
+   }
+
+   @Override public ST visitExprNumber(AGLParser.ExprNumberContext ctx) {
+      ST res = templates.getInstanceOf("value");
+
+      res.add("value", visit(ctx.number()).render()); // render the return value!
+
+      return res;
+   }
+
+   @Override public ST visitExprString(AGLParser.ExprStringContext ctx) {
+      ST res = templates.getInstanceOf("value");
+      
+      res.add("value", ctx.STRING()); // Terminal node
+
+      return res;
+   }
+
+   @Override public ST visitExprID(AGLParser.ExprIDContext ctx) {
+      return null;
+   }
+
+   @Override public ST visitExprWaitFor(AGLParser.ExprWaitForContext ctx) {
+      return null;
+   }
+
+
+//* command   
    @Override public ST visitCommandRefresh(AGLParser.CommandRefreshContext ctx) {
       return null;
    }
 
    @Override public ST visitCommandPrint(AGLParser.CommandPrintContext ctx) {
-      ST res = null;
-      return visitChildren(ctx);
+      return null;
    }
 
    @Override public ST visitCommandClose(AGLParser.CommandCloseContext ctx) {
-      ST res = null;
-      return visitChildren(ctx);
+      return null;
    }
 
    @Override public ST visitWaitFor(AGLParser.WaitForContext ctx) {
-      ST res = null;
-      return visitChildren(ctx);
-      //return res;
+      return null;
    }
 
    @Override public ST visitEventTrigger(AGLParser.EventTriggerContext ctx) {
-      ST res = null;
-      return visitChildren(ctx);
-      //return res;
+      return null;
    }
 
    @Override public ST visitMouseTrigger(AGLParser.MouseTriggerContext ctx) {
-      ST res = null;
-      return visitChildren(ctx);
-      //return res;
+      return null;
    }
 
    @Override public ST visitNumber(AGLParser.NumberContext ctx) {
-      ST res = null;
-      return visitChildren(ctx);
-      //return res;
+      ST res = templates.getInstanceOf("value");
+
+      res.add("value", ctx.INT() == null ? ctx.FLOAT() : ctx.INT()); // Terminal node
+
+      return res;
    }
 
    @Override public ST visitPoint(AGLParser.PointContext ctx) {
-      ST res = null;
-      return visitChildren(ctx);
-      //return res;
+      return null;
    }
 
    @Override public ST visitOperator(AGLParser.OperatorContext ctx) {
-      ST res = null;
-      return visitChildren(ctx);
-      //return res;
+      return null;
    }
 
    @Override public ST visitSign(AGLParser.SignContext ctx) {
-      ST res = null;
-      return visitChildren(ctx);
-      //return res;
+      return null;
    }
 }
