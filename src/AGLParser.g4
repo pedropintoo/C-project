@@ -17,7 +17,7 @@ stat
     ;
 
 instantiation
-    : ID ':' statement=(simpleStatement | blockStatement)
+    : ID ':' (simpleStatement | blockStatement)
     ;
 
 simpleStatement
@@ -85,8 +85,7 @@ point
     ;
 
 typeID
-    : PRIMITIVE_TYPE 
-    | ID
+    : type=(PRIMITIVE_TYPE | ID)
     ;
 
 operator

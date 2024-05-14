@@ -22,7 +22,7 @@ public class AGLMain {
          ParseTree tree = parser.program();
          if (parser.getNumberOfSyntaxErrors() == 0) {
             // print LISP-style tree:
-            System.out.println(tree.toStringTree(parser));
+            // System.out.println(tree.toStringTree(parser));
             AGLCompiler compiler = new AGLCompiler();
             ST result = compiler.visit(tree);
             System.out.println(result.render());
