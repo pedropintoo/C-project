@@ -71,7 +71,7 @@ command
     : 'refresh' ID ('after' number=(INT | FLOAT) 'ms')? ';'   #CommandRefresh
     | 'print' expression ';'                    #CommandPrint
     | 'close' ID ';'                            #CommandClose
-    | 'move' ID 'by' point ';'                #CommandMove
+    | 'move' ID 'by' point ';'                  #CommandMove
     ;
 
 eventTrigger
