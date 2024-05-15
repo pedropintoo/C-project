@@ -10,5 +10,7 @@ view : View with {
 
 a : Number = 2 + 3;
 
-b : Number = a*(a+1 - a);
+a = 5;
+
+#b : Number = a*(a+1 - a);
 
