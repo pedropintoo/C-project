@@ -21,6 +21,7 @@ program
 stat
     : instantiation                             #StatInstantiation
     | blockStatement                            #StatBlockStatement
+    | longAssignment ';'                        #StatLongAssignment
     | command                                   #StatCommand
     | for_loop                                  #StatForLoop
     ;
@@ -35,16 +36,14 @@ simpleStatement returns [String varName]
 
 blockStatement returns [String varName]
     : typeID ('at' expression)? 'with' '{' propertiesAssignment '}'
-    | (typeID '.' propertie ';')+ // to change a single property, the dot (.) may be used instead of the 'with' construction
-    | (command)+
     ;
 
 propertiesAssignment
-    : property ( ';' property)* ';'?
+    : longAssignment ( ';' longAssignment)* ';'?
     ;
 
-property
-    : ID assignment
+longAssignment
+    : ID ('.' attr=ID)? assignment
     ;
 
 assignment returns [String varName]
@@ -64,7 +63,7 @@ expression returns [String varName]
     ;
 
 command
-    : 'refresh' ID ('after' number 'ms')? ';'   #CommandRefresh
+    : 'refresh' ID ('after' number=(INT | FLOAT) 'ms')? ';'   #CommandRefresh
     | 'print' expression ';'                    #CommandPrint
     | 'close' ID ';'                            #CommandClose
     ;
@@ -78,13 +77,19 @@ mouseTrigger
     ;    
 
 for_loop
-    : 'for' ID 'in' NUMBER_RANGE // 'do' '{' blockStatement '}' 
+    : 'for' ID 'in' NUMBER_RANGE 'do' '{' stat* '}' 
     ;
 
 typeID
     : type=(PRIMITIVE_TYPE | ID)
     ;
 
+
+// blockStatement returns [String varName]
+//     : typeID ('at' expression)? 'with' '{' propertiesAssignment '}'
+//     | (typeID '.' longAssignment ';')+ // to change a single property, the dot (.) may be used instead of the 'with' construction
+//     | (command)+
+//     ;
 
 
 

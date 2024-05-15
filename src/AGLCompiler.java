@@ -56,6 +56,10 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
       return visit(ctx.blockStatement());
    }
 
+   @Override public ST visitStatLongAssignment(AGLParser.StatLongAssignmentContext ctx) {
+      return visit(ctx.longAssignment());
+   }
+
    @Override public ST visitStatCommand(AGLParser.StatCommandContext ctx) {
       return visit(ctx.command());
    }
@@ -118,21 +122,21 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
 
       ST view_title = templates.getInstanceOf("view_title");
       ST view_properties = templates.getInstanceOf("view_properties");
-      for (AGLParser.PropertyContext prop: ctx.propertiesAssignment().property()) {
+      for (AGLParser.LongAssignmentContext longAssign: ctx.propertiesAssignment().longAssignment()) {
          ST assign = templates.getInstanceOf("assign");
-         assign.add("stat", visit(prop.assignment()).render()); // render the return value!
+         assign.add("stat", visit(longAssign.assignment()).render()); // render the return value!
          
          String id = newVarName();
 
          assign.add("var", id);
-         assign.add("value", prop.assignment().varName);
+         assign.add("value", longAssign.assignment().varName);
          
          res.add("stat", assign.render()); // render the return value!
 
-         if (prop.ID().getText().equals("title")) {
+         if (longAssign.ID(0).getText().equals("title")) {
             view_title.add("title", id);
          } else {
-            String field = prop.ID().getText();
+            String field = longAssign.ID(0).getText();
             if (field.equals("background")) {
                field = "bg";
             }
@@ -153,28 +157,41 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
 
    
 //* propertiesAssignment
-   @Override public ST visitPropertiesAssignment(AGLParser.PropertiesAssignmentContext ctx) {
-      ST list = templates.getInstanceOf("listProperties");
+   // @Override public ST visitPropertiesAssignment(AGLParser.PropertiesAssignmentContext ctx) {
+   //    ST list = templates.getInstanceOf("listProperties");
 
-      for (AGLParser.PropertyContext property: ctx.property()) {
-         ST assign = templates.getInstanceOf("assign");
-         assign.add("stat", visit(property.assignment()).render()); // render the return value!
+   //    for (AGLParser.LongAssignmentContext longAssign: ctx.longAssignment()) {
+   //       ST assign = templates.getInstanceOf("assign");
+   //       assign.add("stat", visit(longAssign.assignment()).render()); // render the return value!
          
-         String id = newVarName();
+   //       String id = newVarName();
 
-         assign.add("var", id);
-         assign.add("value", property.assignment().varName);
-         list.add("stat", assign.render()); // render the return value!
+   //       assign.add("var", id);
+   //       assign.add("value", longAssign.assignment().varName);
+   //       list.add("stat", assign.render()); // render the return value!
 
-         if (property.ID().getText().equals("title")) {
-            list.add("title", id);
-         } else {
-            list.add("field", property.ID().getText() + "=" + id);
-         }
+   //       if (longAssign.ID().getText().equals("title")) {
+   //          list.add("title", id);
+   //       } else {
+   //          list.add("field", longAssign.ID().getText() + "=" + id);
+   //       }
          
-      }
+   //    }
       
-      return list;
+   //    return list;
+   // }
+
+//* longAssignment
+   @Override public ST visitLongAssignment(AGLParser.LongAssignmentContext ctx) {
+      ST res = templates.getInstanceOf("assign");
+      
+      // TODO: generalizate to attributes!
+      res.add("stat", visit(ctx.assignment()).render()); // render the return value!
+      
+      res.add("var", ctx.ID(0));
+      res.add("value", ctx.assignment().varName); // render the return value!
+
+      return res;
    }
 
    
