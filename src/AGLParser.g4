@@ -24,6 +24,7 @@ stat
     | longAssignment ';'                        #StatLongAssignment
     | command                                   #StatCommand
     | for_loop                                  #StatForLoop
+    | withStatement                             #StatWithStatement
     ;
 
 instantiation
@@ -50,6 +51,10 @@ assignment returns [String varName]
     : '=' expression
     ;
 
+point
+    : '(' x=expression ',' y=expression ')'
+    ;
+
 expression returns [String varName]
     : sign=('+'|'-') expression                 #ExprUnary
     | '(' expression ')'                        #ExprParenthesis
@@ -66,6 +71,7 @@ command
     : 'refresh' ID ('after' number=(INT | FLOAT) 'ms')? ';'   #CommandRefresh
     | 'print' expression ';'                    #CommandPrint
     | 'close' ID ';'                            #CommandClose
+    | 'move' ID 'by' point ';'                  #CommandMove
     ;
 
 eventTrigger
@@ -78,6 +84,10 @@ mouseTrigger
 
 for_loop
     : 'for' ID 'in' NUMBER_RANGE 'do' '{' stat* '}' 
+    ;
+
+withStatement
+    : 'with' ID 'do' '{' propertiesAssignment '}' 
     ;
 
 typeID
@@ -104,4 +114,3 @@ typeID
 
 //instantiation: ID ':' expression;    // line 42 ex01.agl
 //assignment: ID '=' value ';';
-

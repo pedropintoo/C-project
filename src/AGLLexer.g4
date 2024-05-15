@@ -39,6 +39,8 @@ IN      : 'in';
 DO      : 'do';
 AFTER   : 'after';
 MS      : 'ms';
+MOVE    : 'move';
+BY      : 'by';
 
 // Operators
 PLUS    : '+';
