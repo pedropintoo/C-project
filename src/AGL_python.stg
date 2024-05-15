@@ -9,13 +9,21 @@ stats(stat) ::= <<
 <if(stat)><stat; separator="\n"><endif>
 >>
 
-canvas(view, title, property) ::= <<
-root.title('<title>')
-<view> = Canvas(root, <property(field)>)
+canvas(stat, var, view_title, view_properties) ::= <<
+<stats(stat)>
+<view_title>
+<var> = Canvas(root, <view_properties>)
 >>
 
-property(field) ::= << 
-"<if(field)><field; separator=","><endif>"
+view_title(title) ::= <<
+root.title(<title>)
+>>
+
+view_properties(field) ::= <<
+<properties(field)>
+>>
+
+properties(field) ::= <<<if(field)><field; separator=","><endif>
 >>
 
 refresh(view) ::= <<
