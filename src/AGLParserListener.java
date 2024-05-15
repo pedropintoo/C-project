@@ -77,6 +77,18 @@ public interface AGLParserListener extends ParseTreeListener {
 	 */
 	void exitStatForLoop(AGLParser.StatForLoopContext ctx);
 	/**
+	 * Enter a parse tree produced by the {@code StatWithStatement}
+	 * labeled alternative in {@link AGLParser#stat}.
+	 * @param ctx the parse tree
+	 */
+	void enterStatWithStatement(AGLParser.StatWithStatementContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code StatWithStatement}
+	 * labeled alternative in {@link AGLParser#stat}.
+	 * @param ctx the parse tree
+	 */
+	void exitStatWithStatement(AGLParser.StatWithStatementContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link AGLParser#instantiation}.
 	 * @param ctx the parse tree
 	 */
@@ -136,6 +148,16 @@ public interface AGLParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitAssignment(AGLParser.AssignmentContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link AGLParser#point}.
+	 * @param ctx the parse tree
+	 */
+	void enterPoint(AGLParser.PointContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link AGLParser#point}.
+	 * @param ctx the parse tree
+	 */
+	void exitPoint(AGLParser.PointContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code ExprWait}
 	 * labeled alternative in {@link AGLParser#expression}.
@@ -269,6 +291,18 @@ public interface AGLParserListener extends ParseTreeListener {
 	 */
 	void exitCommandClose(AGLParser.CommandCloseContext ctx);
 	/**
+	 * Enter a parse tree produced by the {@code CommandMove}
+	 * labeled alternative in {@link AGLParser#command}.
+	 * @param ctx the parse tree
+	 */
+	void enterCommandMove(AGLParser.CommandMoveContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code CommandMove}
+	 * labeled alternative in {@link AGLParser#command}.
+	 * @param ctx the parse tree
+	 */
+	void exitCommandMove(AGLParser.CommandMoveContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link AGLParser#eventTrigger}.
 	 * @param ctx the parse tree
 	 */
@@ -298,6 +332,16 @@ public interface AGLParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitFor_loop(AGLParser.For_loopContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link AGLParser#withStatement}.
+	 * @param ctx the parse tree
+	 */
+	void enterWithStatement(AGLParser.WithStatementContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link AGLParser#withStatement}.
+	 * @param ctx the parse tree
+	 */
+	void exitWithStatement(AGLParser.WithStatementContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link AGLParser#typeID}.
 	 * @param ctx the parse tree

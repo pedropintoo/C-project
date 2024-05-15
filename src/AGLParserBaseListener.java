@@ -88,6 +88,18 @@ public class AGLParserBaseListener implements AGLParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterStatWithStatement(AGLParser.StatWithStatementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitStatWithStatement(AGLParser.StatWithStatementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterInstantiation(AGLParser.InstantiationContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -155,6 +167,18 @@ public class AGLParserBaseListener implements AGLParserListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitAssignment(AGLParser.AssignmentContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterPoint(AGLParser.PointContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitPoint(AGLParser.PointContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -292,6 +316,18 @@ public class AGLParserBaseListener implements AGLParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterCommandMove(AGLParser.CommandMoveContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitCommandMove(AGLParser.CommandMoveContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterEventTrigger(AGLParser.EventTriggerContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -323,6 +359,18 @@ public class AGLParserBaseListener implements AGLParserListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitFor_loop(AGLParser.For_loopContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterWithStatement(AGLParser.WithStatementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitWithStatement(AGLParser.WithStatementContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

@@ -51,6 +51,13 @@ public interface AGLParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitStatForLoop(AGLParser.StatForLoopContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code StatWithStatement}
+	 * labeled alternative in {@link AGLParser#stat}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitStatWithStatement(AGLParser.StatWithStatementContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link AGLParser#instantiation}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -86,6 +93,12 @@ public interface AGLParserVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitAssignment(AGLParser.AssignmentContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link AGLParser#point}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitPoint(AGLParser.PointContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code ExprWait}
 	 * labeled alternative in {@link AGLParser#expression}.
@@ -164,6 +177,13 @@ public interface AGLParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitCommandClose(AGLParser.CommandCloseContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code CommandMove}
+	 * labeled alternative in {@link AGLParser#command}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitCommandMove(AGLParser.CommandMoveContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link AGLParser#eventTrigger}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -181,6 +201,12 @@ public interface AGLParserVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitFor_loop(AGLParser.For_loopContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link AGLParser#withStatement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitWithStatement(AGLParser.WithStatementContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link AGLParser#typeID}.
 	 * @param ctx the parse tree
