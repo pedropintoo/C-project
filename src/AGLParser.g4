@@ -1,5 +1,14 @@
 parser grammar AGLParser;
 
+@parser::header {
+import java.util.Map;
+import java.util.HashMap;
+}
+
+@parser::members {
+static protected Map<String,Number> symbolTable = new HashMap<>();
+}
+
 options {
     tokenVocab = AGLLexer; // join lexer
 }
@@ -10,58 +19,54 @@ program
     ;
 
 stat
-    : instantiation
-    | blockStatement
-    | command
-    | for_loop
+    : instantiation                             #StatInstantiation
+    | blockStatement                            #StatBlockStatement
+    | longAssignment ';'                        #StatLongAssignment
+    | command                                   #StatCommand
+    | for_loop                                  #StatForLoop
     ;
 
 instantiation
     : ID ':' (simpleStatement | blockStatement)
     ;
 
-simpleStatement
+simpleStatement returns [String varName]
     : typeID (assignment)? ';'
     ;
 
-blockStatement
+blockStatement returns [String varName]
     : typeID ('at' expression)? 'with' '{' propertiesAssignment '}'
-    | (typeID '.' propertie ';')+ // to change a single property, the dot (.) may be used instead of the 'with' construction
-    | (command)+
     ;
 
 propertiesAssignment
-    : propertie ( ';' propertie)* ';'?
+    : longAssignment ( ';' longAssignment)* ';'?
     ;
 
-propertie
-    : ID assignment
+longAssignment
+    : ID ('.' attr=ID)? assignment
     ;
 
-assignment
+assignment returns [String varName]
     : '=' expression
     ;
 
-expression
-    : sign? '(' expression ')'                  #ExprParenthesis
+expression returns [String varName]
+    : sign=('+'|'-') expression                 #ExprUnary
+    | '(' expression ')'                        #ExprParenthesis
     | expression op=('*' | '/') expression      #ExprAddSubMultDiv
     | expression op=('+' | '-') expression      #ExprAddSubMultDiv
-    | sign? point                               #ExprPoint
-    | sign? number                              #ExprNumber                  
+    | '(' x=expression ',' y=expression ')'     #ExprPoint
+    | number=(INT | FLOAT)                      #ExprNumber                  
     | STRING                                    #ExprString                              
-    | sign? ID                                  #ExprID
-    | waitFor                                   #ExprWaitFor
+    | ID                                        #ExprID
+    | 'wait' eventTrigger                       #ExprWait
     ;
 
 command
-    : 'refresh' ID ';' | 'refresh' ID 'after' number 'ms' ';'
-    | 'print' expression ';'
-    | 'close' ID ';'
+    : 'refresh' ID ('after' number=(INT | FLOAT) 'ms')? ';'   #CommandRefresh
+    | 'print' expression ';'                    #CommandPrint
+    | 'close' ID ';'                            #CommandClose
     ;
-
-waitFor
-    : 'wait' eventTrigger
-    ;    
 
 eventTrigger
     : 'mouse' mouseTrigger
@@ -72,42 +77,19 @@ mouseTrigger
     ;    
 
 for_loop
-    : 'for' ID 'in' NUMBER_RANGE // 'do' '{' blockStatement '}' 
-    ;
-
-number
-    : INT 
-    | FLOAT
-    ;
-
-point
-    : '(' x=expression ',' y=expression ')'
+    : 'for' ID 'in' NUMBER_RANGE 'do' '{' stat* '}' 
     ;
 
 typeID
-    : ID 
-    | primitiveType
+    : type=(PRIMITIVE_TYPE | ID)
     ;
 
-primitiveType
-    : 'Integer'
-    | 'Number'
-    | 'String'
-    | 'Point'
-    | 'Vector'
-    ;
 
-operator
-    : '+' 
-    | '-' 
-    | '*' 
-    | '/'
-    ;
-
-sign
-    : '+' 
-    | '-'
-    ;
+// blockStatement returns [String varName]
+//     : typeID ('at' expression)? 'with' '{' propertiesAssignment '}'
+//     | (typeID '.' longAssignment ';')+ // to change a single property, the dot (.) may be used instead of the 'with' construction
+//     | (command)+
+//     ;
 
 
 

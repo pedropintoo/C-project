@@ -17,11 +17,13 @@ DOT     : '.';
 
 
 // Types
+PRIMITIVE_TYPE: INTEGER | NUMBER | STRING_ | POINT | VECTOR;
 INTEGER : 'Integer';    
 NUMBER  : 'Number';
 STRING_  : 'String';
 POINT   : 'Point';
 VECTOR  : 'Vector';
+
 
 // Keywords
 WITH    : 'with';
