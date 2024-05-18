@@ -57,16 +57,38 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
    @Override
    public Boolean visitInstantiation(AGLParser.InstantiationContext ctx) {
-      Boolean res = null;
-      return visitChildren(ctx);
-      // return res;
+      Boolean res = true;
+      String ID = ctx.ID().getText();
+
+      if (ctx.simpleStatement() != null) {
+         res = visit(ctx.simpleStatement());
+      } else if (ctx.blockStatement() != null) {
+         res = visit(ctx.blockStatement());
+      } else {
+         // HandlingError.printError(ctx, "Error: invalid instantiation");
+         System.out.println("Error: invalid instantiation");
+         res = false;
+      }
+
+      return res;
    }
 
    @Override
    public Boolean visitSimpleStatement(AGLParser.SimpleStatementContext ctx) {
-      Boolean res = null;
-      return visitChildren(ctx);
-      // return res;
+      Boolean res = true;
+      String type = ctx.typeID().getText();
+
+      if (type == null) {
+         // HandlingError.printError(ctx, "Error: invalid type");
+         System.out.println("Error: invalid type");
+         res = false;
+      } else {
+         if (ctx.assignment() != null) {
+            res = visit(ctx.assignment());
+         }
+      }
+
+      return res;
    }
 
    @Override
