@@ -1,7 +1,9 @@
 module(stat) ::= <<
 from tkinter import *
+import time, os, sys
 
 root = Tk()
+root.withdraw()
 <stats(stat)>
 >>
 

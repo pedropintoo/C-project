@@ -2,8 +2,8 @@ from tkinter import *
 import time, os, sys
 
 root = Tk()
-root.title("Testing Tk")
 root.withdraw()
+root.title("Testing Tk")
 
 top = Toplevel(root)
 canvas = Canvas(top, bg="wheat", height=450, width=700)
