@@ -12,14 +12,18 @@ COLON   : ':';
 EQUAL   : '=';
 SEMI    : ';';
 COMMA   : ',';
+TWODOTS : '..';
 DOT     : '.';
 
+
 // Types
+PRIMITIVE_TYPE: INTEGER | NUMBER | STRING_ | POINT | VECTOR;
 INTEGER : 'Integer';    
 NUMBER  : 'Number';
 STRING_  : 'String';
 POINT   : 'Point';
 VECTOR  : 'Vector';
+
 
 // Keywords
 WITH    : 'with';
@@ -30,6 +34,13 @@ CLOSE   : 'close';
 MOUSE   : 'mouse';
 CLICK   : 'click';
 WAIT    : 'wait';
+FOR     : 'for';
+IN      : 'in';
+DO      : 'do';
+AFTER   : 'after';
+MS      : 'ms';
+MOVE    : 'move';
+BY      : 'by';
 
 // Operators
 PLUS    : '+';
@@ -45,14 +56,15 @@ ID      : LETTER (LETTER | DIGIT)*;
 INT     : DIGIT+;
 FLOAT: DIGIT* [.] DIGIT+ ([eE][+-]?DIGIT+)? | DIGIT+ [.] DIGIT* ([eE][+-]?DIGIT+)?;
 
+// For loop
+NUMBER_RANGE : DIGIT+ '..' DIGIT+;
+
 // Characters
 STRING  : '"' (ESC | .)*? '"';
 
 fragment LETTER: [a-zA-Z_\u00C0-\u00FF];
 fragment DIGIT: [0-9];
 fragment ESC: '\\"' | '\\\\';
-
-
 
 LINE_COMMENT: '#' .*? '\n' -> skip;
 COMMENT: '#(' (COMMENT | .)*? '#)' -> skip; // alow nested comments
