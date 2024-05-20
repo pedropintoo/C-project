@@ -68,7 +68,7 @@ expression returns [String varName]
     ;
 
 command
-    : 'refresh' ID ('after' number=(INT | FLOAT) 'ms')? ';'   #CommandRefresh
+    : 'refresh' ID ('after' expression suffix=('ms'|'s'))? ';'   #CommandRefresh
     | 'print' expression ';'                    #CommandPrint
     | 'close' ID ';'                            #CommandClose
     | 'move' ID 'by' point ';'                  #CommandMove

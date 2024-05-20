@@ -280,17 +280,38 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
    }
 
    @Override public ST visitExprWait(AGLParser.ExprWaitContext ctx) {
-      return null;
+      ST res = templates.getInstanceOf("waitMouseClick");
+      
+      String id = newVarName();
+      ctx.varName = id;
+
+      res.add("var", id);
+
+      return res;
    }
 
 
 //* command   
    @Override public ST visitCommandRefresh(AGLParser.CommandRefreshContext ctx) {
-      return null;
+      ST res = templates.getInstanceOf("refresh");
+
+      res.add("view", ctx.ID().getText());
+
+      if (ctx.expression() != null) {
+         res.add("stat", visit(ctx.expression()).render()); // render the return value!
+         res.add("delay", ctx.expression().varName + (ctx.suffix.getText().equals("ms")? "/1000": ""));
+      }
+
+      return res;
    }
 
    @Override public ST visitCommandPrint(AGLParser.CommandPrintContext ctx) {
-      return null;
+      ST res = templates.getInstanceOf("print");
+      
+      res.add("stat", visit(ctx.expression()).render()); // render the return value!
+      res.add("output", ctx.expression().varName);
+      
+      return res;
    }
 
    @Override public ST visitCommandClose(AGLParser.CommandCloseContext ctx) {

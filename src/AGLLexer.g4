@@ -39,6 +39,7 @@ IN      : 'in';
 DO      : 'do';
 AFTER   : 'after';
 MS      : 'ms';
+S       : 's';
 MOVE    : 'move';
 BY      : 'by';
 

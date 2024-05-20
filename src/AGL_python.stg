@@ -2,6 +2,10 @@ module(stat) ::= <<
 from tkinter import *
 import time, os, sys
 
+## Auxiliar vars
+last_refresh = time.time()
+##
+
 root = Tk()
 root.withdraw()
 root.title("C-Project Compiler")  
@@ -51,15 +55,27 @@ view_properties(field) ::= <<
 properties(field) ::= <<<if(field)><field; separator=","><endif>
 >>
 
-refresh(view) ::= <<
-<view>.pack()
+waitMouseClick(var) ::= <<
+
+getMouse()
+<var> = (mouseX, mouseY)
 >>
 
-close(view) ::= <<
-<view>.pack_forget()
+refresh(stat, view, delay) ::= <<
+
+<if(delay)> 
+<stats(stat)>
+while (time.time() - last_refresh \<= <delay>):
+    pass   
+
+<endif>
+last_refresh = time.time()
+<view>.update()
 >>
 
-print(output) ::= <<
+print(stat, output) ::= <<
+
+<stats(stat)>
 print(<output>)
 >>
 

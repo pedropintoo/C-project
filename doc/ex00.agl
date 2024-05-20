@@ -5,10 +5,17 @@ view : View with {
     height = 401;
 }
 
+refresh view;
+
+refresh view after 10000 ms;
 
 #a : Number = 2 + 3;
 
 #a = 5;
 
 #b : Number = a*(a+1 - a);
+
+p : Point = wait mouse click; # instantiate a Point and waits for a mouse click
+print p;
+
 
