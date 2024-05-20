@@ -4,6 +4,8 @@ import time, os, sys
 
 root = Tk()
 root.withdraw()
+root.title("C-Project Compiler")  
+
 <stats(stat)>
 >>
 
@@ -13,8 +15,29 @@ stats(stat) ::= <<
 
 canvas(stat, var, view_title, view_properties) ::= <<
 <stats(stat)>
+
 <view_title>
-<var> = Canvas(root, <view_properties>)
+top = Toplevel(root)
+<var> = Canvas(top, <view_properties>)
+<var>.pack()
+
+# binding onClick and getMouse
+mouseX = None
+mouseY = None
+def onClick(event):
+    global mouseX, mouseY
+    mouseX, mouseY = event.x, event.y
+
+def getMouse():
+    global mouseX, mouseY
+    <var>.update()
+    mouseX = None; mouseY = None
+    while mouseX == None:
+        time.sleep(.1)
+        <var>.update() 
+
+top.bind("\<Button-1\>", onClick)
+
 >>
 
 view_title(title) ::= <<

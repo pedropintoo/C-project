@@ -3,11 +3,12 @@ import time, os, sys
 
 root = Tk()
 root.withdraw()
-root.title("Testing Tk")
+root.title("C-Project Compiler")
 
 top = Toplevel(root)
-canvas = Canvas(top, bg="wheat", height=450, width=700)
-canvas.pack()
+a = Canvas(top, bg="wheat", height=450, width=700)
+a.pack()
+canvas = a
 
 def drawPolyline():
     # A Tk line accepts 2 or more pairs of coordinates.

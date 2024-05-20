@@ -3,14 +3,12 @@
 view : View with {
     width = 401;
     height = 401;
-    title = "Illustrating the rectangle shape";
-    background = "wheat";
 }
 
 
-a : Number = 2 + 3;
+#a : Number = 2 + 3;
 
-a = 5;
+#a = 5;
 
 #b : Number = a*(a+1 - a);
 
