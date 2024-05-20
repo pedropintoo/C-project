@@ -4,8 +4,6 @@
 
 import org.stringtemplate.v4.*;
 
-import .antlr.AGLParser;
-
 import org.antlr.v4.runtime.ParserRuleContext;
 
 @SuppressWarnings("CheckReturnValue")
@@ -68,11 +66,11 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
    }
 
    @Override public ST visitStatForLoop(AGLParser.StatForLoopContext ctx) {
-      return null; // TODO: TO_BE_IMPLEMENTED
+      return visit(ctx.for_loop());
    }
 
    @Override public ST visitStatWithStatement(AGLParser.StatWithStatementContext ctx) {
-      return null; // TODO: TO_BE_IMPLEMENTED
+      return visit(ctx.withStatement());
    }
 
 
@@ -130,6 +128,7 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
       ST res = templates.getInstanceOf("canvas");
       
       // TODO: generalize this ( for now, we only have View )
+      // Reuse the propertiesAssignment to generalize this!!
 
       ST view_title = templates.getInstanceOf("view_title");
       ST view_properties = templates.getInstanceOf("view_properties");
@@ -167,12 +166,16 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
    }
 
 //* longAssignment
-   @Override public ST visitLongAssignment(AGLParser.LongAssignmentContext ctx) {
+   @Override public ST visitLongAssignment(AGLParser.LongAssignmentContext ctx) {      
       ST res = templates.getInstanceOf("assign");
       
-      // TODO: generalizate to attributes!
       res.add("stat", visit(ctx.assignment()).render()); // render the return value!
       
+      if (ctx.ID(1) != null) {
+         // res.add("attribute", ctx.ID(1).getText());
+         continue; // TODO: how to handle this?
+      }
+
       res.add("var", ctx.ID(0));
       res.add("value", ctx.assignment().varName); // render the return value!
 

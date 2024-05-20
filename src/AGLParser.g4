@@ -44,7 +44,7 @@ propertiesAssignment
     ;
 
 longAssignment
-    : ID ('.' attr=ID)? assignment
+    : ID ('.' ID)? assignment
     ;
 
 assignment returns [String varName]

@@ -88,9 +88,9 @@ for <value> in <sequence>:
 range(start, end, step) ::= "range(<start>, <end>, <step>)"
 
 
-assign(stat,var,value) ::= <<
+assign(stat,var,value,attribute) ::= <<
 <stats(stat)>
-<if(value)><var> = <value><endif>
+<if(value)><var><if(attribute)>.<attribute><endif> = <value><endif>
 >>
 
 init(value) ::= "<if(value)> = <value><endif>"

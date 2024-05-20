@@ -7,6 +7,8 @@ view : View with {
     background = "black";
 }
 
+view.background = "white";
+
 # 
 # AGL holds a set of primitive data types, every one with a default value:
 # - Integer [0] - integer number
