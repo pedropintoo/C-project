@@ -3,6 +3,7 @@
    */
 
 import org.stringtemplate.v4.*;
+
 import org.antlr.v4.runtime.ParserRuleContext;
 
 @SuppressWarnings("CheckReturnValue")
@@ -64,6 +65,14 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
       return visit(ctx.command());
    }
 
+   @Override public ST visitStatForLoop(AGLParser.StatForLoopContext ctx) {
+      return visit(ctx.for_loop());
+   }
+
+   @Override public ST visitStatWithStatement(AGLParser.StatWithStatementContext ctx) {
+      return visit(ctx.withStatement());
+   }
+
 
 //% instantiation
    @Override public ST visitInstantiation(AGLParser.InstantiationContext ctx) {
@@ -119,6 +128,7 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
       ST res = templates.getInstanceOf("canvas");
       
       // TODO: generalize this ( for now, we only have View )
+      // Reuse the propertiesAssignment to generalize this!!
 
       ST view_title = templates.getInstanceOf("view_title");
       ST view_properties = templates.getInstanceOf("view_properties");
@@ -155,39 +165,17 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
 
    }
 
-   
-//* propertiesAssignment
-   // @Override public ST visitPropertiesAssignment(AGLParser.PropertiesAssignmentContext ctx) {
-   //    ST list = templates.getInstanceOf("listProperties");
-
-   //    for (AGLParser.LongAssignmentContext longAssign: ctx.longAssignment()) {
-   //       ST assign = templates.getInstanceOf("assign");
-   //       assign.add("stat", visit(longAssign.assignment()).render()); // render the return value!
-         
-   //       String id = newVarName();
-
-   //       assign.add("var", id);
-   //       assign.add("value", longAssign.assignment().varName);
-   //       list.add("stat", assign.render()); // render the return value!
-
-   //       if (longAssign.ID().getText().equals("title")) {
-   //          list.add("title", id);
-   //       } else {
-   //          list.add("field", longAssign.ID().getText() + "=" + id);
-   //       }
-         
-   //    }
-      
-   //    return list;
-   // }
-
 //* longAssignment
-   @Override public ST visitLongAssignment(AGLParser.LongAssignmentContext ctx) {
+   @Override public ST visitLongAssignment(AGLParser.LongAssignmentContext ctx) {      
       ST res = templates.getInstanceOf("assign");
       
-      // TODO: generalizate to attributes!
       res.add("stat", visit(ctx.assignment()).render()); // render the return value!
       
+      if (ctx.ID(1) != null) {
+         // res.add("attribute", ctx.ID(1).getText());
+         continue; // TODO: how to handle this?
+      }
+
       res.add("var", ctx.ID(0));
       res.add("value", ctx.assignment().varName); // render the return value!
 
@@ -280,33 +268,58 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
    }
 
    @Override public ST visitExprWait(AGLParser.ExprWaitContext ctx) {
-      return null;
+      ST res = templates.getInstanceOf("waitMouseClick");
+      
+      String id = newVarName();
+      ctx.varName = id;
+
+      res.add("var", id);
+
+      return res;
    }
 
 
 //* command   
    @Override public ST visitCommandRefresh(AGLParser.CommandRefreshContext ctx) {
-      return null;
+      ST res = templates.getInstanceOf("refresh");
+
+      res.add("view", ctx.ID().getText());
+
+      if (ctx.expression() != null) {
+         res.add("stat", visit(ctx.expression()).render()); // render the return value!
+         res.add("delay", ctx.expression().varName + (ctx.suffix.getText().equals("ms")? "/1000": ""));
+      }
+
+      return res;
    }
 
    @Override public ST visitCommandPrint(AGLParser.CommandPrintContext ctx) {
-      return null;
+      ST res = templates.getInstanceOf("print");
+      
+      res.add("stat", visit(ctx.expression()).render()); // render the return value!
+      res.add("output", ctx.expression().varName);
+      
+      return res;
    }
 
    @Override public ST visitCommandClose(AGLParser.CommandCloseContext ctx) {
-      return null;
+      return null; // TODO: why ?
+   }
+
+   @Override public ST visitCommandMove(AGLParser.CommandMoveContext ctx) {
+      return null; // TODO: TO_BE_IMPLEMENTED
    }
 
 
-//* eventTrigger
-   @Override public ST visitEventTrigger(AGLParser.EventTriggerContext ctx) {
-      return null;
-   }
+//* for_loop   
+   @Override public ST visitFor_loop(AGLParser.For_loopContext ctx) {
+         return null;
+      }
 
-
-//* mouseTrigger   
-   @Override public ST visitMouseTrigger(AGLParser.MouseTriggerContext ctx) {
-      return null;
-   }
+ 
+//* withStatement   
+   @Override public ST visitWithStatement(AGLParser.WithStatementContext ctx) {
+      return null; // TODO: TO_BE_IMPLEMENTED
+   }      
 
 }
