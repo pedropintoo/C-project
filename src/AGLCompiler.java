@@ -3,6 +3,9 @@
    */
 
 import org.stringtemplate.v4.*;
+
+import .antlr.AGLParser;
+
 import org.antlr.v4.runtime.ParserRuleContext;
 
 @SuppressWarnings("CheckReturnValue")
@@ -62,6 +65,14 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
 
    @Override public ST visitStatCommand(AGLParser.StatCommandContext ctx) {
       return visit(ctx.command());
+   }
+
+   @Override public ST visitStatForLoop(AGLParser.StatForLoopContext ctx) {
+      return null; // TODO: TO_BE_IMPLEMENTED
+   }
+
+   @Override public ST visitStatWithStatement(AGLParser.StatWithStatementContext ctx) {
+      return null; // TODO: TO_BE_IMPLEMENTED
    }
 
 

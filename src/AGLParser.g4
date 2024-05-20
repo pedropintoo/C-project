@@ -51,10 +51,6 @@ assignment returns [String varName]
     : '=' expression
     ;
 
-point
-    : '(' x=expression ',' y=expression ')'
-    ;
-
 expression returns [String varName]
     : sign=('+'|'-') expression                 #ExprUnary
     | '(' expression ')'                        #ExprParenthesis
@@ -71,7 +67,7 @@ command
     : 'refresh' ID ('after' expression suffix=('ms'|'s'))? ';'   #CommandRefresh
     | 'print' expression ';'                    #CommandPrint
     | 'close' ID ';'                            #CommandClose
-    | 'move' ID 'by' point ';'                  #CommandMove
+    | 'move' ID 'by' expression ';'                  #CommandMove
     ;
 
 eventTrigger
