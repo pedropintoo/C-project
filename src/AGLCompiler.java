@@ -300,7 +300,23 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
    }
 
    @Override public ST visitCommandClose(AGLParser.CommandCloseContext ctx) {
-      return null; // TODO: ????
+      return null; // TODO: why ?
    }
+
+   @Override public ST visitCommandMove(AGLParser.CommandMoveContext ctx) {
+      return null; // TODO: TO_BE_IMPLEMENTED
+   }
+
+
+//* for_loop   
+   @Override public ST visitFor_loop(AGLParser.For_loopContext ctx) {
+         return null;
+      }
+
+ 
+//* withStatement   
+   @Override public ST visitWithStatement(AGLParser.WithStatementContext ctx) {
+      return null; // TODO: TO_BE_IMPLEMENTED
+   }      
 
 }
