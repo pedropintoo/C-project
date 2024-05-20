@@ -7,7 +7,11 @@ view : View with {
 
 refresh view;
 
-refresh view after 10000 ms;
+refresh view after 1 s;
+
+refresh view;
+
+refresh view after 1 s;
 
 #a : Number = 2 + 3;
 

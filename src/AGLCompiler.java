@@ -155,32 +155,6 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
 
    }
 
-   
-//* propertiesAssignment
-   // @Override public ST visitPropertiesAssignment(AGLParser.PropertiesAssignmentContext ctx) {
-   //    ST list = templates.getInstanceOf("listProperties");
-
-   //    for (AGLParser.LongAssignmentContext longAssign: ctx.longAssignment()) {
-   //       ST assign = templates.getInstanceOf("assign");
-   //       assign.add("stat", visit(longAssign.assignment()).render()); // render the return value!
-         
-   //       String id = newVarName();
-
-   //       assign.add("var", id);
-   //       assign.add("value", longAssign.assignment().varName);
-   //       list.add("stat", assign.render()); // render the return value!
-
-   //       if (longAssign.ID().getText().equals("title")) {
-   //          list.add("title", id);
-   //       } else {
-   //          list.add("field", longAssign.ID().getText() + "=" + id);
-   //       }
-         
-   //    }
-      
-   //    return list;
-   // }
-
 //* longAssignment
    @Override public ST visitLongAssignment(AGLParser.LongAssignmentContext ctx) {
       ST res = templates.getInstanceOf("assign");
@@ -315,19 +289,7 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
    }
 
    @Override public ST visitCommandClose(AGLParser.CommandCloseContext ctx) {
-      return null;
-   }
-
-
-//* eventTrigger
-   @Override public ST visitEventTrigger(AGLParser.EventTriggerContext ctx) {
-      return null;
-   }
-
-
-//* mouseTrigger   
-   @Override public ST visitMouseTrigger(AGLParser.MouseTriggerContext ctx) {
-      return null;
+      return null; // TODO: ????
    }
 
 }

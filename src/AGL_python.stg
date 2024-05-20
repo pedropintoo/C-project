@@ -3,6 +3,7 @@ from tkinter import *
 import time, os, sys
 
 ## Auxiliar vars
+REFRESH_RATE = 0.1
 last_refresh = time.time()
 ##
 
@@ -37,7 +38,7 @@ def getMouse():
     <var>.update()
     mouseX = None; mouseY = None
     while mouseX == None:
-        time.sleep(.1)
+        time.sleep(REFRESH_RATE)
         <var>.update() 
 
 top.bind("\<Button-1\>", onClick)
@@ -66,7 +67,7 @@ refresh(stat, view, delay) ::= <<
 <if(delay)> 
 <stats(stat)>
 while (time.time() - last_refresh \<= <delay>):
-    pass   
+    time.sleep(REFRESH_RATE)   
 
 <endif>
 last_refresh = time.time()
