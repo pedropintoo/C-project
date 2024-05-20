@@ -11,10 +11,12 @@ stats(stat) ::= <<
 
 canvas(view, title, property) ::= <<
 root.title('<title>')
-<view> = Canvas(root, <property(field)>)
+<view> = Canvas(root, <property(property)>)
 >>
 
-property(field) ::= "<if(field)><field; separator=","><endif>"
+property(field) ::= <<
+<if(field)><field; separator=", "><endif>
+>>
 
 assign(var, value) ::= <<
 <var> = <value>
@@ -37,4 +39,10 @@ for <value> in <sequence>:
     <stats(stat)>
 >>
 
-range(start, end, step) ::= "range(<start>, <end>, <step>)"
+range(start, end, step) ::= <<
+range(<start>, <end>, <step>)
+>>
+
+line(point, vector, property) ::= <<
+create_line(<point>, <vector>, <property(property)>)
+>>
