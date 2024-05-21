@@ -1,1 +1,1 @@
-cellSize : Number = 200;
+cellSize : Integer = 200;

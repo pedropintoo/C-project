@@ -92,14 +92,41 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    public Boolean visitSimpleStatement(AGLParser.SimpleStatementContext ctx) {
       Boolean res = true;
       String type = ctx.typeID().getText();
+      System.out.println("olá! " + type);
 
       if (type == null) {
          // HandlingError.printError(ctx, "Error: invalid type");
          System.out.println("Error: invalid type");
          res = false;
       } else {
+
+         // Call Type.java method getType(String name) to check if String is a valid type and return the corresponding Type object
+         Type typeObject = Type.getType(type);
+
+         if (typeObject == null) {
+            System.out.println("Error: invalid type");
+            res = false;
+         } else {
+            // Check if the type is a valid type
+            if (typeObject instanceof StringType) {
+               System.out.println("String");
+            } else if (typeObject instanceof IntegerType) {
+               System.out.println("Integer");
+            } else if (typeObject instanceof NumberType) {
+               System.out.println("Number");
+            } else if (typeObject instanceof PointType) {
+               System.out.println("Point");
+            } else if (typeObject instanceof VectorType) {
+               System.out.println("Vector");
+            } else {
+               System.out.println("Error: invalid type");
+               res = false;
+            }
+         }
+
          if (ctx.assignment() != null) {
             res = visit(ctx.assignment());
+            System.out.println("visit assignment");
          }
       }
 
@@ -151,9 +178,9 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
    @Override
    public Boolean visitExprString(AGLParser.ExprStringContext ctx) {
-   Boolean res = null;
-   return visitChildren(ctx);
-   // return res;
+      Boolean res = null;
+      return visitChildren(ctx);
+      // return res;
    }
 
    // @Override
@@ -179,9 +206,9 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
    // @Override
    // public Boolean visitExprParenthesis(AGLParser.ExprParenthesisContext ctx) {
-   //    Boolean res = null;
-   //    return visitChildren(ctx);
-   //    // return res;
+   // Boolean res = null;
+   // return visitChildren(ctx);
+   // // return res;
    // }
 
    // @Override
@@ -260,5 +287,5 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       Boolean res = null;
       return visitChildren(ctx);
       // return res;
-   }
+   } 
 }

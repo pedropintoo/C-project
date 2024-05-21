@@ -546,3 +546,12 @@ Para este trabalho, o nosso grupo dividiu-o nos seguintes tópicos e distribui o
     - Guilherme Santos - 113893
     - ...
   
+cat ../doc/ex00.agl | antlr4-run > ../doc/t1.py
+```
+
+## Test Semantic Check 
+Inside the `src` directory:
+```
+antlr4-main AGLParser.g4 program -v AGLSemanticCheck.java
+antlr4-build
+cat ../doc/TestSemantic.agl | antlr4-run
