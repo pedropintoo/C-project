@@ -109,7 +109,7 @@ public class AGLParser extends Parser {
 	public ATN getATN() { return _ATN; }
 
 
-	static protected Map<String,Number> symbolTable = new HashMap<>();
+	static protected Map<String, Symbol> symbolTable = new HashMap<>();
 
 	public AGLParser(TokenStream input) {
 		super(input);
