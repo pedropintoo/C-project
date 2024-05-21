@@ -76,6 +76,10 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       String ID = ctx.ID().getText();
 
       if (ctx.simpleStatement() != null) {
+         // Add the variable to the symbol table AgLParser.symbolTable static protected Map<String, Type> symbolTable = new HashMap<>();
+         AGLParser.symbolTable.put(ID, new VariableSymbol(ID, Type.getType(ctx.simpleStatement().typeID().getText()) ));
+
+   
          res = visit(ctx.simpleStatement());
       } else if (ctx.blockStatement() != null) {
          res = visit(ctx.blockStatement());
@@ -87,6 +91,27 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
       return res;
    }
+
+
+   // 
+
+   // public Boolean visitDeclaration(CalcParser.DeclarationContext ctx) {
+   //    Boolean res = true;
+   //    //visit(ctx.type());
+   //    for(TerminalNode t: ctx.idList().ID())
+   //    {
+   //       String id = t.getText();
+   //       //out.println(t.getText());
+
+   //       if (CalcParser.symbolTable.containsKey(id))
+   //       {
+   //          ErrorHandling.printError(ctx, "Variable \""+id+"\" already declared!");
+   //          res = false;
+   //       }
+   //       else
+   //          CalcParser.symbolTable.put(id, new VariableSymbol(id, ctx.type().res));
+   //    }
+   //    return res;
 
    @Override
    public Boolean visitSimpleStatement(AGLParser.SimpleStatementContext ctx) {
@@ -100,7 +125,8 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
          res = false;
       } else {
 
-         // Call Type.java method getType(String name) to check if String is a valid type and return the corresponding Type object
+         // Call Type.java method getType(String name) to check if String is a valid type
+         // and return the corresponding Type object
          Type typeObject = Type.getType(type);
 
          if (typeObject == null) {
@@ -287,5 +313,5 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       Boolean res = null;
       return visitChildren(ctx);
       // return res;
-   } 
+   }
 }

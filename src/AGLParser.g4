@@ -6,7 +6,7 @@ import java.util.HashMap;
 }
 
 @parser::members {
-static protected Map<String, Number> symbolTable = new HashMap<>();
+static protected Map<String, Symbol> symbolTable = new HashMap<>();
 }
 
 options {
