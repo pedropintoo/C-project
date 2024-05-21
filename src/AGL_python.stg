@@ -23,7 +23,8 @@ view_properties(field) ::= <<
 <properties(field)>
 >>
 
-properties(field) ::= <<<if(field)><field; separator=","><endif>
+properties(field) ::= <<
+<if(field)><field; separator=","><endif>
 >>
 
 refresh(view) ::= <<
@@ -48,7 +49,7 @@ range(start, end, step) ::= "range(<start>, <end>, <step>)"
 
 assign(stat,var,value) ::= <<
 <stats(stat)>
-<if(value)><var> = <value><endif>
+<if(value)>var_<var> = <value><endif>
 >>
 
 init(value) ::= "<if(value)> = <value><endif>"
