@@ -147,9 +147,6 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
             view_title.add("title", id);
          } else {
             String field = longAssign.ID(0).getText();
-            if (field.equals("background")) {
-               field = "bg";
-            }
             view_properties.add("field", field + "=" + id);
          }
       }
