@@ -6,7 +6,7 @@ root.withdraw()
 root.title("C-Project Compiler")
 
 top = Toplevel(root)
-a = Canvas(top, bg="wheat", height=450, width=700)
+a = Canvas(top, background="wheat", height=450, width=700)
 a.pack()
 canvas = a
 

@@ -79,7 +79,7 @@ mouseTrigger
     ;    
 
 for_loop
-    : 'for' ID 'in' NUMBER_RANGE 'do' '{' stat* '}' 
+    : 'for' ID 'in' number_range 'do' '{' stat+ '}' 
     ;
 
 withStatement
@@ -90,6 +90,9 @@ typeID
     : type=(PRIMITIVE_TYPE | ID)
     ;
 
+number_range
+    : expression '..' expression ('..' expression)?
+    ;
 
 // blockStatement returns [String varName]
 //     : typeID ('at' expression)? 'with' '{' propertiesAssignment '}'

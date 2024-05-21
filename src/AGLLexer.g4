@@ -55,10 +55,7 @@ ID      : LETTER (LETTER | DIGIT)*;
 
 // Numbers        
 INT     : DIGIT+;
-FLOAT: DIGIT* [.] DIGIT+ ([eE][+-]?DIGIT+)? | DIGIT+ [.] DIGIT* ([eE][+-]?DIGIT+)?;
-
-// For loop
-NUMBER_RANGE : DIGIT+ '..' DIGIT+;
+FLOAT: DIGIT+ [.] DIGIT+ ([eE][+-]?DIGIT+)?;
 
 // Characters
 STRING  : '"' (ESC | .)*? '"';

@@ -1,0 +1,4 @@
+#!/bin/bash
+
+cat $* | antlr4-run > ../doc/t1.py
+python3 ../doc/t1.py
