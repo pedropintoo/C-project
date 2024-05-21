@@ -44,15 +44,11 @@ propertiesAssignment
     ;
 
 longAssignment
-    : ID ('.' attr=ID)? assignment
+    : ID ('.' ID)? assignment
     ;
 
 assignment returns [String varName]
     : '=' expression
-    ;
-
-point
-    : '(' x=expression ',' y=expression ')'
     ;
 
 expression returns [String varName]
@@ -68,10 +64,10 @@ expression returns [String varName]
     ;
 
 command
-    : 'refresh' ID ('after' number=(INT | FLOAT) 'ms')? ';'   #CommandRefresh
+    : 'refresh' ID ('after' expression suffix=('ms'|'s'))? ';'   #CommandRefresh
     | 'print' expression ';'                    #CommandPrint
     | 'close' ID ';'                            #CommandClose
-    | 'move' ID 'by' point ';'                  #CommandMove
+    | 'move' ID 'by' expression ';'             #CommandMove
     ;
 
 eventTrigger
@@ -83,7 +79,7 @@ mouseTrigger
     ;    
 
 for_loop
-    : 'for' ID 'in' NUMBER_RANGE 'do' '{' stat* '}' 
+    : 'for' ID 'in' number_range 'do' '{' stat+ '}' 
     ;
 
 withStatement
@@ -94,6 +90,9 @@ typeID
     : type=(PRIMITIVE_TYPE | ID)
     ;
 
+number_range
+    : expression '..' expression ('..' expression)?
+    ;
 
 // blockStatement returns [String varName]
 //     : typeID ('at' expression)? 'with' '{' propertiesAssignment '}'

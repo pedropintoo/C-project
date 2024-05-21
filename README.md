@@ -11,3 +11,9 @@ antlr4-test AGL program -gui ../doc/ex01.agl        [DONE]
 antlr4-test AGL program -gui ../doc/ex02.agl        [DONE]
 antlr4-test AGL program -gui ../doc/ex03.agl        [X]
 ```
+
+## Fast test: 
+Inside the `src` directory:
+```
+cat ../doc/ex00.agl | antlr4-run > ../doc/t1.py
+```

@@ -1,16 +1,18 @@
 
 
 view : View with {
-    width = 401;
-    height = 401;
-    title = "Illustrating the rectangle shape";
-    background = "wheat";
+    width = 601;
+    height = 601;
+    title = "Illustrating the minimum level graphical models";
+    background = "white";
 }
 
+for i in 1..10 do {
+    print "pedro ";
+    print i;
+}
 
-a : Number = 2 + 3;
+p : Point = wait mouse click; # instantiate a Point and waits for a mouse click
+print p;
 
-a = 5;
-
-#b : Number = a*(a+1 - a);
 
