@@ -1,8 +1,6 @@
 import java.io.IOException;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
-import org.stringtemplate.v4.*;
-
 
 public class AGLMain {
    public static void main(String[] args) {
@@ -23,9 +21,8 @@ public class AGLMain {
          if (parser.getNumberOfSyntaxErrors() == 0) {
             // print LISP-style tree:
             // System.out.println(tree.toStringTree(parser));
-            AGLCompiler compiler = new AGLCompiler();
-            ST result = compiler.visit(tree);
-            System.out.println(result.render());
+            AGLSemanticCheck visitor0 = new AGLSemanticCheck();
+            visitor0.visit(tree);
          }
       }
       catch(IOException e) {
