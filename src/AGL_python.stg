@@ -80,9 +80,10 @@ print(stat, output) ::= <<
 print(<output>)
 >>
 
-for(value, sequence, stat) ::= <<
-for <value> in <sequence>:
-    <stats(stat)>
+for(var, range, stat, instruction) ::= <<
+<stats(stat)>
+for <var> in <range>:
+    <stats(instruction)>
 >>
 
 range(start, end, step) ::= "range(<start>, <end>, <step>)"

@@ -314,8 +314,39 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
 
 //* for_loop   
    @Override public ST visitFor_loop(AGLParser.For_loopContext ctx) {
-         return null;
+      ST res = templates.getInstanceOf("for");  
+      
+      res.add("var", ctx.ID().getText());
+
+      AGLParser.Number_rangeContext number_range = ctx.number_range();
+
+      res.add("stat", visit(number_range.expression(0)).render()); // render the return value!
+      String var1 = number_range.expression(0).varName;
+
+      res.add("stat", visit(number_range.expression(1)).render()); // render the return value!
+      String var2 = number_range.expression(1).varName;
+      
+      String step = "1";
+      if (number_range.expression(2) != null) {
+         res.add("stat", visit(number_range.expression(2)).render()); // render the return value!
+         step = number_range.expression(2).varName;
       }
+
+
+      ST range = templates.getInstanceOf("range");
+      range.add("start", var1);
+      range.add("end", var2);
+      range.add("step", step);
+
+      res.add("range", range.render());
+
+      for (AGLParser.StatContext stat : ctx.stat()){
+         ST statRes = visit(stat);
+         res.add("instruction", statRes).render(); // render the return value!
+      }
+
+      return res;
+   }
 
  
 //* withStatement   
