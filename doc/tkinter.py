@@ -48,6 +48,8 @@ if __name__ == "__main__":
     bg = 'alice blue'
     top.title("Illustrating the minimum level graphical models")
     canvas = Canvas(top, height=height, width=width, background=bg)
+    print(canvas.getvar('height'))
+
     canvas.pack()
 
     cellsize = 200.0

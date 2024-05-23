@@ -7,6 +7,22 @@ REFRESH_RATE = 0.1
 last_refresh = time.time()
 ##
 
+def coord(x, y):
+    return (width/2-Ox+x, height/2+Oy-y)
+
+def length(origin, x, y):
+    return (origin[0]+x, origin[1]-y)
+
+def rectangle(origin, length):
+    p0 = (origin[0]-length[0]/2,origin[1]-length[1]/2)
+    p1 = (origin[0]+length[0]/2,origin[1]-length[1]/2)
+    p2 = (origin[0]+length[0]/2,origin[1]+length[1]/2)
+    p3 = (origin[0]-length[0]/2,origin[1]+length[1]/2)
+    return p0,p1,p2,p3,p0
+
+def ellipse(origin, length):
+    return (origin[0]-length[0]/2,origin[1]-length[1]/2),(origin[0]+length[0]/2,origin[1]+length[1]/2)
+
 root = Tk()
 root.withdraw()
 root.title("C-Project Compiler")  
