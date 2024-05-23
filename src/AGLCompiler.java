@@ -4,6 +4,7 @@
 
 import org.stringtemplate.v4.*;
 
+
 import org.antlr.v4.runtime.ParserRuleContext;
 
 @SuppressWarnings("CheckReturnValue")
@@ -125,39 +126,60 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
    
 //* blockStatement
    @Override public ST visitBlockStatement(AGLParser.BlockStatementContext ctx) {
-      ST res = templates.getInstanceOf("canvas");
+      ST res = null;
+      String id = "";
+
+      switch (ctx.typeID().getText()) {
+         case "View":
+            res = templates.getInstanceOf("canvas"); // canvas(stat, var, view_properties)
+
+            ST view_properties = templates.getInstanceOf("view_properties"); // view_properties(Ox, Oy, height, width, title)
+            for (AGLParser.LongAssignmentContext longAssign: ctx.propertiesAssignment().longAssignment()) {
+               ST assign = templates.getInstanceOf("assign");
+               assign.add("stat", visit(longAssign.assignment()).render()); // render the return value!
+               
+               id = newVarName();
       
-      // TODO: generalize this ( for now, we only have View )
-      // Reuse the propertiesAssignment to generalize this!!
+               assign.add("var", id);
+               assign.add("value", longAssign.assignment().varName);
+               
+               res.add("stat", assign.render()); // render the return value!
 
-      ST view_title = templates.getInstanceOf("view_title");
-      ST view_properties = templates.getInstanceOf("view_properties");
-      for (AGLParser.LongAssignmentContext longAssign: ctx.propertiesAssignment().longAssignment()) {
-         ST assign = templates.getInstanceOf("assign");
-         assign.add("stat", visit(longAssign.assignment()).render()); // render the return value!
+               view_properties.add(longAssign.ID(0).getText(), id);
+            }
+      
+            id = newVarName();
+            ctx.varName = id;
+      
+            res.add("var", id);
+            res.add("view_properties", view_properties.render());
+            break;
          
-         String id = newVarName();
+         case "Line":
+            res = templates.getInstanceOf("line"); // line(stat, var, line_properties)
+            
+            // origin of the line
+            res.add("stat", visit(ctx.expression()).render()); // render the return value!
+            res.add("origin", ctx.expression().varName);
 
-         assign.add("var", id);
-         assign.add("value", longAssign.assignment().varName);
-         
-         res.add("stat", assign.render()); // render the return value!
+            for (AGLParser.LongAssignmentContext longAssign: ctx.propertiesAssignment().longAssignment()) {
+               ST assign = templates.getInstanceOf("assign");
+               assign.add("stat", visit(longAssign.assignment()).render()); // render the return value!
+               
+               id = newVarName();
+      
+               assign.add("var", id);
+               assign.add("value", longAssign.assignment().varName);
+               
+               res.add("stat", assign.render()); // render the return value!
 
-         if (longAssign.ID(0).getText().equals("title")) {
-            view_title.add("title", id);
-         } else {
-            String field = longAssign.ID(0).getText();
-            view_properties.add("field", field + "=" + id);
-         }
+               res.add(longAssign.ID(0).getText(), id);
+            }
+
+         default:
+            break;
       }
-
-      String id = newVarName();
-      ctx.varName = id;
-
-      res.add("var", id);
-      res.add("view_title", view_title.render());
-      res.add("view_properties", view_properties.render());
-
+      
       return res;
 
    }

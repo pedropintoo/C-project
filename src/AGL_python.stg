@@ -2,12 +2,18 @@ module(stat) ::= <<
 from tkinter import *
 import time, os, sys
 
-## Auxiliar vars
+#################################################################
+## Auxiliar
+#################################################################
 REFRESH_RATE = 0.1
 last_refresh = time.time()
-##
-
-def coord(x, y):
+canvas_global = None
+mouseX = None
+mouseY = None
+#################################################################
+def coord(point):
+    x = point[0]
+    y = point[1]
     return (width/2-Ox+x, height/2+Oy-y)
 
 def length(origin, x, y):
@@ -23,50 +29,43 @@ def rectangle(origin, length):
 def ellipse(origin, length):
     return (origin[0]-length[0]/2,origin[1]-length[1]/2),(origin[0]+length[0]/2,origin[1]+length[1]/2)
 
-root = Tk()
-root.withdraw()
-root.title("C-Project Compiler")  
-
-<stats(stat)>
->>
-
-stats(stat) ::= <<
-<if(stat)><stat; separator="\n"><endif>
->>
-
-canvas(stat, var, view_title, view_properties) ::= <<
-<stats(stat)>
-
-<view_title>
-top = Toplevel(root)
-<var> = Canvas(top, <view_properties>)
-<var>.pack()
-
-# binding onClick and getMouse
-mouseX = None
-mouseY = None
 def onClick(event):
     global mouseX, mouseY
     mouseX, mouseY = event.x, event.y
 
 def getMouse():
     global mouseX, mouseY
-    <var>.update()
+    top.update()
     mouseX = None; mouseY = None
     while mouseX == None:
-        time.sleep(REFRESH_RATE)
-        <var>.update() 
+        time.sleep(.1)
+        top.update()
 
-top.bind("\<Button-1\>", onClick)
+def waitClick():
+    top.bind("\<Button-1\>", onClick)
+    getMouse()
+    return mouseX-width/2+Ox, height/2+Oy-mouseY
+#################################################################
 
+
+if __name__ == "__main__":
+    root = Tk()
+    root.withdraw()
+
+    # default View values
+    top = Toplevel(root)
+    Ox = 0
+    Oy = 0
+    width = 201
+    height = 201
+    top.title("No title") 
+    background = "black"
+
+    <stats(stat)>
 >>
 
-view_title(title) ::= <<
-root.title(<title>)
->>
-
-view_properties(field) ::= <<
-<properties(field)>
+stats(stat) ::= <<
+<if(stat)><stat; separator="\n"><endif>
 >>
 
 properties(field) ::= <<
@@ -74,17 +73,10 @@ properties(field) ::= <<
 >>
 
 waitMouseClick(var) ::= <<
-
-getMouse()
-<var> = (mouseX, mouseY)
->>
-
-refresh(view) ::= <<
-<view>.pack()
+<var> = waitClick()
 >>
 
 refresh(stat, view, delay) ::= <<
-
 <if(delay)> 
 <stats(stat)>
 while (time.time() - last_refresh \<= <delay>):
@@ -92,11 +84,10 @@ while (time.time() - last_refresh \<= <delay>):
 
 <endif>
 last_refresh = time.time()
-<view>.update()
+top.update() # TODO: Update only the view!
 >>
 
 print(stat, output) ::= <<
-
 <stats(stat)>
 print(<output>)
 >>
@@ -108,7 +99,6 @@ for <var> in <range>:
 >>
 
 range(start, end, step) ::= "range(<start>, <end>, <step>)"
-
 
 assign(stat,var,value,attribute) ::= <<
 <stats(stat)>
@@ -126,4 +116,33 @@ binaryExpression(stat,var,e1,op,e2) ::= <<
 unaryExpression(stat,var,op,e1) ::= <<
 <stats(stat)>
 <decl(var,[op," ",e1])>
+>>
+
+
+
+canvas(stat, var, view_properties) ::= <<
+<stats(stat)>
+
+<view_properties>
+
+<var> = Canvas(top, height=height, width=width, background=background)
+<var>.pack()
+canvas_global = <var>
+>>
+
+view_properties(Ox, Oy, height, width, title, background) ::= <<
+<if(Ox)>Ox=<Ox><endif>
+<if(Oy)>Oy=<Oy><endif>
+<if(height)>height=<height><endif>
+<if(width)>width=<width><endif>
+<if(title)>top.title(<title>)<endif>
+<if(background)>background=<background><endif>
+>>
+
+line(stat, var, origin, length, fill) ::= <<
+<stats(stat)>
+
+origin = coord(<origin>)
+length = <length>
+canvas_global.create_line(rectangle(origin, length), fill=<fill>)
 >>
