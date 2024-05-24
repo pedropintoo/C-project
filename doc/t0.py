@@ -1,5 +1,6 @@
 from tkinter import *
 import time, os, sys
+from tkinter import *
 
 root = Tk()
 root.withdraw()
@@ -9,6 +10,9 @@ top = Toplevel(root)
 a = Canvas(top, background="wheat", height=450, width=700)
 a.pack()
 canvas = a
+
+b = Canvas(top, background="wheat", height=450, width=700)
+b.pack()
 
 def drawPolyline():
     # A Tk line accepts 2 or more pairs of coordinates.

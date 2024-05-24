@@ -1,10 +1,15 @@
-
-
 view : View with {
     width = 601;
     height = 601;
     title = "Illustrating the minimum level graphical models";
-    background = "white";
+    background = "alice blue";
+}
+
+cellSize : Number = 200;
+
+Line at (-cellSize,cellSize) with {
+    length = (50,50);
+    fill = "red";
 }
 
 for i in 1..10 do {
