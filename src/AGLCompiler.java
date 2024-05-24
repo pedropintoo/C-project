@@ -4,6 +4,7 @@
 
 import org.stringtemplate.v4.*;
 
+
 import org.antlr.v4.runtime.ParserRuleContext;
 
 @SuppressWarnings("CheckReturnValue")
@@ -125,39 +126,66 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
    
 //* blockStatement
    @Override public ST visitBlockStatement(AGLParser.BlockStatementContext ctx) {
-      ST res = templates.getInstanceOf("canvas");
-      
-      // TODO: generalize this ( for now, we only have View )
-      // Reuse the propertiesAssignment to generalize this!!
+      ST res = null;
 
-      ST view_title = templates.getInstanceOf("view_title");
-      ST view_properties = templates.getInstanceOf("view_properties");
+      switch (ctx.typeID().getText()) {
+         case "View":
+            res = templates.getInstanceOf("canvas"); // canvas(stat, var, view_properties)
+            break;
+         case "Line":
+            res = templates.getInstanceOf("line"); // line(stat, var, origin, length, fill)
+            break;
+         case "Rectangle":
+            res = templates.getInstanceOf("rectangle"); // rectangle(stat, var, origin, length, fill)
+            break;
+         case "Ellipse":
+            res = templates.getInstanceOf("ellipse"); // ellipse(stat, var, origin, length, fill)
+            break;
+         case "Arc":  
+            res = templates.getInstanceOf("arc"); // arc(stat, var, origin, length, start, extent, outline)
+            break; 
+         case "ArcChord":
+            res = templates.getInstanceOf("arc_chord"); // arc_chord(stat, var, origin, length, start, extent, fill)
+            break;
+         case "PieSlice":
+            res = templates.getInstanceOf("pie_slice"); // pie_slice(stat, var, origin, length, start, extent, fill)
+            break;
+         case "Text":
+            res = templates.getInstanceOf("text"); // text(stat, var, origin, text, fill)
+            break;
+         case "Dot":
+            res = templates.getInstanceOf("dot"); // dot(stat, var, origin, fill)
+            break;
+      }
+
+      // (at expression)?
+      if (ctx.expression() != null) {
+         // define the origin
+         res.add("stat", visit(ctx.expression()).render()); // render the return value!
+         res.add("origin", ctx.expression().varName);
+      }
+
+      ST properties = templates.getInstanceOf("properties");
       for (AGLParser.LongAssignmentContext longAssign: ctx.propertiesAssignment().longAssignment()) {
+         //////////////////////////////////////////////////////////////
+         // assign the properties
          ST assign = templates.getInstanceOf("assign");
          assign.add("stat", visit(longAssign.assignment()).render()); // render the return value!
-         
          String id = newVarName();
-
          assign.add("var", id);
          assign.add("value", longAssign.assignment().varName);
+         //////////////////////////////////////////////////////////////
          
          res.add("stat", assign.render()); // render the return value!
-
-         if (longAssign.ID(0).getText().equals("title")) {
-            view_title.add("title", id);
-         } else {
-            String field = longAssign.ID(0).getText();
-            view_properties.add("field", field + "=" + id);
-         }
+         properties.add("field", longAssign.ID(0).getText() + " = " + id);
       }
+      res.add("properties", properties.render()); // render the return value!
 
       String id = newVarName();
       ctx.varName = id;
 
       res.add("var", id);
-      res.add("view_title", view_title.render());
-      res.add("view_properties", view_properties.render());
-
+      
       return res;
 
    }
@@ -169,10 +197,10 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
       res.add("stat", visit(ctx.assignment()).render()); // render the return value!
       
       // TODO: how to handle this?
-      //if (ctx.ID(1) != null) {
-         // res.add("attribute", ctx.ID(1).getText());
+      if (ctx.ID(1) != null) {
+         res.add("attribute", ctx.ID(1).getText());
          
-      //}
+      }
 
       res.add("var", ctx.ID(0));
       res.add("value", ctx.assignment().varName); // render the return value!
@@ -305,7 +333,13 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
    }
 
    @Override public ST visitCommandMove(AGLParser.CommandMoveContext ctx) {
-      return null; // TODO: TO_BE_IMPLEMENTED
+      ST res = templates.getInstanceOf("move");
+
+      res.add("var", ctx.ID().getText());
+      res.add("stat", visit(ctx.expression()).render()); // render the return value!
+      res.add("destination", ctx.expression().varName);
+
+      return res;
    }
 
 
@@ -348,7 +382,27 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
  
 //* withStatement   
    @Override public ST visitWithStatement(AGLParser.WithStatementContext ctx) {
-      return null; // TODO: TO_BE_IMPLEMENTED
+      ST res = templates.getInstanceOf("with");
+      
+      ST properties = templates.getInstanceOf("properties");
+      for (AGLParser.LongAssignmentContext longAssign: ctx.propertiesAssignment().longAssignment()) {
+         //////////////////////////////////////////////////////////////
+         // assign the properties
+         ST assign = templates.getInstanceOf("assign");
+         assign.add("stat", visit(longAssign.assignment()).render()); // render the return value!
+         String id = newVarName();
+         assign.add("var", id);
+         assign.add("value", longAssign.assignment().varName);
+         //////////////////////////////////////////////////////////////
+         
+         res.add("stat", assign.render()); // render the return value!
+         properties.add("field", longAssign.ID(0).getText() + " = " + id);
+      }
+
+      res.add("var", ctx.ID().getText());
+      res.add("properties", properties.render()); // render the return value!
+
+      return res;
    }      
 
 }

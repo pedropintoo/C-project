@@ -1,74 +1,40 @@
 module(stat) ::= <<
 from tkinter import *
+from AGLClasses import *
 import time, os, sys
 
-## Auxiliar vars
+#################################################################
+## Auxiliar
+#################################################################
 REFRESH_RATE = 0.1
 last_refresh = time.time()
-##
+last_view = None
+mouseX = None
+mouseY = None
+#################################################################
 
-root = Tk()
-root.withdraw()
-root.title("C-Project Compiler")  
+if __name__ == "__main__":
+    root = Tk()
+    root.withdraw()
 
-<stats(stat)>
+    top = Toplevel(root)
+
+    <stats(stat)>
 >>
 
 stats(stat) ::= <<
 <if(stat)><stat; separator="\n"><endif>
 >>
 
-canvas(stat, var, view_title, view_properties) ::= <<
-<stats(stat)>
-
-<view_title>
-top = Toplevel(root)
-<var> = Canvas(top, <view_properties>)
-<var>.pack()
-
-# binding onClick and getMouse
-mouseX = None
-mouseY = None
-def onClick(event):
-    global mouseX, mouseY
-    mouseX, mouseY = event.x, event.y
-
-def getMouse():
-    global mouseX, mouseY
-    <var>.update()
-    mouseX = None; mouseY = None
-    while mouseX == None:
-        time.sleep(REFRESH_RATE)
-        <var>.update() 
-
-top.bind("\<Button-1\>", onClick)
-
->>
-
-view_title(title) ::= <<
-root.title(<title>)
->>
-
-view_properties(field) ::= <<
-<properties(field)>
->>
-
 properties(field) ::= <<
-<if(field)><field; separator=","><endif>
+<if(field)><field; separator=",\n"><endif>
 >>
 
 waitMouseClick(var) ::= <<
-
-getMouse()
-<var> = (mouseX, mouseY)
->>
-
-refresh(view) ::= <<
-<view>.pack()
+<var> = last_view.waitClick()
 >>
 
 refresh(stat, view, delay) ::= <<
-
 <if(delay)> 
 <stats(stat)>
 while (time.time() - last_refresh \<= <delay>):
@@ -80,12 +46,11 @@ last_refresh = time.time()
 >>
 
 print(stat, output) ::= <<
-
 <stats(stat)>
 print(<output>)
 >>
 
-for(var, range, stat, instruction) ::= <<
+for(stat, var, range, instruction) ::= <<
 <stats(stat)>
 for <var> in <range>:
     <stats(instruction)>
@@ -93,10 +58,23 @@ for <var> in <range>:
 
 range(start, end, step) ::= "range(<start>, <end>, <step>)"
 
+with(stat, var, properties) ::= <<
+<stats(stat)>
+<var>.change(<properties>)
+>>
+
+move(stat, var, destination) ::= <<
+<stats(stat)>
+<var>.move(<destination>)
+>>
+
+close(view) ::= <<
+<view>.close()
+>>
 
 assign(stat,var,value,attribute) ::= <<
 <stats(stat)>
-<if(value)><var><if(attribute)>.<attribute><endif> = <value><endif>
+<if(value)><var><if(attribute)>.change(<attribute> = <value>)<else> = <value><endif><endif>
 >>
 
 init(value) ::= "<if(value)> = <value><endif>"
@@ -110,4 +88,102 @@ binaryExpression(stat,var,e1,op,e2) ::= <<
 unaryExpression(stat,var,op,e1) ::= <<
 <stats(stat)>
 <decl(var,[op," ",e1])>
+>>
+
+canvas(stat, var, properties) ::= <<
+<stats(stat)>
+
+<var> = View(
+    top=top,
+    <properties>
+    )
+last_view = <var>
+>>
+
+line(stat, var, origin, properties) ::= <<
+<stats(stat)>
+
+<var> = Line(
+    view=last_view,
+    <if(origin)>origin=<origin>,<endif>
+    <properties>
+    )
+last_view.add_object(<var>)
+>>
+
+rectangle(stat, var, origin, properties) ::= <<
+<stats(stat)>
+
+<var> = Rectangle(
+    view=last_view,
+    <if(origin)>origin=<origin>,<endif>
+    <properties>
+    )
+last_view.add_object(<var>)    
+>>
+
+ellipse(stat, var, origin, properties) ::= <<
+<stats(stat)>
+
+<var> = Ellipse(
+    view=last_view,
+    <if(origin)>origin=<origin>,<endif>
+    <properties>
+    )
+last_view.add_object(<var>)    
+>>
+
+arc(stat, var, origin, properties) ::= <<
+<stats(stat)>
+
+<var> = Arc(
+    view=last_view,
+    <if(origin)>origin=<origin>,<endif>
+    <properties>
+    )
+last_view.add_object(<var>) 
+>>
+
+arc_chord(stat, var, origin, properties) ::= <<
+<stats(stat)>
+
+<var> = ArcChord(
+    view=last_view,
+    <if(origin)>origin=<origin>,<endif>
+    <properties>
+    )
+last_view.add_object(<var>) 
+>>
+
+pie_slice(stat, var, origin, properties) ::= <<
+<stats(stat)>
+
+<var> = PieSlice(
+    view=last_view,
+    <if(origin)>origin=<origin>,<endif>
+    <properties>
+    )
+last_view.add_object(<var>) 
+>>
+
+text(stat, var, origin, properties) ::= <<
+<stats(stat)>
+
+<var> = Text(
+    view=last_view,
+    <if(origin)>origin=<origin>,<endif>
+    <properties>
+    )
+last_view.add_object(<var>) 
+>>
+
+dot(stat, var, origin, properties) ::= <<
+<stats(stat)>
+
+<var> = Dot(
+    view=last_view,
+    <if(origin)>origin=<origin>,<endif>
+    <properties>
+    )
+last_view.add_object(<var>) 
 >>
