@@ -40,77 +40,74 @@ if __name__ == "__main__":
         )
     last_view = v12
     view = v12
-    v14 = 10
+    v14 = 0
     v15 = 0
     v13 = (v14 , v15)
-    v17 = 200
-    v18 = 60
-    v16 = (v17 , v18)
-    v19 = v16
-    v20 = v19
-    v21 = "blue"
-    v22 = v21
+    v16 = v13
+    v17 = v16
+    p = v17
+    v18 = p
+    v20 = 100
+    v21 = 100
+    v19 = (v20 , v21)
+    v22 = v19
     v23 = v22
+    v24 = "pink"
+    v25 = v24
+    v26 = v25
 
-    v24 = Rectangle(
+    v27 = Rectangle(
         view=last_view
-        ,origin=v13
-        ,length=v20
-        ,fill=v23
+        ,origin=v18
+        ,length=v23
+        ,fill=v26
         )
-    last_view.add_object(v24)    
-    v26 = 0
-    v27 = 0
-    v25 = (v26 , v27)
-    v29 = 50
+    last_view.add_object(v27)    
+    v28 = p
     v30 = 50
-    v28 = (v29 , v30)
-    v31 = v28
-    v32 = v31
-    v33 = "pink"
-    v34 = v33
+    v31 = 50
+    v29 = (v30 , v31)
+    v32 = v29
+    v33 = v32
+    v34 = "wheat"
     v35 = v34
-    v36 = 30
-    v37 = v36
-    v38 = v37
-    v39 = 300
-    v40 = v39
-    v41 = v40
+    v36 = v35
 
-    v42 = PieSlice(
+    v37 = Rectangle(
         view=last_view
-        ,origin=v25
-        ,length=v32
-        ,start=v38
-        ,extent=v41
-        ,fill=v35
+        ,origin=v28
+        ,length=v33
+        ,fill=v36
         )
-    last_view.add_object(v42) 
-    pacman = v42
+    last_view.add_object(v37)    
+    r = v37
     last_refresh = time.time()
     view.update()
-    v43 = 1
-    v44 = 10
-    for i in range(v43, v44, 1):
+    v38 = 1
+    v39 = 10
+    for i in range(v38, v39, 1):
+        v40 = "hidden"
+        v41 = v40
+        r.change(state = v41)
          
-        v45 = 20
+        v42 = 100
+        while (time.time() - last_refresh <= v42/1000):
+            time.sleep(REFRESH_RATE)   
+
+        last_refresh = time.time()
+        view.update()
+        v43 = "normal"
+        v44 = v43
+        r.change(state = v44)
+         
+        v45 = 100
         while (time.time() - last_refresh <= v45/1000):
             time.sleep(REFRESH_RATE)   
 
         last_refresh = time.time()
         view.update()
-         
-        v46 = 25
-        while (time.time() - last_refresh <= v46/1000):
-            time.sleep(REFRESH_RATE)   
-
-        last_refresh = time.time()
-        view.update()
-        last_refresh = time.time()
-        view.update()
-    v47 = "Press any mouse button to quit"
-    print(v47)
-    v48 = last_view.waitClick()
-    v49 = v48
-    v50 = v49
-    pos = v50
+    v46 = "Press any mouse button to quit"
+    print(v46)
+    v47 = last_view.waitClick()
+    v48 = v47
+    p = v48

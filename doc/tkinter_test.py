@@ -2,9 +2,8 @@ from tkinter import *
 import time
 
 def coord(point):
-    return coord(point[0],point[1])
-
-def coord(x, y):
+    x = point[0]
+    y = point[1]
     return (width/2-Ox+x, height/2+Oy-y)
 
 def length(origin, x, y):
@@ -52,7 +51,6 @@ if __name__ == "__main__":
 
     top.title("Illustrating the minimum level graphical models")
     canvas = Canvas(top, height=height, width=width, background=bg)
-    print(canvas.getvar('height'))
 
     canvas.pack()
 
@@ -86,7 +84,7 @@ if __name__ == "__main__":
     origin6 = coord((-cellsize,-cellsize))
     len6 = (50,50)
     color6 = 'blue'
-    canvas.create_arc(ellipse(origin6,len6),extent=300,start=30,style=PIESLICE,fill=color6)
+    pie = canvas.create_arc(ellipse(origin6,len6),extent=300,start=30,style=PIESLICE,fill=color6)
 
     origin7 = coord((0,-cellsize))
     text = 'Bla bla ...'
@@ -97,6 +95,9 @@ if __name__ == "__main__":
     color8 = 'black'
     canvas.create_rectangle(origin8,origin8, fill=color8)
     
+    print(ellipse(origin6,len6))
+    print(canvas.itemconfig(pie))
+
     top.update()
 
     output = 'Press any mouse button to quit'

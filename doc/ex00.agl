@@ -7,101 +7,25 @@ view : View with {
 
 cellSize : Number = 200;
 
-Line at (-cellSize,cellSize) with {
+
+line : Line at (-cellSize,cellSize) with {
     length = (50,50);
     fill = "red";
 }
 
-refresh view after 0.5s;
-
-Rectangle at (0,cellSize) with {
-    length = (50,50);
-    fill = "orange";
-}
-
-refresh view after 0.5s;
-
-Ellipse at (cellSize,cellSize) with {
-    length = (60,40);
-    fill = "blue";
-}
-
-refresh view after 0.5s;
-
-Arc at (-cellSize,0) with {
-    length = (50,50);
-    start = 30;
-    extent = 100;
-    outline = "tomato";
-}
-
-refresh view after 0.5s;
-
-ArcChord at (cellSize,0) with {
-    length = (50,50);
-    start = 30;
-    extent = 150;
-    fill = "cyan";
-}
-
-refresh view after 0.5s;
-
-PieSlice at (-cellSize,-cellSize) with {
-    length = (50,50);
-    start = 30;
-    extent = 300;
-    fill = "blue";
-}
-
-refresh view after 0.5s;
-
-Text at (0, -cellSize) with {
-    text = "Bla bla ...";
-    fill = "purple";
-}
-
-refresh view after 0.5s;
-
-Dot at (cellSize, -cellSize) with {
-    fill = "black";
-}
-
-refresh view after 0.5s;
-
-view : View with {
-    width = 401;
-    height = 401;
-    title = "Illustrating the rectangle shape";
-    background = "wheat";
-}
-
-refresh view after 0.5s;
-
-#
-# create an instance of a rectangle
-#
-Rectangle at (10,0) with {
-    length = (200,60);
-    fill = "blue";
-}
-
-refresh view after 0.5s;
-
-#
-# create an instance of a pie slice, storing its reference
-#
-PieSlice at (0,0) with {
-    length = (50,50);
-    fill = "pink";
-    start = 30;
-    extent = 300;
-}
-
-refresh view after 0.5s;
+refresh view;
 
 for i in 1..10 do {
     print "pedro ";
     print i;
+    line.fill = "black";
+
+    refresh view after 1 s;
+
+    line.fill = "red";
+
+    refresh view after 1 s;
+
 }
 
 p : Point = wait mouse click; # instantiate a Point and waits for a mouse click

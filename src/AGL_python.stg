@@ -64,7 +64,7 @@ close(view) ::= <<
 
 assign(stat,var,value,attribute) ::= <<
 <stats(stat)>
-<if(value)><var><if(attribute)>.<attribute><endif> = <value><endif>
+<if(value)><var><if(attribute)>.change(<attribute> = <value>)<else> = <value><endif><endif>
 >>
 
 init(value) ::= "<if(value)> = <value><endif>"
@@ -104,7 +104,7 @@ line(stat, var, origin, length, fill) ::= <<
     <if(length)>,length=<length><endif>
     <if(fill)>,fill=<fill><endif>
     )
-last_view.add_object(<var>)    
+last_view.add_object(<var>)
 >>
 
 rectangle(stat, var, origin, length, fill) ::= <<

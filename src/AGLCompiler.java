@@ -195,10 +195,10 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
       res.add("stat", visit(ctx.assignment()).render()); // render the return value!
       
       // TODO: how to handle this?
-      //if (ctx.ID(1) != null) {
-         // res.add("attribute", ctx.ID(1).getText());
+      if (ctx.ID(1) != null) {
+         res.add("attribute", ctx.ID(1).getText());
          
-      //}
+      }
 
       res.add("var", ctx.ID(0));
       res.add("value", ctx.assignment().varName); // render the return value!
