@@ -26,7 +26,15 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    public Boolean visitStatInstantiation(AGLParser.StatInstantiationContext ctx) {
       Boolean res = true;
       System.out.println("visitStatInstantiation");
-      return visitChildren(ctx);
+      // return visitChildren(ctx);
+
+      res = visit(ctx.instantiation());
+      if (res == false) {
+         // HandlingError.printError(ctx, "Error: invalid instantiation");
+         System.out.println("Error: invalid instantiation");
+      }
+
+      return res;
    }
 
    // @Override
