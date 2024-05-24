@@ -167,25 +167,8 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    // return visitChildren(ctx);
    // // return res;
    // }
-
-   // @Override
-   // public Boolean visitExprWait(AGLParser.ExprWaitContext ctx) {
-   // Boolean res = null;
-   // return visitChildren(ctx);
-   // // return res;
-   // }
-
-   @Override
-   public Boolean visitExprString(AGLParser.ExprStringContext ctx) {
-      ctx.eType = stringType;
-      return true;
-   }
-
-   @Override
-   public Boolean visitExprPoint(AGLParser.ExprPointContext ctx) {
-      ctx.eType = pointType;
-      return true;
-   }
+   
+   // ------ Visit Expression ------
 
    @Override
    public Boolean visitExprUnary(AGLParser.ExprUnaryContext ctx) {
@@ -193,12 +176,6 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       if (res)
          ctx.eType = ctx.e.eType;
       return res;
-   }
-
-   @Override
-   public Boolean visitExprNumber(AGLParser.ExprNumberContext ctx) {
-      ctx.eType = numberType;
-      return true;
    }
 
    @Override
@@ -210,19 +187,95 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    }
 
    // @Override
-   // public Boolean visitExprID(AGLParser.ExprIDContext ctx) {
-   // Boolean res = null;
-   // return visitChildren(ctx);
-   // // return res;
-   // }
+   public Boolean visitExprAddSubMultDiv(AGLParser.ExprAddSubMultDivContext ctx)
+   {
+      Boolean res = visit(ctx.e1) && checkNumericType(ctx, ctx.e1.eType) &&
+                    visit(ctx.e2) && checkNumericType(ctx, ctx.e2.eType);
+      if (res)
+      {
+         ctx.eType = fetchType(ctx.e1.eType, ctx.e2.eType);
+         if (integerOperator(ctx.op.getText()) && !"integer".equals(ctx.eType.name()))
+         {
+            // ErrorHandling.printError(ctx, "The integer operator "+ctx.op.getText()+" requires integer operands!");
+            System.out.println("The integer operator "+ctx.op.getText()+" requires integer operands!");
+            res = false;
+         }
+      }
+      return res;
+   }
 
-   // @Override
-   // public Boolean visitExprAddSubMultDiv(AGLParser.ExprAddSubMultDivContext ctx)
-   // {
-   // Boolean res = null;
-   // return visitChildren(ctx);
-   // // return res;
-   // }
+   @Override
+   public Boolean visitExprPoint(AGLParser.ExprPointContext ctx) {
+      Boolean res = visit(ctx.x) && checkNumericType(ctx, ctx.x.eType) &&
+                  visit(ctx.y) && checkNumericType(ctx, ctx.y.eType);
+      if (res) {
+         ctx.eType = new PointType();  // Definindo o tipo da expressão como Point
+      } else {
+         // ErrorHandling.printError(ctx, "Point creation requires numeric operands!");
+         System.out.println("Point creation requires numeric operands!");
+      }
+      return res;
+   }
+
+   @Override
+   public Boolean visitExprNumber(AGLParser.ExprNumberContext ctx) {
+      if (ctx.INT() != null) {
+         ctx.eType = integerType;
+      } else if (ctx.FLOAT() != null) {
+         ctx.eType = numberType;
+      } else {
+         // Caso inesperado, pode ser necessário tratar isso adequadamente
+         System.out.println("Unexpected number type");
+         return false;
+      }
+      return true;
+   }
+
+   @Override
+   public Boolean visitExprString(AGLParser.ExprStringContext ctx) {
+      ctx.eType = stringType;
+      return true;
+   }
+
+   @Override
+   public Boolean visitExprID(AGLParser.ExprIDContext ctx) {
+      Boolean res = true;
+      String id = ctx.ID().getText();
+      if (!AGLParser.symbolTable.containsKey(id))
+      {
+         // ErrorHandling.printError(ctx, "Variable \""+id+"\" does not exists!");
+         System.out.println("Variable \""+id+"\" does not exists!");
+         res = false;
+      }
+      else
+      {
+         Symbol sym = AGLParser.symbolTable.get(id);
+         if (!sym.valueDefined())
+         {
+            // ErrorHandling.printError(ctx, "Variable \""+id+"\" not defined!");
+            System.out.println("Variable \""+id+"\" not defined!");
+            res = false;
+         }
+         else
+            ctx.eType = sym.type();
+      }
+      return res;
+   }
+
+
+   @Override
+   public Boolean visitExprWait(AGLParser.ExprWaitContext ctx) {
+      Boolean res = visit(ctx.eventTrigger());
+      if (res) {
+         ctx.eType = stringType; // TODO: ????
+      }
+      return res;
+      
+   }
+
+   
+   // --------- End Visit Expression ---------
+   
 
    // @Override
    // public Boolean visitCommandRefresh(AGLParser.CommandRefreshContext ctx) {
@@ -287,6 +340,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    //    // return res;
    // }
 
+   // -- Correct --
    private Boolean checkNumericType(ParserRuleContext ctx, Type t)
    {
       Boolean res = true;
@@ -297,5 +351,27 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
          res = false;
       }
       return res;
+   }
+
+   private Type fetchType(Type t1, Type t2)
+   {
+      Type res = null;
+      if (t1.isNumeric() && t2.isNumeric())
+      {
+         if ("real".equals(t1.name()))
+            res = t1;
+         else if ("real".equals(t2.name()))
+            res = t2;
+         else
+            res = t1;
+      }
+      else if ("boolean".equals(t1.name()) && "boolean".equals(t2.name()))
+         res = t1;
+      return res;
+   }
+
+   private boolean integerOperator(String op)
+   {
+      return "//".equals(op) || "\\\\".equals(op);
    }
 }

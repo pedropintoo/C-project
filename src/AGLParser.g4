@@ -52,15 +52,15 @@ assignment returns [String varName]
     ;
 
 expression returns [Type eType, String varName]:
-      sign=('+'|'-') e=expression                 #ExprUnary
-    | '(' e=expression ')'                        #ExprParenthesis
-    | expression op=('*' | '/') expression      #ExprAddSubMultDiv
-    | expression op=('+' | '-') expression      #ExprAddSubMultDiv
-    | '(' x=expression ',' y=expression ')'     #ExprPoint
-    | number=(INT | FLOAT)                      #ExprNumber                  
-    | STRING                                    #ExprString                              
-    | ID                                        #ExprID
-    | 'wait' eventTrigger                       #ExprWait
+      sign=('+'|'-') e=expression                     #ExprUnary
+    | '(' e=expression ')'                            #ExprParenthesis
+    | e1=expression op=('*' | '/') e2=expression      #ExprAddSubMultDiv
+    | e1=expression op=('+' | '-') e2=expression      #ExprAddSubMultDiv
+    | '(' x=expression ',' y=expression ')'           #ExprPoint
+    | number=(INT | FLOAT)                            #ExprNumber                  
+    | STRING                                          #ExprString                              
+    | ID                                              #ExprID
+    | 'wait' eventTrigger                             #ExprWait
     ;
 
 command

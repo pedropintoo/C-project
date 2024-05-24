@@ -962,7 +962,9 @@ public class AGLParser extends Parser {
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class ExprAddSubMultDivContext extends ExpressionContext {
+		public ExpressionContext e1;
 		public Token op;
+		public ExpressionContext e2;
 		public List<ExpressionContext> expression() {
 			return getRuleContexts(ExpressionContext.class);
 		}
@@ -1122,6 +1124,7 @@ public class AGLParser extends Parser {
 					case 1:
 						{
 						_localctx = new ExprAddSubMultDivContext(new ExpressionContext(_parentctx, _parentState));
+						((ExprAddSubMultDivContext)_localctx).e1 = _prevctx;
 						pushNewRecursionContext(_localctx, _startState, RULE_expression);
 						setState(111);
 						if (!(precpred(_ctx, 7))) throw new FailedPredicateException(this, "precpred(_ctx, 7)");
@@ -1137,12 +1140,13 @@ public class AGLParser extends Parser {
 							consume();
 						}
 						setState(113);
-						expression(8);
+						((ExprAddSubMultDivContext)_localctx).e2 = expression(8);
 						}
 						break;
 					case 2:
 						{
 						_localctx = new ExprAddSubMultDivContext(new ExpressionContext(_parentctx, _parentState));
+						((ExprAddSubMultDivContext)_localctx).e1 = _prevctx;
 						pushNewRecursionContext(_localctx, _startState, RULE_expression);
 						setState(114);
 						if (!(precpred(_ctx, 6))) throw new FailedPredicateException(this, "precpred(_ctx, 6)");
@@ -1158,7 +1162,7 @@ public class AGLParser extends Parser {
 							consume();
 						}
 						setState(116);
-						expression(7);
+						((ExprAddSubMultDivContext)_localctx).e2 = expression(7);
 						}
 						break;
 					}
