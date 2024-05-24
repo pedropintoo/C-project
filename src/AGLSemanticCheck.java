@@ -1,3 +1,5 @@
+import org.antlr.v4.runtime.ParserRuleContext;
+
 @SuppressWarnings("CheckReturnValue")
 public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
@@ -185,12 +187,13 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       return true;
    }
 
-   // @Override
-   // public Boolean visitExprUnary(AGLParser.ExprUnaryContext ctx) {
-   //    Boolean res = null;
-   //    return visitChildren(ctx);
-   //    // return res;
-   // }
+   @Override
+   public Boolean visitExprUnary(AGLParser.ExprUnaryContext ctx) {
+      Boolean res = visit(ctx.e) && checkNumericType(ctx, ctx.e.eType);
+      if (res)
+         ctx.eType = ctx.e.eType;
+      return res;
+   }
 
    @Override
    public Boolean visitExprNumber(AGLParser.ExprNumberContext ctx) {
@@ -283,4 +286,16 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    //    return visitChildren(ctx);
    //    // return res;
    // }
+
+   private Boolean checkNumericType(ParserRuleContext ctx, Type t)
+   {
+      Boolean res = true;
+      if (!t.isNumeric())
+      {
+         // ErrorHandling.printError(ctx, "Numeric operator applied to a non-numeric operand!");
+         System.out.println("Numeric operator applied to a non-numeric operand!");
+         res = false;
+      }
+      return res;
+   }
 }
