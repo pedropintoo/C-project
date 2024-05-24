@@ -17,12 +17,20 @@ DOT     : '.';
 
 
 // Types
-PRIMITIVE_TYPE: INTEGER | NUMBER | STRING_ | POINT | VECTOR;
 INTEGER : 'Integer';    
 NUMBER  : 'Number';
 STRING_  : 'String';
 POINT   : 'Point';
 VECTOR  : 'Vector';
+VIEW    : 'View';
+LINE    : 'Line';
+RECTANGLE : 'Rectangle';
+ELLIPSE : 'Ellipse';
+ARC     : 'Arc';
+ARCCHORD : 'ArcChord';
+PIESLICE : 'PieSlice';
+TEXT    : 'Text';
+DOTTYPE     : 'Dot';
 
 
 // Keywords

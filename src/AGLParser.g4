@@ -86,9 +86,28 @@ withStatement
     : 'with' ID 'do' '{' propertiesAssignment '}' 
     ;
 
-typeID
-    : type=(PRIMITIVE_TYPE | ID)
+typeID returns[Type res]:
+    'Integer'       {$res = new IntegerType();}
+    | 'String'      {$res = new StringType();}
+    | 'Point'       {$res = new PointType();}
+    | 'Number'      {$res = new NumberType();}
+    | 'Vector'      {$res = new VectorType();}
+    | 'View'        {$res = new ObjectType("View");}
+    | 'Line'        {$res = new ObjectType("Line");} 
+    | 'Rectangle'   {$res = new ObjectType("Rectangle");}
+    | 'Ellipse'     {$res = new ObjectType("Ellipse");}
+    | 'Arc'         {$res = new ObjectType("Arc");}
+    | 'ArcChord'    {$res = new ObjectType("ArcChord");}
+    | 'PieSlice'    {$res = new ObjectType("PieSlice");}
+    | 'Text'        {$res = new ObjectType("Text");}
+    | 'Dot'         {$res = new ObjectType("Dot");}
+
     ;
+// : type=(PRIMITIVE_TYPE | ID)
+// ;
+
+// private static final List<Type> types = List.of(new StringType(), new PointType(), new NumberType(),
+    //         new VectorType(), new IntegerType());
 
 
 // blockStatement returns [String varName]
