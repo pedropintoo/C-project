@@ -333,7 +333,13 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
    }
 
    @Override public ST visitCommandMove(AGLParser.CommandMoveContext ctx) {
-      return null; // TODO: TO_BE_IMPLEMENTED
+      ST res = templates.getInstanceOf("move");
+
+      res.add("var", ctx.ID().getText());
+      res.add("stat", visit(ctx.expression()).render()); // render the return value!
+      res.add("destination", ctx.expression().varName);
+
+      return res;
    }
 
 
@@ -377,7 +383,26 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
 //* withStatement   
    @Override public ST visitWithStatement(AGLParser.WithStatementContext ctx) {
       ST res = templates.getInstanceOf("with");
-      return null; // TODO: TO_BE_IMPLEMENTED
+      
+      ST properties = templates.getInstanceOf("properties");
+      for (AGLParser.LongAssignmentContext longAssign: ctx.propertiesAssignment().longAssignment()) {
+         //////////////////////////////////////////////////////////////
+         // assign the properties
+         ST assign = templates.getInstanceOf("assign");
+         assign.add("stat", visit(longAssign.assignment()).render()); // render the return value!
+         String id = newVarName();
+         assign.add("var", id);
+         assign.add("value", longAssign.assignment().varName);
+         //////////////////////////////////////////////////////////////
+         
+         res.add("stat", assign.render()); // render the return value!
+         properties.add("field", longAssign.ID(0).getText() + " = " + id);
+      }
+
+      res.add("var", ctx.ID().getText());
+      res.add("properties", properties.render()); // render the return value!
+
+      return res;
    }      
 
 }

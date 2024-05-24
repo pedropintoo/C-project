@@ -59,7 +59,13 @@ for <var> in <range>:
 range(start, end, step) ::= "range(<start>, <end>, <step>)"
 
 with(stat, var, properties) ::= <<
-<var>.change(properties)
+<stats(stat)>
+<var>.change(<properties>)
+>>
+
+move(stat, var, destination) ::= <<
+<stats(stat)>
+<var>.move(<destination>)
 >>
 
 close(view) ::= <<
