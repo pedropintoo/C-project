@@ -133,6 +133,19 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
       // if (ctx.assignment() != null) {
       // if (!ctx.assignment().expression().eType.conformsTo(typeObject)) {
+      // ErrorHandling.printError(ctx, "Expression type does not conform to
+      // variable \""+id+"\" type!");
+      // System.out.println("Expression type does not conform to variable type!");
+      // res = false;
+      // } else {
+      // System.out.println("ola");
+      // }
+      // }
+
+      System.out.println("ola" + ctx.assignment().getText());
+
+      // if (ctx.assignment() != null) {
+      // if (!ctx.assignment().expression().eType.conformsTo(typeObject)) {
       // // ErrorHandling.printError(ctx, "Expression type does not conform to
       // variable \""+id+"\" type!");
       // System.out.println("Expression type does not conform to variable type!");
@@ -153,7 +166,14 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       String ID = ctx.typeID().getText();
       System.out.println("visitBlockStatement: " + ID);
 
-      // Quais são os tipos possíveis de statement?
+      // Quais são os tipos possíveis de statement? Fazer aqui condições para
+      // verificar se o tipo é válido
+
+      if (ID == null) {
+         // HandlingError.printError(ctx, "Error: invalid block statement");
+         System.out.println("Error: invalid block statement");
+         return false;
+      }
 
       return res;
    }
