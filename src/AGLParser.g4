@@ -133,6 +133,11 @@ modelStat returns [Boolean isAction]
     | longAssignment ';'                        #ModelStatLongAssignment
     | action                                    #ModelStatAction
     ;
+// : type=(PRIMITIVE_TYPE | ID)
+// ;
+
+// private static final List<Type> types = List.of(new StringType(), new PointType(), new NumberType(),
+    //         new VectorType(), new IntegerType());
 
 modelInstantiation
     : ID '::' 'Model' '{' (modelStat)+ '}'

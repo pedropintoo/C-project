@@ -74,10 +74,10 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    public Boolean visitInstantiation(AGLParser.InstantiationContext ctx) {
       Boolean res = true;
       String ID = ctx.ID().getText();
-
+      
       if (ctx.simpleStatement() != null) {
-         // Add the variable to the symbol table AgLParser.symbolTable static protected Map<String, Type> symbolTable = new HashMap<>();
-         AGLParser.symbolTable.put(ID, new VariableSymbol(ID, Type.getType(ctx.simpleStatement().typeID().getText()) ));
+         // Add the variable to the symbol table AgLParser.symbolTable static protected Map<String, Symbol> symbolTable = new HashMap<>();
+         AGLParser.symbolTable.put(ID, new VariableSymbol(ID, ctx.simpleStatement().typeID().res)); // Type.getType(ctx.simpleStatement().typeID().getText())
 
    
          res = visit(ctx.simpleStatement());
@@ -127,7 +127,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
          // Call Type.java method getType(String name) to check if String is a valid type
          // and return the corresponding Type object
-         Type typeObject = Type.getType(type);
+         Type typeObject = ctx.typeID().res;
 
          if (typeObject == null) {
             System.out.println("Error: invalid type");
@@ -294,24 +294,24 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    // // return res;
    // }
 
-   @Override
-   public Boolean visitFor_loop(AGLParser.For_loopContext ctx) {
-      Boolean res = null;
-      return visitChildren(ctx);
-      // return res;
-   }
+   // @Override
+   // public Boolean visitFor_loop(AGLParser.For_loopContext ctx) {
+   //    Boolean res = null;
+   //    return visitChildren(ctx);
+   //    // return res;
+   // }
 
-   @Override
-   public Boolean visitWithStatement(AGLParser.WithStatementContext ctx) {
-      Boolean res = null;
-      return visitChildren(ctx);
-      // return res;
-   }
+   // @Override
+   // public Boolean visitWithStatement(AGLParser.WithStatementContext ctx) {
+   //    Boolean res = null;
+   //    return visitChildren(ctx);
+   //    // return res;
+   // }
 
-   @Override
-   public Boolean visitTypeID(AGLParser.TypeIDContext ctx) {
-      Boolean res = null;
-      return visitChildren(ctx);
-      // return res;
-   }
+   // @Override
+   // public Boolean visitTypeID(AGLParser.TypeIDContext ctx) {
+   //    Boolean res = null;
+   //    return visitChildren(ctx);
+   //    // return res;
+   // }
 }
