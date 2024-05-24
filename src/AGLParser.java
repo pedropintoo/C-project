@@ -878,6 +878,7 @@ public class AGLParser extends Parser {
 	@SuppressWarnings("CheckReturnValue")
 	public static class ExprUnaryContext extends ExpressionContext {
 		public Token sign;
+		public ExpressionContext e;
 		public ExpressionContext expression() {
 			return getRuleContext(ExpressionContext.class,0);
 		}
@@ -1025,7 +1026,7 @@ public class AGLParser extends Parser {
 					consume();
 				}
 				setState(93);
-				expression(9);
+				((ExprUnaryContext)_localctx).e = expression(9);
 				}
 				break;
 			case 2:
