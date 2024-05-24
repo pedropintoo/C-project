@@ -1,1 +1,4 @@
-cellSize : Integer = +200;
+Rectangle at (0,cellSize) with {
+    length = (50,50);
+    fill = "orange";
+}
