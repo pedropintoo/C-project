@@ -50,13 +50,17 @@ print(stat, output) ::= <<
 print(<output>)
 >>
 
-for(var, range, stat, instruction) ::= <<
+for(stat, var, range, instruction) ::= <<
 <stats(stat)>
 for <var> in <range>:
     <stats(instruction)>
 >>
 
 range(start, end, step) ::= "range(<start>, <end>, <step>)"
+
+with(stat, var, properties) ::= <<
+<var>.change(properties)
+>>
 
 close(view) ::= <<
 <view>.close()

@@ -376,6 +376,7 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
  
 //* withStatement   
    @Override public ST visitWithStatement(AGLParser.WithStatementContext ctx) {
+      ST res = templates.getInstanceOf("with");
       return null; // TODO: TO_BE_IMPLEMENTED
    }      
 
