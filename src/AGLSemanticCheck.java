@@ -226,6 +226,24 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       return res;
    }
 
+   /////////////////////////////// não deveria haver uma expressão de vetor??????
+
+   // @Override
+   // public Boolean visitExprVector(AGLParser.ExprVectorContext ctx) {
+   // Boolean res = visit(ctx.x) && checkNumericType(ctx, ctx.x.eType) &&
+   // visit(ctx.y) && checkNumericType(ctx, ctx.y.eType);
+   // if (res) {
+   // ctx.eType = new VectorType(); // Definindo o tipo da expressão como Vector
+   // } else {
+   // // ErrorHandling.printError(ctx, "Vector creation requires numeric
+   // operands!");
+   // System.out.println("Vector creation requires numeric operands!");
+   // }
+   // return res;
+   // }
+
+   ///////////////////////////////
+
    @Override
    public Boolean visitExprNumber(AGLParser.ExprNumberContext ctx) {
       if (ctx.INT() != null) {
