@@ -26,7 +26,6 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    public Boolean visitStatInstantiation(AGLParser.StatInstantiationContext ctx) {
       Boolean res = true;
       System.out.println("visitStatInstantiation");
-      // return visitChildren(ctx);
 
       res = visit(ctx.instantiation());
       if (res == false) {
@@ -37,14 +36,19 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       return res;
    }
 
-   // @Override
-   // public Boolean visitStatBlockStatement(AGLParser.StatBlockStatementContext
-   // ctx) {
-   // Boolean res = true;
-   // System.out.println("visitStatBlockStatement");
-   // return visitChildren(ctx);
-   // // return res;
-   // }
+   @Override
+   public Boolean visitStatBlockStatement(AGLParser.StatBlockStatementContext ctx) {
+      Boolean res = true;
+      System.out.println("visitStatBlockStatement");
+
+      res = visit(ctx.blockStatement());
+      if (res == false) {
+         // HandlingError.printError(ctx, "Error: invalid block statement");
+         System.out.println("Error: invalid block statement");
+      }
+
+      return res;
+   }
 
    // @Override
    // public Boolean visitStatLongAssignment(AGLParser.StatLongAssignmentContext
@@ -141,12 +145,18 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       return res;
    }
 
-   // @Override
-   // public Boolean visitBlockStatement(AGLParser.BlockStatementContext ctx) {
-   // Boolean res = null;
-   // return visitChildren(ctx);
-   // // return res;
-   // }
+   @Override
+   public Boolean visitBlockStatement(AGLParser.BlockStatementContext ctx) {
+      Boolean res = true;
+      System.out.println("visitBlockStatement");
+
+      String ID = ctx.typeID().getText();
+      System.out.println("visitBlockStatement: " + ID);
+
+      // Quais são os tipos possíveis de statement?
+
+      return res;
+   }
 
    // @Override
    // public Boolean
