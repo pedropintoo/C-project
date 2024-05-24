@@ -165,6 +165,7 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
          res.add("origin", ctx.expression().varName);
       }
 
+      ST properties = templates.getInstanceOf("properties");
       for (AGLParser.LongAssignmentContext longAssign: ctx.propertiesAssignment().longAssignment()) {
          //////////////////////////////////////////////////////////////
          // assign the properties
@@ -176,8 +177,9 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
          //////////////////////////////////////////////////////////////
          
          res.add("stat", assign.render()); // render the return value!
-         res.add(longAssign.ID(0).getText(), id);
+         properties.add("field", longAssign.ID(0).getText() + " = " + id);
       }
+      res.add("properties", properties.render()); // render the return value!
 
       String id = newVarName();
       ctx.varName = id;

@@ -59,7 +59,7 @@ if __name__ == "__main__":
     origin = coord((-cellsize,cellsize))
     len = length(origin,50,50)
     color = 'red'
-    canvas.create_line(origin, len, fill=color)
+    canvas.create_line(origin, len, fill=color,)
 
     origin2 = coord((0,cellsize))
     len2 = (50,50)
@@ -93,7 +93,7 @@ if __name__ == "__main__":
 
     origin8 = coord((cellsize,-cellsize))
     color8 = 'black'
-    canvas.create_rectangle(origin8,origin8, fill=color8)
+    canvas.create_rectangle(origin8,origin8, fill=color8, state=HIDDEN)
     
     print(ellipse(origin6,len6))
     print(canvas.itemconfig(pie))

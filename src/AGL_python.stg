@@ -27,7 +27,7 @@ stats(stat) ::= <<
 >>
 
 properties(field) ::= <<
-<if(field)><field; separator=","><endif>
+<if(field)><field; separator=",\n"><endif>
 >>
 
 waitMouseClick(var) ::= <<
@@ -80,118 +80,100 @@ unaryExpression(stat,var,op,e1) ::= <<
 <decl(var,[op," ",e1])>
 >>
 
-canvas(stat, var, Ox, Oy, height, width, title, background) ::= <<
+canvas(stat, var, properties) ::= <<
 <stats(stat)>
 
 <var> = View(
-    top=top
-    <if(Ox)>,Ox=<Ox><endif>
-    <if(Oy)>,Oy=<Oy><endif>
-    <if(height)>,height=<height><endif>
-    <if(width)>,width=<width><endif>
-    <if(title)>,title=<title><endif>
-    <if(background)>,background=<background><endif>
+    top=top,
+    <properties>
     )
 last_view = <var>
 >>
 
-line(stat, var, origin, length, fill) ::= <<
+line(stat, var, origin, properties) ::= <<
 <stats(stat)>
 
 <var> = Line(
-    view=last_view
-    <if(origin)>,origin=<origin><endif>
-    <if(length)>,length=<length><endif>
-    <if(fill)>,fill=<fill><endif>
+    view=last_view,
+    <if(origin)>origin=<origin>,<endif>
+    <properties>
     )
 last_view.add_object(<var>)
 >>
 
-rectangle(stat, var, origin, length, fill) ::= <<
+rectangle(stat, var, origin, properties) ::= <<
 <stats(stat)>
 
 <var> = Rectangle(
-    view=last_view
-    <if(origin)>,origin=<origin><endif>
-    <if(length)>,length=<length><endif>
-    <if(fill)>,fill=<fill><endif>
+    view=last_view,
+    <if(origin)>origin=<origin>,<endif>
+    <properties>
     )
 last_view.add_object(<var>)    
 >>
 
-ellipse(stat, var, origin, length, fill) ::= <<
+ellipse(stat, var, origin, properties) ::= <<
 <stats(stat)>
 
 <var> = Ellipse(
-    view=last_view
-    <if(origin)>,origin=<origin><endif>
-    <if(length)>,length=<length><endif>
-    <if(fill)>,fill=<fill><endif>
+    view=last_view,
+    <if(origin)>origin=<origin>,<endif>
+    <properties>
     )
 last_view.add_object(<var>)    
 >>
 
-arc(stat, var, origin, length, start, extent, outline) ::= <<
+arc(stat, var, origin, properties) ::= <<
 <stats(stat)>
 
 <var> = Arc(
-    view=last_view
-    <if(origin)>,origin=<origin><endif>
-    <if(length)>,length=<length><endif>
-    <if(start)>,start=<start><endif>
-    <if(extent)>,extent=<extent><endif>
-    <if(outline)>,outline=<outline><endif>
+    view=last_view,
+    <if(origin)>origin=<origin>,<endif>
+    <properties>
     )
 last_view.add_object(<var>) 
 >>
 
-arc_chord(stat, var, origin, length, start, extent, fill) ::= <<
+arc_chord(stat, var, origin, properties) ::= <<
 <stats(stat)>
 
 <var> = ArcChord(
-    view=last_view
-    <if(origin)>,origin=<origin><endif>
-    <if(length)>,length=<length><endif>
-    <if(start)>,start=<start><endif>
-    <if(extent)>,extent=<extent><endif>
-    <if(fill)>,fill=<fill><endif>
+    view=last_view,
+    <if(origin)>origin=<origin>,<endif>
+    <properties>
     )
 last_view.add_object(<var>) 
 >>
 
-pie_slice(stat, var, origin, length, start, extent, fill) ::= <<
+pie_slice(stat, var, origin, properties) ::= <<
 <stats(stat)>
 
 <var> = PieSlice(
-    view=last_view
-    <if(origin)>,origin=<origin><endif>
-    <if(length)>,length=<length><endif>
-    <if(start)>,start=<start><endif>
-    <if(extent)>,extent=<extent><endif>
-    <if(fill)>,fill=<fill><endif>
+    view=last_view,
+    <if(origin)>origin=<origin>,<endif>
+    <properties>
     )
 last_view.add_object(<var>) 
 >>
 
-text(stat, var, origin, text, fill) ::= <<
+text(stat, var, origin, properties) ::= <<
 <stats(stat)>
 
 <var> = Text(
-    view=last_view
-    <if(origin)>,origin=<origin><endif>
-    <if(text)>,text=<text><endif>
-    <if(fill)>,fill=<fill><endif>
+    view=last_view,
+    <if(origin)>origin=<origin>,<endif>
+    <properties>
     )
 last_view.add_object(<var>) 
 >>
 
-dot(stat, var, origin, fill) ::= <<
+dot(stat, var, origin, properties) ::= <<
 <stats(stat)>
 
 <var> = Dot(
-    view=last_view
-    <if(origin)>,origin=<origin><endif>
-    <if(fill)>,fill=<fill><endif>
+    view=last_view,
+    <if(origin)>origin=<origin>,<endif>
+    <properties>
     )
 last_view.add_object(<var>) 
 >>
