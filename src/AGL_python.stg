@@ -16,8 +16,8 @@ def coord(point):
     y = point[1]
     return (width/2-Ox+x, height/2+Oy-y)
 
-def length(origin, x, y):
-    return (origin[0]+x, origin[1]-y)
+def length(origin, point):
+    return (origin[0]+point[0], origin[1]-point[1])
 
 def rectangle(origin, length):
     p0 = (origin[0]-length[0]/2,origin[1]-length[1]/2)
@@ -120,29 +120,84 @@ unaryExpression(stat,var,op,e1) ::= <<
 
 
 
-canvas(stat, var, view_properties) ::= <<
+
+
+canvas(stat, var, Ox, Oy, height, width, title, background) ::= <<
 <stats(stat)>
 
-<view_properties>
-
-<var> = Canvas(top, height=height, width=width, background=background)
-<var>.pack()
-canvas_global = <var>
->>
-
-view_properties(Ox, Oy, height, width, title, background) ::= <<
 <if(Ox)>Ox=<Ox><endif>
 <if(Oy)>Oy=<Oy><endif>
 <if(height)>height=<height><endif>
 <if(width)>width=<width><endif>
 <if(title)>top.title(<title>)<endif>
 <if(background)>background=<background><endif>
+
+<var> = Canvas(top, height=height, width=width, background=background)
+<var>.pack()
+canvas_global = <var>
 >>
 
 line(stat, var, origin, length, fill) ::= <<
 <stats(stat)>
 
 origin = coord(<origin>)
-length = <length>
-canvas_global.create_line(rectangle(origin, length), fill=<fill>)
+line_length = length(origin, <length>)
+canvas_global.create_line(origin, line_length, fill=<fill>)
+# TODO: assign to a var
+>>
+
+rectangle(stat, var, origin, length, fill) ::= <<
+<stats(stat)>
+
+origin = coord(<origin>)
+canvas_global.create_line(rectangle(origin, <length>), fill=<fill>)
+# TODO: assign to a var
+>>
+
+ellipse(stat, var, origin, length, fill) ::= <<
+<stats(stat)>
+
+origin = coord(<origin>)
+canvas_global.create_oval(ellipse(origin, <length>), fill=<fill>)
+# TODO: assign to a var
+>>
+
+arc(stat, var, origin, length, start, extent, outline) ::= <<
+<stats(stat)>
+
+origin = coord(<origin>)
+canvas_global.create_arc(ellipse(origin,<length>),style=ARC,start=<start>,extent=<extent>,outline=<outline>)
+# TODO: assign to a var
+>>
+
+arc_chord(stat, var, origin, length, start, extent, fill) ::= <<
+<stats(stat)>
+
+origin = coord(<origin>)
+canvas_global.create_arc(ellipse(origin,<length>),style=CHORD,start=<start>,extent=<extent>,fill=<fill>)
+# TODO: assign to a var
+>>
+
+pie_slice(stat, var, origin, length, start, extent, fill) ::= <<
+<stats(stat)>
+
+origin = coord(<origin>)
+canvas_global.create_arc(ellipse(origin,<length>),style=PIESLICE,start=<start>,extent=<extent>,fill=<fill>)
+# TODO: assign to a var
+>>
+
+text(stat, var, origin, text, fill) ::= <<
+<stats(stat)>
+
+origin = coord(<origin>)
+canvas_global.create_text(origin,text=<text>, fill=<fill>)
+# TODO: assign to a var
+>>
+
+dot(stat, var, origin, fill) ::= <<
+<stats(stat)>
+
+origin = coord(<origin>)
+canvas_global.create_rectangle(origin, origin, fill=<fill>)
+# TODO: assign to a var
 >>

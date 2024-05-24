@@ -127,58 +127,62 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
 //* blockStatement
    @Override public ST visitBlockStatement(AGLParser.BlockStatementContext ctx) {
       ST res = null;
-      String id = "";
 
       switch (ctx.typeID().getText()) {
          case "View":
             res = templates.getInstanceOf("canvas"); // canvas(stat, var, view_properties)
-
-            ST view_properties = templates.getInstanceOf("view_properties"); // view_properties(Ox, Oy, height, width, title)
-            for (AGLParser.LongAssignmentContext longAssign: ctx.propertiesAssignment().longAssignment()) {
-               ST assign = templates.getInstanceOf("assign");
-               assign.add("stat", visit(longAssign.assignment()).render()); // render the return value!
-               
-               id = newVarName();
-      
-               assign.add("var", id);
-               assign.add("value", longAssign.assignment().varName);
-               
-               res.add("stat", assign.render()); // render the return value!
-
-               view_properties.add(longAssign.ID(0).getText(), id);
-            }
-      
-            id = newVarName();
-            ctx.varName = id;
-      
-            res.add("var", id);
-            res.add("view_properties", view_properties.render());
             break;
-         
          case "Line":
-            res = templates.getInstanceOf("line"); // line(stat, var, line_properties)
-            
-            // origin of the line
-            res.add("stat", visit(ctx.expression()).render()); // render the return value!
-            res.add("origin", ctx.expression().varName);
-
-            for (AGLParser.LongAssignmentContext longAssign: ctx.propertiesAssignment().longAssignment()) {
-               ST assign = templates.getInstanceOf("assign");
-               assign.add("stat", visit(longAssign.assignment()).render()); // render the return value!
-               
-               id = newVarName();
-      
-               assign.add("var", id);
-               assign.add("value", longAssign.assignment().varName);
-               
-               res.add("stat", assign.render()); // render the return value!
-
-               res.add(longAssign.ID(0).getText(), id);
-            }
-
-         default:
+            res = templates.getInstanceOf("line"); // line(stat, var, origin, length, fill)
+            break;
+         case "Rectangle":
+            res = templates.getInstanceOf("rectangle"); // rectangle(stat, var, origin, length, fill)
+            break;
+         case "Ellipse":
+            res = templates.getInstanceOf("ellipse"); // ellipse(stat, var, origin, length, fill)
+            break;
+         case "Arc":  
+            res = templates.getInstanceOf("arc"); // arc(stat, var, origin, length, start, extent, outline)
+            break; 
+         case "ArcChord":
+            res = templates.getInstanceOf("arc_chord"); // arc_chord(stat, var, origin, length, start, extent, fill)
+            break;
+         case "PieSlice":
+            res = templates.getInstanceOf("pie_slice"); // pie_slice(stat, var, origin, length, start, extent, fill)
+            break;
+         case "Text":
+            res = templates.getInstanceOf("text"); // text(stat, var, origin, text, fill)
+            break;
+         case "Dot":
+            res = templates.getInstanceOf("dot"); // dot(stat, var, origin, fill)
             break;
       }
+
+      // (at expression)?
+      if (ctx.expression() != null) {
+         // define the origin
+         res.add("stat", visit(ctx.expression()).render()); // render the return value!
+         res.add("origin", ctx.expression().varName);
+      }
+
+      for (AGLParser.LongAssignmentContext longAssign: ctx.propertiesAssignment().longAssignment()) {
+         //////////////////////////////////////////////////////////////
+         // assign the properties
+         ST assign = templates.getInstanceOf("assign");
+         assign.add("stat", visit(longAssign.assignment()).render()); // render the return value!
+         String id = newVarName();
+         assign.add("var", id);
+         assign.add("value", longAssign.assignment().varName);
+         //////////////////////////////////////////////////////////////
+         
+         res.add("stat", assign.render()); // render the return value!
+         res.add(longAssign.ID(0).getText(), id);
+      }
+
+      String id = newVarName();
+      ctx.varName = id;
+
+      res.add("var", id);
       
       return res;
 
