@@ -9,7 +9,7 @@ Secondly, generate the syntax tree:
 ```
 antlr4-test AGL program -gui ../doc/ex01.agl        [DONE]
 antlr4-test AGL program -gui ../doc/ex02.agl        [DONE]
-antlr4-test AGL program -gui ../doc/ex03.agl        [X]
+antlr4-test AGL program -gui ../doc/ex03.agl        [DONE]
 ```
 
 ## Fast test: 

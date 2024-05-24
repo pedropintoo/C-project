@@ -21,7 +21,7 @@ stat: show
 
 show: 'show' expr;
 
-declaration: idList ':' type;
+declaration: idList ':' type;        
 
 assignment: expr '->' ID;
 
