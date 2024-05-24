@@ -1,5 +1,6 @@
 module(stat) ::= <<
 from tkinter import *
+from AGLClasses import *
 import time, os, sys
 
 #################################################################
@@ -7,59 +8,16 @@ import time, os, sys
 #################################################################
 REFRESH_RATE = 0.1
 last_refresh = time.time()
-canvas_global = None
+last_view = None
 mouseX = None
 mouseY = None
 #################################################################
-def coord(point):
-    x = point[0]
-    y = point[1]
-    return (width/2-Ox+x, height/2+Oy-y)
-
-def length(origin, point):
-    return (origin[0]+point[0], origin[1]-point[1])
-
-def rectangle(origin, length):
-    p0 = (origin[0]-length[0]/2,origin[1]-length[1]/2)
-    p1 = (origin[0]+length[0]/2,origin[1]-length[1]/2)
-    p2 = (origin[0]+length[0]/2,origin[1]+length[1]/2)
-    p3 = (origin[0]-length[0]/2,origin[1]+length[1]/2)
-    return p0,p1,p2,p3,p0
-
-def ellipse(origin, length):
-    return (origin[0]-length[0]/2,origin[1]-length[1]/2),(origin[0]+length[0]/2,origin[1]+length[1]/2)
-
-def onClick(event):
-    global mouseX, mouseY
-    mouseX, mouseY = event.x, event.y
-
-def getMouse():
-    global mouseX, mouseY
-    top.update()
-    mouseX = None; mouseY = None
-    while mouseX == None:
-        time.sleep(.1)
-        top.update()
-
-def waitClick():
-    top.bind("\<Button-1\>", onClick)
-    getMouse()
-    return mouseX-width/2+Ox, height/2+Oy-mouseY
-#################################################################
-
 
 if __name__ == "__main__":
     root = Tk()
     root.withdraw()
 
-    # default View values
     top = Toplevel(root)
-    Ox = 0
-    Oy = 0
-    width = 201
-    height = 201
-    top.title("No title") 
-    background = "black"
 
     <stats(stat)>
 >>
@@ -73,7 +31,7 @@ properties(field) ::= <<
 >>
 
 waitMouseClick(var) ::= <<
-<var> = waitClick()
+<var> = last_view.waitClick()
 >>
 
 refresh(stat, view, delay) ::= <<
@@ -84,7 +42,7 @@ while (time.time() - last_refresh \<= <delay>):
 
 <endif>
 last_refresh = time.time()
-top.update() # TODO: Update only the view!
+<view>.update()
 >>
 
 print(stat, output) ::= <<
@@ -118,47 +76,50 @@ unaryExpression(stat,var,op,e1) ::= <<
 <decl(var,[op," ",e1])>
 >>
 
-
-
-
-
 canvas(stat, var, Ox, Oy, height, width, title, background) ::= <<
 <stats(stat)>
 
-<if(Ox)>Ox=<Ox><endif>
-<if(Oy)>Oy=<Oy><endif>
-<if(height)>height=<height><endif>
-<if(width)>width=<width><endif>
-<if(title)>top.title(<title>)<endif>
-<if(background)>background=<background><endif>
-
-<var> = Canvas(top, height=height, width=width, background=background)
-<var>.pack()
-canvas_global = <var>
+<var> = View(
+    top=top
+    <if(Ox)>,Ox=<Ox><endif>
+    <if(Oy)>,Oy=<Oy><endif>
+    <if(height)>,height=<height><endif>
+    <if(width)>,width=<width><endif>
+    <if(title)>,title=<title><endif>
+    <if(background)>,background=<background><endif>
+    )
+last_view = <var>
 >>
 
 line(stat, var, origin, length, fill) ::= <<
 <stats(stat)>
 
-origin = coord(<origin>)
-line_length = length(origin, <length>)
-canvas_global.create_line(origin, line_length, fill=<fill>)
-# TODO: assign to a var
+<var> = Line(
+    view=last_view
+    <if(origin)>,origin=<origin><endif>
+    <if(length)>,length=<length><endif>
+    <if(fill)>,fill=<fill><endif>
+    )
+last_view.add_object(<var>)    
 >>
 
 rectangle(stat, var, origin, length, fill) ::= <<
 <stats(stat)>
 
-origin = coord(<origin>)
-canvas_global.create_line(rectangle(origin, <length>), fill=<fill>)
-# TODO: assign to a var
+<var> = Rectangle(
+    view=last_view
+    <if(origin)>,origin=<origin><endif>
+    <if(length)>,length=<length><endif>
+    <if(fill)>,fill=<fill><endif>
+    )
+last_view.add_object(<var>)    
 >>
 
 ellipse(stat, var, origin, length, fill) ::= <<
 <stats(stat)>
 
 origin = coord(<origin>)
-canvas_global.create_oval(ellipse(origin, <length>), fill=<fill>)
+last_view.create_oval(ellipse(origin, <length>), fill=<fill>)
 # TODO: assign to a var
 >>
 
@@ -166,7 +127,7 @@ arc(stat, var, origin, length, start, extent, outline) ::= <<
 <stats(stat)>
 
 origin = coord(<origin>)
-canvas_global.create_arc(ellipse(origin,<length>),style=ARC,start=<start>,extent=<extent>,outline=<outline>)
+last_view.create_arc(ellipse(origin,<length>),style=ARC,start=<start>,extent=<extent>,outline=<outline>)
 # TODO: assign to a var
 >>
 
@@ -174,7 +135,7 @@ arc_chord(stat, var, origin, length, start, extent, fill) ::= <<
 <stats(stat)>
 
 origin = coord(<origin>)
-canvas_global.create_arc(ellipse(origin,<length>),style=CHORD,start=<start>,extent=<extent>,fill=<fill>)
+last_view.create_arc(ellipse(origin,<length>),style=CHORD,start=<start>,extent=<extent>,fill=<fill>)
 # TODO: assign to a var
 >>
 
@@ -182,7 +143,7 @@ pie_slice(stat, var, origin, length, start, extent, fill) ::= <<
 <stats(stat)>
 
 origin = coord(<origin>)
-canvas_global.create_arc(ellipse(origin,<length>),style=PIESLICE,start=<start>,extent=<extent>,fill=<fill>)
+last_view.create_arc(ellipse(origin,<length>),style=PIESLICE,start=<start>,extent=<extent>,fill=<fill>)
 # TODO: assign to a var
 >>
 
@@ -190,7 +151,7 @@ text(stat, var, origin, text, fill) ::= <<
 <stats(stat)>
 
 origin = coord(<origin>)
-canvas_global.create_text(origin,text=<text>, fill=<fill>)
+last_view.create_text(origin,text=<text>, fill=<fill>)
 # TODO: assign to a var
 >>
 
@@ -198,6 +159,6 @@ dot(stat, var, origin, fill) ::= <<
 <stats(stat)>
 
 origin = coord(<origin>)
-canvas_global.create_rectangle(origin, origin, fill=<fill>)
+last_view.create_rectangle(origin, origin, fill=<fill>)
 # TODO: assign to a var
 >>
