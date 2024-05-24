@@ -8,7 +8,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    private final NumberType numberType = new NumberType();
    private final PointType pointType = new PointType();
    private final VectorType vectorType = new VectorType();
-
+   
    // @Override
    // public Boolean visitProgram(AGLParser.ProgramContext ctx) {
    // Boolean res = true;
