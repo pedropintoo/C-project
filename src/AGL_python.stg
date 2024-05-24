@@ -58,6 +58,10 @@ for <var> in <range>:
 
 range(start, end, step) ::= "range(<start>, <end>, <step>)"
 
+close(view) ::= <<
+<view>.close()
+>>
+
 assign(stat,var,value,attribute) ::= <<
 <stats(stat)>
 <if(value)><var><if(attribute)>.<attribute><endif> = <value><endif>
@@ -118,47 +122,76 @@ last_view.add_object(<var>)
 ellipse(stat, var, origin, length, fill) ::= <<
 <stats(stat)>
 
-origin = coord(<origin>)
-last_view.create_oval(ellipse(origin, <length>), fill=<fill>)
-# TODO: assign to a var
+<var> = Ellipse(
+    view=last_view
+    <if(origin)>,origin=<origin><endif>
+    <if(length)>,length=<length><endif>
+    <if(fill)>,fill=<fill><endif>
+    )
+last_view.add_object(<var>)    
 >>
 
 arc(stat, var, origin, length, start, extent, outline) ::= <<
 <stats(stat)>
 
-origin = coord(<origin>)
-last_view.create_arc(ellipse(origin,<length>),style=ARC,start=<start>,extent=<extent>,outline=<outline>)
-# TODO: assign to a var
+<var> = Arc(
+    view=last_view
+    <if(origin)>,origin=<origin><endif>
+    <if(length)>,length=<length><endif>
+    <if(start)>,start=<start><endif>
+    <if(extent)>,extent=<extent><endif>
+    <if(outline)>,outline=<outline><endif>
+    )
+last_view.add_object(<var>) 
 >>
 
 arc_chord(stat, var, origin, length, start, extent, fill) ::= <<
 <stats(stat)>
 
-origin = coord(<origin>)
-last_view.create_arc(ellipse(origin,<length>),style=CHORD,start=<start>,extent=<extent>,fill=<fill>)
-# TODO: assign to a var
+<var> = ArcChord(
+    view=last_view
+    <if(origin)>,origin=<origin><endif>
+    <if(length)>,length=<length><endif>
+    <if(start)>,start=<start><endif>
+    <if(extent)>,extent=<extent><endif>
+    <if(fill)>,fill=<fill><endif>
+    )
+last_view.add_object(<var>) 
 >>
 
 pie_slice(stat, var, origin, length, start, extent, fill) ::= <<
 <stats(stat)>
 
-origin = coord(<origin>)
-last_view.create_arc(ellipse(origin,<length>),style=PIESLICE,start=<start>,extent=<extent>,fill=<fill>)
-# TODO: assign to a var
+<var> = PieSlice(
+    view=last_view
+    <if(origin)>,origin=<origin><endif>
+    <if(length)>,length=<length><endif>
+    <if(start)>,start=<start><endif>
+    <if(extent)>,extent=<extent><endif>
+    <if(fill)>,fill=<fill><endif>
+    )
+last_view.add_object(<var>) 
 >>
 
 text(stat, var, origin, text, fill) ::= <<
 <stats(stat)>
 
-origin = coord(<origin>)
-last_view.create_text(origin,text=<text>, fill=<fill>)
-# TODO: assign to a var
+<var> = Text(
+    view=last_view
+    <if(origin)>,origin=<origin><endif>
+    <if(text)>,text=<text><endif>
+    <if(fill)>,fill=<fill><endif>
+    )
+last_view.add_object(<var>) 
 >>
 
 dot(stat, var, origin, fill) ::= <<
 <stats(stat)>
 
-origin = coord(<origin>)
-last_view.create_rectangle(origin, origin, fill=<fill>)
-# TODO: assign to a var
+<var> = Dot(
+    view=last_view
+    <if(origin)>,origin=<origin><endif>
+    <if(fill)>,fill=<fill><endif>
+    )
+last_view.add_object(<var>) 
 >>
