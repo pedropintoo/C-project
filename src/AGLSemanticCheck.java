@@ -75,87 +75,58 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       Boolean res = true;
       String ID = ctx.ID().getText();
       
-      if (ctx.simpleStatement() != null) {
-         // Add the variable to the symbol table AgLParser.symbolTable static protected Map<String, Symbol> symbolTable = new HashMap<>();
-         AGLParser.symbolTable.put(ID, new VariableSymbol(ID, ctx.simpleStatement().typeID().res)); // Type.getType(ctx.simpleStatement().typeID().getText())
-
-   
-         res = visit(ctx.simpleStatement());
-      } else if (ctx.blockStatement() != null) {
-         res = visit(ctx.blockStatement());
-      } else {
-         // HandlingError.printError(ctx, "Error: invalid instantiation");
-         System.out.println("Error: invalid instantiation");
+      if (AGLParser.symbolTable.containsKey(ID)) {
+         // HandlingError.printError(ctx, "Variable \"" + ID + "\" already declared!");
+         System.out.println("Variable \"" + ID + "\" already declared!");
          res = false;
+      } else {
+         if (ctx.simpleStatement() != null) {
+            res = visit(ctx.simpleStatement());
+            if (res == true) {
+               AGLParser.symbolTable.put(ID, new VariableSymbol(ID, ctx.simpleStatement().typeID().res));
+            } else {
+               // HandlingError.printError(ctx, "Error: invalid instantiation");
+               System.out.println("Error: invalid instantiation");
+            }
+            
+         } else if (ctx.blockStatement() != null) {
+            res = visit(ctx.blockStatement());
+         } else {
+            // HandlingError.printError(ctx, "Error: invalid instantiation");
+            System.out.println("Error: invalid instantiation");
+            res = false;
+         }   
       }
-
+      
       return res;
    }
 
 
-   // 
-
-   // public Boolean visitDeclaration(CalcParser.DeclarationContext ctx) {
-   //    Boolean res = true;
-   //    //visit(ctx.type());
-   //    for(TerminalNode t: ctx.idList().ID())
-   //    {
-   //       String id = t.getText();
-   //       //out.println(t.getText());
-
-   //       if (CalcParser.symbolTable.containsKey(id))
-   //       {
-   //          ErrorHandling.printError(ctx, "Variable \""+id+"\" already declared!");
-   //          res = false;
-   //       }
-   //       else
-   //          CalcParser.symbolTable.put(id, new VariableSymbol(id, ctx.type().res));
-   //    }
-   //    return res;
-
+   
    @Override
    public Boolean visitSimpleStatement(AGLParser.SimpleStatementContext ctx) {
-      Boolean res = true;
+      // simpleStatement: typeID (assignment)?;
+      Boolean res = visit(ctx.assignment().expression());
       String type = ctx.typeID().getText();
-      System.out.println("olá! " + type);
-
-      if (type == null) {
-         // HandlingError.printError(ctx, "Error: invalid type");
-         System.out.println("Error: invalid type");
-         res = false;
-      } else {
-
-         // Call Type.java method getType(String name) to check if String is a valid type
-         // and return the corresponding Type object
-         Type typeObject = ctx.typeID().res;
-
-         if (typeObject == null) {
-            System.out.println("Error: invalid type");
-            res = false;
-         } else {
-            // Check if the type is a valid type
-            if (typeObject instanceof StringType) {
-               System.out.println("String");
-            } else if (typeObject instanceof IntegerType) {
-               System.out.println("Integer");
-            } else if (typeObject instanceof NumberType) {
-               System.out.println("Number");
-            } else if (typeObject instanceof PointType) {
-               System.out.println("Point");
-            } else if (typeObject instanceof VectorType) {
-               System.out.println("Vector");
-            } else {
-               System.out.println("Error: invalid type");
-               res = false;
-            }
-         }
-
-         if (ctx.assignment() != null) {
-            res = visit(ctx.assignment());
-            System.out.println("visit assignment");
-         }
+      Type typeObject = ctx.typeID().res;
+      
+      if (res == false) {
+         // HandlingError.printError(ctx, "Error: invalid simple statement");
+         System.out.println("Error: invalid simple statement");
+         return false;
       }
 
+      // if (ctx.assignment() != null) {
+      //    if (!ctx.assignment().expression().eType.conformsTo(typeObject)) {
+      //       // ErrorHandling.printError(ctx, "Expression type does not conform to variable \""+id+"\" type!");
+      //       System.out.println("Expression type does not conform to variable type!");
+      //       res = false;
+      //    } else {
+      //       System.out.println("sym.setValueDefined()"); // TODO: ??
+      //    }
+      // }
+
+      
       return res;
    }
 
@@ -204,38 +175,36 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
    @Override
    public Boolean visitExprString(AGLParser.ExprStringContext ctx) {
-      Boolean res = null;
-      return visitChildren(ctx);
-      // return res;
+      ctx.eType = stringType;
+      return true;
+   }
+
+   @Override
+   public Boolean visitExprPoint(AGLParser.ExprPointContext ctx) {
+      ctx.eType = pointType;
+      return true;
    }
 
    // @Override
-   // public Boolean visitExprPoint(AGLParser.ExprPointContext ctx) {
-   // Boolean res = null;
-   // return visitChildren(ctx);
-   // // return res;
+   // public Boolean visitExprUnary(AGLParser.ExprUnaryContext ctx) {
+   //    Boolean res = null;
+   //    return visitChildren(ctx);
+   //    // return res;
    // }
-
-   @Override
-   public Boolean visitExprUnary(AGLParser.ExprUnaryContext ctx) {
-      Boolean res = null;
-      return visitChildren(ctx);
-      // return res;
-   }
 
    @Override
    public Boolean visitExprNumber(AGLParser.ExprNumberContext ctx) {
-      Boolean res = null;
-      return visitChildren(ctx);
-      // return res;
+      ctx.eType = numberType;
+      return true;
    }
 
-   // @Override
-   // public Boolean visitExprParenthesis(AGLParser.ExprParenthesisContext ctx) {
-   // Boolean res = null;
-   // return visitChildren(ctx);
-   // // return res;
-   // }
+   @Override
+   public Boolean visitExprParenthesis(AGLParser.ExprParenthesisContext ctx) {
+      Boolean res = visit(ctx.e);
+      if (res)
+         ctx.eType = ctx.e.eType;
+      return res;
+   }
 
    // @Override
    // public Boolean visitExprID(AGLParser.ExprIDContext ctx) {

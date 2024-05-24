@@ -51,9 +51,9 @@ assignment returns [String varName]
     : '=' expression
     ;
 
-expression returns [String varName]
+expression returns [Type eType, String varName]
     : sign=('+'|'-') expression                 #ExprUnary
-    | '(' expression ')'                        #ExprParenthesis
+    | '(' e=expression ')'                        #ExprParenthesis
     | expression op=('*' | '/') expression      #ExprAddSubMultDiv
     | expression op=('+' | '-') expression      #ExprAddSubMultDiv
     | '(' x=expression ',' y=expression ')'     #ExprPoint

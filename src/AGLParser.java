@@ -794,6 +794,7 @@ public class AGLParser extends Parser {
 
 	@SuppressWarnings("CheckReturnValue")
 	public static class ExpressionContext extends ParserRuleContext {
+		public Type eType;
 		public String varName;
 		public ExpressionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -803,6 +804,7 @@ public class AGLParser extends Parser {
 		public ExpressionContext() { }
 		public void copyFrom(ExpressionContext ctx) {
 			super.copyFrom(ctx);
+			this.eType = ctx.eType;
 			this.varName = ctx.varName;
 		}
 	}
@@ -918,11 +920,12 @@ public class AGLParser extends Parser {
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class ExprParenthesisContext extends ExpressionContext {
+		public ExpressionContext e;
 		public TerminalNode LPAREN() { return getToken(AGLParser.LPAREN, 0); }
+		public TerminalNode RPAREN() { return getToken(AGLParser.RPAREN, 0); }
 		public ExpressionContext expression() {
 			return getRuleContext(ExpressionContext.class,0);
 		}
-		public TerminalNode RPAREN() { return getToken(AGLParser.RPAREN, 0); }
 		public ExprParenthesisContext(ExpressionContext ctx) { copyFrom(ctx); }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
@@ -1033,7 +1036,7 @@ public class AGLParser extends Parser {
 				setState(94);
 				match(LPAREN);
 				setState(95);
-				expression(0);
+				((ExprParenthesisContext)_localctx).e = expression(0);
 				setState(96);
 				match(RPAREN);
 				}
