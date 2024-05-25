@@ -1,2 +1,7 @@
 cellSize : Integer = +200;
 cellSize : Number = 200;
+
+Line at (-cellSize,cellSize) with {
+    length = (50,50);
+    fill = "red";
+}
