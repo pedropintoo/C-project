@@ -128,7 +128,7 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
    @Override public ST visitBlockStatement(AGLParser.BlockStatementContext ctx) {
       ST res = null;
 
-      switch (ctx.typeID().getText()) {
+      /*switch (ctx.typeID().getText()) {
          case "View":
             res = templates.getInstanceOf("canvas"); // canvas(stat, var, view_properties)
             break;
@@ -156,8 +156,9 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
          case "Dot":
             res = templates.getInstanceOf("dot"); // dot(stat, var, origin, fill)
             break;
-      }
-
+      }*/
+      res = templates.getInstanceOf("model");
+      res.add("type", ctx.typeID().getText());
       // (at expression)?
       if (ctx.expression() != null) {
          // define the origin
@@ -165,26 +166,33 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
          res.add("origin", ctx.expression().varName);
       }
 
-      ST properties = templates.getInstanceOf("properties");
+      String id = newVarName();
+      ctx.varName = id;
+
+      res.add("var", id);
+
+      //ST properties = templates.getInstanceOf("properties");
+      
       for (AGLParser.LongAssignmentContext longAssign: ctx.propertiesAssignment().longAssignment()) {
+         ST properties2 = templates.getInstanceOf("properties2");
          //////////////////////////////////////////////////////////////
          // assign the properties
          ST assign = templates.getInstanceOf("assign");
          assign.add("stat", visit(longAssign.assignment()).render()); // render the return value!
-         String id = newVarName();
+         id = newVarName();
          assign.add("var", id);
          assign.add("value", longAssign.assignment().varName);
          //////////////////////////////////////////////////////////////
          
          res.add("stat", assign.render()); // render the return value!
-         properties.add("field", longAssign.ID(0).getText() + " = " + id);
+         //properties.add("field", longAssign.ID(0).getText() + " = " + id);
+         //properties2.add("var", ctx.varName);
+         res.add("field", ctx.varName+"."+longAssign.ID(0).getText() + " = " + id);
+         //res.add("properties2", properties2.render());
       }
-      res.add("properties", properties.render()); // render the return value!
+       // render the return value!
 
-      String id = newVarName();
-      ctx.varName = id;
-
-      res.add("var", id);
+      
       
       return res;
 

@@ -9,7 +9,7 @@
 view : View with {
     width = 401;
     height = 401;
-    title = "Illustrating the rectangle shape";
+    title = "1 Illustrating the rectangle shape";
     background = "wheat";
 }
 
@@ -41,10 +41,10 @@ food1 : PieSlice at (100,0) with {
 view2 : View with {
     width = 401;
     height = 401;
-    title = "Illustrating the rectangle shape";
+    title = "2 Illustrating the rectangle shape";
     background = "wheat";
 }
-
+#(
 Rectangle at (-10,0) with {
     length = (200,60);
     fill = "blue";
@@ -63,6 +63,7 @@ food2 : PieSlice at (-100,0) with {
     start = 89;
     extent = 359;
 }
+#)
 
 
 #
@@ -81,35 +82,38 @@ for i in 1..10 do {
         start = 1;
         extent = 359;
     }
+    #(
     with pacman2 do {
         start = 179;
         extent = 359;
     }
+    #)
     food1.state = "hidden";
-    move food2 by (0, -10);
+    # move food2 by (0, -10);
     refresh view after 20 ms;
     refresh view2 after 20 ms;
     with pacman do {
         start = 30;
         extent = 300;
     }
+    #(
     with pacman2 do {
         start = 210;
         extent = 300;
-    }
+    }#)
     refresh view after 25 ms;
     move pacman by (10,0);    # the 'by' makes the movement relative; the argument is a vector
     food1.state = "normal";
     move view by (10,0);    # the 'by' makes the movement relative; the argument is a vector
-    move pacman2 by (-10,0);
-    move view2 by (-10,0);
-    move food2 by (0, 10);
+    # move pacman2 by (-10,0);
+    # move view2 by (-10,0);
+    # move food2 by (0, 10);
     refresh view;
     refresh view2;
 }
 
 food1.state = "hidden";
-food2.state = "hidden";
+# food2.state = "hidden";
 
 refresh view;
 refresh view2;

@@ -1,9 +1,21 @@
 from tkinter import *
 import time
 
+class Root:
+
+    def __init__(self):
+        self.root = Tk()
+        self.objects = []
+
+        self.root.withdraw()
+
+    def add_object(self, obj):
+        self.objects.append(obj)
+
 class View:
 
-    def __init__(self, top, Ox=0, Oy=0, height=201, width=201, title="No title", background="black"):
+    def __init__(self, root: Root, top=None, Ox=0, Oy=0, height=201, width=201, title="No title", background="black"):
+        self.root = root
         self.top = top
         self.Ox = Ox
         self.Oy = Oy
@@ -15,17 +27,16 @@ class View:
         self.mouseX = None
         self.mouseY = None
 
-        self.objects = []
-
         self.canvas = None
-        self.create_canvas()
+        #self.create_canvas()
         
     def create_canvas(self):
+        if not self.top: self.top = Toplevel(self.root.root)
         self.top.title(self.title)
         self.canvas = Canvas(self.top, height=self.height, width=self.width, background=self.background)
         self.canvas.pack()
-        for o in self.objects:
-            o.create_object()
+        for o in self.root.objects:
+            o.create_object(self)
 
     def change(self, Ox=None, Oy=None, height=None, width=None, title=None, background=None):
         self.Ox = Ox if Ox else self.Ox
@@ -39,22 +50,26 @@ class View:
         self.canvas.config(height=self.height, width=self.width, background=self.background)
 
     def update(self):
-        for o in self.objects:
-            self.canvas.delete(o.object)
-            o.create_object()
-        self.top.update()
+        if self.canvas: self.canvas.destroy()
+        self.create_canvas()
+        self.root.root.update()
 
-    def move(self, point):
+    def move_relative(self, point):
         x, y = point
         self.Ox += x
         self.Oy += y
+
+    def move_absolute(self, point):
+        x, y = point
+        self.Ox = x
+        self.Oy = y
 
     def coord(self, point):
         x, y = point
         return (self.width/2-self.Ox+x, self.height/2+self.Oy-y)
 
-    def length(self, origin, point):
-        return (origin[0]+point[0], origin[1]-point[1])
+    def line(self, origin, point):
+        return (origin[0],origin[1]),(origin[0]+point[0], origin[1]-point[1])
 
     def rectangle(self, origin, length):
         p0 = (origin[0]-length[0]/2,origin[1]-length[1]/2)
@@ -93,29 +108,36 @@ class View:
 
 class Object:
 
-    def __init__(self, view: View, state):
+    def __init__(self, root: Root, view: View, origin, state):
+        self.root = root
         self.view = view
+        self.origin = origin
         self.state = state
+
+        self.root.add_object(self)
 
     def waitClick(self):
         return self.view.waitClick()  
 
-    def move(self, vector):
-        self.change(origin=(self.origin[0] + vector[0], self.origin[1] + vector[1]))    
+    def move_relative(self, vector):
+        self.origin = (self.origin[0] + vector[0], self.origin[1] + vector[1])
+
+    def move_absolute(self, vector):
+        self.origin=(vector[0], vector[1])
 
 class Line(Object):
 
-    def __init__(self, view: View, state="normal", origin=(0,0), length=(1,1), fill="black"):
-        super().__init__(view, state)
-        self.origin = origin
-        self.length = view.length(view.coord(origin), length)
+    def __init__(self, root: Root, view: View = None, state="normal", origin=(0,0), length=(1,1), fill="black"):
+        super().__init__(root, view, origin, state)
+        self.length = length
         self.fill = fill
 
         self.object = None
-        self.create_object()
+        #self.create_object()
 
-    def create_object(self):
-        self.object = self.view.canvas.create_line(self.view.coord(self.origin), self.length, fill=self.fill, state=self.state)
+    def create_object(self, view):
+        self.view = view
+        self.object = self.view.canvas.create_line(self.view.line(self.view.coord(self.origin), self.length), fill=self.fill, state=DISABLED)
 
     def change(self, state=None, origin=None, length=None, fill=None):
         self.origin = origin if origin else self.origin
@@ -126,17 +148,17 @@ class Line(Object):
 
 class Rectangle(Object):
 
-    def __init__(self, view: View, state="normal", origin=(0,0), length=(1,1), fill="black"):
-        super().__init__(view, state)
-        self.origin = origin
+    def __init__(self, root: Root, view: View = None, state="normal", origin=(0,0), length=(1,1), fill="black"):
+        super().__init__(root, view, origin, state)
         self.length = length
         self.fill = fill
         self.state = NORMAL
 
         self.object = None
-        self.create_object()
+        #self.create_object()
     
-    def create_object(self):
+    def create_object(self, view):
+        self.view = view
         self.object = self.view.canvas.create_line(self.view.rectangle(self.view.coord(self.origin), self.length), fill=self.fill, state=self.state)
 
     def change(self, state=None, origin=None, length=None, fill=None):
@@ -148,16 +170,16 @@ class Rectangle(Object):
 
 class Ellipse(Object):
 
-    def __init__(self, view: View, state="normal", origin=(0,0), length=(1,1), fill="black"):
-        super().__init__(view, state)
-        self.origin = origin
+    def __init__(self, root: Root, view: View = None, state="normal", origin=(0,0), length=(1,1), fill="black"):
+        super().__init__(root, view, origin, state)
         self.length = length
         self.fill = fill
 
         self.object = None
-        self.create_object()
+        #self.create_object()
 
-    def create_object(self):
+    def create_object(self, view):
+        self.view = view
         self.object = self.view.canvas.create_oval(self.view.ellipse(self.view.coord(self.origin), self.length), fill=self.fill, state=self.state)
 
     def change(self, origin=None, length=None, fill=None, state=None):
@@ -169,18 +191,18 @@ class Ellipse(Object):
 
 class Arc(Object):
 
-    def __init__(self, view: View, state="normal", origin=(0,0), length=(1,1), start=0, extent=100, outline="black"):
-        super().__init__(view, state)
-        self.origin = origin
+    def __init__(self, root: Root, view: View = None, state="normal", origin=(0,0), length=(1,1), start=0, extent=100, outline="black"):
+        super().__init__(root, view, origin, state)
         self.length = length
         self.start = start
         self.extent = extent   
         self.outline = outline
 
         self.object = None
-        self.create_object()
+        #self.create_object()
 
-    def create_object(self):
+    def create_object(self, view):
+        self.view = view
         self.object = self.view.canvas.create_arc(self.view.ellipse(self.view.coord(self.origin), self.length), style=ARC, start=self.start, extent=self.extent, outline=self.outline, state=self.state)
 
     def change(self, origin=None, length=None, start=None, extent=None, outline=None, state=None):
@@ -194,18 +216,18 @@ class Arc(Object):
 
 class ArcChord(Object):
 
-    def __init__(self, view: View, state="normal", origin=(0,0), length=(1,1), start=0, extent=100, fill="black"):
-        super().__init__(view, state)
-        self.origin = origin
+    def __init__(self, root: Root, view: View = None, state="normal", origin=(0,0), length=(1,1), start=0, extent=100, fill="black"):
+        super().__init__(root, view, origin, state)
         self.length = length
         self.start = start
         self.extent = extent   
         self.fill = fill
 
         self.object = None
-        self.create_object()
+        #self.create_object()
 
-    def create_object(self):
+    def create_object(self, view):
+        self.view = view
         self.object = self.view.canvas.create_arc(self.view.ellipse(self.view.coord(self.origin), self.length), style=CHORD, start=self.start, extent=self.extent, fill=self.fill, state=self.state)
 
     def change(self, origin=None, length=None, start=None, extent=None, fill=None, state=None):
@@ -219,18 +241,18 @@ class ArcChord(Object):
 
 class PieSlice(Object):
 
-    def __init__(self, view: View, state="normal", origin=(0,0), length=(1,1), start=0, extent=100, fill="black"):
-        super().__init__(view, state)
-        self.origin = origin
+    def __init__(self, root: Root, view: View = None, state="normal", origin=(0,0), length=(1,1), start=0, extent=100, fill="black"):
+        super().__init__(root, view, origin, state)
         self.length = length
         self.start = start
         self.extent = extent   
         self.fill = fill  
 
         self.object = None
-        self.create_object()
+        #self.create_object()
 
-    def create_object(self):
+    def create_object(self, view):
+        self.view = view
         self.object = self.view.canvas.create_arc(self.view.ellipse(self.view.coord(self.origin), self.length), style=PIESLICE, start=self.start, extent=self.extent, fill=self.fill, state=self.state)
 
     def change(self, origin=None, length=None, start=None, extent=None, fill=None, state=None):
@@ -244,16 +266,16 @@ class PieSlice(Object):
 
 class Text(Object):
     
-    def __init__(self, view: View, state="normal", origin=(0,0), text="No text", fill="black"):
-        super().__init__(view, state)
-        self.origin = origin
+    def __init__(self, root: Root, view: View = None, state="normal", origin=(0,0), text="No text", fill="black"):
+        super().__init__(root, view, origin, state)
         self.text = text
         self.fill = fill
 
         self.object = None
-        self.create_object()
+        #self.create_object()
 
-    def create_object(self):
+    def create_object(self, view):
+        self.view = view
         self.object = self.view.canvas.create_text(self.view.coord(self.origin), text=self.text, fill=self.fill, state=self.state)
 
     def change(self, origin=None, text=None, fill=None, state=None):
@@ -265,15 +287,15 @@ class Text(Object):
 
 class Dot(Object):
 
-    def __init__(self, view: View, state="normal", origin=(0,0), fill="black"):
-        super().__init__( view, state)
-        self.origin = origin
+    def __init__(self, root: Root, view: View = None, state="normal", origin=(0,0), fill="black"):
+        super().__init__(root, view, origin, state)
         self.fill = fill
 
         self.object = None
-        self.create_object()
+        #self.create_object()
 
-    def create_object(self):
+    def create_object(self, view):
+        self.view = view
         origin_coord = self.view.coord(self.origin)
         self.object = self.view.canvas.create_oval(origin_coord, origin_coord, fill=self.fill, state=self.state)
 

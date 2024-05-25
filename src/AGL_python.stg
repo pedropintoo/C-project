@@ -14,10 +14,7 @@ mouseY = None
 #################################################################
 
 if __name__ == "__main__":
-    root = Tk()
-    root.withdraw()
-
-    top = Toplevel(root)
+    root = Root()
 
     <stats(stat)>
 >>
@@ -42,6 +39,7 @@ while (time.time() - last_refresh \<= <delay>):
 
 <endif>
 last_refresh = time.time()
+last_view = <view>
 <view>.update()
 >>
 
@@ -65,7 +63,7 @@ with(stat, var, properties) ::= <<
 
 move(stat, var, destination) ::= <<
 <stats(stat)>
-<var>.move(<destination>)
+<var>.move_relative(<destination>)
 >>
 
 close(view) ::= <<
@@ -74,7 +72,7 @@ close(view) ::= <<
 
 assign(stat,var,value,attribute) ::= <<
 <stats(stat)>
-<if(value)><var><if(attribute)>.change(<attribute> = <value>)<else> = <value><endif><endif>
+<if(value)><var><if(attribute)>.<attribute> = <value><else> = <value><endif><endif>
 >>
 
 init(value) ::= "<if(value)> = <value><endif>"
@@ -186,4 +184,16 @@ dot(stat, var, origin, properties) ::= <<
     <properties>
     )
 last_view.add_object(<var>) 
+>>
+
+model(stat, var, type, origin, properties2, field) ::= <<
+<stats(stat)>
+
+<var> = <type>(root = root)
+<if(origin)><var>.origin = <origin><endif>
+<properties2(field)>
+>>
+
+properties2(field) ::= <<
+<if(field)><field; separator="\n"><endif>
 >>
