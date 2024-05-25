@@ -42,11 +42,6 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       System.out.println("visitStatBlockStatement");
 
       res = visit(ctx.blockStatement());
-      if (res == false) {
-         // HandlingError.printError(ctx, "Error: invalid block statement");
-         System.out.println("Error: invalid block statement");
-      }
-
       return res;
    }
 
@@ -170,12 +165,6 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       if (!ID.equals("Line") && !ID.equals("Rectangle") && !ID.equals("Ellipse") &&
             !ID.equals("Arc") && !ID.equals("ArcChord") && !ID.equals("PiesSlice") &&
             !ID.equals("Text") && !ID.equals("Dot")) {
-         // HandlingError.printError(ctx, "Error: invalid block statement");
-         System.out.println("Error: invalid block statement");
-         return false;
-      }
-
-      if (ID == null) {
          // HandlingError.printError(ctx, "Error: invalid block statement");
          System.out.println("Error: invalid block statement");
          return false;
