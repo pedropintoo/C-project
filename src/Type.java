@@ -14,7 +14,7 @@ public abstract class Type {
         return name;
     }
 
-    public boolean comformsTo(Type other) {
+    public boolean conformsTo(Type other) {
         return name.equals(other.name());
     }
 

@@ -80,6 +80,10 @@ print(stat, output) ::= <<
 print(<output>)
 >>
 
+with(var, assignment) ::= <<
+with <var> do
+>>
+
 for(value, sequence, stat) ::= <<
 for <value> in <sequence>:
     <stats(stat)>
