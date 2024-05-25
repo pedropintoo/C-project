@@ -28,7 +28,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       System.out.println("visitStatInstantiation");
 
       res = visit(ctx.instantiation());
-      if (res == false) {
+      if (!res) {
          // HandlingError.printError(ctx, "Error: invalid instantiation");
          System.out.println("Error: invalid instantiation");
       }
@@ -101,6 +101,11 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
          } else if (ctx.blockStatement() != null) {
             res = visit(ctx.blockStatement());
+            if (res) {
+               AGLParser.symbolTable.put(ID, new VariableSymbol(ID, ctx.blockStatement().typeID().res));
+            } else {
+               System.out.println("Error: invalid block statement instantiation");
+            }
          } else {
             // HandlingError.printError(ctx, "Error: invalid instantiation");
             System.out.println("Error: invalid instantiation");
@@ -120,9 +125,14 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
       System.out.println("visitSimpleStatement: " + type + " " + typeObject.name());
 
-      if (res == false) {
+      if (!res) {
          // HandlingError.printError(ctx, "Error: invalid simple statement");
          System.out.println("Error: invalid simple statement");
+         return false;
+      }
+
+      if (!ctx.assignment().expression().eType.conformsTo(typeObject)) {
+         System.out.println("Expression type does not conform to variable type!");
          return false;
       }
 
@@ -137,7 +147,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       // }
       // }
 
-      System.out.println("ola" + ctx.assignment().getText());
+      System.out.println("ola " + ctx.assignment().getText());
 
       // if (ctx.assignment() != null) {
       // if (!ctx.assignment().expression().eType.conformsTo(typeObject)) {
@@ -150,7 +160,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       // }
       // }
 
-      return res;
+      return true;
    }
 
    @Override
@@ -173,13 +183,11 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       System.out.println("visitBlockStatement: " + ctx.expression().getText());
 
       if (ctx.expression() != null) {
-         // res = visit(ctx.expression());
-         // if (res == false) {
-         // // HandlingError.printError(ctx, "Error: invalid block statement");
-         // System.out.println("Error: invalid block statement ola");
-         // return false;
-
-         // }
+         res = visit(ctx.expression());
+         if (!res) {
+            System.out.println("Error: invalid block statement");
+            return false;
+         }
       }
 
       System.out.println("visitBlockStatement: Success");
@@ -229,10 +237,14 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
          return false;
       }
 
-      Boolean res = visit(ctx.e) && checkNumericType(ctx, ctx.e.eType);
-      if (res)
+      Boolean res = visit(ctx.e);
+      if (res && ctx.e.eType != null && checkNumericType(ctx, ctx.e.eType)) {
          ctx.eType = ctx.e.eType;
-      System.out.println("visitExprUnary: " + ctx.eType.name());
+         System.out.println("visitExprUnary: " + ctx.eType.name());
+      } else {
+         System.out.println("Error: invalid unary expression or undefined type!");
+         res = false;
+      }
       return res;
    }
 
