@@ -170,6 +170,18 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
          return false;
       }
 
+      System.out.println("visitBlockStatement: " + ctx.expression().getText());
+
+      if (ctx.expression() != null) {
+         // res = visit(ctx.expression());
+         // if (res == false) {
+         // // HandlingError.printError(ctx, "Error: invalid block statement");
+         // System.out.println("Error: invalid block statement ola");
+         // return false;
+
+         // }
+      }
+
       System.out.println("visitBlockStatement: Success");
 
       return res;
