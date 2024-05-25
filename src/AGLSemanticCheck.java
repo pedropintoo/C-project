@@ -8,7 +8,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    private final NumberType numberType = new NumberType();
    private final PointType pointType = new PointType();
    private final VectorType vectorType = new VectorType();
-   
+
    // @Override
    // public Boolean visitProgram(AGLParser.ProgramContext ctx) {
    // Boolean res = true;
@@ -166,14 +166,22 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       String ID = ctx.typeID().getText();
       System.out.println("visitBlockStatement: " + ID);
 
-      // Quais são os tipos possíveis de statement? Fazer aqui condições para
-      // verificar se o tipo é válido
+      // Verificar se o tipo é válido
+      if (!ID.equals("Line") && !ID.equals("Rectangle") && !ID.equals("Ellipse") &&
+            !ID.equals("Arc") && !ID.equals("ArcChord") && !ID.equals("PiesSlice") &&
+            !ID.equals("Text") && !ID.equals("Dot")) {
+         // HandlingError.printError(ctx, "Error: invalid block statement");
+         System.out.println("Error: invalid block statement");
+         return false;
+      }
 
       if (ID == null) {
          // HandlingError.printError(ctx, "Error: invalid block statement");
          System.out.println("Error: invalid block statement");
          return false;
       }
+
+      System.out.println("visitBlockStatement: Success");
 
       return res;
    }
