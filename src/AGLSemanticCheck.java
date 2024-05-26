@@ -192,30 +192,32 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       return res;
    }
 
-   // @Override
-   // public Boolean
-   // visitPropertiesAssignment(AGLParser.PropertiesAssignmentContext ctx) {
-   // Boolean res = null;
-   // return visitChildren(ctx);
-   // // return res;
-   // }
+   @Override
+   public Boolean
+   visitPropertiesAssignment(AGLParser.PropertiesAssignmentContext ctx) {
+   Boolean res = null;
+   return visitChildren(ctx);
+   // return res;
+   }
 
-   // @Override
-   // public Boolean visitLongAssignment(AGLParser.LongAssignmentContext ctx) {
-   // Boolean res = null;
-   // return visitChildren(ctx);
-   // // return res;
-   // }
+   @Override
+   public Boolean visitLongAssignment(AGLParser.LongAssignmentContext ctx) {
+   Boolean res = null;
+   return visitChildren(ctx);
+   // return res;
+   }
 
    @Override
    public Boolean visitAssignment(AGLParser.AssignmentContext ctx) {
       // assignment '=' expression
+      System.out.println("visitAssignment");
       Boolean res = visit(ctx.expression());
       if (!res) {
          System.out.println("Error: invalid assignment");
          return false;
       }
       String id = ctx.expression().getText();
+      System.out.println("visitAssignment: " + id);
       if (!AGLParser.symbolTable.containsKey(id)) {
          // HandlingError.printError(ctx, "Variable \""+id+"\" does not exists!");
          System.out.println("Variable \"" + id + "\" does not exists!");
@@ -357,7 +359,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       } else {
          Symbol sym = AGLParser.symbolTable.get(id);
          System.out.println("Type: " + sym.type().name()); // está a imprimir correto: "Integer"
-         System.out.println("sym.valueDefined() -> " + sym.valueDefined()); // não percebo porque é falso!
+         System.out.println("sym.valueDefined() -> " + sym.valueDefined()); // está a imprimir incorreto: "false"
          if (!sym.valueDefined()) {
             // ErrorHandling.printError(ctx, "Variable \""+id+"\" not defined!");
             System.out.println("Variable \"" + id + "\" not defined!");
