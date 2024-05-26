@@ -352,7 +352,6 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
             res = false;
          } else
             ctx.eType = sym.type();
-            System.out.println("visitExprId: eType -> " + ctx.eType.name());
       }
       return res;
    }
