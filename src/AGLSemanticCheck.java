@@ -138,16 +138,6 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
          }
       }
 
-      // if (ctx.assignment() != null) {
-      // if (!ctx.assignment().expression().eType.conformsTo(typeObject)) {
-      // ErrorHandling.printError(ctx, "Expression type does not conform to
-      // variable \""+id+"\" type!");
-      // System.out.println("Expression type does not conform to variable type!");
-      // res = false;
-      // } else {
-      // System.out.println("ola");
-      // }
-      // }
 
       System.out.println("ola " + ctx.assignment().getText());
 
@@ -217,12 +207,32 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    // // return res;
    // }
 
-   // @Override
-   // public Boolean visitAssignment(AGLParser.AssignmentContext ctx) {
-   // Boolean res = null;
-   // return visitChildren(ctx);
-   // // return res;
-   // }
+   @Override
+   public Boolean visitAssignment(AGLParser.AssignmentContext ctx) {
+      // assignment '=' expression
+      Boolean res = visit(ctx.expression());
+      if (!res) {
+         System.out.println("Error: invalid assignment");
+         return false;
+      }
+      String id = ctx.expression().getText();
+      if (!AGLParser.symbolTable.containsKey(id)) {
+         // HandlingError.printError(ctx, "Variable \""+id+"\" does not exists!");
+         System.out.println("Variable \"" + id + "\" does not exists!");
+         return false;
+      }
+      Symbol sym = AGLParser.symbolTable.get(id);
+      if (!ctx.expression().eType.conformsTo(sym.type())) {
+         // HandlingError.printError(ctx, "Expression type does not conform to variable
+         // \""+id+"\" type!");
+         System.out.println("Expression type does not conform to variable type!");
+         return false;
+      } else {
+         sym.setValueDefined();
+      }
+
+      return res;
+   }
 
    // @Override
    // public Boolean visitPoint(AGLParser.PointContext ctx) {
@@ -346,6 +356,8 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
          res = false;
       } else {
          Symbol sym = AGLParser.symbolTable.get(id);
+         System.out.println("Type: " + sym.type().name()); // está a imprimir correto: "Integer"
+         System.out.println("sym.valueDefined() -> " + sym.valueDefined()); // não percebo porque é falso!
          if (!sym.valueDefined()) {
             // ErrorHandling.printError(ctx, "Variable \""+id+"\" not defined!");
             System.out.println("Variable \"" + id + "\" not defined!");
