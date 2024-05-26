@@ -1,5 +1,5 @@
 #(
-    A 'model' defines the appearance and properties of a graphical item.
+    A 'Model' defines the appearance and properties of a graphical item.
     It has an intrinsic reference frame, relative to which all of its graphical 
     children are positioned.
     When instantiated, a pose (position) is required, 
@@ -22,7 +22,7 @@
 #
 # The double-colon operator (::) is used to defined a new model
 #
-Pacman :: model {
+Pacman :: Model {
     # A Pacman is composed of a pie slice plus an ellipse representing an eye.
     # Its reference frame is at the center of the circle circumscribing the pie slice.
 

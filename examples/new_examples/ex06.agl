@@ -22,7 +22,7 @@
 #
 # The doble-colon operator (::) is used to defined a new model
 #
-Pacman :: model {
+Pacman :: Model {
     # A Pacman is composed of a pie slice plus an ellipse representing an eye.
     # Its reference frame is at the center of the circle circumscribing the pie slice.
     #
