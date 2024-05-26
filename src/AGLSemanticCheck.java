@@ -357,15 +357,6 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       return res;
    }
 
-   @Override
-   public Boolean visitExprWait(AGLParser.ExprWaitContext ctx) {
-      Boolean res = visit(ctx.eventTrigger());
-      if (res) {
-         ctx.eType = stringType; // TODO: ????
-      }
-      return res;
-
-   }
 
 
 
