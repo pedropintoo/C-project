@@ -83,11 +83,12 @@ unaryExpression(stat,var,op,e1) ::= <<
 <decl(var,[op," ",e1])>
 >>
 
-model(stat, var, type, origin, properties2, field) ::= <<
+model(stat, var, type, origin, field, update_lastView) ::= <<
 <stats(stat)>
 
 <var> = <type>(root = root)
 <if(origin)><var>.origin = <origin><endif>
+<if(update_lastView)>last_view = <var><endif>
 <properties2(field)>
 >>
 
@@ -101,7 +102,7 @@ with(stat, var, field) ::= <<
 <properties2(field)>
 >>
 
-array(stat, var, properties, field) ::= <<
+array(stat, var, field) ::= <<
 <stats(stat)>
 <var> = [<properties(field)>]
 >>

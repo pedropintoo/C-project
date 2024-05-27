@@ -130,6 +130,11 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
 
       res = templates.getInstanceOf("model");
       res.add("type", ctx.typeID().getText());
+
+      if (ctx.typeID().getText().equals("View")) {
+         res.add("update_lastView", "True");
+      }
+      
       // (at expression)?
       if (ctx.expression() != null) {
          // define the origin
@@ -282,6 +287,11 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
       ctx.varName = id;
 
       res.add("var", id);
+
+      for (AGLParser.ExpressionContext expression : ctx.expression()) {
+         res.add("stat", visit(expression).render());
+         res.add("field", expression.varName);
+      }
 
       return res;
    }
