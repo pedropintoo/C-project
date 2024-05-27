@@ -173,13 +173,13 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
       System.out.println("visitBlockStatement: " + ctx.expression().getText());
 
-      if (ctx.expression() != null) {
-         res = visit(ctx.expression());
-         if (!res) {
-            System.out.println("Error: invalid block statement");
-            return false;
-         }
-      }
+      // if (ctx.expression() != null) {
+      //    res = visit(ctx.expression());
+      //    if (!res) {
+      //       System.out.println("Error: invalid block statement");
+      //       return false;
+      //    }
+      // }
 
       res = visit(ctx.propertiesAssignment());
       if (!res) {
@@ -194,6 +194,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    @Override
    public Boolean
    visitPropertiesAssignment(AGLParser.PropertiesAssignmentContext ctx) {
+   System.out.println("visitPropertiesAssignment");
    Boolean res = null;
    return visitChildren(ctx);
    // return res;
@@ -358,6 +359,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
             ErrorHandling.printError(ctx, "Variable \""+id+"\" not defined!");
             res = false;
          } else
+            System.out.println("sym.type() -> " + sym.type().name());
             ctx.eType = sym.type();
       }
       return res;
