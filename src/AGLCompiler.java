@@ -128,35 +128,6 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
    @Override public ST visitBlockStatement(AGLParser.BlockStatementContext ctx) {
       ST res = null;
 
-      /*switch (ctx.typeID().getText()) {
-         case "View":
-            res = templates.getInstanceOf("canvas"); // canvas(stat, var, view_properties)
-            break;
-         case "Line":
-            res = templates.getInstanceOf("line"); // line(stat, var, origin, length, fill)
-            break;
-         case "Rectangle":
-            res = templates.getInstanceOf("rectangle"); // rectangle(stat, var, origin, length, fill)
-            break;
-         case "Ellipse":
-            res = templates.getInstanceOf("ellipse"); // ellipse(stat, var, origin, length, fill)
-            break;
-         case "Arc":  
-            res = templates.getInstanceOf("arc"); // arc(stat, var, origin, length, start, extent, outline)
-            break; 
-         case "ArcChord":
-            res = templates.getInstanceOf("arc_chord"); // arc_chord(stat, var, origin, length, start, extent, fill)
-            break;
-         case "PieSlice":
-            res = templates.getInstanceOf("pie_slice"); // pie_slice(stat, var, origin, length, start, extent, fill)
-            break;
-         case "Text":
-            res = templates.getInstanceOf("text"); // text(stat, var, origin, text, fill)
-            break;
-         case "Dot":
-            res = templates.getInstanceOf("dot"); // dot(stat, var, origin, fill)
-            break;
-      }*/
       res = templates.getInstanceOf("model");
       res.add("type", ctx.typeID().getText());
       // (at expression)?
@@ -185,8 +156,6 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
          //////////////////////////////////////////////////////////////
          
          res.add("stat", assign.render()); // render the return value!
-         //properties.add("field", longAssign.ID(0).getText() + " = " + id);
-         //properties2.add("var", ctx.varName);
          res.add("field", ctx.varName+"."+longAssign.ID(0).getText() + " = " + id);
          //res.add("properties2", properties2.render());
       }
