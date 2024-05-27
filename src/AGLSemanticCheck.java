@@ -202,38 +202,53 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
    @Override
    public Boolean visitLongAssignment(AGLParser.LongAssignmentContext ctx) {
-   Boolean res = null;
-   return visitChildren(ctx);
-   // return res;
+      System.out.println("--- visitLongAssignment");
+
+      // Consultar primeiro ID
+      String id1 = ctx.ID(0).getText();
+      System.out.println("visitLongAssignment: " + id1);
+
+      // Se houver um segundo ID
+      String id2 = null;
+      if (ctx.ID(1) != null) {
+         id2 = ctx.ID(1).getText();
+         System.out.println("visitLongAssignment: second ID " + id2);
+      }
+
+      Boolean res = visit(ctx.assignment());
+      
+      if (res) {
+         if (!AGLParser.symbolTable.containsKey(id1)) {
+               System.out.println("Variable \"" + id1 + "\" does not exist!");
+               return false;
+         }
+         Symbol sym = AGLParser.symbolTable.get(id1);
+         if (!ctx.assignment().expression().eType.conformsTo(sym.type())) {
+               System.out.println("Expression type does not conform to variable type!");
+               return false;
+         } else {
+               sym.setValueDefined();
+         }
+      }
+
+      return res;
    }
+
 
    @Override
    public Boolean visitAssignment(AGLParser.AssignmentContext ctx) {
       // assignment '=' expression
       System.out.println("visitAssignment");
+    
       Boolean res = visit(ctx.expression());
-      if (!res) {
-         System.out.println("Error: invalid assignment");
-         return false;
+  
+      if (res) {
+         String exprText = ctx.expression().getText();
+         System.out.println("visitAssignment: Expression = " + exprText);
       }
-      String id = ctx.expression().getText();
-      System.out.println("visitAssignment: " + id);
-      if (!AGLParser.symbolTable.containsKey(id)) {
-         // HandlingError.printError(ctx, "Variable \""+id+"\" does not exists!");
-         System.out.println("Variable \"" + id + "\" does not exists!");
-         return false;
-      }
-      Symbol sym = AGLParser.symbolTable.get(id);
-      if (!ctx.expression().eType.conformsTo(sym.type())) {
-         // HandlingError.printError(ctx, "Expression type does not conform to variable
-         // \""+id+"\" type!");
-         System.out.println("Expression type does not conform to variable type!");
-         return false;
-      } else {
-         sym.setValueDefined();
-      }
-
+  
       return res;
+      
    }
 
    // @Override
