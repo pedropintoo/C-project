@@ -143,7 +143,6 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
       res.add("var", id);
       
       for (AGLParser.LongAssignmentContext longAssign: ctx.propertiesAssignment().longAssignment()) {
-         //ST properties2 = templates.getInstanceOf("properties2");
          //////////////////////////////////////////////////////////////
          // assign the properties
          ST assign = templates.getInstanceOf("assign");
@@ -370,7 +369,6 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
       res.add("var", ctx.ID().getText());
 
       for (AGLParser.LongAssignmentContext longAssign: ctx.propertiesAssignment().longAssignment()) {
-         ST properties2 = templates.getInstanceOf("properties2");
          //////////////////////////////////////////////////////////////
          // assign the properties
          ST assign = templates.getInstanceOf("assign");

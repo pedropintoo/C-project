@@ -38,17 +38,6 @@ class View:
         for o in self.root.objects:
             o.create_object(self)
 
-    def change(self, Ox=None, Oy=None, height=None, width=None, title=None, background=None):
-        self.Ox = Ox if Ox else self.Ox
-        self.Oy = Oy if Oy else self.Oy
-        self.height = height if height else self.height
-        self.width = width if width else self.width
-        self.title = title if title else self.title
-        self.background = background if background else self.background
-        # next update will change the canvas
-        self.top.title(self.title)
-        self.canvas.config(height=self.height, width=self.width, background=self.background)
-
     def update(self):
         if self.canvas: self.canvas.destroy()
         self.create_canvas()
@@ -139,13 +128,6 @@ class Line(Object):
         self.view = view
         self.object = self.view.canvas.create_line(self.view.line(self.view.coord(self.origin), self.length), fill=self.fill, state=DISABLED)
 
-    def change(self, state=None, origin=None, length=None, fill=None):
-        self.origin = origin if origin else self.origin
-        self.length = self.view.length(self.view.coord(self.origin), length) if length else self.length
-        self.fill = fill if fill else self.fill
-        self.state = state if state else self.state
-        # next update will change the canvas
-
 class PolyLine(Object):
     """
     PolyLine is a line that needs to pass through a list of points.
@@ -164,13 +146,6 @@ class PolyLine(Object):
         self.view = view
         self.object = self.view.canvas.create_line(self.view.coord(self.origin), *[self.view.coord(p) for p in self.points], fill=self.fill, state=self.state)
 
-    def change(self, state=None, origin=None, points=None, fill=None):
-        self.origin = origin if origin else self.origin
-        self.points = points if points else self.points
-        self.fill = fill if fill else self.fill
-        self.state = state if state else self.state
-        # next update will change the canvas
-
 class Rectangle(Object):
 
     def __init__(self, root: Root, view: View = None, state="normal", origin=(0,0), length=(1,1), fill="black"):
@@ -186,13 +161,6 @@ class Rectangle(Object):
         self.view = view
         self.object = self.view.canvas.create_line(self.view.rectangle(self.view.coord(self.origin), self.length), fill=self.fill, state=self.state)
 
-    def change(self, state=None, origin=None, length=None, fill=None):
-        self.origin = origin if origin else self.origin
-        self.length = length if length else self.length
-        self.fill = fill if fill else self.fill
-        self.state = state if state else self.state
-        # next update will change the canvas
-
 class Ellipse(Object):
 
     def __init__(self, root: Root, view: View = None, state="normal", origin=(0,0), length=(1,1), fill="black"):
@@ -206,13 +174,6 @@ class Ellipse(Object):
     def create_object(self, view):
         self.view = view
         self.object = self.view.canvas.create_oval(self.view.ellipse(self.view.coord(self.origin), self.length), fill=self.fill, state=self.state)
-
-    def change(self, origin=None, length=None, fill=None, state=None):
-        self.origin = origin if origin else self.origin
-        self.length = length if length else self.length
-        self.fill = fill if fill else self.fill
-        self.state = state if state else self.state
-        # next update will change the canvas
 
 class Arc(Object):
 
@@ -230,15 +191,6 @@ class Arc(Object):
         self.view = view
         self.object = self.view.canvas.create_arc(self.view.ellipse(self.view.coord(self.origin), self.length), style=ARC, start=self.start, extent=self.extent, outline=self.outline, state=self.state)
 
-    def change(self, origin=None, length=None, start=None, extent=None, outline=None, state=None):
-        self.origin = origin if origin else self.origin
-        self.length = length if length else self.length
-        self.start = start if start else self.start
-        self.extent = extent if extent else self.extent
-        self.outline = outline if outline else self.outline
-        self.state = state if state else self.state
-        # next update will change the canvas
-
 class ArcChord(Object):
 
     def __init__(self, root: Root, view: View = None, state="normal", origin=(0,0), length=(1,1), start=0, extent=100, fill="black"):
@@ -255,14 +207,6 @@ class ArcChord(Object):
         self.view = view
         self.object = self.view.canvas.create_arc(self.view.ellipse(self.view.coord(self.origin), self.length), style=CHORD, start=self.start, extent=self.extent, fill=self.fill, state=self.state)
 
-    def change(self, origin=None, length=None, start=None, extent=None, fill=None, state=None):
-        self.origin = origin if origin else self.origin
-        self.length = length if length else self.length
-        self.start = start if start else self.start
-        self.extent = extent if extent else self.extent
-        self.fill = fill if fill else self.fill
-        self.state = state if state else self.state
-        # next update will change the canvas
 
 class PieSlice(Object):
 
@@ -280,14 +224,6 @@ class PieSlice(Object):
         self.view = view
         self.object = self.view.canvas.create_arc(self.view.ellipse(self.view.coord(self.origin), self.length), style=PIESLICE, start=self.start, extent=self.extent, fill=self.fill, state=self.state)
 
-    def change(self, origin=None, length=None, start=None, extent=None, fill=None, state=None):
-        self.origin = origin if origin else self.origin
-        self.length = length if length else self.length
-        self.start = start if start else self.start
-        self.extent = extent if extent else self.extent
-        self.fill = fill if fill else self.fill
-        self.state = state if state else self.state
-        # next update will change the canvas
 
 class Text(Object):
     
@@ -303,12 +239,6 @@ class Text(Object):
         self.view = view
         self.object = self.view.canvas.create_text(self.view.coord(self.origin), text=self.text, fill=self.fill, state=self.state)
 
-    def change(self, origin=None, text=None, fill=None, state=None):
-        self.origin = origin if origin else self.origin
-        self.text = text if text else self.text
-        self.fill = fill if fill else self.fill
-        self.state = state if state else self.state
-        # next update will change the canvas
 
 class Dot(Object):
 
@@ -323,9 +253,3 @@ class Dot(Object):
         self.view = view
         origin_coord = self.view.coord(self.origin)
         self.object = self.view.canvas.create_oval(origin_coord, origin_coord, fill=self.fill, state=self.state)
-
-    def change(self, origin=None, fill=None, state=None):
-        self.origin = origin if origin else self.origin
-        self.fill = fill if fill else self.fill
-        self.state = state if state else self.state
-        # next update will change the canvas
