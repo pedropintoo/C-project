@@ -143,9 +143,8 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
       // if (ctx.assignment() != null) {
       // if (!ctx.assignment().expression().eType.conformsTo(typeObject)) {
-      // // ErrorHandling.printError(ctx, "Expression type does not conform to
+      // ErrorHandling.printError(ctx, "Expression type does not conform to
       // variable \""+id+"\" type!");
-      // System.out.println("Expression type does not conform to variable type!");
       // res = false;
       // } else {
       // System.out.println("sym.setValueDefined()"); // TODO: ??
@@ -251,8 +250,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       System.out.println("visitExprUnary: " + signal);
 
       if (!signal) {
-         // ErrorHandling.printError(ctx, "Invalid unary operator!");
-         System.out.println("Invalid unary operator!");
+         ErrorHandling.printError(ctx, "Invalid unary operator!");
          return false;
       }
 
@@ -282,9 +280,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       if (res) {
          ctx.eType = fetchType(ctx.e1.eType, ctx.e2.eType);
          if (integerOperator(ctx.op.getText()) && !"integer".equals(ctx.eType.name())) {
-            // ErrorHandling.printError(ctx, "The integer operator "+ctx.op.getText()+"
-            // requires integer operands!");
-            System.out.println("The integer operator " + ctx.op.getText() + " requires integer operands!");
+            ErrorHandling.printError(ctx, "The integer operator "+ctx.op.getText()+"requires integer operands!");
             res = false;
          }
       }
@@ -298,8 +294,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       if (res) {
          ctx.eType = new PointType(); // Definindo o tipo da expressão como Point
       } else {
-         // ErrorHandling.printError(ctx, "Point creation requires numeric operands!");
-         System.out.println("Point creation requires numeric operands!");
+         ErrorHandling.printError(ctx, "Point creation requires numeric operands!");
       }
       return res;
    }
@@ -353,16 +348,14 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       String id = ctx.ID().getText();
       System.out.println("visitExprID: " + id);
       if (!AGLParser.symbolTable.containsKey(id)) {
-         // ErrorHandling.printError(ctx, "Variable \""+id+"\" does not exists!");
-         System.out.println("Variable \"" + id + "\" does not exists!");
+         ErrorHandling.printError(ctx, "Variable \""+id+"\" does not exists!");
          res = false;
       } else {
          Symbol sym = AGLParser.symbolTable.get(id);
          System.out.println("Type: " + sym.type().name()); // está a imprimir correto: "Integer"
          System.out.println("sym.valueDefined() -> " + sym.valueDefined()); // está a imprimir incorreto: "false"
          if (!sym.valueDefined()) {
-            // ErrorHandling.printError(ctx, "Variable \""+id+"\" not defined!");
-            System.out.println("Variable \"" + id + "\" not defined!");
+            ErrorHandling.printError(ctx, "Variable \""+id+"\" not defined!");
             res = false;
          } else
             ctx.eType = sym.type();
