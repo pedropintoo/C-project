@@ -56,11 +56,6 @@ for <var> in <range>:
 
 range(start, end, step) ::= "range(<start>, <end>, <step>)"
 
-with(stat, var, properties) ::= <<
-<stats(stat)>
-<var>.change(<properties>)
->>
-
 move(stat, var, destination) ::= <<
 <stats(stat)>
 <var>.move_relative(<destination>)
@@ -98,4 +93,10 @@ model(stat, var, type, origin, properties2, field) ::= <<
 
 properties2(field) ::= <<
 <if(field)><field; separator="\n"><endif>
+>>
+
+with(stat, var, field) ::= <<
+<stats(stat)>
+
+<properties2(field)>
 >>

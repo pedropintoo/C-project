@@ -134,8 +134,9 @@ if __name__ == "__main__":
         v79 = 359
         v80 = v79
         v81 = v80
-        pacman.change(start = v78,
-        extent = v81)
+
+        pacman.start = v78
+        pacman.extent = v81
         v82 = "hidden"
         v83 = v82
         food1.state = v83
@@ -161,8 +162,9 @@ if __name__ == "__main__":
         v89 = 300
         v90 = v89
         v91 = v90
-        pacman.change(start = v88,
-        extent = v91)
+
+        pacman.start = v88
+        pacman.extent = v91
          
         v92 = 25
         while (time.time() - last_refresh <= v92/1000):

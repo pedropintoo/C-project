@@ -141,11 +141,9 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
       ctx.varName = id;
 
       res.add("var", id);
-
-      //ST properties = templates.getInstanceOf("properties");
       
       for (AGLParser.LongAssignmentContext longAssign: ctx.propertiesAssignment().longAssignment()) {
-         ST properties2 = templates.getInstanceOf("properties2");
+         //ST properties2 = templates.getInstanceOf("properties2");
          //////////////////////////////////////////////////////////////
          // assign the properties
          ST assign = templates.getInstanceOf("assign");
@@ -157,12 +155,9 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
          
          res.add("stat", assign.render()); // render the return value!
          res.add("field", ctx.varName+"."+longAssign.ID(0).getText() + " = " + id);
-         //res.add("properties2", properties2.render());
       }
        // render the return value!
 
-      
-      
       return res;
 
    }
@@ -372,8 +367,10 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
    @Override public ST visitWithStatement(AGLParser.WithStatementContext ctx) {
       ST res = templates.getInstanceOf("with");
       
-      ST properties = templates.getInstanceOf("properties");
+      res.add("var", ctx.ID().getText());
+
       for (AGLParser.LongAssignmentContext longAssign: ctx.propertiesAssignment().longAssignment()) {
+         ST properties2 = templates.getInstanceOf("properties2");
          //////////////////////////////////////////////////////////////
          // assign the properties
          ST assign = templates.getInstanceOf("assign");
@@ -384,11 +381,8 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
          //////////////////////////////////////////////////////////////
          
          res.add("stat", assign.render()); // render the return value!
-         properties.add("field", longAssign.ID(0).getText() + " = " + id);
+         res.add("field", ctx.ID().getText()+"."+longAssign.ID(0).getText() + " = " + id);
       }
-
-      res.add("var", ctx.ID().getText());
-      res.add("properties", properties.render()); // render the return value!
 
       return res;
    }      
