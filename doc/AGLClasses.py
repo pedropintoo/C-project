@@ -146,6 +146,31 @@ class Line(Object):
         self.state = state if state else self.state
         # next update will change the canvas
 
+class PolyLine(Object):
+    """
+    PolyLine is a line that needs to pass through a list of points.
+    It has an origin, and, if no points are given, it will have a default length of (1,1).
+    """
+
+    def __init__(self, root: Root, view: View = None, state="normal", origin=(0,0), points=[(1,1)], fill="black"):
+        super().__init__(root, view, origin, state)
+        self.points = points
+        self.fill = fill
+
+        self.object = None
+        #self.create_object()
+    
+    def create_object(self, view):
+        self.view = view
+        self.object = self.view.canvas.create_line(self.view.coord(self.origin), *[self.view.coord(p) for p in self.points], fill=self.fill, state=self.state)
+
+    def change(self, state=None, origin=None, points=None, fill=None):
+        self.origin = origin if origin else self.origin
+        self.points = points if points else self.points
+        self.fill = fill if fill else self.fill
+        self.state = state if state else self.state
+        # next update will change the canvas
+
 class Rectangle(Object):
 
     def __init__(self, root: Root, view: View = None, state="normal", origin=(0,0), length=(1,1), fill="black"):
