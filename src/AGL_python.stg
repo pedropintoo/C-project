@@ -24,7 +24,7 @@ stats(stat) ::= <<
 >>
 
 properties(field) ::= <<
-<if(field)><field; separator=",\n"><endif>
+<if(field)><field; separator=","><endif>
 >>
 
 waitMouseClick(var) ::= <<
@@ -99,4 +99,9 @@ with(stat, var, field) ::= <<
 <stats(stat)>
 
 <properties2(field)>
+>>
+
+array(stat, var, properties, field) ::= <<
+<stats(stat)>
+<var> = [<properties(field)>]
 >>
