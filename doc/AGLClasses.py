@@ -146,13 +146,68 @@ class PolyLine(Object):
         self.view = view
         self.object = self.view.canvas.create_line(self.view.coord(self.origin), *[self.view.coord(p) for p in self.points], fill=self.fill, state=self.state)
 
+class Spline(Object):
+    """
+    Spline is a smooth curve that is defined by a series of control points.
+    It has an origin, and, if no points are given, it will have a default end point of (1,1).
+    """
+
+    def __init__(self, root: Root, view: View = None, state="normal", origin=(0,0), points=[(1,1)], fill="black"):
+        super().__init__(root, view, origin, state)
+        self.points = points
+        self.fill = fill
+
+        self.object = None
+        #self.create_object()
+
+    def create_object(self, view):
+        self.view = view
+        self.object = self.view.canvas.create_line(self.view.coord(self.origin), *[self.view.coord(p) for p in self.points], fill=self.fill, state=self.state, smooth=True)
+
+class Polygon(Object):
+    """
+    Polygon is a shape that is defined by a series of points.
+    It can be filled or not.
+    """
+
+    def __init__(self, root: Root, view: View = None, state="normal", origin=(0,0), points=[(1,1)], fill="black", outline="black"):
+        super().__init__(root, view, origin, state)
+        self.points = points
+        self.fill = fill
+        self.outline = outline
+
+        self.object = None
+        #self.create_object()
+    
+    def create_object(self, view):
+        self.view = view
+        self.object = self.view.canvas.create_polygon(self.view.coord(self.origin), *[self.view.coord(p) for p in self.points], fill=self.fill, outline=self.outline, state=self.state)
+
+class Blob(Object):
+    """
+    Blob is a shape that can be interpreted as drawing an irregular, free-form shape.
+    It is basically a smooth polygon.
+    """
+
+    def __init__(self, root: Root, view: View = None, state="normal", origin=(0,0), points=[(1,1)], fill="black", outline="black"):
+        super().__init__(root, view, origin, state)
+        self.points = points
+        self.fill = fill
+        self.outline = outline
+
+        self.object = None
+        #self.create_object()
+    
+    def create_object(self, view):
+        self.view = view
+        self.object = self.view.canvas.create_polygon(self.view.coord(self.origin), *[self.view.coord(p) for p in self.points], fill=self.fill, outline=self.outline, state=self.state, smooth=True)
+
 class Rectangle(Object):
 
     def __init__(self, root: Root, view: View = None, state="normal", origin=(0,0), length=(1,1), fill="black"):
         super().__init__(root, view, origin, state)
         self.length = length
         self.fill = fill
-        self.state = NORMAL
 
         self.object = None
         #self.create_object()
