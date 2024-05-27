@@ -5,14 +5,30 @@ view : View with {
     background = "alice blue";
 }
 
-line : Line at (-cellSize,cellSize) with {
-    length = (50,50);
+p : PolyLine at (0,0) with {
+    points = [(1,80), (30,50), (100,100)];
     fill = "red";
-    points = [(0,1), (2,3)]
+}
+
+spline : Spline at (100, 100) with {
+    points = [(80,1), (50,30), (-100,100)];
+    fill = "blue";
+}
+
+poligono : Polygon at (-100, 100) with {
+    points = [(-100,100), (10, 100), (100,10), (3, 75)];
+    fill = "blue";
+    outline = "black";
+}
+
+blob : Blob at (100, 100) with {
+    points = [(-90,30), (62, 39), (50,100), (31, 45)];
+    fill = "yellow";
+    outline = "blue";
 }
 
 
-p : Point = wait mouse click; # instantiate a Point and waits for a mouse click
-print p;
+refresh view;
 
+pos : Point = wait mouse click;
 

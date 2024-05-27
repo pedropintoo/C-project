@@ -15,193 +15,144 @@ mouseY = None
 if __name__ == "__main__":
     root = Root()
 
-    v1 = 401
+    v1 = 601
     v2 = v1
     v3 = v2
-    v4 = 401
+    v4 = 601
     v5 = v4
     v6 = v5
-    v7 = "1 Illustrating the rectangle shape"
+    v7 = "Illustrating the minimum level graphical models"
     v8 = v7
     v9 = v8
-    v10 = "wheat"
+    v10 = "alice blue"
     v11 = v10
     v12 = v11
 
     v0 = View(root = root)
+    last_view = v0
     v0.width = v3
     v0.height = v6
     v0.title = v9
     v0.background = v12
     view = v0
-    v14 = 10
+    v14 = 0
     v15 = 0
     v13 = (v14 , v15)
-    v18 = 200
-    v19 = 60
-    v17 = (v18 , v19)
-    v20 = v17
-    v21 = v20
-    v22 = "blue"
-    v23 = v22
-    v24 = v23
+    v19 = 1
+    v20 = 80
+    v18 = (v19 , v20)
+    v22 = 30
+    v23 = 50
+    v21 = (v22 , v23)
+    v25 = 100
+    v26 = 100
+    v24 = (v25 , v26)
+    v17 = [v18,v21,v24]
+    v27 = v17
+    v28 = v27
+    v29 = "red"
+    v30 = v29
+    v31 = v30
 
-    v16 = Rectangle(root = root)
+    v16 = PolyLine(root = root)
     v16.origin = v13
-    v16.length = v21
-    v16.fill = v24
-    v26 = 0
-    v27 = 0
-    v25 = (v26 , v27)
-    v30 = 50
-    v31 = 50
-    v29 = (v30 , v31)
-    v32 = v29
-    v33 = v32
-    v34 = "pink"
-    v35 = v34
-    v36 = v35
-    v37 = 30
-    v38 = v37
-    v39 = v38
-    v40 = 300
-    v41 = v40
-    v42 = v41
-
-    v28 = PieSlice(root = root)
-    v28.origin = v25
-    v28.length = v33
-    v28.fill = v36
-    v28.start = v39
-    v28.extent = v42
-    pacman = v28
+    v16.points = v28
+    v16.fill = v31
+    p = v16
+    v33 = 100
+    v34 = 100
+    v32 = (v33 , v34)
+    v38 = 80
+    v39 = 1
+    v37 = (v38 , v39)
+    v41 = 50
+    v42 = 30
+    v40 = (v41 , v42)
     v44 = 100
-    v45 = 0
-    v43 = (v44 , v45)
-    v48 = 20
-    v49 = 20
-    v47 = (v48 , v49)
-    v50 = v47
+    v45 = - v44
+    v46 = 100
+    v43 = (v45 , v46)
+    v36 = [v37,v40,v43]
+    v47 = v36
+    v48 = v47
+    v49 = "blue"
+    v50 = v49
     v51 = v50
-    v52 = "red"
-    v53 = v52
-    v54 = v53
-    v55 = 89
-    v56 = v55
-    v57 = v56
-    v58 = 359
-    v59 = v58
-    v60 = v59
 
-    v46 = PieSlice(root = root)
-    v46.origin = v43
-    v46.length = v51
-    v46.fill = v54
-    v46.start = v57
-    v46.extent = v60
-    food1 = v46
-    v62 = 401
-    v63 = v62
-    v64 = v63
-    v65 = 401
-    v66 = v65
-    v67 = v66
-    v68 = "2 Illustrating the rectangle shape"
-    v69 = v68
-    v70 = v69
-    v71 = "wheat"
+    v35 = Spline(root = root)
+    v35.origin = v32
+    v35.points = v48
+    v35.fill = v51
+    spline = v35
+    v53 = 100
+    v54 = - v53
+    v55 = 100
+    v52 = (v54 , v55)
+    v59 = 100
+    v60 = - v59
+    v61 = 100
+    v58 = (v60 , v61)
+    v63 = 10
+    v64 = 100
+    v62 = (v63 , v64)
+    v66 = 100
+    v67 = 10
+    v65 = (v66 , v67)
+    v69 = 3
+    v70 = 75
+    v68 = (v69 , v70)
+    v57 = [v58,v62,v65,v68]
+    v71 = v57
     v72 = v71
-    v73 = v72
+    v73 = "blue"
+    v74 = v73
+    v75 = v74
+    v76 = "black"
+    v77 = v76
+    v78 = v77
 
-    v61 = View(root = root)
-    v61.width = v64
-    v61.height = v67
-    v61.title = v70
-    v61.background = v73
-    view2 = v61
+    v56 = Polygon(root = root)
+    v56.origin = v52
+    v56.points = v72
+    v56.fill = v75
+    v56.outline = v78
+    poligono = v56
+    v80 = 100
+    v81 = 100
+    v79 = (v80 , v81)
+    v85 = 90
+    v86 = - v85
+    v87 = 30
+    v84 = (v86 , v87)
+    v89 = 62
+    v90 = 39
+    v88 = (v89 , v90)
+    v92 = 50
+    v93 = 100
+    v91 = (v92 , v93)
+    v95 = 31
+    v96 = 45
+    v94 = (v95 , v96)
+    v83 = [v84,v88,v91,v94]
+    v97 = v83
+    v98 = v97
+    v99 = "yellow"
+    v100 = v99
+    v101 = v100
+    v102 = "blue"
+    v103 = v102
+    v104 = v103
+
+    v82 = Blob(root = root)
+    v82.origin = v79
+    v82.points = v98
+    v82.fill = v101
+    v82.outline = v104
+    blob = v82
     last_refresh = time.time()
     last_view = view
     view.update()
-    last_refresh = time.time()
-    last_view = view2
-    view2.update()
-    v74 = 1
-    v75 = 10
-    for i in range(v74, v75, 1):
-        v76 = 1
-        v77 = v76
-        v78 = v77
-        v79 = 359
-        v80 = v79
-        v81 = v80
-
-        pacman.start = v78
-        pacman.extent = v81
-        v82 = "hidden"
-        v83 = v82
-        food1.state = v83
-         
-        v84 = 20
-        while (time.time() - last_refresh <= v84/1000):
-            time.sleep(REFRESH_RATE)   
-
-        last_refresh = time.time()
-        last_view = view
-        view.update()
-         
-        v85 = 20
-        while (time.time() - last_refresh <= v85/1000):
-            time.sleep(REFRESH_RATE)   
-
-        last_refresh = time.time()
-        last_view = view2
-        view2.update()
-        v86 = 30
-        v87 = v86
-        v88 = v87
-        v89 = 300
-        v90 = v89
-        v91 = v90
-
-        pacman.start = v88
-        pacman.extent = v91
-         
-        v92 = 25
-        while (time.time() - last_refresh <= v92/1000):
-            time.sleep(REFRESH_RATE)   
-
-        last_refresh = time.time()
-        last_view = view
-        view.update()
-        v94 = 10
-        v95 = 0
-        v93 = (v94 , v95)
-        pacman.move_relative(v93)
-        v96 = "normal"
-        v97 = v96
-        food1.state = v97
-        v99 = 10
-        v100 = 0
-        v98 = (v99 , v100)
-        view.move_relative(v98)
-        last_refresh = time.time()
-        last_view = view
-        view.update()
-        last_refresh = time.time()
-        last_view = view2
-        view2.update()
-    v101 = "hidden"
-    v102 = v101
-    food1.state = v102
-    last_refresh = time.time()
-    last_view = view
-    view.update()
-    last_refresh = time.time()
-    last_view = view2
-    view2.update()
-    v103 = "Press any mouse button to quit"
-    print(v103)
-    v104 = last_view.waitClick()
-    v105 = v104
+    v105 = last_view.waitClick()
     v106 = v105
-    pos = v106
+    v107 = v106
+    pos = v107
