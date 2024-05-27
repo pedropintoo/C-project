@@ -61,6 +61,7 @@ expression returns [String varName]
     | STRING                                    #ExprString                              
     | ID                                        #ExprID
     | 'wait' eventTrigger                       #ExprWait
+    | '[' expression (',' expression)* ']'      #ExprArray
     ;
 
 command

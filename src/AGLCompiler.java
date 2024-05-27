@@ -281,6 +281,17 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
       return res;
    }
 
+   @Override public ST visitExprArray(AGLParser.ExprArrayContext ctx) {
+      ST res = templates.getInstanceOf("array");
+      
+      String id = newVarName();
+      ctx.varName = id;
+
+      res.add("var", id);
+
+      return res;
+   }
+
 
 //* command   
    @Override public ST visitCommandRefresh(AGLParser.CommandRefreshContext ctx) {
