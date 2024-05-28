@@ -23,7 +23,6 @@ NUMBER  : 'Number';
 STRING_  : 'String';
 POINT   : 'Point';
 VECTOR  : 'Vector';
-<<<<<<< HEAD
 TIME    : 'Time';
 BOOLEAN_ : 'Boolean';
 VIEW    : 'View';
@@ -43,17 +42,6 @@ Model   : 'Model';
 Enum    : 'Enum';
 ARRAY   : 'Array';
 SCRIPT  : 'Script';
-=======
-VIEW    : 'View';
-LINE    : 'Line';
-RECTANGLE : 'Rectangle';
-ELLIPSE : 'Ellipse';
-ARC     : 'Arc';
-ARCCHORD : 'ArcChord';
-PIESLICE : 'PieSlice';
-TEXT    : 'Text';
-DOTTYPE     : 'Dot';
->>>>>>> 5195bbc (Removi PRIMITIVE_TYPE do lexer e do parser)
 
 
 // Keywords
