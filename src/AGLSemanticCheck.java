@@ -419,12 +419,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       
    }
 
-   // @Override
-   // public Boolean visitEventTrigger(AGLParser.EventTriggerContext ctx) {
-   // Boolean res = null;
-   // return visitChildren(ctx);
-   // // return res;
-   // }
+   
 
    // @Override
    // public Boolean visitMouseTrigger(AGLParser.MouseTriggerContext ctx) {
