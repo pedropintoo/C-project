@@ -132,12 +132,8 @@ modelStat returns [Boolean isAction]
     | blockStatement                            #ModelStatBlockStatement
     | longAssignment ';'                        #ModelStatLongAssignment
     | action                                    #ModelStatAction
-    ;
-// : type=(PRIMITIVE_TYPE | ID)
-// ;
+    ;   
 
-// private static final List<Type> types = List.of(new StringType(), new PointType(), new NumberType(),
-    //         new VectorType(), new IntegerType());
 
 modelInstantiation
     : ID '::' 'Model' '{' (modelStat)+ '}'
@@ -154,29 +150,28 @@ ifStatement
  
 
 typeID returns[Type res]
-    : 'Integer'
-    | 'String'
-    | 'Point'
-    | 'Number'
-    | 'Vector'
-    | 'Time'
-    | 'Boolean'
-    | 'View'
-    | 'Line'
-    | 'Rectangle'
-    | 'Ellipse'
-    | 'Arc'
-    | 'ArcChord'
-    | 'PieSlice'
-    | 'Text'
-    | 'Dot'
-    | 'Polyline'
-    | 'Spline'
-    | 'Polygon'
-    | 'Blob'
-    | 'Script'
-    | 'Enum'
-    | 'Array'
+    : 'Integer'     {$res = new IntegerType();}
+    | 'String'      {$res = new StringType();}
+    | 'Point'       {$res = new PointType();}
+    | 'Number'      {$res = new NumberType();}
+    | 'Vector'      {$res = new VectorType();}
+    | 'Time'        {$res = new TimeType();}
+    | 'Boolean'     {$res = new BooleanType();}
+    | 'View'        {$res = new ObjectType("View");}
+    | 'Line'        {$res = new ObjectType("Line");} 
+    | 'Rectangle'   {$res = new ObjectType("Rectangle");}
+    | 'Ellipse'     {$res = new ObjectType("Ellipse");}
+    | 'Arc'         {$res = new ObjectType("Arc");}
+    | 'ArcChord'    {$res = new ObjectType("ArcChord");}
+    | 'PieSlice'    {$res = new ObjectType("PieSlice");}
+    | 'Text'        {$res = new ObjectType("Text");}
+    | 'Dot'         {$res = new ObjectType("Dot");}
+    | 'PolyLine'    {$res = new ObjectType("PolyLine");}
+    | 'Spline'      {$res = new ObjectType("Spline");}   
+    | 'Polygon'     {$res = new ObjectType("Polygon");}
+    | 'Blob'        {$res = new ObjectType("Blob");}
+    | 'Script'      {$res = new ObjectType("Script");}
+    | 'Enum'        {$res = new ObjectType("Enum");}    
     | ID
     ;
 
@@ -184,4 +179,3 @@ identifier
     : ID
     | ID '.' identifier
     | ID ('[' expression ']')+ ('.' identifier)?
-    ;
