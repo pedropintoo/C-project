@@ -444,6 +444,49 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       return res;
    }
 
+   @Override 
+   public Boolean visitWhileStatement(AGLParser.WhileStatementContext ctx) {
+      Boolean res = true;
+      res = visit(ctx.expression());
+
+      if (!res) {
+         ErrorHandling.printError("Error: invalid expression in while statement");
+         return false;
+      }
+
+      Type exprType = ctx.expression().eType;
+      if (!(exprType instanceof BooleanType)) {
+         ErrorHandling.printError("Error: the expression in the while statement has to be a boolean");
+         return false;
+      }
+
+      res = visit(ctx.stat());
+      if (!res) {
+         ErrorHandling.printError("Error: invalid statement in while statement");
+         return false;
+      }
+
+      return res;
+   }
+
+   @Override
+   public Boolean visitRepeatStatement(AGLParser.RepeatStatementContext ctx) {
+      Boolean res = true;
+      res = visit(ctx.stat());
+
+      if (!res) {
+         ErrorHandling.printError("Error: invalid statement in repeat statement");
+         return false;
+      }
+
+      res = visit(ctx.expression());
+      if (!res) {
+         ErrorHandling.printError("Error: invalid expression in repeat statement");
+         return false;
+      }
+      return res;
+   }
+
    // @Override
    // public Boolean visitWithStatement(AGLParser.WithStatementContext ctx) {
    // Boolean res = null;
