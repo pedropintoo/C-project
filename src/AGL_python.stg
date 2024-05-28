@@ -84,22 +84,22 @@ object(stat, var, type, origin, field, update_lastView) ::= <<
 <var> = <type>(root = root)
 <if(origin)><var>.origin = <origin><endif>
 <if(update_lastView)>last_view = <var><endif>
-<properties2(field)>
->>
-
-properties2(field) ::= <<
-<if(field)><field; separator="\n"><endif>
+<properties(field)>
 >>
 
 with(stat, var, field) ::= <<
 <stats(stat)>
 
-<properties2(field)>
+<properties(field)>
 >>
 
 array(stat, var, field) ::= <<
 <stats(stat)>
 <var> = [<elements(field)>]
+>>
+
+properties(field) ::= <<
+<if(field)><field; separator="\n"><endif>
 >>
 
 elements(field) ::= <<
