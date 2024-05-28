@@ -71,6 +71,7 @@ expression returns [String varName]
     | e1=expression op=('*'|'/'|'&&') e2=expression #ExprAddSubMultDivAndOr
     | e1=expression op=('+'|'-'|'||') e2=expression #ExprAddSubMultDivAndOr
     | '(' x=expression ',' y=expression ')'         #ExprPoint
+    | '(' x=expression ':' y=expression ')'         #ExprVector
     | '[' expression (',' expression)* ']'          #ExprArray
     | expression RELATIONAL_OPERATOR expression     #ExprRelational
     | number=(INT | FLOAT)                          #ExprNumber
