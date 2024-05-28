@@ -23,10 +23,6 @@ stats(stat) ::= <<
 <if(stat)><stat; separator="\n"><endif>
 >>
 
-properties(field) ::= <<
-<if(field)><field; separator=","><endif>
->>
-
 waitMouseClick(var) ::= <<
 <var> = last_view.waitClick()
 >>
@@ -103,5 +99,9 @@ with(stat, var, field) ::= <<
 
 array(stat, var, field) ::= <<
 <stats(stat)>
-<var> = [<properties(field)>]
+<var> = [<elements(field)>]
+>>
+
+elements(field) ::= <<
+<if(field)><field; separator=","><endif>
 >>
