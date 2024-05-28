@@ -308,9 +308,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
          return false;
       }
 
-      System.out.println("sign: " + ctx.sign.getText()   );
       Boolean res = visit(ctx.e);
-      System.out.println("Unary: " + ctx.e.eType);
 
       if (res && ctx.e.eType != null && checkNumericType(ctx, ctx.e.eType)) {
          ctx.eType = ctx.e.eType;
@@ -383,26 +381,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       return true;
    }
 
-   // @Override
-   // public Boolean visitExprID(AGLParser.ExprIDContext ctx) {
-   //    // expression: ID and expression returns[Type eType]
-   //    Boolean res = true;
-   //    String id = ctx.ID().getText();
-   //    if (!AGLParser.symbolTable.containsKey(id)) {
-   //       ErrorHandling.printError(ctx, "Variable \"" + id + "\" does not exists!");
-   //       res = false;
-   //    } else {
-   //       Symbol sym = AGLParser.symbolTable.get(id);
-   //       if (!sym.valueDefined()) {
-   //          ErrorHandling.printError(ctx, "Variable \"" + id + "\" not defined!");
-   //          res = false;
-   //       } else {
-   //          ctx.eType = sym.type();
-   //       }
-   //    }
-   //    return res;
-   // }
-   
+
 
    @Override
    public Boolean visitExprID(AGLParser.ExprIDContext ctx) {
@@ -521,8 +500,32 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       // 'move' identifier type=('by'|'to') expression ';' #CommandMove
       Boolean res = true;
       String id = ctx.identifier().getText();
+      
+      if (!AGLParser.symbolTable.containsKey(id)) {
+         ErrorHandling.printError(ctx, "Variable \""+id+"\" does not exists!");
+         res = false;
+      }
 
-      // TODO
+      res = visit(ctx.expression());
+      if (!res) {
+         ErrorHandling.printError("Error: invalid expression in move command");
+         return false;
+      }
+
+      // if type is 'by' then the expression can be a point or a vector
+      // if type is 'to' then the expression must be a point
+      if (ctx.type.getText().equals("by")) {
+         if (!ctx.expression().eType.conformsTo(pointType) && !ctx.expression().eType.conformsTo(vectorType)) {
+            ErrorHandling.printError("Error: invalid expression type in move command (must be a point or a vector!)");
+            return false;
+         }
+      } else if (ctx.type.getText().equals("to")) {
+         if (!ctx.expression().eType.conformsTo(pointType)) {
+            ErrorHandling.printError("Error: invalid expression type in move command (must be a point!)");
+            return false;
+         }
+      }
+
       return res;
       
    }
