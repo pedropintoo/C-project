@@ -269,6 +269,25 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       Boolean res = true;
       String id = ctx.identifier().getText();
       // TODO: Check if the identifier is valid
+      System.out.println("Check long assignment");
+      if (ctx.identifier().ID(1) == null) {
+         if (!AGLParser.symbolTable.containsKey(id)) {
+            ErrorHandling.printError(ctx, "Variable \"" + id + "\" does not exists!");
+            res = false;
+         }
+         Boolean resExpr = visit(ctx.assignment());
+         if (res) {
+            Symbol sym = AGLParser.symbolTable.get(id);
+            if (!ctx.assignment().eType.conformsTo(sym.type())) {
+               ErrorHandling.printError(ctx, "Expression type does not conform to variable type!");
+               res = false;
+            } else {
+               sym.setValueDefined();
+            }
+         }
+      } else {
+         ErrorHandling.printError("TO BE IMPLEMENTED ID ('.' ID)+ - attributes");
+      }
 
       return res;
    }
@@ -354,6 +373,22 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       }
       return res;
    }
+   
+   @Override
+   public Boolean visitExprRelational(AGLParser.ExprRelationalContext ctx) {
+      // expression: expression RELATIONAL_OPERATOR expression and expression returns [Type eType, String varName]
+      Boolean res = true;
+
+      // Visit the left expression and check if it is IntegerType
+      res = visit(ctx.expression(0));
+      
+      // Visit the right expression and check if it is IntegerType
+
+      // Define the expression type as BooleanType: tx.eType = new BooleanType();
+
+      return res;
+   }
+
 
    @Override
    public Boolean visitExprNumber(AGLParser.ExprNumberContext ctx) {
@@ -574,8 +609,12 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
          ErrorHandling.printError("Error: invalid expression in while statement");
          return false;
       }
+      System.out.println("Expression: " + ctx.expression().getText() );
+      // Type of the expression
+      System.out.println("Expression type: " + ctx.expression().eType.name());
 
       Type exprType = ctx.expression().eType;
+      System.out.println("Expression type: " + exprType.name());
       if (!(exprType instanceof BooleanType)) {
          ErrorHandling.printError("Error: the expression in the while statement has to be a boolean");
          return false;
