@@ -9,6 +9,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    private final PointType pointType = new PointType();
    private final VectorType vectorType = new VectorType();
    private final BooleanType booleanType = new BooleanType();
+   private final ObjectType objectType = new ObjectType(null);
 
    @Override
    public Boolean visitProgram(AGLParser.ProgramContext ctx) {
@@ -381,12 +382,24 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
       // Visit the left expression and check if it is IntegerType
       res = visit(ctx.expression(0));
+      Type leftType = ctx.expression(0).eType;
+      if (!leftType.conformsTo(integerType)) {
+         ErrorHandling.printError("Error: The left expression should be an integer");
+         return false;
+      }
       
       // Visit the right expression and check if it is IntegerType
+      res = visit(ctx.expression(0));
+      Type rightType = ctx.expression(0).eType;
+      if (!rightType.conformsTo(integerType)) {
+         ErrorHandling.printError("Error: The right expression should be an integer");
+         return false;
+      }
 
       // Define the expression type as BooleanType: tx.eType = new BooleanType();
+      ctx.eType = new BooleanType();
 
-      return res;
+      return true;
    }
 
 
@@ -666,7 +679,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    //    }
 
    //    Type idType = ctx.identifier().eType;
-   //    if (!(idType instanceof ObjectType)) {
+   //    if (!(idType.conformsTo(ObjectType))) {
    //       ErrorHandling.printError("Error: identifier \"" + id + "\" is not an object type");
    //       return false;
    //    }
