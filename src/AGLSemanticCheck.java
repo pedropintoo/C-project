@@ -335,12 +335,37 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
    // --------- End Visit Expression ---------
 
-   // @Override
-   // public Boolean visitCommandRefresh(AGLParser.CommandRefreshContext ctx) {
-   // Boolean res = null;
-   // return visitChildren(ctx);
-   // // return res;
-   // }
+   @Override
+   public Boolean visitCommandRefresh(AGLParser.CommandRefreshContext ctx) {
+      // 'refresh' ID ('after' expression suffix=('ms'|'s'))? ';'    and     Expression returns [Type eType, String varName]
+      Boolean res = true;
+      String id = ctx.ID().getText();
+      
+      if (!AGLParser.symbolTable.containsKey(id)) {
+         ErrorHandling.printError(ctx, "Variable \""+id+"\" does not exists!");
+         res = false;
+      } 
+
+      if (ctx.expression() != null) {
+         res = visit(ctx.expression());
+         if (!res) {
+            ErrorHandling.printError(ctx, "Error: invalid expression in refresh command");
+            return false;
+         }
+         
+         if (ctx.expression().getText().contains("-")) {
+            ErrorHandling.printError(ctx, "Error: invalid expression in refresh command (cannot have '-' signal)");
+            return false;
+         }
+         
+         if (!ctx.expression().eType.conformsTo(numberType) && !ctx.expression().eType.conformsTo(integerType)) {
+            ErrorHandling.printError(ctx, "Error: invalid expression type in refresh command (must be integer!)");
+            return false;
+         }
+      }
+
+      return res;
+   }
 
    @Override
    public Boolean visitCommandPrint(AGLParser.CommandPrintContext ctx) {
