@@ -67,7 +67,7 @@
 //    }
 
 //    @Override public ST visitStatForLoop(AGLParser.StatForLoopContext ctx) {
-//       return visit(ctx.for_loop());
+//       return visit(ctx.forStatement());
 //    }
 
 //    @Override public ST visitStatWithStatement(AGLParser.StatWithStatementContext ctx) {
@@ -358,8 +358,8 @@
 //    }
 
 
-// //* for_loop   
-//    @Override public ST visitFor_loop(AGLParser.For_loopContext ctx) {
+// //* forStatement   
+//    @Override public ST visitForStatement(AGLParser.ForStatementContext ctx) {
 //       ST res = templates.getInstanceOf("for");  
       
 //       res.add("var", ctx.ID().getText());

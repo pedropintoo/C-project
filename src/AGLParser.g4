@@ -20,15 +20,21 @@ program
 
 stat
     : instantiation                             #StatInstantiation
+    | modelInstantiation                        #StatModelInstantiation
     | blockStatement                            #StatBlockStatement
     | longAssignment ';'                        #StatLongAssignment
-    | command                                   #StatCommand
-    | for_loop                                  #StatForLoop
     | withStatement                             #StatWithStatement
-    | modelInstantiation                        #StatModelInstantiation
-    | ifStatement                               #StatIfStatement
     | playStatement                             #StatPlayStatement
+    | repetitiveStatement                       #StatRepetitiveStatement
+    | ifStatement                               #StatIfStatement
+    | command                                   #StatCommand
     | '{' stat+ '}'                             #StatBlock
+    ;
+
+repetitiveStatement
+    : forStatement                              #RepForStatement
+    | whileStatement                            #RepWhileStatement
+    | repeatStatement                           #RepRepeatStatement  
     ;
 
 instantiation
@@ -40,11 +46,11 @@ simpleStatement returns [String varName]
     ;
 
 blockStatement returns [String varName]
-    : typeID ('at' expression)? 'with' '{' propertiesAssignment '}'
+    : typeID ('at' expression)? 'with' propertiesAssignment 
     ;
 
 propertiesAssignment
-    : longAssignment ( ';' longAssignment)* ';'?
+    : '{' longAssignment ( ';' longAssignment)* ';'? '}'
     ;
 
 longAssignment
@@ -90,14 +96,29 @@ mouseTrigger
     : 'click'
     ;    
 
-for_loop
+forStatement
     : 'for' ID 'in' number_range 'do' stat 
     ;
 
+number_range
+    : expression '..' expression ('..' expression)?
+    ;    
+
+whileStatement
+    : 'while' expression 'do' stat
+    ;    
+
+repeatStatement
+    : 'repeat' stat 'until' expression
+    ;    
+
 withStatement
-    : 'with' identifier 'do' '{' propertiesAssignment '}' 
+    : 'with' identifier 'do' propertiesAssignment 
     ;
 
+playStatement
+    : 'play' ID 'with' propertiesAssignment
+    ;   
 
 modelInstantiation
     : ID '::' 'Model' '{' (instantiation|blockStatement|action|longAssignment ';')+ '}'
@@ -111,9 +132,7 @@ ifStatement
     : 'if' expression 'do' stat ('else' 'do' stat)?
     ;
 
-playStatement
-    : 'play' ID 'with' '{' propertiesAssignment '}'
-    ;    
+ 
 
 typeID returns[Type res]
     : 'Integer'
@@ -121,6 +140,8 @@ typeID returns[Type res]
     | 'Point'
     | 'Number'
     | 'Vector'
+    | 'Time'
+    | 'Boolean'
     | 'View'
     | 'Line'
     | 'Rectangle'
@@ -144,6 +165,4 @@ identifier
     | ID ('.' ID)+
     ;
 
-number_range
-    : expression '..' expression ('..' expression)?
-    ;
+
