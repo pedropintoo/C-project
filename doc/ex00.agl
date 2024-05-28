@@ -27,8 +27,15 @@ blob : Blob at (100, 100) with {
     outline = "blue";
 }
 
-
 refresh view;
+move blob to (10,0);
+refresh view after 1s;
+move blob by (-10,0);
+refresh view after 1s;
+move blob by (-10,0);
+refresh view after 1s;
+move blob to (10,0);
+refresh view after 1s;
 
 pos : Point = wait mouse click;
 
