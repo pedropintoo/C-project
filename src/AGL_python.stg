@@ -47,10 +47,10 @@ print(stat, output) ::= <<
 print(<output>)
 >>
 
-for(stat, var, range, instruction) ::= <<
+for(stat, var, range, instructions) ::= <<
 <stats(stat)>
 for <var> in <range>:
-    <stats(instruction)>
+    <instructions>
 >>
 
 range(start, end, step) ::= "range(<start>, <end>, <step>)"

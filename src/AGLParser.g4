@@ -27,7 +27,8 @@ stat
     | withStatement                             #StatWithStatement
     | modelInstantiation                        #StatModelInstantiation
     | ifStatement                               #StatIfStatement
-    | '{' stat+ '}'
+    | playStatement                             #StatPlayStatement
+    | '{' stat+ '}'                             #StatBlock
     ;
 
 instantiation
@@ -35,7 +36,7 @@ instantiation
     ;
 
 simpleStatement returns [String varName]
-    : typeID (assignment)? ';'
+    : typeID ('at' expression)? ((assignment)? ';' | in_assignment)
     ;
 
 blockStatement returns [String varName]
@@ -47,33 +48,38 @@ propertiesAssignment
     ;
 
 longAssignment
-    : ID ('.' ID)? assignment
+    : identifier assignment
     ;
 
 assignment returns [Type eType, String varName]
     : '=' expression
     ;
 
+in_assignment
+    : 'in' '{' ID (',' ID)* '}'
+    ;    
+
 expression returns [String varName]
-    : sign=('+'|'-'|NOT) e=expression               #ExprUnary
+    : sign=('+'|'-'|'!') e=expression               #ExprUnary
     | '(' e=expression ')'                          #ExprParenthesis
-    | e1=expression op=('*'|'/'|AND) e2=expression  #ExprAddSubMultDivAndOr
-    | e1=expression op=('+'|'-'|OR) e2=expression   #ExprAddSubMultDivAndOr
+    | e1=expression op=('*'|'/'|'&&') e2=expression #ExprAddSubMultDivAndOr
+    | e1=expression op=('+'|'-'|'||') e2=expression #ExprAddSubMultDivAndOr
     | '(' x=expression ',' y=expression ')'         #ExprPoint
-    | 'wait' eventTrigger                           #ExprWait
     | '[' expression (',' expression)* ']'          #ExprArray
     | expression RELATIONAL_OPERATOR expression     #ExprRelational
     | number=(INT | FLOAT)                          #ExprNumber
     | BOOLEAN                                       #ExprBoolean                   
     | STRING                                        #ExprString                              
-    | ID                                            #ExprID
+    | identifier                                    #ExprID
+    | 'wait' eventTrigger                           #ExprWait
+    | op=('input'|'load') STRING                    #ExprScript
     ;
 
 command
     : 'refresh' ID ('after' expression suffix=('ms'|'s'))? ';'   #CommandRefresh
     | 'print' expression ';'                    #CommandPrint
     | 'close' ID ';'                            #CommandClose
-    | 'move' ID type=('by'|'to') expression ';'             #CommandMove
+    | 'move' identifier type=('by'|'to') expression ';'             #CommandMove
     ;
 
 eventTrigger
@@ -89,21 +95,25 @@ for_loop
     ;
 
 withStatement
-    : 'with' ID 'do' '{' propertiesAssignment '}' 
+    : 'with' identifier 'do' '{' propertiesAssignment '}' 
     ;
 
 
 modelInstantiation
-    : ID '::' typeID '{' (instantiation|action|longAssignment)+ '}'
+    : ID '::' 'Model' '{' (instantiation|blockStatement|action|longAssignment ';')+ '}'
     ;
 
 action
-    : 'action' 'on' ID '{' stat+ '}'
+    : 'action' 'on' identifier stat
     ;
 
 ifStatement
     : 'if' expression 'do' stat ('else' 'do' stat)?
     ;
+
+playStatement
+    : 'play' ID 'with' '{' propertiesAssignment '}'
+    ;    
 
 typeID returns[Type res]
     : 'Integer'
@@ -124,6 +134,14 @@ typeID returns[Type res]
     | 'Spline'
     | 'Polygon'
     | 'Blob'
+    | 'Script'
+    | 'Enum'
+    | ID
+    ;
+
+identifier
+    : ID
+    | ID ('.' ID)+
     ;
 
 number_range

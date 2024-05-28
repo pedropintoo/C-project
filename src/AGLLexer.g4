@@ -36,6 +36,9 @@ POLYLINE: 'PolyLine';
 SPLINE  : 'Spline';
 POLYGON : 'Polygon';
 BLOB    : 'Blob';
+Model   : 'Model';
+Enum    : 'Enum';
+SCRIPT  : 'Script';
 
 
 // Keywords
@@ -47,7 +50,12 @@ CLOSE   : 'close';
 MOUSE   : 'mouse';
 CLICK   : 'click';
 WAIT    : 'wait';
+INPUT   : 'input';
+LOAD    : 'load';
+PLAY    : 'play';
 FOR     : 'for';
+IF      : 'if';
+ELSE    : 'else';
 IN      : 'in';
 DO      : 'do';
 AFTER   : 'after';
@@ -78,6 +86,7 @@ NOT     : '!';
 
 // Identifier names
 ID      : LETTER (LETTER | DIGIT)*;
+NAME    : ID;
 
 // Boolean
 BOOLEAN : 'True' | 'False';
