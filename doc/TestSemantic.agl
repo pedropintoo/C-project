@@ -20,3 +20,15 @@ vector = vector / 0.5;
 n : Number = a / b
 
 refresh view after n ms;
+
+print "Press any mouse button to quit";
+
+refresh view after 0.2 ms;
+
+close view;
+
+move view by (10,0);
+
+for i in 10..1 do {
+    close view;
+}   
