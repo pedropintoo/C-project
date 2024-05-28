@@ -542,7 +542,24 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
          return false;
       }
 
-      // TODO: Check expressions and if the range is valid
+      // first expression
+      res = visit(ctx.number_range().expression(0));
+      if (!res) {
+         ErrorHandling.printError("Error: invalid first expression in for statement");
+         return false;
+      }
+
+      // second expression
+      res = visit(ctx.number_range().expression(1));
+      if (!res) {
+         ErrorHandling.printError("Error: invalid second expression in for statement");
+         return false;
+      }
+
+      // second expression can not be less than the first expression
+      if ( ! (ctx.number_range().expression(0).eType instanceof IntegerType && ctx.number_range().expression(1).eType instanceof IntegerType ))  {
+         ErrorHandling.printError("Error: invalid expression type in for statement (must be integer!)");
+      }
 
       return res;
    }
