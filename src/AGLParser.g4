@@ -6,7 +6,7 @@ import java.util.HashMap;
 }
 
 @parser::members {
-static protected Map<String,Number> symbolTable = new HashMap<>();
+static protected Map<String, Number> symbolTable = new HashMap<>();
 }
 
 options {
@@ -47,15 +47,15 @@ longAssignment
     : ID ('.' ID)? assignment
     ;
 
-assignment returns [String varName]
+assignment returns [Type eType, String varName]
     : '=' expression
     ;
 
 expression returns [String varName]
-    : sign=('+'|'-') expression                 #ExprUnary
-    | '(' expression ')'                        #ExprParenthesis
-    | expression op=('*' | '/') expression      #ExprAddSubMultDiv
-    | expression op=('+' | '-') expression      #ExprAddSubMultDiv
+    : sign=('+'|'-') e=expression                 #ExprUnary
+    | '(' e=expression ')'                        #ExprParenthesis
+    | e1=expression op=('*' | '/') e2=expression      #ExprAddSubMultDiv
+    | e1=expression op=('+' | '-') e2=expression      #ExprAddSubMultDiv
     | '(' x=expression ',' y=expression ')'     #ExprPoint
     | number=(INT | FLOAT)                      #ExprNumber                  
     | STRING                                    #ExprString                              
@@ -87,30 +87,27 @@ withStatement
     : 'with' ID 'do' '{' propertiesAssignment '}' 
     ;
 
-typeID
-    : type=(PRIMITIVE_TYPE | ID)
+typeID returns[Type res]:
+    'Integer'
+    | 'String'
+    | 'Point'
+    | 'Number'
+    | 'Vector'
+    | 'View'
+    | 'Line'
+    | 'Rectangle'
+    | 'Ellipse'
+    | 'Arc'
+    | 'ArcChord'
+    | 'PieSlice'
+    | 'Text'
+    | 'Dot'
+    | 'PolyLine'
+    | 'Spline'
+    | 'Polygon'
+    | 'Blob'
     ;
 
 number_range
     : expression '..' expression ('..' expression)?
     ;
-
-// blockStatement returns [String varName]
-//     : typeID ('at' expression)? 'with' '{' propertiesAssignment '}'
-//     | (typeID '.' longAssignment ';')+ // to change a single property, the dot (.) may be used instead of the 'with' construction
-//     | (command)+
-//     ;
-
-
-
-
-// RAW
-
-//expression: TYPE ( (('=' value)? ';') | ( ('at' position)? 'with' '{' assignment '}' ) );  // line 9 and line 19 ex01.
-
-// p,a,d : Point
-
-// refresh a; refresh a;
-
-//instantiation: ID ':' expression;    // line 42 ex01.agl
-//assignment: ID '=' value ';';
