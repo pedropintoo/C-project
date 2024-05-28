@@ -64,10 +64,23 @@ PLUS    : '+';
 MINUS   : '-';
 MUL     : '*';
 DIV     : '/';
-
+RELATIONAL_OPERATOR
+    : '<' 
+    | '<='
+    | '>'
+    | '>='
+    | '=='
+    | '!='
+    ;
+AND     : '&&';
+OR      : '||';
+NOT     : '!';
 
 // Identifier names
 ID      : LETTER (LETTER | DIGIT)*;
+
+// Boolean
+BOOLEAN : 'True' | 'False';
 
 // Numbers        
 INT     : DIGIT+;
