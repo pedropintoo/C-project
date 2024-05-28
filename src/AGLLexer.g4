@@ -14,6 +14,7 @@ SEMI    : ';';
 COMMA   : ',';
 TWODOTS : '..';
 DOT     : '.';
+DOUBLECOLON : '::';
 
 
 // Types
@@ -55,6 +56,8 @@ S       : 's';
 MOVE    : 'move';
 BY      : 'by';
 TO      : 'to';
+ACTION  : 'action';
+ON      : 'on';
 
 // Operators
 PLUS    : '+';

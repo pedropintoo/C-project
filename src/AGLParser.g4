@@ -25,6 +25,8 @@ stat
     | command                                   #StatCommand
     | for_loop                                  #StatForLoop
     | withStatement                             #StatWithStatement
+    | modelInstantiation                        #StatModelInstantiation
+    | ifStatement                               #StatIfStatement
     ;
 
 instantiation
@@ -62,6 +64,7 @@ expression returns [String varName]
     | ID                                        #ExprID
     | 'wait' eventTrigger                       #ExprWait
     | '[' expression (',' expression)* ']'      #ExprArray
+    | expression op=('<' | '>' | '<=' | '>=' | '==' | '!=') expression #ExprBoolean
     ;
 
 command
@@ -85,6 +88,19 @@ for_loop
 
 withStatement
     : 'with' ID 'do' '{' propertiesAssignment '}' 
+    ;
+
+
+modelInstantiation
+    : ID '::' typeID '{' (instantiation|action|longAssignment)+ '}'
+    ;
+
+action
+    : 'action' 'on' ID '{' stat+ '}'
+    ;
+
+ifStatement
+    : 'if' expression 'do' stat+ ('else' 'do' stat+)?
     ;
 
 typeID returns[Type res]:
