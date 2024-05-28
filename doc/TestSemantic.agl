@@ -12,4 +12,11 @@ view : View with {
     background = "alice blue";
 }
 
-refresh view after 0.2 ms;
+vector : Vector = (1,1) + (10, 10) - (2,-1);
+
+vector = vector * 0.5;
+vector = vector / 0.5;
+
+n : Number = a / b
+
+refresh view after n ms;
