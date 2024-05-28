@@ -200,6 +200,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
    @Override
    public Boolean visitBlockStatement(AGLParser.BlockStatementContext ctx) {
+      // blockStatement: typeID ('at' expression)? 'with' '{' propertiesAssignment '}'
       Boolean res = true;
 
       String ID = ctx.typeID().getText();
@@ -298,15 +299,18 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
    @Override
    public Boolean visitExprUnary(AGLParser.ExprUnaryContext ctx) {
-      // expression: sign=('+'|'-') e=expression and expression returns[Type eType]
-      Boolean signal = ctx.sign.getText().equals("+") || ctx.sign.getText().equals("-");
+      // expression: sign=('+'|'-'|'!') e=expression and expression returns [Type eType, String varName]
+      Boolean signal = ctx.sign.getText().equals("+") || ctx.sign.getText().equals("-") || ctx.sign.getText().equals("!");
 
       if (!signal) {
          ErrorHandling.printError(ctx, "Invalid unary operator!");
          return false;
       }
 
+      System.out.println("sign: " + ctx.sign.getText()   );
       Boolean res = visit(ctx.e);
+      System.out.println("Unary: " + ctx.e.eType);
+
       if (res && ctx.e.eType != null && checkNumericType(ctx, ctx.e.eType)) {
          ctx.eType = ctx.e.eType;
       } else {
@@ -340,6 +344,8 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
    @Override
    public Boolean visitExprPoint(AGLParser.ExprPointContext ctx) {
+      // expression: '(' x=expression ',' y=expression ')'  and expression returns [Type eType, String varName]
+      
       Boolean res = visit(ctx.x) && checkNumericType(ctx, ctx.x.eType) &&
             visit(ctx.y) && checkNumericType(ctx, ctx.y.eType);
       if (res) {
@@ -403,7 +409,22 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       // identifier : ID | ID('.' ID)+;
       Boolean res = true;
       String id = ctx.identifier().getText();
-      
+      if (ctx.identifier().ID(1) == null) {
+         if (!AGLParser.symbolTable.containsKey(id)) {
+            ErrorHandling.printError(ctx, "Variable \"" + id + "\" does not exists!");
+            res = false;
+         } else {
+            Symbol sym = AGLParser.symbolTable.get(id);
+            if (!sym.valueDefined()) {
+               ErrorHandling.printError(ctx, "Variable \"" + id + "\" not defined!");
+               res = false;
+            } else {
+               ctx.eType = sym.type();
+            }
+         }
+      } else {
+         ErrorHandling.printError("TO BE IMPLEMENTED ID ('.' ID)+ - attributes");
+      }
       // TODO
       return res;
    }
@@ -609,6 +630,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    // -- Correct --
    private Boolean checkNumericType(ParserRuleContext ctx, Type t) {
       Boolean res = true;
+
       if (!t.isNumeric()) {
          // ErrorHandling.printError(ctx, "Numeric operator applied to a non-numeric
          // operand!");
