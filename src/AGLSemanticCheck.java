@@ -232,35 +232,6 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       return res;
    }
 
-   // @Override
-   // public Boolean visitLongAssignment(AGLParser.LongAssignmentContext ctx) {
-   //    // longAssignment: ID ('.' ID)? assignment;
-   //    String id1 = ctx.ID(0).getText();
-
-   //    if (!AGLParser.symbolTable.containsKey(id1)) {
-   //       ErrorHandling.printError("Variable \"" + id1 + "\" does not exist!");
-   //       return false;
-   //    }
-
-   //    // if attribute exists
-   //    String atr = null;
-   //    if (ctx.ID(1) != null) {
-   //       atr = ctx.ID(1).getText();
-   //    }
-
-   //    Boolean res = visit(ctx.assignment());
-   //    if (res) {
-   //       Symbol sym = AGLParser.symbolTable.get(id1); // TODO: with attribute!!!
-   //       if (!ctx.assignment().eType.conformsTo(sym.type())) {
-   //          ErrorHandling.printError("Expression type does not conform to variable type!");
-   //          return false;
-   //       } else {
-   //          sym.setValueDefined();
-   //       }
-   //    }
-
-   //    return res;
-   // }
 
    @Override
    public Boolean visitLongAssignment(AGLParser.LongAssignmentContext ctx) {
@@ -616,15 +587,11 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    public Boolean visitWhileStatement(AGLParser.WhileStatementContext ctx) {
       Boolean res = true;
       res = visit(ctx.expression());
-      System.out.println("Check while statement");
 
       if (!res) {
          ErrorHandling.printError("Error: invalid expression in while statement");
          return false;
       }
-      System.out.println("Expression: " + ctx.expression().getText() );
-      // Type of the expression
-      System.out.println("Expression type: " + ctx.expression().eType.name());
 
       Type exprType = ctx.expression().eType;
       System.out.println("Expression type: " + exprType.name());
