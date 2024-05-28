@@ -4,19 +4,19 @@ import time
 class Root:
 
     def __init__(self):
-        self.root = Tk()
+        self.tk = Tk()
         self.objects = []
 
-        self.root.withdraw()
+        self.tk.withdraw()
 
     def add_object(self, obj):
         self.objects.append(obj)
 
 class View:
 
-    def __init__(self, root: Root, top=None, Ox=0, Oy=0, height=201, width=201, title="No title", background="black"):
+    def __init__(self, root: Root, Ox=0, Oy=0, height=201, width=201, title="No title", background="black"):
         self.root = root
-        self.top = top
+        self.top = None
         self.Ox = Ox
         self.Oy = Oy
         self.height = height
@@ -28,10 +28,9 @@ class View:
         self.mouseY = None
 
         self.canvas = None
-        #self.create_canvas()
         
     def create_canvas(self):
-        if not self.top: self.top = Toplevel(self.root.root)
+        if not self.top: self.top = Toplevel(self.root.tk)
         self.top.title(self.title)
         self.canvas = Canvas(self.top, height=self.height, width=self.width, background=self.background)
         self.canvas.pack()
@@ -41,7 +40,7 @@ class View:
     def update(self):
         if self.canvas: self.canvas.destroy()
         self.create_canvas()
-        self.root.root.update()
+        self.top.update()
 
     def move_relative(self, point):
         x, y = point
@@ -85,8 +84,6 @@ class View:
         self.getMouse()
         return self.mouseX-self.width/2+self.Ox, self.height/2+self.Oy-self.mouseY
     
-    def add_object(self, obj):
-        self.objects.append(obj)
 
     def close(self):
         self.canvas.destroy()
@@ -102,6 +99,7 @@ class Object:
         self.view = view
         self.origin = origin
         self.state = state
+        self.object = None                
 
         self.root.add_object(self)
 
@@ -121,12 +119,9 @@ class Line(Object):
         self.length = length
         self.fill = fill
 
-        self.object = None
-        #self.create_object()
-
     def create_object(self, view):
         self.view = view
-        self.object = self.view.canvas.create_line(self.view.line(self.view.coord(self.origin), self.length), fill=self.fill, state=DISABLED)
+        self.object = self.view.canvas.create_line(self.view.line(self.view.coord(self.origin), self.length), fill=self.fill, state=self.state)
 
 class PolyLine(Object):
     """
@@ -138,9 +133,6 @@ class PolyLine(Object):
         super().__init__(root, view, origin, state)
         self.points = points
         self.fill = fill
-
-        self.object = None
-        #self.create_object()
     
     def create_object(self, view):
         self.view = view
@@ -157,9 +149,6 @@ class Spline(Object):
         self.points = points
         self.fill = fill
 
-        self.object = None
-        #self.create_object()
-
     def create_object(self, view):
         self.view = view
         self.object = self.view.canvas.create_line(self.view.coord(self.origin), *[self.view.coord(p) for p in self.points], fill=self.fill, state=self.state, smooth=True)
@@ -175,9 +164,6 @@ class Polygon(Object):
         self.points = points
         self.fill = fill
         self.outline = outline
-
-        self.object = None
-        #self.create_object()
     
     def create_object(self, view):
         self.view = view
@@ -194,9 +180,6 @@ class Blob(Object):
         self.points = points
         self.fill = fill
         self.outline = outline
-
-        self.object = None
-        #self.create_object()
     
     def create_object(self, view):
         self.view = view
@@ -208,9 +191,7 @@ class Rectangle(Object):
         super().__init__(root, view, origin, state)
         self.length = length
         self.fill = fill
-
-        self.object = None
-        #self.create_object()
+        
     
     def create_object(self, view):
         self.view = view
@@ -222,9 +203,6 @@ class Ellipse(Object):
         super().__init__(root, view, origin, state)
         self.length = length
         self.fill = fill
-
-        self.object = None
-        #self.create_object()
 
     def create_object(self, view):
         self.view = view
@@ -239,9 +217,6 @@ class Arc(Object):
         self.extent = extent   
         self.outline = outline
 
-        self.object = None
-        #self.create_object()
-
     def create_object(self, view):
         self.view = view
         self.object = self.view.canvas.create_arc(self.view.ellipse(self.view.coord(self.origin), self.length), style=ARC, start=self.start, extent=self.extent, outline=self.outline, state=self.state)
@@ -254,9 +229,6 @@ class ArcChord(Object):
         self.start = start
         self.extent = extent   
         self.fill = fill
-
-        self.object = None
-        #self.create_object()
 
     def create_object(self, view):
         self.view = view
@@ -272,9 +244,6 @@ class PieSlice(Object):
         self.extent = extent   
         self.fill = fill  
 
-        self.object = None
-        #self.create_object()
-
     def create_object(self, view):
         self.view = view
         self.object = self.view.canvas.create_arc(self.view.ellipse(self.view.coord(self.origin), self.length), style=PIESLICE, start=self.start, extent=self.extent, fill=self.fill, state=self.state)
@@ -287,9 +256,6 @@ class Text(Object):
         self.text = text
         self.fill = fill
 
-        self.object = None
-        #self.create_object()
-
     def create_object(self, view):
         self.view = view
         self.object = self.view.canvas.create_text(self.view.coord(self.origin), text=self.text, fill=self.fill, state=self.state)
@@ -300,9 +266,6 @@ class Dot(Object):
     def __init__(self, root: Root, view: View = None, state="normal", origin=(0,0), fill="black"):
         super().__init__(root, view, origin, state)
         self.fill = fill
-
-        self.object = None
-        #self.create_object()
 
     def create_object(self, view):
         self.view = view

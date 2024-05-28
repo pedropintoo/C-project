@@ -128,7 +128,7 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
    @Override public ST visitBlockStatement(AGLParser.BlockStatementContext ctx) {
       ST res = null;
 
-      res = templates.getInstanceOf("model");
+      res = templates.getInstanceOf("object");
       res.add("type", ctx.typeID().getText());
 
       if (ctx.typeID().getText().equals("View")) {

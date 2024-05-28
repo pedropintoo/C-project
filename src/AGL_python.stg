@@ -83,7 +83,7 @@ unaryExpression(stat,var,op,e1) ::= <<
 <decl(var,[op," ",e1])>
 >>
 
-model(stat, var, type, origin, field, update_lastView) ::= <<
+object(stat, var, type, origin, field, update_lastView) ::= <<
 <stats(stat)>
 
 <var> = <type>(root = root)
