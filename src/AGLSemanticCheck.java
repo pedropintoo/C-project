@@ -526,6 +526,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    public Boolean visitWhileStatement(AGLParser.WhileStatementContext ctx) {
       Boolean res = true;
       res = visit(ctx.expression());
+      System.out.println("Check while statement");
 
       if (!res) {
          ErrorHandling.printError("Error: invalid expression in while statement");
@@ -551,6 +552,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    public Boolean visitRepeatStatement(AGLParser.RepeatStatementContext ctx) {
       Boolean res = true;
       res = visit(ctx.stat());
+      System.out.println("Check repeat statement");
 
       if (!res) {
          ErrorHandling.printError("Error: invalid statement in repeat statement");
@@ -562,15 +564,40 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
          ErrorHandling.printError("Error: invalid expression in repeat statement");
          return false;
       }
+
+      Type exprType = ctx.expression().eType;
+      if (!(exprType instanceof BooleanType)) {
+         ErrorHandling.printError("Error: the expression in the repeat statement has to be a boolean");
+         return false;
+      }
       return res;
    }
 
-   // @Override
-   // public Boolean visitWithStatement(AGLParser.WithStatementContext ctx) {
-   // Boolean res = null;
-   // return visitChildren(ctx);
-   // // return res;
-   // }
+   @Override
+   public Boolean visitWithStatement(AGLParser.WithStatementContext ctx) {
+      Boolean res = true;
+      String id = ctx.identifier().getText();
+      System.out.println("Check with statement");
+
+      if (!AGLParser.symbolTable.containsKey(id)) {
+         ErrorHandling.printError("Error: identifier \"" + id + "\" is not defined");
+         return false;
+      }
+
+      Type idType = ctx.identifier().eType;
+      if (!(idType instanceof ObjectType)) {
+         ErrorHandling.printError("Error: identifier \"" + id + "\" is not an object type");
+         return false;
+      }
+
+      res = visit(ctx.propertiesAssignment());
+      if (!res) {
+         ErrorHandling.printError("Error: invalid assignment in with statement");
+         return false;
+      }
+
+      return res;
+   }
 
    // @Override
    // public Boolean visitTypeID(AGLParser.TypeIDContext ctx) {
