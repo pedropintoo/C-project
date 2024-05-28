@@ -40,7 +40,10 @@ POLYGON : 'Polygon';
 BLOB    : 'Blob';
 Model   : 'Model';
 Enum    : 'Enum';
+<<<<<<< HEAD
 ARRAY   : 'Array';
+=======
+>>>>>>> bba7c60 (lexer)
 SCRIPT  : 'Script';
 
 
@@ -53,7 +56,10 @@ CLOSE   : 'close';
 MOUSE   : 'mouse';
 CLICK   : 'click';
 WAIT    : 'wait';
+<<<<<<< HEAD
 DEEPCOPY: 'deepcopy';
+=======
+>>>>>>> bba7c60 (lexer)
 INPUT   : 'input';
 LOAD    : 'load';
 PLAY    : 'play';
