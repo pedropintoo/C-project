@@ -379,19 +379,45 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       return res;
    }
 
-   // @Override
-   // public Boolean visitCommandClose(AGLParser.CommandCloseContext ctx) {
-   // Boolean res = null;
-   // return visitChildren(ctx);
-   // // return res;
-   // }
+   @Override
+   public Boolean visitCommandClose(AGLParser.CommandCloseContext ctx) {
+      // 'close' ID ';' #CommandClose
+      Boolean res = true;
+      String id = ctx.ID().getText();
+      
+      if (!AGLParser.symbolTable.containsKey(id)) {
+         ErrorHandling.printError(ctx, "Variable \""+id+"\" does not exists!");
+         res = false;
+      } 
 
-   // @Override
-   // public Boolean visitCommandMove(AGLParser.CommandMoveContext ctx) {
-   // Boolean res = null;
-   // return visitChildren(ctx);
-   // // return res;
-   // }
+      return res;
+   }
+
+   @Override
+   public Boolean visitCommandMove(AGLParser.CommandMoveContext ctx) {
+      // 'move' ID 'by' expression ';' #CommandMove
+      Boolean res = true;
+      String id = ctx.ID().getText();
+
+      if (!AGLParser.symbolTable.containsKey(id)) {
+         ErrorHandling.printError(ctx, "Variable \""+id+"\" does not exists!");
+         res = false;
+      }
+
+      res = visit(ctx.expression());
+      if (!res) {
+         ErrorHandling.printError("Error: invalid expression in move command");
+         return false;
+      }
+
+      if (!ctx.expression().eType.conformsTo(pointType)) {
+         ErrorHandling.printError("Error: invalid expression type in move command (must be a point!)");
+         return false;
+      }
+
+      return res;
+      
+   }
 
    // @Override
    // public Boolean visitEventTrigger(AGLParser.EventTriggerContext ctx) {
