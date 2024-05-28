@@ -1,7 +1,4 @@
-cellSize : Integer = +200;
-cellSize = 200;
-
-cellSize = (2,3);
+cellSize : Integer = 200;
 
 Line at (-cellSize,cellSize) with {
     length = (50,50);

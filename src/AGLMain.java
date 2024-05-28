@@ -22,7 +22,13 @@ public class AGLMain {
             // print LISP-style tree:
             // System.out.println(tree.toStringTree(parser));
             AGLSemanticCheck visitor0 = new AGLSemanticCheck();
-            visitor0.visit(tree);
+            if (visitor0.visit(tree)) {
+               System.out.println("Semantic check passed.");
+            } else {
+               System.out.println("Semantic check failed.");
+               System.exit(1);
+            }
+            
          }
       }
       catch(IOException e) {

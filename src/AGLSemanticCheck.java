@@ -10,18 +10,18 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    private final PointType pointType = new PointType();
    private final VectorType vectorType = new VectorType();
 
-   // @Override
-   // public Boolean visitProgram(AGLParser.ProgramContext ctx) {
-   // Boolean res = true;
+   @Override
+   public Boolean visitProgram(AGLParser.ProgramContext ctx) {
+      Boolean res = true;
 
-   // for (AGLParser.StatContext stat : ctx.stat()) {
-   // res = visit(stat);
-   // if (!res || res == null) {
-   // return false;
-   // }
-   // }
-   // return true;
-   // }
+      for (AGLParser.StatContext stat : ctx.stat()) {
+         res = visit(stat);
+         if (!res || res == null) {
+            return false;
+         }
+      }
+      return true;
+   }
    
    // ------ Start visit stat ------
 
@@ -109,7 +109,9 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
             ErrorHandling.printError("Error: invalid simple statement instantiation");
             return false;
          }
-         AGLParser.symbolTable.put(ID, new VariableSymbol(ID, ctx.simpleStatement().typeID().res));
+         Symbol sym = new VariableSymbol(ID, ctx.simpleStatement().typeID().res);
+         sym.setValueDefined();
+         AGLParser.symbolTable.put(ID, sym);
          
       } else if (ctx.blockStatement() != null) {
          res = visit(ctx.blockStatement());
@@ -117,7 +119,9 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
             ErrorHandling.printError(ctx, "Error: invalid block statement instantiation");
             return false;
          }
-         AGLParser.symbolTable.put(ID, new VariableSymbol(ID, ctx.blockStatement().typeID().res));
+         Symbol sym = new VariableSymbol(ID, ctx.blockStatement().typeID().res);
+         sym.setValueDefined();
+         AGLParser.symbolTable.put(ID, sym);
       }
 
       return res;
@@ -139,7 +143,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
          if (!ctx.assignment().expression().eType.conformsTo(typeObject)) {
             ErrorHandling.printError("Expression type does not conform to variable type!");
             return false;
-         }
+         } 
       }
 
       return true;
@@ -159,7 +163,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
          }
          Type type = new PointType();
          if (!ctx.expression().eType.conformsTo(type)) {
-            ErrorHandling.printError("Error: invalid expression type in block statement");
+            ErrorHandling.printError("Error: invalid expression type in block statement (must be point origin!)");
             return false;
          }
       }
@@ -326,7 +330,6 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
             ErrorHandling.printError(ctx, "Variable \""+id+"\" not defined!");
             res = false;
          } else {
-            ErrorHandling.printError("sym.type() -> " + sym.type().name());
             ctx.eType = sym.type();
          }
       }
