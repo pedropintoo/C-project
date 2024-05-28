@@ -8,6 +8,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    private final NumberType numberType = new NumberType();
    private final PointType pointType = new PointType();
    private final VectorType vectorType = new VectorType();
+   private final BooleanType booleanType = new BooleanType();
 
    @Override
    public Boolean visitProgram(AGLParser.ProgramContext ctx) {
@@ -587,38 +588,38 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       }
 
       Type exprType = ctx.expression().eType;
-      if (!(exprType instanceof BooleanType)) {
+      if (!(exprType.conformsTo(booleanType))) {
          ErrorHandling.printError("Error: the expression in the repeat statement has to be a boolean");
          return false;
       }
       return res;
    }
 
-   @Override
-   public Boolean visitWithStatement(AGLParser.WithStatementContext ctx) {
-      Boolean res = true;
-      String id = ctx.identifier().getText();
-      System.out.println("Check with statement");
+   // @Override
+   // public Boolean visitWithStatement(AGLParser.WithStatementContext ctx) {
+   //    Boolean res = true;
+   //    String id = ctx.identifier().getText();
+   //    System.out.println("Check with statement");
 
-      if (!AGLParser.symbolTable.containsKey(id)) {
-         ErrorHandling.printError("Error: identifier \"" + id + "\" is not defined");
-         return false;
-      }
+   //    if (!AGLParser.symbolTable.containsKey(id)) {
+   //       ErrorHandling.printError("Error: identifier \"" + id + "\" is not defined");
+   //       return false;
+   //    }
 
-      Type idType = ctx.identifier().eType;
-      if (!(idType instanceof ObjectType)) {
-         ErrorHandling.printError("Error: identifier \"" + id + "\" is not an object type");
-         return false;
-      }
+   //    Type idType = ctx.identifier().eType;
+   //    if (!(idType instanceof ObjectType)) {
+   //       ErrorHandling.printError("Error: identifier \"" + id + "\" is not an object type");
+   //       return false;
+   //    }
 
-      res = visit(ctx.propertiesAssignment());
-      if (!res) {
-         ErrorHandling.printError("Error: invalid assignment in with statement");
-         return false;
-      }
+   //    res = visit(ctx.propertiesAssignment());
+   //    if (!res) {
+   //       ErrorHandling.printError("Error: invalid assignment in with statement");
+   //       return false;
+   //    }
 
-      return res;
-   }
+   //    return res;
+   // }
 
    // @Override
    // public Boolean visitTypeID(AGLParser.TypeIDContext ctx) {
