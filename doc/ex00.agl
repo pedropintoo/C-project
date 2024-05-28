@@ -10,6 +10,8 @@ p : PolyLine at (0,0) with {
     fill = "red";
 }
 
+p1 + v1
+
 spline : Spline at (100, 100) with {
     points = [(80,1), (50,30), (-100,100)];
     fill = "blue";

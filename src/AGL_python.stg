@@ -11,6 +11,7 @@ last_refresh = time.time()
 last_view = None
 mouseX = None
 mouseY = None
+model = None
 #################################################################
 
 if __name__ == "__main__":
@@ -51,6 +52,20 @@ for <var> in <range>:
 
 range(start, end, step) ::= "range(<start>, <end>, <step>)"
 
+while(stat, var, condition, instructions) ::= <<
+<stats(stat)>
+while <condition>:
+    <instructions>
+>>
+
+repeat(stat, var, condition, instructions) ::= <<
+<stats(stat)>
+while True:
+    <instructions>
+    if not <condition>:
+        break   # Repeat until condition is false
+>>
+
 move(stat, var, destination, relative) ::= <<
 <stats(stat)>
 <if(relative)><var>.move_relative(<destination>)<else><var>.move_absolute(<destination>)<endif>
@@ -83,11 +98,22 @@ object(stat, var, type, origin, field, update_lastView) ::= <<
 
 <var> = <type>(root = root)
 <if(origin)><var>.origin = <origin><endif>
-<if(update_lastView)>last_view = <var><endif>
+<if(update_lastView)>last_view = <var><else>if model is not None:
+    model.add_object(<var>)<endif>
 <properties(field)>
 >>
 
-with(stat, var, field) ::= <<
+model(stat, var) ::= <<
+<stats(stat)>
+
+<var> = Model(root = root)
+model = <var>
+<instructions>
+model = None
+
+>>
+
+block_properties(stat, var, field) ::= <<
 <stats(stat)>
 
 <properties(field)>
