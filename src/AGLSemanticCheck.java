@@ -1,6 +1,5 @@
 import org.antlr.v4.runtime.ParserRuleContext;
 
-
 @SuppressWarnings("CheckReturnValue")
 public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
@@ -22,7 +21,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       }
       return true;
    }
-   
+
    // ------ Start visit stat ------
 
    @Override
@@ -49,7 +48,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
    @Override
    public Boolean visitStatLongAssignment(AGLParser.StatLongAssignmentContext ctx) {
-      // stat: longAssignment; 
+      // stat: longAssignment;
       Boolean res = true;
       res = visit(ctx.longAssignment());
       if (!res) {
@@ -81,8 +80,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    }
 
    @Override
-   public Boolean visitStatWithStatement(AGLParser.StatWithStatementContext ctx)
-   {
+   public Boolean visitStatWithStatement(AGLParser.StatWithStatementContext ctx) {
       // stat: withStatement;
       Boolean res = true;
       res = visit(ctx.withStatement());
@@ -102,7 +100,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       if (AGLParser.symbolTable.containsKey(ID)) {
          ErrorHandling.printError("Variable \"" + ID + "\" already declared!");
          return false;
-      } 
+      }
       if (ctx.simpleStatement() != null) {
          res = visit(ctx.simpleStatement());
          if (!res) {
@@ -112,7 +110,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
          Symbol sym = new VariableSymbol(ID, ctx.simpleStatement().typeID().res);
          sym.setValueDefined();
          AGLParser.symbolTable.put(ID, sym);
-         
+
       } else if (ctx.blockStatement() != null) {
          res = visit(ctx.blockStatement());
          if (!res) {
@@ -129,7 +127,8 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
    @Override
    public Boolean visitSimpleStatement(AGLParser.SimpleStatementContext ctx) {
-      // simpleStatement: typeID (assignment)?     and      simpleStatement returns [String varName]      and typeID returns[Type res]
+      // simpleStatement: typeID (assignment)? and simpleStatement returns [String
+      // varName] and typeID returns[Type res]
       String type = ctx.typeID().getText();
       Type typeObject = ctx.typeID().res;
 
@@ -143,7 +142,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
          if (!ctx.assignment().expression().eType.conformsTo(typeObject)) {
             ErrorHandling.printError("Expression type does not conform to variable type!");
             return false;
-         } 
+         }
       }
 
       return true;
@@ -210,20 +209,19 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       return res;
    }
 
-
    @Override
    public Boolean visitAssignment(AGLParser.AssignmentContext ctx) {
       // assignment '=' expression
-    
+
       Boolean res = visit(ctx.expression());
-  
+
       if (res) {
          String exprText = ctx.expression().getText();
          ctx.eType = ctx.expression().eType;
       }
-  
+
       return res;
-      
+
    }
 
    // @Override
@@ -237,7 +235,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
    @Override
    public Boolean visitExprUnary(AGLParser.ExprUnaryContext ctx) {
-      // expression: sign=('+'|'-') e=expression     and     expression returns[Type eType]
+      // expression: sign=('+'|'-') e=expression and expression returns[Type eType]
       Boolean signal = ctx.sign.getText().equals("+") || ctx.sign.getText().equals("-");
 
       if (!signal) {
@@ -270,7 +268,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       if (res) {
          ctx.eType = fetchType(ctx.e1.eType, ctx.e2.eType);
          if (integerOperator(ctx.op.getText()) && !"integer".equals(ctx.eType.name())) {
-            ErrorHandling.printError(ctx, "The integer operator "+ctx.op.getText()+"requires integer operands!");
+            ErrorHandling.printError(ctx, "The integer operator " + ctx.op.getText() + "requires integer operands!");
             res = false;
          }
       }
@@ -289,10 +287,9 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       return res;
    }
 
-
    @Override
    public Boolean visitExprNumber(AGLParser.ExprNumberContext ctx) {
-      // expression: number=(INT | FLOAT)     and     expression returns[Type eType]
+      // expression: number=(INT | FLOAT) and expression returns[Type eType]
       if (ctx.INT() != null) {
          ctx.eType = integerType;
       } else if (ctx.FLOAT() != null) {
@@ -318,16 +315,16 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
    @Override
    public Boolean visitExprID(AGLParser.ExprIDContext ctx) {
-      // expression: ID     and     expression returns[Type eType]
+      // expression: ID and expression returns[Type eType]
       Boolean res = true;
       String id = ctx.ID().getText();
       if (!AGLParser.symbolTable.containsKey(id)) {
-         ErrorHandling.printError(ctx, "Variable \""+id+"\" does not exists!");
+         ErrorHandling.printError(ctx, "Variable \"" + id + "\" does not exists!");
          res = false;
       } else {
          Symbol sym = AGLParser.symbolTable.get(id);
          if (!sym.valueDefined()) {
-            ErrorHandling.printError(ctx, "Variable \""+id+"\" not defined!");
+            ErrorHandling.printError(ctx, "Variable \"" + id + "\" not defined!");
             res = false;
          } else {
             ctx.eType = sym.type();
@@ -335,9 +332,6 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       }
       return res;
    }
-
-
-
 
    // --------- End Visit Expression ---------
 
@@ -348,12 +342,17 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    // // return res;
    // }
 
-   // @Override
-   // public Boolean visitCommandPrint(AGLParser.CommandPrintContext ctx) {
-   // Boolean res = null;
-   // return visitChildren(ctx);
-   // // return res;
-   // }
+   @Override
+   public Boolean visitCommandPrint(AGLParser.CommandPrintContext ctx) {
+      Boolean res = true;
+      res = visit(ctx.expression());
+
+      if (!res) {
+         ErrorHandling.printError("Error: invalid expression in print command");
+         return false;
+      }
+      return res;
+   }
 
    // @Override
    // public Boolean visitCommandClose(AGLParser.CommandCloseContext ctx) {
