@@ -9,7 +9,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    private final PointType pointType = new PointType();
    private final VectorType vectorType = new VectorType();
    private final BooleanType booleanType = new BooleanType();
-   private final ObjectType objectType = new ObjectType(null);
+   // private final ObjectType objectType;
 
    @Override
    public Boolean visitProgram(AGLParser.ProgramContext ctx) {
@@ -177,24 +177,86 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       return res;
    }
 
+   // @Override
+   // public Boolean visitSimpleStatement(AGLParser.SimpleStatementContext ctx) {
+   //    // simpleStatement: typeID (assignment)? and simpleStatement returns [String varName] and typeID returns[Type res]
+   //    // assignment = expression    and   expression returns [Type eType, String varName]
+   //    String type = ctx.typeID().getText();
+   //    Type typeObject = ctx.typeID().res;
+
+   //    if (ctx.assignment() != null) {
+   //       Boolean res = visit(ctx.assignment().expression());
+   //       if (!res) {
+   //          ErrorHandling.printError("Error: invalid simple statement");
+   //          return false;
+   //       }
+
+   //       if (!ctx.assignment().expression().eType.conformsTo(typeObject)) {
+   //          ErrorHandling.printError("Expression type does not conform to variable type!");
+   //          return false;
+   //       }
+   //    }
+
+   //    return true;
+   // }
+
+
    @Override
    public Boolean visitSimpleStatement(AGLParser.SimpleStatementContext ctx) {
-      // simpleStatement: typeID (assignment)? and simpleStatement returns [String
-      // varName] and typeID returns[Type res]
+      // simpleStatement: typeID ('at' expression)? ((assignment)? ';' | in_assignment)
+      // assignment = expression    and   expression returns [Type eType, String varName]
+      // in_assignment: 'in' '{' ID (',' ID)* '}'
+
       String type = ctx.typeID().getText();
       Type typeObject = ctx.typeID().res;
 
-      if (ctx.assignment() != null) {
-         Boolean res = visit(ctx.assignment().expression());
+      // check if we have an expression and if we have typeObject must be a ObjectType()
+      if (ctx.expression() != null) {
+         Boolean res = visit(ctx.expression());
          if (!res) {
             ErrorHandling.printError("Error: invalid simple statement");
             return false;
          }
 
-         if (!ctx.assignment().expression().eType.conformsTo(typeObject)) {
+         // expression must be a PointType
+         Type pointType = new PointType();
+         if (!ctx.expression().eType.conformsTo(pointType)) {
+            ErrorHandling.printError("Error: invalid expression type in simple statement (must be point!)");
+            return false;
+         }
+
+         // typeObject must be a instanceof ObjectType
+         Type t = new ObjectType(type);
+         
+         if (!t.conformsTo(typeObject)) {
+            ErrorHandling.printError("Error: invalid type in simple statement (must be an object type!)");
+            return false;
+         }
+
+      }
+
+  
+      // check if we have an assignment or a in_assignment and if it conforms to the type
+      if (ctx.assignment() != null) {
+         Boolean res = visit(ctx.assignment());
+         if (!res) {
+            ErrorHandling.printError("Error: invalid simple statement");
+            return false;
+         }
+
+         if (!ctx.assignment().eType.conformsTo(typeObject)) {
             ErrorHandling.printError("Expression type does not conform to variable type!");
             return false;
          }
+      } else if (ctx.in_assignment() != null) {
+         
+         Boolean res = visit(ctx.in_assignment());
+         if (!res) {
+            ErrorHandling.printError("Error: invalid simple statement");
+            return false;
+         }
+
+         return true; // TO DO
       }
 
       return true;
@@ -240,7 +302,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       // assignment : '=' expression;
       Boolean res = true;
       String id = ctx.identifier().getText();
-      // TODO: Check if the identifier is valid
+
       System.out.println("Check long assignment");
       if (ctx.identifier().ID(1) == null) {
          if (!AGLParser.symbolTable.containsKey(id)) {
@@ -258,7 +320,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
             }
          }
       } else {
-         ErrorHandling.printError("TO BE IMPLEMENTED ID ('.' ID)+ - attributes");
+         ErrorHandling.printError("TO BE IMPLEMENTED ID ('.' ID)+ - attributes"); // TODO
       }
 
       return res;
@@ -422,9 +484,9 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
             }
          }
       } else {
-         ErrorHandling.printError("TO BE IMPLEMENTED ID ('.' ID)+ - attributes");
+         ErrorHandling.printError("TO BE IMPLEMENTED ID ('.' ID)+ - attributes"); // TODO
       }
-      // TODO
+      
       return res;
    }
 
