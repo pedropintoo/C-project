@@ -39,7 +39,6 @@ while (time.time() - last_refresh \<= <delay>):
 
 <endif>
 last_refresh = time.time()
-last_view = <view>
 <view>.update()
 >>
 
@@ -56,9 +55,9 @@ for <var> in <range>:
 
 range(start, end, step) ::= "range(<start>, <end>, <step>)"
 
-move(stat, var, destination) ::= <<
+move(stat, var, destination, relative) ::= <<
 <stats(stat)>
-<var>.move_relative(<destination>)
+<if(relative)><var>.move_relative(<destination>)<else><var>.move_absolute(<destination>)<endif>
 >>
 
 close(view) ::= <<

@@ -331,6 +331,10 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
       res.add("stat", visit(ctx.expression()).render()); // render the return value!
       res.add("destination", ctx.expression().varName);
 
+      if (ctx.type.getText().equals("by")) {
+         res.add("relative", "True"); 
+      } 
+
       return res;
    }
 

@@ -68,7 +68,7 @@ command
     : 'refresh' ID ('after' expression suffix=('ms'|'s'))? ';'   #CommandRefresh
     | 'print' expression ';'                    #CommandPrint
     | 'close' ID ';'                            #CommandClose
-    | 'move' ID 'by' expression ';'             #CommandMove
+    | 'move' ID type=('by'|'to') expression ';'             #CommandMove
     ;
 
 eventTrigger

@@ -54,6 +54,7 @@ MS      : 'ms';
 S       : 's';
 MOVE    : 'move';
 BY      : 'by';
+TO      : 'to';
 
 // Operators
 PLUS    : '+';
