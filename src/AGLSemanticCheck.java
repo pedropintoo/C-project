@@ -36,6 +36,17 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    }
 
    @Override
+   public Boolean visitStatModelInstantiation(AGLParser.StatModelInstantiationContext ctx) {
+      // stat: modelInstantiation;
+      Boolean res = true;
+      res = visit(ctx.modelInstantiation());
+      if (!res) {
+         ErrorHandling.printError(ctx, "Error: invalid modelInstantiation");
+      }
+      return res;
+   }
+
+   @Override
    public Boolean visitStatBlockStatement(AGLParser.StatBlockStatementContext ctx) {
       // stat: blockStatement;
       Boolean res = true;
@@ -58,6 +69,51 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    }
 
    @Override
+   public Boolean visitStatWithStatement(AGLParser.StatWithStatementContext ctx) {
+      // stat: withStatement;
+      Boolean res = true;
+      res = visit(ctx.withStatement());
+      if (!res) {
+         ErrorHandling.printError(ctx, "Error: invalid with statement");
+      }
+      return res;
+   }
+
+   @Override
+   public Boolean visitStatPlayStatement(AGLParser.StatPlayStatementContext ctx) {
+      // stat: playStatement;
+      Boolean res = true;
+      res = visit(ctx.playStatement());
+      if (!res) {
+         ErrorHandling.printError(ctx, "Error: invalid with playStatement");
+      }
+      return res;
+   }
+
+   @Override
+   public Boolean visitStatRepetitiveStatement(AGLParser.StatRepetitiveStatementContext ctx) {
+      // stat: repetitiveStatement;
+      Boolean res = true;
+      res = visit(ctx.repetitiveStatement());
+      if (!res) {
+         ErrorHandling.printError(ctx, "Error: invalid with repetitiveStatement");
+      }
+      return res;
+   }
+
+   @Override
+   public Boolean visitStatIfStatement(AGLParser.StatIfStatementContext ctx) {
+      // stat: ifStatement;
+      Boolean res = true;
+      res = visit(ctx.ifStatement());
+      if (!res) {
+         ErrorHandling.printError(ctx, "Error: invalid with ifStatement");
+      }
+      return res;
+   }
+
+
+   @Override
    public Boolean visitStatCommand(AGLParser.StatCommandContext ctx) {
       // stat: command;
       Boolean res = true;
@@ -69,26 +125,20 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    }
 
    @Override
-   public Boolean visitStatForLoop(AGLParser.StatForLoopContext ctx) {
-      // stat: for_loop;
+   public Boolean visitStatBlock(AGLParser.StatBlockContext ctx) {
+      // '{' stat+ '}'
       Boolean res = true;
-      res = visit(ctx.for_loop());
-      if (!res) {
-         ErrorHandling.printError(ctx, "Error: invalid for loop");
+      for (AGLParser.StatContext stat : ctx.stat()) {
+         res = visit(stat);
+         if (!res || res == null) {
+            return false;
+         }
       }
       return res;
    }
 
-   @Override
-   public Boolean visitStatWithStatement(AGLParser.StatWithStatementContext ctx) {
-      // stat: withStatement;
-      Boolean res = true;
-      res = visit(ctx.withStatement());
-      if (!res) {
-         ErrorHandling.printError(ctx, "Error: invalid with statement");
-      }
-      return res;
-   }
+
+
 
    // ------ End visit stat ------
 
@@ -179,35 +229,48 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       return res;
    }
 
+   // @Override
+   // public Boolean visitLongAssignment(AGLParser.LongAssignmentContext ctx) {
+   //    // longAssignment: ID ('.' ID)? assignment;
+   //    String id1 = ctx.ID(0).getText();
+
+   //    if (!AGLParser.symbolTable.containsKey(id1)) {
+   //       ErrorHandling.printError("Variable \"" + id1 + "\" does not exist!");
+   //       return false;
+   //    }
+
+   //    // if attribute exists
+   //    String atr = null;
+   //    if (ctx.ID(1) != null) {
+   //       atr = ctx.ID(1).getText();
+   //    }
+
+   //    Boolean res = visit(ctx.assignment());
+   //    if (res) {
+   //       Symbol sym = AGLParser.symbolTable.get(id1); // TODO: with attribute!!!
+   //       if (!ctx.assignment().eType.conformsTo(sym.type())) {
+   //          ErrorHandling.printError("Expression type does not conform to variable type!");
+   //          return false;
+   //       } else {
+   //          sym.setValueDefined();
+   //       }
+   //    }
+
+   //    return res;
+   // }
+
    @Override
    public Boolean visitLongAssignment(AGLParser.LongAssignmentContext ctx) {
-
-      String id1 = ctx.ID(0).getText();
-
-      if (!AGLParser.symbolTable.containsKey(id1)) {
-         ErrorHandling.printError("Variable \"" + id1 + "\" does not exist!");
-         return false;
-      }
-
-      // if attribute exists
-      String atr = null;
-      if (ctx.ID(1) != null) {
-         atr = ctx.ID(1).getText();
-      }
-
-      Boolean res = visit(ctx.assignment());
-      if (res) {
-         Symbol sym = AGLParser.symbolTable.get(id1); // TODO: with attribute!!!
-         if (!ctx.assignment().eType.conformsTo(sym.type())) {
-            ErrorHandling.printError("Expression type does not conform to variable type!");
-            return false;
-         } else {
-            sym.setValueDefined();
-         }
-      }
+      // longAssignment : identifier assignment; 
+      // identifier : ID | ID('.' ID)+;
+      // assignment : '=' expression;
+      Boolean res = true;
+      String id = ctx.identifier().getText();
+      // TODO: Check if the identifier is valid
 
       return res;
    }
+
 
    @Override
    public Boolean visitAssignment(AGLParser.AssignmentContext ctx) {
@@ -262,7 +325,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    }
 
    // @Override
-   public Boolean visitExprAddSubMultDiv(AGLParser.ExprAddSubMultDivContext ctx) {
+   public Boolean visitExprAddSubMultDiv(AGLParser.ExprAddSubMultDivAndOrContext ctx) {
       Boolean res = visit(ctx.e1) && checkNumericType(ctx, ctx.e1.eType) &&
             visit(ctx.e2) && checkNumericType(ctx, ctx.e2.eType);
       if (res) {
@@ -313,23 +376,35 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       return true;
    }
 
+   // @Override
+   // public Boolean visitExprID(AGLParser.ExprIDContext ctx) {
+   //    // expression: ID and expression returns[Type eType]
+   //    Boolean res = true;
+   //    String id = ctx.ID().getText();
+   //    if (!AGLParser.symbolTable.containsKey(id)) {
+   //       ErrorHandling.printError(ctx, "Variable \"" + id + "\" does not exists!");
+   //       res = false;
+   //    } else {
+   //       Symbol sym = AGLParser.symbolTable.get(id);
+   //       if (!sym.valueDefined()) {
+   //          ErrorHandling.printError(ctx, "Variable \"" + id + "\" not defined!");
+   //          res = false;
+   //       } else {
+   //          ctx.eType = sym.type();
+   //       }
+   //    }
+   //    return res;
+   // }
+   
+
    @Override
    public Boolean visitExprID(AGLParser.ExprIDContext ctx) {
-      // expression: ID and expression returns[Type eType]
+      // expression: identifier and expression returns [Type eType, String varName]
+      // identifier : ID | ID('.' ID)+;
       Boolean res = true;
-      String id = ctx.ID().getText();
-      if (!AGLParser.symbolTable.containsKey(id)) {
-         ErrorHandling.printError(ctx, "Variable \"" + id + "\" does not exists!");
-         res = false;
-      } else {
-         Symbol sym = AGLParser.symbolTable.get(id);
-         if (!sym.valueDefined()) {
-            ErrorHandling.printError(ctx, "Variable \"" + id + "\" not defined!");
-            res = false;
-         } else {
-            ctx.eType = sym.type();
-         }
-      }
+      String id = ctx.identifier().getText();
+      
+      // TODO
       return res;
    }
 
@@ -393,36 +468,47 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       return res;
    }
 
+   // @Override
+   // public Boolean visitCommandMove(AGLParser.CommandMoveContext ctx) {
+   //    // 'move' ID 'by' expression ';' #CommandMove
+   //    Boolean res = true;
+   //    String id = ctx.ID().getText();
+
+   //    if (!AGLParser.symbolTable.containsKey(id)) {
+   //       ErrorHandling.printError(ctx, "Variable \""+id+"\" does not exists!");
+   //       res = false;
+   //    }
+
+   //    res = visit(ctx.expression());
+   //    if (!res) {
+   //       ErrorHandling.printError("Error: invalid expression in move command");
+   //       return false;
+   //    }
+
+   //    if (!ctx.expression().eType.conformsTo(pointType)) {
+   //       ErrorHandling.printError("Error: invalid expression type in move command (must be a point!)");
+   //       return false;
+   //    }
+
+   //    return res;
+      
+   // }
+   
    @Override
    public Boolean visitCommandMove(AGLParser.CommandMoveContext ctx) {
-      // 'move' ID 'by' expression ';' #CommandMove
+      // 'move' identifier type=('by'|'to') expression ';' #CommandMove
       Boolean res = true;
-      String id = ctx.ID().getText();
+      String id = ctx.identifier().getText();
 
-      if (!AGLParser.symbolTable.containsKey(id)) {
-         ErrorHandling.printError(ctx, "Variable \""+id+"\" does not exists!");
-         res = false;
-      }
-
-      res = visit(ctx.expression());
-      if (!res) {
-         ErrorHandling.printError("Error: invalid expression in move command");
-         return false;
-      }
-
-      if (!ctx.expression().eType.conformsTo(pointType)) {
-         ErrorHandling.printError("Error: invalid expression type in move command (must be a point!)");
-         return false;
-      }
-
+      // TODO
       return res;
       
    }
 
-
    @Override
-   public Boolean visitFor_loop(AGLParser.For_loopContext ctx) {
-      // 'for' ID 'in' NUMBER_RANGE 'do' '{' stat* '}' 
+   public Boolean visitForStatement(AGLParser.ForStatementContext ctx) {
+      // forStatement : 'for' ID 'in' number_range 'do' stat;
+      // number_range : expression '..' expression ('..' expression)?
       Boolean res = true;
       String id = ctx.ID().getText();
 
@@ -431,15 +517,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
          return false;
       }
 
-      // In the lexer: NUMBER_RANGE : DIGIT+ '..' DIGIT+;
-      String[] range = ctx.NUMBER_RANGE().getText().split("\\.\\.");
-      
-      // Check if the range is valid -> range[0] < range[1]
-      if (Integer.parseInt(range[0]) >= Integer.parseInt(range[1])) {
-         ErrorHandling.printError("Invalid range in for loop");
-         return false;
-      }
-
+      // TODO: Check expressions and if the range is valid
 
       return res;
    }

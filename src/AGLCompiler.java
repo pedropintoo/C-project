@@ -2,14 +2,14 @@
 //    File: AGL Generator to Python
 //    */
 
-import org.stringtemplate.v4.*;
+// import org.stringtemplate.v4.*;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import java.util.Iterator;
 
-@SuppressWarnings("CheckReturnValue")
-public class AGLCompiler extends AGLParserBaseVisitor<ST> {
+// @SuppressWarnings("CheckReturnValue")
+// public class AGLCompiler extends AGLParserBaseVisitor<ST> {
    
 
     private STGroup templates = new STGroupFile("AGL_python.stg");
