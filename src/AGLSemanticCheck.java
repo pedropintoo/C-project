@@ -420,13 +420,29 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    }
 
 
+   @Override
+   public Boolean visitFor_loop(AGLParser.For_loopContext ctx) {
+      // 'for' ID 'in' NUMBER_RANGE 'do' '{' stat* '}' 
+      Boolean res = true;
+      String id = ctx.ID().getText();
 
-   // @Override
-   // public Boolean visitFor_loop(AGLParser.For_loopContext ctx) {
-   // Boolean res = null;
-   // return visitChildren(ctx);
-   // // return res;
-   // }
+      if (AGLParser.symbolTable.containsKey(id)) {
+         ErrorHandling.printError("Variable \"" + id + "\" already declared!");
+         return false;
+      }
+
+      // In the lexer: NUMBER_RANGE : DIGIT+ '..' DIGIT+;
+      String[] range = ctx.NUMBER_RANGE().getText().split("\\.\\.");
+      
+      // Check if the range is valid -> range[0] < range[1]
+      if (Integer.parseInt(range[0]) >= Integer.parseInt(range[1])) {
+         ErrorHandling.printError("Invalid range in for loop");
+         return false;
+      }
+
+
+      return res;
+   }
 
    // @Override
    // public Boolean visitWithStatement(AGLParser.WithStatementContext ctx) {
