@@ -207,7 +207,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       // assignment = expression    and   expression returns [Type eType, String varName]
       // in_assignment: 'in' '{' ID (',' ID)* '}'
 
-      System.out.println("Check simple statement");
+      // System.out.println("Check simple statement");
 
       String type = ctx.typeID().getText();
       Type typeObject = ctx.typeID().res;
@@ -241,8 +241,8 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       // check if we have an assignment or a in_assignment and if it conforms to the type
       if (ctx.assignment() != null) {
          Boolean res = visit(ctx.assignment());
-         System.out.println("Check assignment");
-         System.out.println("Type: " + ctx.assignment().eType.name());
+         // System.out.println("Check assignment");
+         // System.out.println("Type: " + ctx.assignment().eType.name());
          if (!res) {
             ErrorHandling.printError("Error: invalid simple statement");
             return false;
@@ -334,7 +334,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    @Override
    public Boolean visitAssignment(AGLParser.AssignmentContext ctx) {
       // assignment '=' expression
-
+      // System.out.println("Check assignment");
       Boolean res = visit(ctx.expression());
 
       if (res) {
@@ -426,33 +426,44 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
          
          if (res) {
 
-            // we can't sum or subtract a point with a point
-            // we can't multiply or divide a point with a point
-            // we can sum or subtract a point with a vector
-            // we can divide a point or a vector with a scalar
-            // we can multiply a point with a scalar or a vector with a scalar
-            // we can multiply a scalar with a point or a scalar with a vector
-            // we can sum, subtract, multiply or divide a scalar with a scalar
-            
-            
             // we can't divide by zero
             if (ctx.op.getText().equals("/") && ctx.e2.getText().equals("0")) {
                ErrorHandling.printError(ctx, "Error: division by zero!");
                return false;
             }
 
-            System.out.println("e1: " + ctx.e1.eType.name());
-            System.out.println("e2: " + ctx.e2.eType.name());
-            // we can't divide a scalar with a point 
-            if ( (ctx.e1.eType.conformsTo(integerType) || ctx.e1.eType.conformsTo(numberType) ) && ctx.e2.eType.conformsTo(pointType)) {
-               ErrorHandling.printError(ctx, "Error: invalid expression type in arithmetic operation (cannot divide a scalar with a point!)");
+            // we cannot divide, sum or subtract a scalar with a point or vector
+            if ( (ctx.op.getText().equals("/") || ctx.op.getText().equals("+") || ctx.op.getText().equals("-") ) && (ctx.e1.eType.conformsTo(integerType) || ctx.e1.eType.conformsTo(numberType) ) && (ctx.e2.eType.conformsTo(pointType) || ctx.e2.eType.conformsTo(vectorType ) ) ) {
+               ErrorHandling.printError(ctx, "Error: cannot divide, sum or subtract a scalar with a point or vector!");
                return false;
             }
 
+            // we cannot sum or subtract a point or vector with a scalar
+            if ( (ctx.op.getText().equals("+") || ctx.op.getText().equals("-") ) && (ctx.e1.eType.conformsTo(pointType) || ctx.e1.eType.conformsTo(vectorType) ) && (ctx.e2.eType.conformsTo(integerType) || ctx.e2.eType.conformsTo(numberType) ) ) {
+               ErrorHandling.printError(ctx, "Error: cannot sum or subtract a point or vector with a scalar!");
+               return false;
+            }
 
-             
+            // we can't sum, subtract, multiply or divide a point with a point
+            if (ctx.e1.eType.conformsTo(pointType) && ctx.e2.eType.conformsTo(pointType)) {
+               ErrorHandling.printError(ctx, "Error: cannot sum, subtract, multiply or divide a point with a point!");
+               return false;
+            }
+
+            // we can't divide a vector by a vector
+            if (  ctx.op.getText().equals("/") && (ctx.e1.eType.conformsTo(vectorType) && ctx.e2.eType.conformsTo(vectorType)) ) {
+               ErrorHandling.printError(ctx, "Error: cannot divide a vector by a vector!");
+               return false;
+            }
 
             ctx.eType = fetchType(ctx.e1.eType, ctx.e2.eType);
+            System.out.println("Type: " + ctx.eType.name());
+
+            if (ctx.eType == null) {
+               ErrorHandling.printError(ctx, "Error: invalid type in arithmetic operation!");
+               return false;
+            }
+
          }
          return res;
       }
@@ -464,14 +475,17 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    @Override
    public Boolean visitExprPoint(AGLParser.ExprPointContext ctx) {
       // expression: '(' x=expression ',' y=expression ')'  and expression returns [Type eType, String varName]
-      
+      // System.out.println("Check point expression");
+      // System.out.println("x: " + ctx.x.getText());
+      // System.out.println("y: " + ctx.y.getText());
+
       Boolean res = visit(ctx.x) && checkNumericType(ctx.x.eType) && visit(ctx.y) && checkNumericType(ctx.y.eType);
       
       // Define as PointType      
       if (res) {
          ctx.eType = new PointType();
       } else {
-         ErrorHandling.printError(ctx, "Point creation requires numeric operands!");
+         ErrorHandling.printError(ctx, "aPoint creation requires numeric operands!");
       }
       return res;
    }
@@ -633,31 +647,6 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       return res;
    }
 
-   // @Override
-   // public Boolean visitCommandMove(AGLParser.CommandMoveContext ctx) {
-   //    // 'move' ID 'by' expression ';' #CommandMove
-   //    Boolean res = true;
-   //    String id = ctx.ID().getText();
-
-   //    if (!AGLParser.symbolTable.containsKey(id)) {
-   //       ErrorHandling.printError(ctx, "Variable \""+id+"\" does not exists!");
-   //       res = false;
-   //    }
-
-   //    res = visit(ctx.expression());
-   //    if (!res) {
-   //       ErrorHandling.printError("Error: invalid expression in move command");
-   //       return false;
-   //    }
-
-   //    if (!ctx.expression().eType.conformsTo(pointType)) {
-   //       ErrorHandling.printError("Error: invalid expression type in move command (must be a point!)");
-   //       return false;
-   //    }
-
-   //    return res;
-      
-   // }
    
    @Override
    public Boolean visitCommandMove(AGLParser.CommandMoveContext ctx) {
@@ -826,14 +815,30 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    private Type fetchType(Type t1, Type t2) {
       Type res = null;
       if (t1.isNumeric() && t2.isNumeric()) {
-         if ("real".equals(t1.name()))
+         if ("Number".equals(t1.name())) {
             res = t1;
-         else if ("real".equals(t2.name()))
+         } else if ("Number".equals(t2.name())) {
             res = t2;
-         else
+         } else
             res = t1;
-      } else if ("boolean".equals(t1.name()) && "boolean".equals(t2.name()))
+      } else if ("boolean".equals(t1.name()) && "boolean".equals(t2.name())) {
          res = t1;
+      } else if ("Point".equals(t1.name()) && "Vector".equals(t2.name())) {
+         res = t1;
+      } else if ("Vector".equals(t1.name()) && "Point".equals(t2.name())) {
+         res = t2;
+      } else if ("Vector".equals(t1.name()) && t2.isNumeric()) {
+         res = t1;
+      } else if (t1.isNumeric() && "Vector".equals(t2.name())) {
+         res = t2;   
+      } else if ("Point".equals(t1.name()) && t2.isNumeric()) {
+         res = t1;
+      } else if (t1.isNumeric() && "Point".equals(t2.name())) {
+         res = t2;
+      } else if ("Vector".equals(t1.name()) && "Vector".equals(t2.name())) {
+         res = t1;
+      } 
+   
       return res;
    }
 
