@@ -792,7 +792,31 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    @Override
    public Boolean visitPlayStatement(AGLParser.PlayStatementContext ctx) {
       // 'play' ID 'with' propertiesAssignment
+      Boolean res = true;
+      String ID = ctx.ID().getText();
 
+      if (!AGLParser.symbolTable.containsKey(ID)) {
+         ErrorHandling.printError("Error: identifier \"" + ID + "\" is not defined");
+         return false;
+      }
+
+      Type idType = AGLParser.symbolTable.get(ID).type();
+
+      if (!(idType instanceof ObjectType)) {
+         ErrorHandling.printError("Error: identifier \"" + ID + "\" is not an object type");
+         return false;
+      }
+
+      // we do not need PropertyAssignment visitor!
+      for (AGLParser.LongAssignmentContext longAssign : ctx.propertiesAssignment().longAssignment()) {
+         res = visit(longAssign.assignment());
+         if (!res) {
+            ErrorHandling.printError("Error: invalid properties assignment in play statement");
+            return false;
+         }
+      }
+
+      return res;
    }
 
 
