@@ -353,7 +353,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
    @Override
    public Boolean visitExprUnary(AGLParser.ExprUnaryContext ctx) {
-      // expression: sign=('+'|'-'|'!') e=expression and expression returns [Type eType, String varName]
+      // expression: sign=('+'|'-'|'not') e=expression and expression returns [Type eType, String varName]      
       Boolean signal = ctx.sign.getText().equals("+") || ctx.sign.getText().equals("-") || ctx.sign.getText().equals("not");
 
       if (!signal) {
@@ -363,12 +363,23 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
       Boolean res = visit(ctx.e);
 
-      if (res && ctx.e.eType != null && checkNumericType(ctx, ctx.e.eType)) {
-         ctx.eType = ctx.e.eType;
+      // If signal is not 'not' then the expression must be numeric
+      if (res && ctx.sign.getText().equals("not")) {
+         if (!ctx.e.eType.conformsTo(booleanType)) {
+            ErrorHandling.printError(ctx, "The 'not' operator requires a boolean operand!");
+            res = false;
+         } else {
+            ctx.eType = booleanType;
+         }
       } else {
-         ErrorHandling.printError("Error: invalid unary expression or undefined type!");
-         res = false;
+         if (res && ctx.e.eType != null && checkNumericType(ctx, ctx.e.eType)) {
+            ctx.eType = ctx.e.eType;
+         } else {
+            ErrorHandling.printError("Error: invalid unary expression or undefined type!");
+            res = false;
+         }
       }
+
       return res;
    }
 
@@ -381,7 +392,8 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    }
 
    // @Override
-   public Boolean visitExprAddSubMultDiv(AGLParser.ExprAddSubMultDivAndOrContext ctx) {
+   public Boolean visitExprAddSubMultDivAndOr(AGLParser.ExprAddSubMultDivAndOrContext ctx) {
+      // expression: e1=expression op=('*'|'/'|'and') e2=expression | e1=expression op=('+'|'-'|'or') e2=expression
       Boolean res = visit(ctx.e1) && checkNumericType(ctx, ctx.e1.eType) &&
             visit(ctx.e2) && checkNumericType(ctx, ctx.e2.eType);
       if (res) {
@@ -398,12 +410,28 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    public Boolean visitExprPoint(AGLParser.ExprPointContext ctx) {
       // expression: '(' x=expression ',' y=expression ')'  and expression returns [Type eType, String varName]
       
-      Boolean res = visit(ctx.x) && checkNumericType(ctx, ctx.x.eType) &&
-            visit(ctx.y) && checkNumericType(ctx, ctx.y.eType);
+      Boolean res = visit(ctx.x) && checkNumericType(ctx, ctx.x.eType) && visit(ctx.y) && checkNumericType(ctx, ctx.y.eType);
+      
+      // Define as PointType      
       if (res) {
-         ctx.eType = new PointType(); // Definindo o tipo da expressão como Point
+         ctx.eType = new PointType();
       } else {
          ErrorHandling.printError(ctx, "Point creation requires numeric operands!");
+      }
+      return res;
+   }
+
+   @Override
+   public Boolean visitExprVector(AGLParser.ExprVectorContext ctx) {
+      // '(' deg=expression ':' length=expression ')' and expression returns [Type eType, String varName]
+      
+      Boolean res = visit(ctx.deg) && checkNumericType(ctx, ctx.deg.eType) && visit(ctx.length) && checkNumericType(ctx, ctx.length.eType);
+
+      // Define as VectorType
+      if (res) {
+         ctx.eType = new VectorType(); 
+      } else {
+         ErrorHandling.printError(ctx, "Vector creation requires numeric operands!");
       }
       return res;
    }
