@@ -259,9 +259,9 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
         
         String id = newVarName();
         ctx.varName = id;
-        // id = op=('+' | '-') e1
+
         res.add("var", id);
-        res.add("op", ctx.sign.getText()); // ('+' | '-')
+        res.add("op", ctx.sign.getText()); // ('+' | '-' | 'not')
         res.add("e1", ctx.expression().varName); // render the return value!
         
         return res;
@@ -273,13 +273,24 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
         return res;
     }
 
-    @Override public ST visitExprAddSubMultDivAndOr(AGLParser.ExprAddSubMultDivAndOrContext ctx) {
-        ctx.varName = newVarName();
-        return binaryExpression(visit(ctx.expression(0)).render(), visit(ctx.expression(1)).render(), ctx.varName, ctx.expression(0).varName, ctx.op.getText(), ctx.expression(1).varName);
+    @Override public ST visitExprAddSubMultDiv(AGLParser.ExprAddSubMultDivContext ctx) {
+        ctx.varName = newVarName(); // TODO: operations with points and vectors
+        return binaryExpression(visit(ctx.e1).render(), visit(ctx.e2).render(), ctx.varName, ctx.e1.varName, ctx.op.getText(), ctx.e2.varName);
+    }
+
+    @Override public ST visitExprRelational(AGLParser.ExprRelationalContext ctx) {
+        ctx.varName = newVarName(); 
+        return binaryExpression(visit(ctx.e1).render(), visit(ctx.e2).render(), ctx.varName, ctx.e1.varName, ctx.op.getText(), ctx.e2.varName);
+    }
+
+    @Override public ST visitExprAndOr(AGLParser.ExprAndOrContext ctx) {
+        ctx.varName = newVarName(); 
+        String op = ctx.OR() != null ? ctx.OR().getText() : ctx.AND().getText();
+        return binaryExpression(visit(ctx.e1).render(), visit(ctx.e2).render(), ctx.varName, ctx.e1.varName, op, ctx.e2.varName);
     }
 
     @Override public ST visitExprPoint(AGLParser.ExprPointContext ctx) {
-        ctx.varName = newVarName();
+        ctx.varName = newVarName(); // TODO: point type!
         return binaryExpression(visit(ctx.x).render(), visit(ctx.y).render(), ctx.varName, ctx.x.varName, ",", ctx.y.varName);
     }
 
@@ -298,10 +309,10 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
         assign2.add("var", length);
         assign2.add("value", ctx.length.getText());
 
-        String x = "( " + length + "*math.cos(math.radians(" + degree + "))" + " )";
-        String y = "( " + length + "*math.sin(math.radians(" + degree + "))" + " )";
+        String x = length + "*math.cos(math.radians(" + degree + "))";
+        String y = length + "*math.sin(math.radians(" + degree + "))";
 
-        ctx.varName = newVarName();
+        ctx.varName = newVarName(); // TODO: vector type!
         return binaryExpression(assign.render(), assign2.render(), ctx.varName, x, ",", y);
     }
 
@@ -321,9 +332,7 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
         return res;
     }
 
-    @Override public ST visitExprRelational(AGLParser.ExprRelationalContext ctx) {
-      return null; // TODO
-    }
+    
 
     @Override public ST visitExprNumber(AGLParser.ExprNumberContext ctx) {
         ST res = templates.getInstanceOf("assign");
@@ -338,7 +347,15 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
     }
 
     @Override public ST visitExprBoolean(AGLParser.ExprBooleanContext ctx) {
-        return null; // todo
+        ST res = templates.getInstanceOf("assign");
+        
+        String id = newVarName();
+        ctx.varName = id;
+
+        res.add("vard", id);
+        res.add("vaue", ctx.BOOLEAN().getText()); // assign the value to current variable
+
+        return res;
     }
 
     @Override public ST visitExprString(AGLParser.ExprStringContext ctx) {
@@ -504,19 +521,19 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
 
 //* ifStatement
     @Override public ST visitIfStatement(AGLParser.IfStatementContext ctx) {
-        // ST res = templates.getInstanceOf("if_else"); // if_else(stat, condition, if_instructions, else_instructions)
-        // System.out.println(visit(ctx.expression()).render());
-        // res.add("stat", visit(ctx.expression()).render()); // render the return value!
+        ST res = templates.getInstanceOf("if_else"); // if_else(stat, condition, if_instructions, else_instructions)
 
-        // res.add("condition", ctx.expression().varName);
+        res.add("stat", visit(ctx.expression()).render()); // render the return value!
 
-        // res.add("if_instructions", visit(ctx.stat(0)).render()); // render the return value!
+        res.add("condition", ctx.expression().varName);
 
-        // if (ctx.stat(1) != null) {
-        //     res.add("else_instructions", visit(ctx.stat(1)).render()); // render the return value!
-        // }
+        res.add("if_instructions", visit(ctx.stat(0)).render()); // render the return value!
+
+        if (ctx.stat(1) != null) {
+            res.add("else_instructions", visit(ctx.stat(1)).render()); // render the return value!
+        }
         
-        return null;
+        return res;
     }   
 
 }

@@ -1,43 +1,14 @@
-view : View with {
-    width = 601;
-    height = 601;
-    title = "Illustrating the minimum level graphical models";
-    background = "alice blue";
-}
 
-p : PolyLine at (0,0) with {
-    points = [(1,80), (30,50), (100,100)];
-    fill = "red";
-}
+a : Number = 2;
+type_ : String = "teste";
+name : String = "jorguinho";
 
-p1 + v1
 
-spline : Spline at (100, 100) with {
-    points = [(80,1), (50,30), (-100,100)];
-    fill = "blue";
-}
-
-poligono : Polygon at (-100, 100) with {
-    points = [(-100,100), (10, 100), (100,10), (3, 75)];
-    fill = "blue";
-    outline = "black";
-}
-
-blob : Blob at (100, 100) with {
-    points = [(-90,30), (62, 39), (50,100), (31, 45)];
-    fill = "yellow";
-    outline = "blue";
-}
-
-refresh view;
-move blob to (10,0);
-refresh view after 1s;
-move blob by (-10,0);
-refresh view after 1s;
-move blob by (-10,0);
-refresh view after 1s;
-move blob to (10,0);
-refresh view after 1s;
-
-pos : Point = wait mouse click;
+if (a >= 3) or (type_ == "teste") and (name == "jorguinho") do 
+{
+    for j in 1..10 do 
+        print "pedro é lindo";  
+}          
+else do
+    print "nao é";
 

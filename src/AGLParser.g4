@@ -66,20 +66,23 @@ in_assignment
     ;    
 
 expression returns [Type eType, String varName]
-    : sign=('+'|'-'|'not') e=expression                 #ExprUnary
-    | '(' e=expression ')'                              #ExprParenthesis
-    | e1=expression op=('*'|'/'|'and') e2=expression    #ExprAddSubMultDivAndOr
-    | e1=expression op=('+'|'-'|'or') e2=expression     #ExprAddSubMultDivAndOr
-    | '(' x=expression ',' y=expression ')'             #ExprPoint
-    | '(' deg=expression ':' length=expression ')'      #ExprVector
-    | '[' expression (',' expression)* ']'              #ExprArray
-    | expression RELATIONAL_OPERATOR expression         #ExprRelational
-    | number=(INT | FLOAT)                              #ExprNumber
-    | BOOLEAN                                           #ExprBoolean                   
-    | STRING                                            #ExprString                              
-    | identifier                                        #ExprID
-    | 'wait' eventTrigger                               #ExprWait
-    | op=('input'|'load') STRING                        #ExprScript
+    : sign=('+'|'-'|'not') e=expression                     #ExprUnary
+    | '(' e=expression ')'                                  #ExprParenthesis
+    | e1=expression op=('*'|'/') e2=expression              #ExprAddSubMultDiv
+    | e1=expression op=('+'|'-') e2=expression              #ExprAddSubMultDiv
+    | e1=expression op=('>'|'<'|'>='|'<=') e2=expression    #ExprRelational
+    | e1=expression op=('=='|'!=') e2=expression            #ExprRelational
+    | e1=expression 'and' e2=expression                     #ExprAndOr
+    | e1=expression 'or' e2=expression                      #ExprAndOr
+    | '(' x=expression ',' y=expression ')'                 #ExprPoint
+    | '(' deg=expression ':' length=expression ')'          #ExprVector
+    | '[' expression (',' expression)* ']'                  #ExprArray
+    | number=(INT | FLOAT)                                  #ExprNumber
+    | BOOLEAN                                               #ExprBoolean                   
+    | STRING                                                #ExprString                              
+    | identifier                                            #ExprID
+    | 'wait' eventTrigger                                   #ExprWait
+    | op=('input'|'load') STRING                            #ExprScript
     ;
 
 command

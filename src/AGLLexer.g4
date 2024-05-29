@@ -78,14 +78,12 @@ PLUS    : '+';
 MINUS   : '-';
 MUL     : '*';
 DIV     : '/';
-RELATIONAL_OPERATOR
-    : '<' 
-    | '<='
-    | '>'
-    | '>='
-    | '=='
-    | '!='
-    ;
+GT      : '>';
+LT      : '<';
+GTE     : '>=';
+LTE     : '<=';
+EQ      : '==';
+NEQ     : '!=';
 AND     : 'and';
 OR      : 'or';
 NOT     : 'not';
