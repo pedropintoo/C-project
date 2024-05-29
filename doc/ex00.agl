@@ -1,6 +1,61 @@
+#(
+    This is a block, possible multiline, comment
+#)
 
-array : Array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+#(
+    This example illustrates the instantiation of a view and all the base graphical models
+    to be implemented in the minimum level.
+#)
 
-array[0] = 2;
+#
+# create an instance of a View.
+#
+# A View is a display window where one can capture snapshots of the canvas at a given moment.
+# A View holds a set of intrisic properties, every one with a type and a default value:
+# - Ox [Number, 0.0], Oy [Number, 0.0] - point of the canvas that appears in the central (sub)pixel of the view window
+# - width [Integer, 201] - number of pixels in a row
+# - height [Integer, 201] - number of pixels in a column
+# - title [String, "No title"] - the main window title
+# - background [String, "black"] - the color of the background
+#
+# The colon (:) is the instantiation operator
+# The equal (=) is the assignment operator
+# The with construction allows to change several properties for the same object.
+#
+view : View with {
+    width = 601;
+    height = 601;
+    title = "Illustrating the minimum level graphical models";
+    background = "alice blue";
+}
 
-print array;
+
+cellSize : Number = 200;
+
+Line at (-cellSize,cellSize) with {
+    length = (50,50);
+    fill = "red";
+}
+
+
+rec : Rectangle at (0,cellSize) with {
+    length = (50,50);
+    fill = "orange";
+}
+
+refresh view after 1 s;
+move rec by (10,0);
+refresh view after 1 s;
+move rec by (10,0);
+refresh view after 1 s;
+move rec by (10,0);
+refresh view after 1 s;
+move rec by (10,0);
+refresh view after 1 s;
+move rec to (0,cellSize);
+refresh view after 1 s;
+
+print "Press any mouse button to quit";
+p = wait mouse click; # instantiate a Point and waits for a mouse click
+
+close view;

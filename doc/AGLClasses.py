@@ -112,6 +112,20 @@ class Object:
     def move_absolute(self, vector):
         self.origin=(vector[0], vector[1])
 
+class Model(Object):
+    
+        def __init__(self, root: Root, view: View = None, state="normal"):
+            super().__init__(root, view, (0,0), state)
+            self.objects = []
+    
+        def add_object(self, obj):
+            self.objects.append(obj)
+    
+        def create_object(self, view):
+            for o in self.objects:
+                o.create_object(view)
+
+
 class Line(Object):
 
     def __init__(self, root: Root, view: View = None, state="normal", origin=(0,0), length=(1,1), fill="black"):
@@ -138,6 +152,8 @@ class PolyLine(Object):
         self.view = view
         self.object = self.view.canvas.create_line(self.view.coord(self.origin), *[self.view.coord(p) for p in self.points], fill=self.fill, state=self.state)
 
+    # TODO: override move_relative and move_absolute
+
 class Spline(Object):
     """
     Spline is a smooth curve that is defined by a series of control points.
@@ -152,6 +168,8 @@ class Spline(Object):
     def create_object(self, view):
         self.view = view
         self.object = self.view.canvas.create_line(self.view.coord(self.origin), *[self.view.coord(p) for p in self.points], fill=self.fill, state=self.state, smooth=True)
+
+    # TODO: override move_relative and move_absolute
 
 class Polygon(Object):
     """
@@ -169,6 +187,8 @@ class Polygon(Object):
         self.view = view
         self.object = self.view.canvas.create_polygon(self.view.coord(self.origin), *[self.view.coord(p) for p in self.points], fill=self.fill, outline=self.outline, state=self.state)
 
+    # TODO: override move_relative and move_absolute
+
 class Blob(Object):
     """
     Blob is a shape that can be interpreted as drawing an irregular, free-form shape.
@@ -184,6 +204,8 @@ class Blob(Object):
     def create_object(self, view):
         self.view = view
         self.object = self.view.canvas.create_polygon(self.view.coord(self.origin), *[self.view.coord(p) for p in self.points], fill=self.fill, outline=self.outline, state=self.state, smooth=True)
+
+    # TODO: override move_relative and move_absolute
 
 class Rectangle(Object):
 
