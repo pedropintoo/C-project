@@ -141,8 +141,92 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
 
 
-
    // ------ End visit stat ------
+
+   @Override
+   public Boolean visitForStatement(AGLParser.ForStatementContext ctx) {
+      // forStatement : 'for' ID 'in' number_range 'do' stat;
+      // number_range : expression '..' expression ('..' expression)?
+      Boolean res = true;
+      String id = ctx.ID().getText();
+
+      if (AGLParser.symbolTable.containsKey(id)) {
+         ErrorHandling.printError("Variable \"" + id + "\" already declared!");
+         return false;
+      }
+
+      // first expression
+      res = visit(ctx.number_range().expression(0));
+      if (!res) {
+         ErrorHandling.printError("Error: invalid first expression in for statement");
+         return false;
+      }
+
+      // second expression
+      res = visit(ctx.number_range().expression(1));
+      if (!res) {
+         ErrorHandling.printError("Error: invalid second expression in for statement");
+         return false;
+      }
+
+      // second expression can not be less than the first expression
+      if ( ! (ctx.number_range().expression(0).eType instanceof IntegerType && ctx.number_range().expression(1).eType instanceof IntegerType ))  {
+         ErrorHandling.printError("Error: invalid expression type in for statement (must be integer!)");
+      }
+
+      return res;
+   }
+
+   @Override 
+   public Boolean visitWhileStatement(AGLParser.WhileStatementContext ctx) {
+      Boolean res = true;
+      res = visit(ctx.expression());
+
+      if (!res) {
+         ErrorHandling.printError("Error: invalid expression in while statement");
+         return false;
+      }
+
+      Type exprType = ctx.expression().eType;
+      System.out.println("Expression type: " + exprType.name());
+      if (!(exprType instanceof BooleanType)) {
+         ErrorHandling.printError("Error: the expression in the while statement has to be a boolean");
+         return false;
+      }
+
+      res = visit(ctx.stat());
+      if (!res) {
+         ErrorHandling.printError("Error: invalid statement in while statement");
+         return false;
+      }
+
+      return res;
+   }
+
+   @Override
+   public Boolean visitRepeatStatement(AGLParser.RepeatStatementContext ctx) {
+      Boolean res = true;
+      res = visit(ctx.stat());
+      System.out.println("Check repeat statement");
+
+      if (!res) {
+         ErrorHandling.printError("Error: invalid statement in repeat statement");
+         return false;
+      }
+
+      res = visit(ctx.expression());
+      if (!res) {
+         ErrorHandling.printError("Error: invalid expression in repeat statement");
+         return false;
+      }
+
+      Type exprType = ctx.expression().eType;
+      if (!(exprType.conformsTo(booleanType))) {
+         ErrorHandling.printError("Error: the expression in the repeat statement has to be a boolean");
+         return false;
+      }
+      return res;
+   }
 
    @Override
    public Boolean visitInstantiation(AGLParser.InstantiationContext ctx) {
@@ -654,90 +738,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       
    }
 
-   @Override
-   public Boolean visitForStatement(AGLParser.ForStatementContext ctx) {
-      // forStatement : 'for' ID 'in' number_range 'do' stat;
-      // number_range : expression '..' expression ('..' expression)?
-      Boolean res = true;
-      String id = ctx.ID().getText();
-
-      if (AGLParser.symbolTable.containsKey(id)) {
-         ErrorHandling.printError("Variable \"" + id + "\" already declared!");
-         return false;
-      }
-
-      // first expression
-      res = visit(ctx.number_range().expression(0));
-      if (!res) {
-         ErrorHandling.printError("Error: invalid first expression in for statement");
-         return false;
-      }
-
-      // second expression
-      res = visit(ctx.number_range().expression(1));
-      if (!res) {
-         ErrorHandling.printError("Error: invalid second expression in for statement");
-         return false;
-      }
-
-      // second expression can not be less than the first expression
-      if ( ! (ctx.number_range().expression(0).eType instanceof IntegerType && ctx.number_range().expression(1).eType instanceof IntegerType ))  {
-         ErrorHandling.printError("Error: invalid expression type in for statement (must be integer!)");
-      }
-
-      return res;
-   }
-
-   @Override 
-   public Boolean visitWhileStatement(AGLParser.WhileStatementContext ctx) {
-      Boolean res = true;
-      res = visit(ctx.expression());
-
-      if (!res) {
-         ErrorHandling.printError("Error: invalid expression in while statement");
-         return false;
-      }
-
-      Type exprType = ctx.expression().eType;
-      System.out.println("Expression type: " + exprType.name());
-      if (!(exprType instanceof BooleanType)) {
-         ErrorHandling.printError("Error: the expression in the while statement has to be a boolean");
-         return false;
-      }
-
-      res = visit(ctx.stat());
-      if (!res) {
-         ErrorHandling.printError("Error: invalid statement in while statement");
-         return false;
-      }
-
-      return res;
-   }
-
-   @Override
-   public Boolean visitRepeatStatement(AGLParser.RepeatStatementContext ctx) {
-      Boolean res = true;
-      res = visit(ctx.stat());
-      System.out.println("Check repeat statement");
-
-      if (!res) {
-         ErrorHandling.printError("Error: invalid statement in repeat statement");
-         return false;
-      }
-
-      res = visit(ctx.expression());
-      if (!res) {
-         ErrorHandling.printError("Error: invalid expression in repeat statement");
-         return false;
-      }
-
-      Type exprType = ctx.expression().eType;
-      if (!(exprType.conformsTo(booleanType))) {
-         ErrorHandling.printError("Error: the expression in the repeat statement has to be a boolean");
-         return false;
-      }
-      return res;
-   }
+   
 
    // @Override
    // public Boolean visitWithStatement(AGLParser.WithStatementContext ctx) {
