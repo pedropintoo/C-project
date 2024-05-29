@@ -355,7 +355,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    public Boolean visitExprUnary(AGLParser.ExprUnaryContext ctx) {
       // expression: sign=('+'|'-'|'not') e=expression and expression returns [Type eType, String varName]      
       Boolean signal = ctx.sign.getText().equals("+") || ctx.sign.getText().equals("-") || ctx.sign.getText().equals("not");
-
+      
       if (!signal) {
          ErrorHandling.printError(ctx, "Invalid unary operator!");
          return false;
@@ -386,7 +386,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    @Override
    public Boolean visitExprParenthesis(AGLParser.ExprParenthesisContext ctx) {
       // expression: '(' e=expression ')' and expression returns [Type eType, String varName]
-      
+
       Boolean res = visit(ctx.e);
       if (res)
          ctx.eType = ctx.e.eType;
@@ -396,21 +396,72 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    // @Override
    public Boolean visitExprAddSubMultDivAndOr(AGLParser.ExprAddSubMultDivAndOrContext ctx) {
       // expression: e1=expression op=('*'|'/'|'and') e2=expression | e1=expression op=('+'|'-'|'or') e2=expression
-      Boolean res = visit(ctx.e1) && checkNumericType(ctx, ctx.e1.eType) &&
-            visit(ctx.e2) && checkNumericType(ctx, ctx.e2.eType);
-      if (res) {
-         ctx.eType = fetchType(ctx.e1.eType, ctx.e2.eType);
-         if (integerOperator(ctx.op.getText()) && !"integer".equals(ctx.eType.name())) {
-            ErrorHandling.printError(ctx, "The integer operator " + ctx.op.getText() + "requires integer operands!");
-            res = false;
+      // expression returns [Type eType, String varName]
+      Boolean res = true;
+
+      // if op is 'and' or 'or' then both expressions must be boolean
+      if (ctx.op.getText().equals("and") || ctx.op.getText().equals("or")) {
+         res = visit(ctx.e1) && visit(ctx.e2);
+         if (res) {
+            if (!ctx.e1.eType.conformsTo(booleanType) || !ctx.e2.eType.conformsTo(booleanType)) {
+               ErrorHandling.printError(ctx, "The operator " + ctx.op.getText() + " requires boolean operands!");
+               res = false;
+            } else {
+               ctx.eType = booleanType;
+            }
          }
+         return res;
       }
+
+      // if op is '+','-','*','/' then both expressions must be numeric
+      if (ctx.op.getText().equals("+") || ctx.op.getText().equals("-") || ctx.op.getText().equals("*") || ctx.op.getText().equals("/")) {
+         res = visit(ctx.e1) && checkNumericType(ctx, ctx.e1.eType) && visit(ctx.e2) && checkNumericType(ctx, ctx.e2.eType);
+         
+         
+         if (res) {
+
+            // we can't sum or subtract a point with a point
+            // we can't multiply or divide a point with a point
+            // we can sum or subtract a point with a vector
+            // we can divide a point or a vector with a scalar
+            // we can multiply a point with a scalar or a vector with a scalar
+            // we can multiply a scalar with a point or a scalar with a vector
+            // we can sum, subtract, multiply or divide a scalar with a scalar
+            
+            
+            // we can't divide by zero
+            if (ctx.op.getText().equals("/") && ctx.e2.getText().equals("0")) {
+               ErrorHandling.printError(ctx, "Error: division by zero!");
+               return false;
+            }
+
+            System.out.println("e1: " + ctx.e1.eType.name());
+            System.out.println("e2: " + ctx.e2.eType.name());
+            // we can't divide a scalar with a point 
+            if ( (ctx.e1.eType.conformsTo(integerType) || ctx.e1.eType.conformsTo(numberType) ) && ctx.e2.eType.conformsTo(pointType)) {
+               ErrorHandling.printError(ctx, "Error: invalid expression type in arithmetic operation (cannot divide a scalar with a point!)");
+               return false;
+            }
+
+
+             
+
+            ctx.eType = fetchType(ctx.e1.eType, ctx.e2.eType);
+         }
+         return res;
+      }
+
       return res;
+   
    }
 
    @Override
    public Boolean visitExprPoint(AGLParser.ExprPointContext ctx) {
       // expression: '(' x=expression ',' y=expression ')'  and expression returns [Type eType, String varName]
+      System.out.println("Check point expression");
+      System.out.println("x: " + ctx.x.getText());
+      System.out.println("y: " + ctx.y.getText());
+
       
       Boolean res = visit(ctx.x) && checkNumericType(ctx, ctx.x.eType) && visit(ctx.y) && checkNumericType(ctx, ctx.y.eType);
       
@@ -760,12 +811,11 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    // }
 
    // -- Correct --
-   private Boolean checkNumericType(ParserRuleContext ctx, Type t) {
+   private Boolean checkNumericType(Type t) {
       Boolean res = true;
-
+      System.out.println("Check numeric type");
+      System.out.println("Type: " + t.name());
       if (!t.isNumeric()) {
-         // ErrorHandling.printError(ctx, "Numeric operator applied to a non-numeric
-         // operand!");
          ErrorHandling.printError("Numeric operator applied to a non-numeric operand!");
          res = false;
       }
