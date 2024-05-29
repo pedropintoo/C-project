@@ -10,7 +10,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    private final PointType pointType = new PointType();
    private final VectorType vectorType = new VectorType();
    private final BooleanType booleanType = new BooleanType();
-   // private final ObjectType objectType;
+   private final ObjectType scriptType = new ObjectType("Script");
 
    @Override
    public Boolean visitProgram(AGLParser.ProgramContext ctx) {
@@ -558,6 +558,14 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       }
       
       return res;
+   }
+
+   @Override
+   public Boolean visitExprScript(AGLParser.ExprScriptContext ctx) {
+      // expression: op=('input'|'load') STRING  and expression returns [Type eType, String varName]
+      ctx.eType = scriptType;
+      // System.out.println("Check script expression");
+      return true;
    }
 
    // --------- End Visit Expression ---------
