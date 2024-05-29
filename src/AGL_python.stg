@@ -63,14 +63,21 @@ range(start, end, step) ::= "range(<start>, <end>, <step>)"
 
 while(stat, var, condition, instructions) ::= <<
 <stats(stat)>
+
 while <condition>:
     <instructions>
+    # refresh the condition
+    <stats(stat)>
+    ##
 >>
 
 repeat(stat, var, condition, instructions) ::= <<
 <stats(stat)>
 while True:
     <instructions>
+    # refresh the condition
+    <stats(stat)>
+    ##
     if not <condition>:
         break   # Repeat until condition is false
 >>
@@ -102,7 +109,7 @@ unaryExpression(stat,var,op,e1) ::= <<
 <decl(var,[op," ",e1])>
 >>
 
-object(stat, var, type, origin, field, update_lastView) ::= <<
+object(stat, var, type, origin, properties, update_lastView) ::= <<
 <stats(stat)>
 
 <var> = <type>(root = root)
@@ -111,7 +118,7 @@ object(stat, var, type, origin, field, update_lastView) ::= <<
 <else>if model is not None:
     model.add_object(<var>)
 <endif>
-<properties(field)>
+<properties>
 >>
 
 model(stat, var) ::= <<

@@ -1,14 +1,6 @@
 
-a : Number = 2;
-type_ : String = "teste";
-name : String = "jorguinho";
+array : Array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
+array[0] = 2;
 
-if (a >= 3) or (type_ == "teste") and (name == "jorguinho") do 
-{
-    for j in 1..10 do 
-        print "pedro é lindo";  
-}          
-else do
-    print "nao é";
-
+print array;

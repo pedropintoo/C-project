@@ -49,7 +49,7 @@ blockStatement returns [String varName]
     : typeID ('at' expression)? 'with' propertiesAssignment 
     ;
 
-propertiesAssignment
+propertiesAssignment returns [String idToAssign]
     : '{' longAssignment ( ';' longAssignment)* ';'? '}'
     ;
 
@@ -113,7 +113,7 @@ whileStatement
     ;    
 
 repeatStatement
-    : 'repeat' stat 'until' expression
+    : 'repeat' stat 'until' expression ';'
     ;    
 
 withStatement
