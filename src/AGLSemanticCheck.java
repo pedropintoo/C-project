@@ -1,12 +1,5 @@
 import org.antlr.v4.runtime.ParserRuleContext;
 
-import .antlr.AGLParser;
-
-import .antlr.AGLParser;
-
-import .antlr.AGLParser;
-
-import .antlr.AGLParser;
 
 @SuppressWarnings("CheckReturnValue")
 public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
@@ -802,8 +795,9 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
       Type idType = AGLParser.symbolTable.get(ID).type();
 
-      if (!(idType instanceof ObjectType)) {
-         ErrorHandling.printError("Error: identifier \"" + ID + "\" is not an object type");
+      // id type must be "Script" that is an ObjectType
+      if (!idType.conformsTo(new ObjectType("Script"))) {
+         ErrorHandling.printError("Error: identifier \"" + ID + "\" is not a script type");
          return false;
       }
 
