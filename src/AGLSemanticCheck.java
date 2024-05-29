@@ -783,12 +783,6 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    //    return res;
    // }
 
-   // @Override
-   // public Boolean visitTypeID(AGLParser.TypeIDContext ctx) {
-   // Boolean res = null;
-   // return visitChildren(ctx);
-   // // return res;
-   // }
 
    @Override
    public Boolean visitPlayStatement(AGLParser.PlayStatementContext ctx) {
@@ -806,7 +800,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       // id type must be "Script" that is an ObjectType
       if (!idType.conformsTo(new ObjectType("Script"))) {
          ErrorHandling.printError("Error: identifier \"" + ID + "\" is not a script type");
-         return false;
+         return false; 
       }
 
       // we do not need PropertyAssignment visitor!
