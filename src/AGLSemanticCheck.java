@@ -354,7 +354,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    @Override
    public Boolean visitExprUnary(AGLParser.ExprUnaryContext ctx) {
       // expression: sign=('+'|'-'|'!') e=expression and expression returns [Type eType, String varName]
-      Boolean signal = ctx.sign.getText().equals("+") || ctx.sign.getText().equals("-") || ctx.sign.getText().equals("!");
+      Boolean signal = ctx.sign.getText().equals("+") || ctx.sign.getText().equals("-") || ctx.sign.getText().equals("not");
 
       if (!signal) {
          ErrorHandling.printError(ctx, "Invalid unary operator!");

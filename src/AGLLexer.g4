@@ -41,9 +41,13 @@ BLOB    : 'Blob';
 Model   : 'Model';
 Enum    : 'Enum';
 <<<<<<< HEAD
+<<<<<<< HEAD
 ARRAY   : 'Array';
 =======
 >>>>>>> bba7c60 (lexer)
+=======
+ARRAY   : 'Array';
+>>>>>>> 1b30d6c (Mudei o Lexer e o Parser na nossa branch)
 SCRIPT  : 'Script';
 
 
@@ -98,6 +102,7 @@ NOT     : 'not';
 
 // Boolean
 BOOLEAN : 'True' | 'False';
+
 
 // Identifier names
 ID      : LETTER (LETTER | DIGIT)*;
