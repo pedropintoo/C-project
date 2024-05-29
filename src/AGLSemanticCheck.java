@@ -385,6 +385,8 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
    @Override
    public Boolean visitExprParenthesis(AGLParser.ExprParenthesisContext ctx) {
+      // expression: '(' e=expression ')' and expression returns [Type eType, String varName]
+      
       Boolean res = visit(ctx.e);
       if (res)
          ctx.eType = ctx.e.eType;
