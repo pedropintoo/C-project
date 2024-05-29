@@ -1,5 +1,13 @@
 import org.antlr.v4.runtime.ParserRuleContext;
 
+import .antlr.AGLParser;
+
+import .antlr.AGLParser;
+
+import .antlr.AGLParser;
+
+import .antlr.AGLParser;
+
 @SuppressWarnings("CheckReturnValue")
 public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
@@ -146,6 +154,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
    @Override
    public Boolean visitInstantiation(AGLParser.InstantiationContext ctx) {
+      // instantiation: ID ':' (simpleStatement | blockStatement)
       Boolean res = true;
       String ID = ctx.ID().getText();
 
@@ -779,6 +788,13 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    // return visitChildren(ctx);
    // // return res;
    // }
+
+   @Override
+   public Boolean visitPlayStatement(AGLParser.PlayStatementContext ctx) {
+      // 'play' ID 'with' propertiesAssignment
+
+   }
+
 
    // -- Correct --
    private Boolean checkNumericType(Type t) {
