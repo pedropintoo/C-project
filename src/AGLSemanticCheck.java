@@ -177,30 +177,6 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       return res;
    }
 
-   // @Override
-   // public Boolean visitSimpleStatement(AGLParser.SimpleStatementContext ctx) {
-   //    // simpleStatement: typeID (assignment)? and simpleStatement returns [String varName] and typeID returns[Type res]
-   //    // assignment = expression    and   expression returns [Type eType, String varName]
-   //    String type = ctx.typeID().getText();
-   //    Type typeObject = ctx.typeID().res;
-
-   //    if (ctx.assignment() != null) {
-   //       Boolean res = visit(ctx.assignment().expression());
-   //       if (!res) {
-   //          ErrorHandling.printError("Error: invalid simple statement");
-   //          return false;
-   //       }
-
-   //       if (!ctx.assignment().expression().eType.conformsTo(typeObject)) {
-   //          ErrorHandling.printError("Expression type does not conform to variable type!");
-   //          return false;
-   //       }
-   //    }
-
-   //    return true;
-   // }
-
-
    @Override
    public Boolean visitSimpleStatement(AGLParser.SimpleStatementContext ctx) {
       // simpleStatement: typeID ('at' expression)? ((assignment)? ';' | in_assignment)
@@ -260,7 +236,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
             return false;
          }
 
-         return true; // TO DO
+         return true; 
       }
 
       return true;
@@ -346,12 +322,6 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
    }
 
-   // @Override
-   // public Boolean visitPoint(AGLParser.PointContext ctx) {
-   // Boolean res = null;
-   // return visitChildren(ctx);
-   // // return res;
-   // }
 
    // ------ Visit Expression ------
 
@@ -457,7 +427,8 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
             }
 
             ctx.eType = fetchType(ctx.e1.eType, ctx.e2.eType);
-            System.out.println("Type: " + ctx.eType.name());
+            // System.out.println("Type: " + ctx.eType.name());
+
 
             if (ctx.eType == null) {
                ErrorHandling.printError(ctx, "Error: invalid type in arithmetic operation!");
@@ -842,7 +813,4 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       return res;
    }
 
-   private boolean integerOperator(String op) {
-      return "//".equals(op) || "\\\\".equals(op);
-   }
 }
