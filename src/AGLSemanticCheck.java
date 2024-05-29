@@ -372,7 +372,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
             ctx.eType = booleanType;
          }
       } else {
-         if (res && ctx.e.eType != null && checkNumericType(ctx, ctx.e.eType)) {
+         if (res && ctx.e.eType != null && checkNumericType( ctx.e.eType)) {
             ctx.eType = ctx.e.eType;
          } else {
             ErrorHandling.printError("Error: invalid unary expression or undefined type!");
@@ -415,7 +415,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
       // if op is '+','-','*','/' then both expressions must be numeric
       if (ctx.op.getText().equals("+") || ctx.op.getText().equals("-") || ctx.op.getText().equals("*") || ctx.op.getText().equals("/")) {
-         res = visit(ctx.e1) && checkNumericType(ctx, ctx.e1.eType) && visit(ctx.e2) && checkNumericType(ctx, ctx.e2.eType);
+         res = visit(ctx.e1) && checkNumericType(ctx.e1.eType) && visit(ctx.e2) && checkNumericType(ctx.e2.eType);
          
          
          if (res) {
@@ -463,7 +463,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       System.out.println("y: " + ctx.y.getText());
 
       
-      Boolean res = visit(ctx.x) && checkNumericType(ctx, ctx.x.eType) && visit(ctx.y) && checkNumericType(ctx, ctx.y.eType);
+      Boolean res = visit(ctx.x) && checkNumericType(ctx.x.eType) && visit(ctx.y) && checkNumericType(ctx.y.eType);
       
       // Define as PointType      
       if (res) {
@@ -478,7 +478,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    public Boolean visitExprVector(AGLParser.ExprVectorContext ctx) {
       // '(' deg=expression ':' length=expression ')' and expression returns [Type eType, String varName]
       
-      Boolean res = visit(ctx.deg) && checkNumericType(ctx, ctx.deg.eType) && visit(ctx.length) && checkNumericType(ctx, ctx.length.eType);
+      Boolean res = visit(ctx.deg) && checkNumericType(ctx.deg.eType) && visit(ctx.length) && checkNumericType(ctx.length.eType);
 
       // Define as VectorType
       if (res) {
