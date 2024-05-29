@@ -207,6 +207,8 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       // assignment = expression    and   expression returns [Type eType, String varName]
       // in_assignment: 'in' '{' ID (',' ID)* '}'
 
+      System.out.println("Check simple statement");
+
       String type = ctx.typeID().getText();
       Type typeObject = ctx.typeID().res;
 
@@ -239,6 +241,8 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       // check if we have an assignment or a in_assignment and if it conforms to the type
       if (ctx.assignment() != null) {
          Boolean res = visit(ctx.assignment());
+         System.out.println("Check assignment");
+         System.out.println("Type: " + ctx.assignment().eType.name());
          if (!res) {
             ErrorHandling.printError("Error: invalid simple statement");
             return false;
@@ -415,7 +419,9 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
       // if op is '+','-','*','/' then both expressions must be numeric
       if (ctx.op.getText().equals("+") || ctx.op.getText().equals("-") || ctx.op.getText().equals("*") || ctx.op.getText().equals("/")) {
-         res = visit(ctx.e1) && checkNumericType(ctx.e1.eType) && visit(ctx.e2) && checkNumericType(ctx.e2.eType);
+         
+         
+         res = visit(ctx.e1) && visit(ctx.e2);
          
          
          if (res) {
@@ -458,10 +464,6 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    @Override
    public Boolean visitExprPoint(AGLParser.ExprPointContext ctx) {
       // expression: '(' x=expression ',' y=expression ')'  and expression returns [Type eType, String varName]
-      System.out.println("Check point expression");
-      System.out.println("x: " + ctx.x.getText());
-      System.out.println("y: " + ctx.y.getText());
-
       
       Boolean res = visit(ctx.x) && checkNumericType(ctx.x.eType) && visit(ctx.y) && checkNumericType(ctx.y.eType);
       
@@ -813,8 +815,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    // -- Correct --
    private Boolean checkNumericType(Type t) {
       Boolean res = true;
-      System.out.println("Check numeric type");
-      System.out.println("Type: " + t.name());
+
       if (!t.isNumeric()) {
          ErrorHandling.printError("Numeric operator applied to a non-numeric operand!");
          res = false;
