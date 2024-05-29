@@ -1,423 +1,522 @@
-// /*
-//    File: AGL Generator to Python
-//    */
+/*
+   File: AGL Generator to Python
+   */
 
-// import org.stringtemplate.v4.*;
+import org.stringtemplate.v4.*;
 
+import org.antlr.v4.runtime.ParserRuleContext;
 
-// import org.antlr.v4.runtime.ParserRuleContext;
-
-// @SuppressWarnings("CheckReturnValue")
-// public class AGLCompiler extends AGLParserBaseVisitor<ST> {
+@SuppressWarnings("CheckReturnValue")
+public class AGLCompiler extends AGLParserBaseVisitor<ST> {
    
 
-//    private STGroup templates = new STGroupFile("AGL_python.stg");
+    private STGroup templates = new STGroupFile("AGL_python.stg");
 
-//    private int varCounter = 0;
+    private int varCounter = 0;
 
-//    private String newVarName() {
-//       return "v" + varCounter++;
-//    }
+    private String newVarName() {
+        return "v" + varCounter++;
+    }
 
-//    private ST binaryExpression(String e1Stats, String e2Stats, String var, String e1Var, String op, String e2Var) {
-//       ST res = templates.getInstanceOf("binaryExpression");
-//       res.add("stat", e1Stats);
-//       res.add("stat", e2Stats);
-//       res.add("var", var);
-//       res.add("e1", (op=="," ? "(" : "")+e1Var);
-//       res.add("op", op);
-//       res.add("e2", e2Var+(op=="," ? ")" : ""));
-//       return res;
-//    }
+    private ST binaryExpression(String e1Stats, String e2Stats, String var, String e1Var, String op, String e2Var) {
+        ST res = templates.getInstanceOf("binaryExpression");
+        res.add("stat", e1Stats);
+        res.add("stat", e2Stats);
+        res.add("var", var);
+        res.add("e1", (op=="," ? "(" : "")+e1Var);
+        res.add("op", op);
+        res.add("e2", e2Var+(op=="," ? ")" : ""));
+        return res;
+    }
 
-
-// /*
-//    Compiler visitor methods
-//    */
-
-// //% program
-//    @Override public ST visitProgram(AGLParser.ProgramContext ctx) {
-//       ST res = templates.getInstanceOf("module");
-      
-//       // iterate all stat*
-//       for (AGLParser.StatContext stat : ctx.stat()){
-//          ST statRes = visit(stat);
-//          res.add("stat", statRes).render(); // render the return value!
-//       }
-
-//       return res;
-//    }
+   private String getConcreteId(AGLParser.IdentifierContext ctx, ST res){  
+        String id = ctx.ID(0).getText();
+        if (ctx.ID(1) != null) { 
+            for (int i = 1; i < ctx.ID().size(); i++) {
+                id += "." + ctx.ID(i).getText();
+            }
+        } else if (ctx.expression() != null) {
+            res.add("stat", visit(ctx.expression()).render()); // render the return value!
+            id += "[" + ctx.expression().varName + "]";
+        }
+        return id;
+   }
 
 
-// //% stat
-//    @Override public ST visitStatInstantiation(AGLParser.StatInstantiationContext ctx) {
-//       return visit(ctx.instantiation());
-//    }
+/*
+   Compiler visitor methods
+   */
 
-//    @Override public ST visitStatBlockStatement(AGLParser.StatBlockStatementContext ctx) {
-//       return visit(ctx.blockStatement());
-//    }
+//% program
+    @Override public ST visitProgram(AGLParser.ProgramContext ctx) {
+        ST res = templates.getInstanceOf("module");
+        
+        // iterate all stat*
+        for (AGLParser.StatContext stat : ctx.stat()){
+            ST statRes = visit(stat);
+            res.add("stat", statRes).render(); // render the return value!
+        }
 
-//    @Override public ST visitStatLongAssignment(AGLParser.StatLongAssignmentContext ctx) {
-//       return visit(ctx.longAssignment());
-//    }
-
-//    @Override public ST visitStatCommand(AGLParser.StatCommandContext ctx) {
-//       return visit(ctx.command());
-//    }
-
-//    @Override public ST visitStatForLoop(AGLParser.StatForLoopContext ctx) {
-//       return visit(ctx.forStatement());
-//    }
-
-//    @Override public ST visitStatWithStatement(AGLParser.StatWithStatementContext ctx) {
-//       return visit(ctx.withStatement());
-//    }
-
-//    @Override public ST visitStatModelInstantiation(AGLParser.StatModelInstantiationContext ctx) {
-//       return visit(ctx.modelInstantiation());
-//    }
-
-//    @Override public ST visitStatIfStatement(AGLParser.StatIfStatementContext ctx) {
-//       return visit(ctx.ifStatement());
-//    }
-
-//    @Override public ST visitStatBlock(AGLParser.StatBlockContext ctx) {
-//       ST res = templates.getInstanceOf("stats");
-
-//       for (AGLParser.StatContext stat : ctx.stat()){
-//          ST statRes = visit(stat);
-//          res.add("stat", statRes).render(); // render the return value!
-//       }
-      
-//       return res;
-//    }
+        return res;
+    }
 
 
-// //% instantiation
-//    @Override public ST visitInstantiation(AGLParser.InstantiationContext ctx) {
-//       ST res = templates.getInstanceOf("assign");
-      
-//       String id = ctx.ID().getText();
+//% stat
+    @Override public ST visitStatInstantiation(AGLParser.StatInstantiationContext ctx) {
+        return visit(ctx.instantiation());
+    }
 
-//       ST stat = null;
-//       String value;
-//       if (ctx.simpleStatement() != null) {
-//          stat = visit(ctx.simpleStatement());
-//          value = ctx.simpleStatement().varName;
-//       } else {
-//          stat = visit(ctx.blockStatement());
-//          value = ctx.blockStatement().varName;
-//       }
+    @Override public ST visitStatModelInstantiation(AGLParser.StatModelInstantiationContext ctx) {
+        return visit(ctx.modelInstantiation());
+    }
 
-//       res.add("stat", stat.render()); // render the return value!
-//       res.add("var", id);
-//       if (value != null) {
-//          res.add("value", value); // blockStatement can be uninitialized
-//       }
-      
+    @Override public ST visitStatBlockStatement(AGLParser.StatBlockStatementContext ctx) {
+        return visit(ctx.blockStatement());
+    }
 
-//       return res;
-//    }
+    @Override public ST visitStatLongAssignment(AGLParser.StatLongAssignmentContext ctx) {
+        return visit(ctx.longAssignment());
+    }
+
+    @Override public ST visitStatWithStatement(AGLParser.StatWithStatementContext ctx) {
+       return visit(ctx.withStatement());
+    }
+
+    @Override public ST visitStatPlayStatement(AGLParser.StatPlayStatementContext ctx) {
+        return visit(ctx.playStatement());
+    }
+
+    @Override public ST visitStatRepetitiveStatement(AGLParser.StatRepetitiveStatementContext ctx) {
+        return visit(ctx.repetitiveStatement());
+    }
+
+    @Override public ST visitStatIfStatement(AGLParser.StatIfStatementContext ctx) {
+        return visit(ctx.ifStatement());
+    }
+    
+    @Override public ST visitStatCommand(AGLParser.StatCommandContext ctx) {
+        return visit(ctx.command());
+    }
+
+    @Override public ST visitStatBlock(AGLParser.StatBlockContext ctx) {
+        ST res = templates.getInstanceOf("stats");
+  
+        for (AGLParser.StatContext stat : ctx.stat()){
+           ST statRes = visit(stat);
+           res.add("stat", statRes).render(); // render the return value!
+        }
+        
+        return res;
+     }
+    
+
+//% repetitiveStatement    
+   @Override
+    public ST visitRepForStatement(AGLParser.RepForStatementContext ctx) {
+        return visit(ctx.forStatement());
+    }
+    @Override
+    public ST visitRepWhileStatement(AGLParser.RepWhileStatementContext ctx) {
+        return visit(ctx.whileStatement());
+    }
+    @Override
+    public ST visitRepRepeatStatement(AGLParser.RepRepeatStatementContext ctx) {
+        return visit(ctx.repeatStatement());
+    }
 
 
-// //* simpleStatement
-//    @Override public ST visitSimpleStatement(AGLParser.SimpleStatementContext ctx) {
-//       ST res = templates.getInstanceOf("assign");
-      
-//       String value;
-//       if (ctx.assignment() != null) {
-//          res.add("stat", visit(ctx.assignment()).render()); // render the return value!
-//          value = ctx.assignment().varName;
-//       } else { 
-//          value = "DEFAULT_VALUE";  // TODO: TO_BE_IMPLEMENTED
-//       } 
+//% instantiation
+    @Override public ST visitInstantiation(AGLParser.InstantiationContext ctx) {
+        ST res = templates.getInstanceOf("assign");
+        
+        String id = ctx.ID().getText();
 
-//       String id = newVarName();
-//       ctx.varName = id;
+        ST stat = null;
+        String value;
+        if (ctx.simpleStatement() != null) {
+            stat = visit(ctx.simpleStatement());
+            value = ctx.simpleStatement().varName;
+        } else {
+            stat = visit(ctx.blockStatement());
+            value = ctx.blockStatement().varName;
+        }
 
-//       res.add("var", id);
-//       res.add("value", value);   // assign the value to current variable
+        res.add("stat", stat.render()); // render the return value!
+        res.add("var", id);
+        if (value != null) {
+            res.add("value", value); // blockStatement can be uninitialized
+        }
+        
 
-//       return res;
-//    }
+        return res;
+    }
 
-   
-// //* blockStatement
-//    @Override public ST visitBlockStatement(AGLParser.BlockStatementContext ctx) {
-//       ST res = null;
 
-//       res = templates.getInstanceOf("object");
-//       res.add("type", ctx.typeID().getText());
+//* simpleStatement
+    @Override public ST visitSimpleStatement(AGLParser.SimpleStatementContext ctx) {
+        ST res = templates.getInstanceOf("assign");
+        
+        String value;
+        if (ctx.assignment() != null) {
+            res.add("stat", visit(ctx.assignment()).render()); // render the return value!
+            value = ctx.assignment().varName;
+        } else { 
+            value = "DEFAULT_VALUE";  // TODO: TO_BE_IMPLEMENTED
+        } 
 
-//       if (ctx.typeID().getText().equals("View")) {
-//          res.add("update_lastView", "True");
-//       }
-      
-//       // (at expression)?
-//       if (ctx.expression() != null) {
-//          // define the origin
-//          res.add("stat", visit(ctx.expression()).render()); // render the return value!
-//          res.add("origin", ctx.expression().varName);
-//       }
+        String id = newVarName();
+        ctx.varName = id;
 
-//       String id = newVarName();
-//       ctx.varName = id;
+        res.add("var", id);
+        res.add("value", value);   // assign the value to current variable
 
-//       res.add("var", id);
-      
-//       for (AGLParser.LongAssignmentContext longAssign: ctx.propertiesAssignment().longAssignment()) {
-//          //////////////////////////////////////////////////////////////
-//          // assign the properties
-//          ST assign = templates.getInstanceOf("assign");
-//          assign.add("stat", visit(longAssign.assignment()).render()); // render the return value!
-//          id = newVarName();
-//          assign.add("var", id);
-//          assign.add("value", longAssign.assignment().varName);
-//          //////////////////////////////////////////////////////////////
-         
-//          res.add("stat", assign.render()); // render the return value!
-//          res.add("field", ctx.varName+"."+longAssign.ID(0).getText() + " = " + id);
-//       }
-//        // render the return value!
+        // TODO: new grammar
 
-//       return res;
-
-//    }
-
-// //* longAssignment
-//    @Override public ST visitLongAssignment(AGLParser.LongAssignmentContext ctx) {      
-//       ST res = templates.getInstanceOf("assign");
-      
-//       res.add("stat", visit(ctx.assignment()).render()); // render the return value!
-      
-//       // TODO: how to handle this?
-//       if (ctx.ID(1) != null) {
-//          res.add("attribute", ctx.ID(1).getText());
-         
-//       }
-
-//       res.add("var", ctx.ID(0));
-//       res.add("value", ctx.assignment().varName); // render the return value!
-
-//       return res;
-//    }
+        return res;
+    }
 
    
-// //* assignment   
-//    @Override public ST visitAssignment(AGLParser.AssignmentContext ctx) {
-//       ST res = templates.getInstanceOf("assign");
-      
-//       res.add("stat", visit(ctx.expression()).render()); // render the return value!
-      
-//       String id = newVarName();
-//       ctx.varName = id;
+//* blockStatement
+    @Override public ST visitBlockStatement(AGLParser.BlockStatementContext ctx) {
+        ST res = null;
 
-//       res.add("var", id);
-//       res.add("value", ctx.expression().varName); // assign the value to current variable
+        res = templates.getInstanceOf("object");
+        res.add("type", ctx.typeID().getText());
 
-//       return res;
-//    }
+        if (ctx.typeID().getText().equals("View")) {
+            res.add("update_lastView", "True");
+        }
+        
+        // (at expression)?
+        if (ctx.expression() != null) {
+            // define the origin
+            res.add("stat", visit(ctx.expression()).render()); // render the return value!
+            res.add("origin", ctx.expression().varName);
+        }
 
+        String id = newVarName();
+        ctx.varName = id;
 
-// //* expression  
-//    @Override public ST visitExprUnary(AGLParser.ExprUnaryContext ctx) {
-//       ST res = templates.getInstanceOf("unaryExpression");
+        res.add("var", id);
+        
+        for (AGLParser.LongAssignmentContext longAssign: ctx.propertiesAssignment().longAssignment()) {
+            //////////////////////////////////////////////////////////////
+            // assign the properties
+            ST assign = templates.getInstanceOf("assign");
+            assign.add("stat", visit(longAssign.assignment()).render()); // render the return value!
+            id = newVarName();
+            assign.add("var", id);
+            assign.add("value", longAssign.assignment().varName);
+            //////////////////////////////////////////////////////////////
+            
+            res.add("stat", assign.render()); // render the return value!
+            res.add("field", ctx.varName+"."+longAssign.identifier().ID(0).getText() + " = " + id);
+        }
+        // render the return value!
 
-//       res.add("stat", visit(ctx.expression()).render()); // render the return value!
-      
-//       String id = newVarName();
-//       ctx.varName = id;
-//       // id = op=('+' | '-') e1
-//       res.add("var", id);
-//       res.add("op", ctx.sign.getText()); // ('+' | '-')
-//       res.add("e1", ctx.expression().varName); // render the return value!
-      
-//       return res;
-//    }
+        return res;
 
-//    @Override public ST visitExprParenthesis(AGLParser.ExprParenthesisContext ctx) {
-//       ST res = visit(ctx.expression());
-//       ctx.varName = ctx.expression().varName;
-//       return res;
-//    }
+    }
 
-//    @Override public ST visitExprAddSubMultDivAndOr(AGLParser.ExprAddSubMultDivAndOrContext ctx) {
-//       ctx.varName = newVarName();
-//       return binaryExpression(visit(ctx.expression(0)).render(), visit(ctx.expression(1)).render(), ctx.varName, ctx.expression(0).varName, ctx.op.getText(), ctx.expression(1).varName);
-//    }
+    @Override
+    public ST visitPropertiesAssignment(AGLParser.PropertiesAssignmentContext ctx) {
+        return null; // TODO
+    }
 
-//    @Override public ST visitExprPoint(AGLParser.ExprPointContext ctx) {
-//       ctx.varName = newVarName();
-//       return binaryExpression(visit(ctx.x).render(), visit(ctx.y).render(), ctx.varName, ctx.x.varName, ",", ctx.y.varName);
-//    }
+//* longAssignment
+    @Override public ST visitLongAssignment(AGLParser.LongAssignmentContext ctx) {      
+        ST res = templates.getInstanceOf("assign");
+        
+        res.add("stat", visit(ctx.assignment()).render()); // render the return value!
+        res.add("var", getConcreteId(ctx.identifier(), res));
+        res.add("value", ctx.assignment().varName); // render the return value!
 
-//    @Override public ST visitExprNumber(AGLParser.ExprNumberContext ctx) {
-//       ST res = templates.getInstanceOf("assign");
-      
-//       String id = newVarName();
-//       ctx.varName = id;
+        return res;
+    }
 
-//       res.add("var", id);
-//       res.add("value", ctx.number.getText()); // assign the value to current variable
+   
+//* assignment   
+    @Override public ST visitAssignment(AGLParser.AssignmentContext ctx) {
+        ST res = templates.getInstanceOf("assign");
+        
+        res.add("stat", visit(ctx.expression()).render()); // render the return value!
+        
+        String id = newVarName();
+        ctx.varName = id;
 
-//       return res;
-//    }
+        res.add("var", id);
+        res.add("value", ctx.expression().varName); // assign the value to current variable
 
-//    @Override public ST visitExprString(AGLParser.ExprStringContext ctx) {
-//       ST res = templates.getInstanceOf("assign");
-      
-//       String id = newVarName();
-//       ctx.varName = id;
-
-//       res.add("var", id);
-//       res.add("value", ctx.STRING().getText()); // assign the value to current variable
-
-//       return res;
-//    }
-
-//    @Override public ST visitExprID(AGLParser.ExprIDContext ctx) {
-//       ST res = templates.getInstanceOf("assign");
-      
-//       String id = newVarName();
-//       ctx.varName = id;
-
-//       res.add("var", id);
-//       res.add("value", ctx.ID().getText()); // assign the value to current variable
-
-//       return res;
-//    }
-
-//    @Override public ST visitExprWait(AGLParser.ExprWaitContext ctx) {
-//       ST res = templates.getInstanceOf("waitMouseClick");
-      
-//       String id = newVarName();
-//       ctx.varName = id;
-
-//       res.add("var", id);
-
-//       return res;
-//    }
-
-//    @Override public ST visitExprArray(AGLParser.ExprArrayContext ctx) {
-//       ST res = templates.getInstanceOf("array");
-      
-//       String id = newVarName();
-//       ctx.varName = id;
-
-//       res.add("var", id);
-
-//       for (AGLParser.ExpressionContext expression : ctx.expression()) {
-//          res.add("stat", visit(expression).render());
-//          res.add("field", expression.varName);
-//       }
-
-//       return res;
-//    }
+        return res;
+    }
 
 
-// //* command   
-//    @Override public ST visitCommandRefresh(AGLParser.CommandRefreshContext ctx) {
-//       ST res = templates.getInstanceOf("refresh");
+//* expression  
+    @Override public ST visitExprUnary(AGLParser.ExprUnaryContext ctx) {
+        ST res = templates.getInstanceOf("unaryExpression");
 
-//       res.add("view", ctx.ID().getText());
+        res.add("stat", visit(ctx.expression()).render()); // render the return value!
+        
+        String id = newVarName();
+        ctx.varName = id;
+        // id = op=('+' | '-') e1
+        res.add("var", id);
+        res.add("op", ctx.sign.getText()); // ('+' | '-')
+        res.add("e1", ctx.expression().varName); // render the return value!
+        
+        return res;
+    }
 
-//       if (ctx.expression() != null) {
-//          res.add("stat", visit(ctx.expression()).render()); // render the return value!
-//          res.add("delay", ctx.expression().varName + (ctx.suffix.getText().equals("ms")? "/1000": ""));
-//       }
+    @Override public ST visitExprParenthesis(AGLParser.ExprParenthesisContext ctx) {
+        ST res = visit(ctx.expression());
+        ctx.varName = ctx.expression().varName;
+        return res;
+    }
 
-//       return res;
-//    }
+    @Override public ST visitExprAddSubMultDivAndOr(AGLParser.ExprAddSubMultDivAndOrContext ctx) {
+        ctx.varName = newVarName();
+        return binaryExpression(visit(ctx.expression(0)).render(), visit(ctx.expression(1)).render(), ctx.varName, ctx.expression(0).varName, ctx.op.getText(), ctx.expression(1).varName);
+    }
 
-//    @Override public ST visitCommandPrint(AGLParser.CommandPrintContext ctx) {
-//       ST res = templates.getInstanceOf("print");
-      
-//       res.add("stat", visit(ctx.expression()).render()); // render the return value!
-//       res.add("output", ctx.expression().varName);
-      
-//       return res;
-//    }
+    @Override public ST visitExprPoint(AGLParser.ExprPointContext ctx) {
+        ctx.varName = newVarName();
+        return binaryExpression(visit(ctx.x).render(), visit(ctx.y).render(), ctx.varName, ctx.x.varName, ",", ctx.y.varName);
+    }
 
-//    @Override public ST visitCommandClose(AGLParser.CommandCloseContext ctx) {
-//       return null; // TODO: why ?
-//    }
+    @Override public ST visitExprVector(AGLParser.ExprVectorContext ctx) {
+        ST res = templates.getInstanceOf("stats");
 
-//    @Override public ST visitCommandMove(AGLParser.CommandMoveContext ctx) {
-//       ST res = templates.getInstanceOf("move");
+        ST assign = templates.getInstanceOf("assign");
+        assign.add("stat", visit(ctx.deg).render()); // render the return value!
+        String degree = newVarName();
+        assign.add("var", degree);
+        assign.add("value", ctx.deg.getText());
 
-//       res.add("var", ctx.ID().getText());
-//       res.add("stat", visit(ctx.expression()).render()); // render the return value!
-//       res.add("destination", ctx.expression().varName);
+        ST assign2 = templates.getInstanceOf("assign");
+        assign2.add("stat", visit(ctx.length).render()); // render the return value!
+        String length = newVarName();
+        assign2.add("var", length);
+        assign2.add("value", ctx.length.getText());
 
-//       if (ctx.type.getText().equals("by")) {
-//          res.add("relative", "True"); 
-//       } 
+        String x = "( " + length + "*math.cos(math.radians(" + degree + "))" + " )";
+        String y = "( " + length + "*math.sin(math.radians(" + degree + "))" + " )";
 
-//       return res;
-//    }
+        ctx.varName = newVarName();
+        return binaryExpression(assign.render(), assign2.render(), ctx.varName, x, ",", y);
+    }
+
+     @Override public ST visitExprArray(AGLParser.ExprArrayContext ctx) {
+        ST res = templates.getInstanceOf("array");
+        
+        String id = newVarName();
+        ctx.varName = id;
+
+        res.add("var", id);
+
+        for (AGLParser.ExpressionContext expression : ctx.expression()) {
+            res.add("stat", visit(expression).render());
+            res.add("field", expression.varName);
+        }
+
+        return res;
+    }
+
+    @Override public ST visitExprRelational(AGLParser.ExprRelationalContext ctx) {
+      return null; // TODO
+    }
+
+    @Override public ST visitExprNumber(AGLParser.ExprNumberContext ctx) {
+        ST res = templates.getInstanceOf("assign");
+        
+        String id = newVarName();
+        ctx.varName = id;
+
+        res.add("var", id);
+        res.add("value", ctx.number.getText()); // assign the value to current variable
+
+        return res;
+    }
+
+    @Override public ST visitExprBoolean(AGLParser.ExprBooleanContext ctx) {
+        return null; // todo
+    }
+
+    @Override public ST visitExprString(AGLParser.ExprStringContext ctx) {
+        ST res = templates.getInstanceOf("assign");
+        
+        String id = newVarName();
+        ctx.varName = id;
+
+        res.add("var", id);
+        res.add("value", ctx.STRING().getText()); // assign the value to current variable
+
+        return res;
+    }
+
+    @Override public ST visitExprID(AGLParser.ExprIDContext ctx) {
+        ST res = templates.getInstanceOf("assign");
+        
+        String id = newVarName();
+        ctx.varName = id;
+
+        res.add("var", id);
+        res.add("value", getConcreteId(ctx.identifier(), res)); // assign the value to current variable
+
+        return res;
+    }
+
+    @Override public ST visitExprWait(AGLParser.ExprWaitContext ctx) {
+        ST res = templates.getInstanceOf("waitMouseClick");
+        
+        String id = newVarName();
+        ctx.varName = id;
+
+        res.add("var", id);
+
+        return res;
+    }
+
+    @Override public ST visitExprScript(AGLParser.ExprScriptContext ctx) {
+        return null; // TODO
+    }
 
 
-// //* forStatement   
-//    @Override public ST visitForStatement(AGLParser.ForStatementContext ctx) {
-//       ST res = templates.getInstanceOf("for");  
-      
-//       res.add("var", ctx.ID().getText());
 
-//       AGLParser.Number_rangeContext number_range = ctx.number_range();
+//* command   
+    @Override public ST visitCommandRefresh(AGLParser.CommandRefreshContext ctx) {
+        ST res = templates.getInstanceOf("refresh");
 
-//       res.add("stat", visit(number_range.expression(0)).render()); // render the return value!
-//       String var1 = number_range.expression(0).varName;
+        res.add("view", ctx.ID().getText());
 
-//       res.add("stat", visit(number_range.expression(1)).render()); // render the return value!
-//       String var2 = number_range.expression(1).varName;
-      
-//       String step = "1";
-//       if (number_range.expression(2) != null) {
-//          res.add("stat", visit(number_range.expression(2)).render()); // render the return value!
-//          step = number_range.expression(2).varName;
-//       }
+        if (ctx.expression() != null) {
+            res.add("stat", visit(ctx.expression()).render()); // render the return value!
+            res.add("delay", ctx.expression().varName + (ctx.suffix.getText().equals("ms")? "/1000": ""));
+        }
+
+        return res;
+    }
+
+    @Override public ST visitCommandPrint(AGLParser.CommandPrintContext ctx) {
+        ST res = templates.getInstanceOf("print");
+        
+        res.add("stat", visit(ctx.expression()).render()); // render the return value!
+        res.add("output", ctx.expression().varName);
+        
+        return res;
+    }
+
+    @Override public ST visitCommandClose(AGLParser.CommandCloseContext ctx) {
+        ST res = templates.getInstanceOf("close");
+
+        res.add("view", ctx.ID().getText());
+        
+        return res;
+    }
+
+    @Override public ST visitCommandMove(AGLParser.CommandMoveContext ctx) {
+        ST res = templates.getInstanceOf("move");
+
+        String id = ctx.identifier().ID(0).getText();
+        if (ctx.identifier().ID(1) != null) { 
+            for (int i = 1; i < ctx.identifier().ID().size(); i++) {
+                id += "." + ctx.identifier().ID(i).getText();
+            }
+        } else if (ctx.identifier().expression() != null) {
+            res.add("stat", visit(ctx.identifier().expression()).render()); // render the return value!
+            id += "[" + ctx.identifier().expression().varName + "]";
+        }
+
+        res.add("var", id);
+        res.add("stat", visit(ctx.expression()).render()); // render the return value!
+        res.add("destination", ctx.expression().varName);
+
+        if (ctx.type.getText().equals("by")) {
+            res.add("relative", "True"); 
+        } 
+
+        return res;
+    }
+
+//* forStatement   
+    @Override public ST visitForStatement(AGLParser.ForStatementContext ctx) {
+        ST res = templates.getInstanceOf("for");  
+        
+        res.add("var", ctx.ID().getText());
+
+        AGLParser.Number_rangeContext number_range = ctx.number_range();
+
+        res.add("stat", visit(number_range.expression(0)).render()); // render the return value!
+        String var1 = number_range.expression(0).varName;
+
+        res.add("stat", visit(number_range.expression(1)).render()); // render the return value!
+        String var2 = number_range.expression(1).varName;
+        
+        String step = "1";
+        if (number_range.expression(2) != null) {
+            res.add("stat", visit(number_range.expression(2)).render()); // render the return value!
+            step = number_range.expression(2).varName;
+        }
 
 
-//       ST range = templates.getInstanceOf("range");
-//       range.add("start", var1);
-//       range.add("end", var2);
-//       range.add("step", step);
+        ST range = templates.getInstanceOf("range");
+        range.add("start", var1);
+        range.add("end", var2);
+        range.add("step", step);
 
-//       res.add("range", range.render());
+        res.add("range", range.render());
 
-//       res.add("instructions", visit(ctx.stat()).render()); // render the return value!
+        res.add("instructions", visit(ctx.stat()).render()); // render the return value!
 
-//       return res;
-//    }
+        return res;
+    }
 
  
-// //* withStatement   
-//    @Override public ST visitWithStatement(AGLParser.WithStatementContext ctx) {
-//       ST res = templates.getInstanceOf("with");
-      
-//       res.add("var", ctx.ID().getText());
+//* withStatement   
+    @Override public ST visitWithStatement(AGLParser.WithStatementContext ctx) {
+        ST res = templates.getInstanceOf("block_properties");
+        
+        for (AGLParser.LongAssignmentContext longAssign: ctx.propertiesAssignment().longAssignment()) {
+            //////////////////////////////////////////////////////////////
+            // assign the properties
+            ST assign = templates.getInstanceOf("assign");
+            assign.add("stat", visit(longAssign.assignment()).render()); // render the return value!
+            String id = newVarName();
+            assign.add("var", id);
+            assign.add("value", longAssign.assignment().varName);
+            //////////////////////////////////////////////////////////////
 
-//       for (AGLParser.LongAssignmentContext longAssign: ctx.propertiesAssignment().longAssignment()) {
-//          //////////////////////////////////////////////////////////////
-//          // assign the properties
-//          ST assign = templates.getInstanceOf("assign");
-//          assign.add("stat", visit(longAssign.assignment()).render()); // render the return value!
-//          String id = newVarName();
-//          assign.add("var", id);
-//          assign.add("value", longAssign.assignment().varName);
-//          //////////////////////////////////////////////////////////////
-         
-//          res.add("stat", assign.render()); // render the return value!
-//          res.add("field", ctx.ID().getText()+"."+longAssign.ID(0).getText() + " = " + id);
-//       }
+            res.add("stat", assign.render()); // render the return value!
+            res.add("field", getConcreteId(ctx.identifier(), res)+"."+getConcreteId(longAssign.identifier(), res) + " = " + id);
+        }
 
-//       return res;
-//    }      
+        return res;
+    }      
 
-// //* modelStatement   
-//    @Override public ST visitModelInstantiation(AGLParser.ModelInstantiationContext ctx) {
-//       return null;
-//    }
+//* modelStatement   
+    @Override public ST visitModelInstantiation(AGLParser.ModelInstantiationContext ctx) {
+        return null; // TODO
+    }
 
-// }
+//* action
+    @Override public ST visitAction(AGLParser.ActionContext ctx) {
+        return  null; // TODO
+    }
+
+//* ifStatement
+    @Override public ST visitIfStatement(AGLParser.IfStatementContext ctx) {
+        // ST res = templates.getInstanceOf("if_else"); // if_else(stat, condition, if_instructions, else_instructions)
+        // System.out.println(visit(ctx.expression()).render());
+        // res.add("stat", visit(ctx.expression()).render()); // render the return value!
+
+        // res.add("condition", ctx.expression().varName);
+
+        // res.add("if_instructions", visit(ctx.stat(0)).render()); // render the return value!
+
+        // if (ctx.stat(1) != null) {
+        //     res.add("else_instructions", visit(ctx.stat(1)).render()); // render the return value!
+        // }
+        
+        return null;
+    }   
+
+}

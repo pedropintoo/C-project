@@ -40,6 +40,7 @@ POLYGON : 'Polygon';
 BLOB    : 'Blob';
 Model   : 'Model';
 Enum    : 'Enum';
+ARRAY   : 'Array';
 SCRIPT  : 'Script';
 
 
@@ -85,9 +86,9 @@ RELATIONAL_OPERATOR
     | '=='
     | '!='
     ;
-AND     : '&&';
-OR      : '||';
-NOT     : '!';
+AND     : 'and';
+OR      : 'or';
+NOT     : 'not';
 
 // Identifier names
 ID      : LETTER (LETTER | DIGIT)*;

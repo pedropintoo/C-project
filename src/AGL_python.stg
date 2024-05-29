@@ -1,6 +1,7 @@
 module(stat) ::= <<
 from tkinter import *
 from AGLClasses import *
+import math
 import time, os, sys
 
 #################################################################
@@ -44,6 +45,14 @@ print(stat, output) ::= <<
 print(<output>)
 >>
 
+if_else(stat, condition, if_instructions, else_instructions) ::= <<
+<stats(stat)>
+if <condition>:
+    <if_instructions>
+else:
+    <else_instructions>
+>>
+
 for(stat, var, range, instructions) ::= <<
 <stats(stat)>
 for <var> in <range>:
@@ -75,9 +84,9 @@ close(view) ::= <<
 <view>.close()
 >>
 
-assign(stat,var,value,attribute) ::= <<
+assign(stat,var,value) ::= <<
 <stats(stat)>
-<if(value)><var><if(attribute)>.<attribute> = <value><else> = <value><endif><endif>
+<if(value)><var> = <value><endif>
 >>
 
 init(value) ::= "<if(value)> = <value><endif>"
@@ -98,8 +107,10 @@ object(stat, var, type, origin, field, update_lastView) ::= <<
 
 <var> = <type>(root = root)
 <if(origin)><var>.origin = <origin><endif>
-<if(update_lastView)>last_view = <var><else>if model is not None:
-    model.add_object(<var>)<endif>
+<if(update_lastView)>last_view = <var>
+<else>if model is not None:
+    model.add_object(<var>)
+<endif>
 <properties(field)>
 >>
 
@@ -113,7 +124,7 @@ model = None
 
 >>
 
-block_properties(stat, var, field) ::= <<
+block_properties(stat, field) ::= <<
 <stats(stat)>
 
 <properties(field)>
