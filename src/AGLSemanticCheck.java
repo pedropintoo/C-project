@@ -169,9 +169,15 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
          return false;
       }
 
-      // second expression can not be less than the first expression
+      // expressions must be integer
       if ( ! (ctx.number_range().expression(0).eType instanceof IntegerType && ctx.number_range().expression(1).eType instanceof IntegerType ))  {
          ErrorHandling.printError("Error: invalid expression type in for statement (must be integer!)");
+      }
+
+      // second expression can not be less than the first expression
+      if (Integer.parseInt(ctx.number_range().expression(0).getText()) > Integer.parseInt(ctx.number_range().expression(1).getText())) {
+         ErrorHandling.printError("Error: second expression must be greater than the first expression in for statement");
+         return false;
       }
 
       return res;
