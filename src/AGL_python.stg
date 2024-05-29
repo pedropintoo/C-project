@@ -3,6 +3,7 @@ from tkinter import *
 from AGLClasses import *
 import math
 import time, os, sys
+import copy
 
 #################################################################
 ## Auxiliar
@@ -91,9 +92,12 @@ close(view) ::= <<
 <view>.close()
 >>
 
-assign(stat,var,value) ::= <<
+assign(stat,var,value, varIfModel) ::= <<
 <stats(stat)>
-<if(value)><var> = <value><endif>
+<if(value)><var> = <value><endif><if(varIfModel)>
+if model is not None: 
+    model.<varIfModel> = <var>
+<endif>
 >>
 
 init(value) ::= "<if(value)> = <value><endif>"
@@ -112,22 +116,34 @@ unaryExpression(stat,var,op,e1) ::= <<
 object(stat, var, type, origin, properties, update_lastView) ::= <<
 <stats(stat)>
 
-<var> = <type>(root = root)
+if model is not None:
+    <var> = <type>()
+    model.add_object(<var>) # add object to model
+else:
+    <var> = <type>(root = root)
 <if(origin)><var>.origin = <origin><endif>
 <if(update_lastView)>last_view = <var>
-<else>if model is not None:
-    model.add_object(<var>)
 <endif>
 <properties>
 >>
 
-model(stat, var) ::= <<
-<stats(stat)>
-
-<var> = Model(root = root)
-model = <var>
-<instructions>
+model_creation(modelName, modelStat) ::= <<
+#################################################################
+## Model
+#################################################################
+<modelName> = Model()
+model = <modelName>
+<stats(modelStat)>
 model = None
+#################################################################
+>>
+
+model(var, modelName, origin) ::= <<
+
+<modelName>.root = root
+<modelName>.view = last_view
+<modelName>.origin = <origin>
+<var> = copy.deepcopy(<modelName>)
 
 >>
 
@@ -140,6 +156,10 @@ block_properties(stat, field) ::= <<
 array(stat, var, field) ::= <<
 <stats(stat)>
 <var> = [<elements(field)>]
+>>
+
+enum(stat, var, field) ::= <<
+<var> = {<elements(field)>}
 >>
 
 properties(field) ::= <<

@@ -42,7 +42,8 @@ instantiation
     ;
 
 simpleStatement returns [String varName]
-    : typeID ('at' expression)? ((assignment)? ';' | in_assignment)
+    : typeID ('at' expression)? (assignment)? ';'
+    | typeID in_assignment
     ;
 
 blockStatement returns [String varName]
@@ -124,8 +125,15 @@ playStatement
     : 'play' ID 'with' propertiesAssignment
     ;  
 
+modelStat
+    : instantiation                             #ModelStatInstantiation
+    | blockStatement                            #ModelStatBlockStatement
+    | longAssignment ';'                        #ModelStatLongAssignment
+    | action                                    #ModelStatAction
+    ;
+
 modelInstantiation
-    : ID '::' 'Model' '{' (instantiation|blockStatement|action|longAssignment ';')+ '}'
+    : ID '::' 'Model' '{' (modelStat)+ '}'
     ;
 
 action

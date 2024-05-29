@@ -146,6 +146,8 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
         if (value != null) {
             res.add("value", value); // blockStatement can be uninitialized
         }
+
+        res.add("varIfModel", id);
         
 
         return res;
@@ -160,8 +162,25 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
         if (ctx.assignment() != null) {
             res.add("stat", visit(ctx.assignment()).render()); // render the return value!
             value = ctx.assignment().varName;
+        } else if (ctx.in_assignment() != null) {
+            // -> Enum
+            value = ctx.in_assignment().ID(0).getText(); // first values is the default
         } else { 
             value = "DEFAULT_VALUE";  // TODO: TO_BE_IMPLEMENTED
+            // TODO: make a good selection
+
+            if (ctx.typeID().ID() != null) {
+                // -> Model
+                ST model = templates.getInstanceOf("model");
+            
+                model.add("modelName", ctx.typeID().getText());
+                value = newVarName();
+                model.add("var", value);
+                res.add("stat", visit(ctx.expression()).render()); // render the return value!
+                model.add("origin", ctx.expression().varName);
+                
+                res.add("stat", model.render()); // render the return value!
+            } 
         } 
 
         String id = newVarName();
@@ -537,9 +556,34 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
         return res;
     }
 
+//* modelStat
+    @Override public ST visitModelStatInstantiation(AGLParser.ModelStatInstantiationContext ctx) {
+        return visit(ctx.instantiation());
+    }
+
+    @Override public ST visitModelStatBlockStatement(AGLParser.ModelStatBlockStatementContext ctx) {
+        return visit(ctx.blockStatement());
+    }
+
+    @Override public ST visitModelStatLongAssignment(AGLParser.ModelStatLongAssignmentContext ctx) {
+        return visit(ctx.longAssignment());
+    }
+
+    @Override public ST visitModelStatAction(AGLParser.ModelStatActionContext ctx) {
+        return visit(ctx.action());
+    }
+
 //* modelStatement   
     @Override public ST visitModelInstantiation(AGLParser.ModelInstantiationContext ctx) {
-        return null; // TODO
+        ST res = templates.getInstanceOf("model_creation");
+
+        res.add("modelName", ctx.ID().getText());
+        
+        for (AGLParser.ModelStatContext stat : ctx.modelStat()){
+            res.add("modelStat", visit(stat).render()); // render the return value!
+        }
+
+        return res;
     }
 
 //* action
