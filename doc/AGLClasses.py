@@ -172,7 +172,6 @@ class Model(Object):
         for o in self.objects:
             old_origin = o.origin
             old_relative = (o.origin[0] - self.origin[0], o.origin[1] - self.origin[1])
-            print(old_relative)
             
             o.move_absolute(point) 
             o.move_relative(old_relative) 
