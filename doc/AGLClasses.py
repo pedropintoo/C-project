@@ -81,7 +81,7 @@ class View:
             self.top.update()
 
     def waitClick(self):
-        self.top.bind("<Button-1>", self.onClick)
+        self.canvas.bind("<Button-1>", self.onClick)
         self.getMouse()
         return self.mouseX-self.width/2+self.Ox, self.height/2+self.Oy-self.mouseY
     
@@ -153,12 +153,8 @@ class Model(Object):
     def fixCoords(self):
         for o in self.objects:
             old_relative = o.origin
-            print(str(self.origin))
             o.move_absolute(self.origin)
-            print(o.origin)
             o.move_relative(old_relative)
-            #o.move_relative((old_relative[0]/2, old_relative[1]/2))
-            print(o.origin)
 
     def add_object(self, obj):
         self.objects.append(obj)
@@ -170,10 +166,17 @@ class Model(Object):
     def move_relative(self, vector):
         for o in self.objects:
             o.move_relative(vector)
+        self.origin = (self.origin[0] + vector[0], self.origin[1] + vector[1])    
 
     def move_absolute(self, point):
         for o in self.objects:
-            o.move_absolute(point)  
+            old_origin = o.origin
+            old_relative = (o.origin[0] - self.origin[0], o.origin[1] - self.origin[1])
+            print(old_relative)
+            
+            o.move_absolute(point) 
+            o.move_relative(old_relative) 
+        self.origin = point    
 
 # TODO: override move_relative and move_absolute
 
@@ -328,7 +331,6 @@ class Ellipse(Object):
     def create_object(self, view):
         self.view = view
         calc = self.view.ellipse(self.origin, self.length)
-        print(self.view.coord(self.origin))
         self.object = self.view.canvas.create_oval(self.view.ellipse(self.view.coord(self.origin), self.length), fill=self.fill, state=self.state)
 
 class Arc(Object):
@@ -390,7 +392,6 @@ class PieSlice(Object):
 
     def create_object(self, view):
         self.view = view
-        print(self.length[0]/2)
         self.object = self.view.canvas.create_arc(self.view.ellipse(self.view.coord(self.origin), self.length), style=PIESLICE, start=self.start, extent=self.extent, fill=self.fill, state=self.state)
 
 

@@ -164,19 +164,19 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
             // -> Enum
             value = ctx.in_assignment().ID(0).getText(); // first values is the default
 
-            ST enum_t = templates.getInstanceOf("enum");
+            ST enum_temp = templates.getInstanceOf("enum");
 
             String enum_id = newVarName();
-            enum_t.add("var", enum_id);
+            enum_temp.add("var", enum_id);
 
             for (TerminalNode id : ctx.in_assignment().ID()) {
-                enum_t.add("id", id);
+                enum_temp.add("id", id);
             }
 
             value = newVarName();
-            enum_t.add("value", value);
+            enum_temp.add("value", value);
             
-            res.add("stat", enum_t.render()); // render the return value!
+            res.add("stat", enum_temp.render()); // render the return value!
 
         } else if (ctx.assignment() != null) {
             // -> Expression
@@ -576,22 +576,22 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
 
 //* modelStat
     @Override public ST visitModelStatInstantiation(AGLParser.ModelStatInstantiationContext ctx) {
-        ctx.isAction = null;
+        ctx.isAction = false;
         return visit(ctx.instantiation());
     }
 
     @Override public ST visitModelStatBlockStatement(AGLParser.ModelStatBlockStatementContext ctx) {
-        ctx.isAction = null;
+        ctx.isAction = false;
         return visit(ctx.blockStatement());
     }
 
     @Override public ST visitModelStatLongAssignment(AGLParser.ModelStatLongAssignmentContext ctx) {
-        ctx.isAction = null;
+        ctx.isAction = false;
         return visit(ctx.longAssignment());
     }
 
     @Override public ST visitModelStatAction(AGLParser.ModelStatActionContext ctx) {
-        ctx.isAction = "true";
+        ctx.isAction = true;
         return visit(ctx.action());
     }
 
@@ -602,11 +602,12 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
         res.add("modelName", ctx.ID().getText());
         
         for (AGLParser.ModelStatContext stat : ctx.modelStat()){
-            if (stat.isAction != null) {
-                // TODO: not working!!
-                res.add("action", visit(stat).render()); // render the return value!
+            
+            ST statRes = visit(stat);
+            if (stat.isAction) {
+                res.add("action", statRes.render()); // render the return value!
             } else {
-                res.add("modelStat", visit(stat).render()); // render the return value!
+                res.add("modelStat", statRes.render()); // render the return value!
             }
         }
 
