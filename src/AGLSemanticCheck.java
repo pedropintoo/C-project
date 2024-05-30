@@ -1,3 +1,6 @@
+import java.util.HashMap;
+import java.util.Map;
+
 import org.antlr.v4.runtime.ParserRuleContext;
 
 
@@ -278,6 +281,23 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       return res;
    }
 
+   @Override
+   public Boolean visitPropertiesAssignment(AGLParser.PropertiesAssignmentContext ctx) {
+       Boolean res = true;
+       System.out.println("Handling properties assignment");
+   
+       for (AGLParser.LongAssignmentContext longAssign : ctx.longAssignment()) {
+           System.out.println("Visiting long assignment: " + longAssign.identifier().getText());
+           res = visit(longAssign);
+           if (!res) {
+               ErrorHandling.printError("Error: invalid properties assignment");
+               return false;
+           }
+       }
+   
+       return res;
+   }
+
 
    @Override
    public Boolean visitLongAssignment(AGLParser.LongAssignmentContext ctx) {
@@ -293,27 +313,28 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
          if (!AGLParser.symbolTable.containsKey(id)) {
             ErrorHandling.printError(ctx, "Variable \"" + id + "\" does not exists!");
             res = false;
-         }
-         Boolean resExpr = visit(ctx.assignment());
-         if (resExpr) {
-            Symbol sym = AGLParser.symbolTable.get(id);
-            if (sym == null) {
-               ErrorHandling.printError(ctx, "Simbol for variable " + id + " is null");
-               return false;
-            }
-            if (ctx.assignment().eType == null) {
-               ErrorHandling.printError(ctx, "Assignment type is null");
-               return false;
-            }
-            if (!ctx.assignment().eType.conformsTo(sym.type())) {
-               ErrorHandling.printError(ctx, "Expression type does not conform to variable type!");
-               res = false;
-            } else {
-               sym.setValueDefined();
-               System.out.println("Assignment successful: " + id);
-            }
          } else {
-            res = false;
+            Boolean resExpr = visit(ctx.assignment());
+            if (resExpr) {
+               Symbol sym = AGLParser.symbolTable.get(id);
+               if (sym == null) {
+                  ErrorHandling.printError(ctx, "Simbol for variable " + id + " is null");
+                  return false;
+               }
+               if (ctx.assignment().eType == null) {
+                  ErrorHandling.printError(ctx, "Assignment type is null");
+                  return false;
+               }
+               if (!ctx.assignment().eType.conformsTo(sym.type())) {
+                  ErrorHandling.printError(ctx, "Expression type does not conform to variable type!");
+                  res = false;
+               } else {
+                  sym.setValueDefined();
+                  System.out.println("Assignment successful: " + id);
+               }
+            } else {
+               res = false;
+            }
          }
       } else {
          ErrorHandling.printError("TO BE IMPLEMENTED ID ('.' ID)+ - attributes"); // TODO
@@ -803,15 +824,29 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       }
 
       Symbol symbol = AGLParser.symbolTable.get(id);
+      if (symbol == null) {
+         ErrorHandling.printError("Error: Symbol for identifier " + id + " is null");
+         return false;
+      }
+
       if (!(symbol.type() instanceof ObjectType)) {
          ErrorHandling.printError("Error: identifier \"" + id + "\" is not an object type");
          return false;
       }
 
-      res = visit(ctx.propertiesAssignment());
-      if (!res) {
-         ErrorHandling.printError("Error: invalid assignment in with statement");
-         return false;
+      Map<String, Symbol> previousScope = new HashMap<>(AGLParser.symbolTable);
+      try {
+         res = visit(ctx.propertiesAssignment());
+         if (!res) {
+               ErrorHandling.printError("Error: invalid assignment in with statement");
+               return false;
+         }
+      } catch (Exception e) {
+        e.printStackTrace();
+        res = false;
+      } finally {
+         AGLParser.symbolTable.clear();
+         AGLParser.symbolTable.putAll(previousScope);
       }
 
       return res;
