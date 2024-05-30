@@ -1,0 +1,5 @@
+pacman: Integer = 1;
+
+with pacman do {
+    a = 1;
+}
