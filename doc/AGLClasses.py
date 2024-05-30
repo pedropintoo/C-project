@@ -61,10 +61,10 @@ class View:
         return (origin[0],origin[1]),(origin[0]+point[0], origin[1]-point[1])
 
     def rectangle(self, origin, length):
-        p0 = (origin[0]-length[0]/2,origin[1]-length[1]/2)
-        p1 = (origin[0]+length[0]/2,origin[1]-length[1]/2)
-        p2 = (origin[0]+length[0]/2,origin[1]+length[1]/2)
-        p3 = (origin[0]-length[0]/2,origin[1]+length[1]/2)
+        p0 = (origin[0]-length[0],origin[1]-length[1])
+        p1 = (origin[0]+length[0],origin[1]-length[1])
+        p2 = (origin[0]+length[0],origin[1]+length[1])
+        p3 = (origin[0]-length[0],origin[1]+length[1])
         return p0,p1,p2,p3,p0
 
     def ellipse(self, origin, length):
@@ -144,13 +144,26 @@ class Model(Object):
                 object_copy.move_relative(old_relative)
                 
         return new_model
+        # TODO: copy object at origin;
+        # Pacman.root = root
+        # Pacman.view = last_view
+        # Pacman.origin = v63
+        # v62 = copy.deepcopy(Pacman)
+
+    def fixCoords(self):
+        for o in self.objects:
+            old_relative = o.origin
+            print(str(self.origin))
+            o.move_absolute(self.origin)
+            print(o.origin)
+            o.move_relative(old_relative)
+            #o.move_relative((old_relative[0]/2, old_relative[1]/2))
+            print(o.origin)
 
     def add_object(self, obj):
-        print(self.objects)
         self.objects.append(obj)
 
     def create_object(self, view):
-        print(self.objects)
         for o in self.objects:
             o.create_object(view)
 
@@ -161,7 +174,6 @@ class Model(Object):
     def move_absolute(self, point):
         for o in self.objects:
             o.move_absolute(point)  
-            o.move_relative(o.origin)              
 
 # TODO: override move_relative and move_absolute
 
@@ -316,11 +328,8 @@ class Ellipse(Object):
     def create_object(self, view):
         self.view = view
         calc = self.view.ellipse(self.origin, self.length)
-        res = (self.view.coord(calc[0]), self.view.coord(calc[1]))
-        print(res)
-        self.object = self.view.canvas.create_oval(self.view.coord(calc[0]), self.view.coord(calc[1]), fill="red", state=self.state)
-        print(self.view.ellipse(self.view.coord(self.origin), self.length))
-        #self.object = self.view.canvas.create_oval(self.view.ellipse(self.view.coord(self.origin), self.length), fill=self.fill, state=self.state)
+        print(self.view.coord(self.origin))
+        self.object = self.view.canvas.create_oval(self.view.ellipse(self.view.coord(self.origin), self.length), fill=self.fill, state=self.state)
 
 class Arc(Object):
 
@@ -381,7 +390,7 @@ class PieSlice(Object):
 
     def create_object(self, view):
         self.view = view
-        print(self.root, self.view, self.state, self.origin, self.length, self.start, self.extent, self.fill)
+        print(self.length[0]/2)
         self.object = self.view.canvas.create_arc(self.view.ellipse(self.view.coord(self.origin), self.length), style=PIESLICE, start=self.start, extent=self.extent, fill=self.fill, state=self.state)
 
 

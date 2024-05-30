@@ -5,6 +5,7 @@
 import org.stringtemplate.v4.*;
 
 import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.tree.TerminalNode;
 
 @SuppressWarnings("CheckReturnValue")
 public class AGLCompiler extends AGLParserBaseVisitor<ST> {
@@ -159,12 +160,29 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
         ST res = templates.getInstanceOf("assign");
         
         String value;
-        if (ctx.assignment() != null) {
-            res.add("stat", visit(ctx.assignment()).render()); // render the return value!
-            value = ctx.assignment().varName;
-        } else if (ctx.in_assignment() != null) {
+        if (ctx.in_assignment() != null) {
             // -> Enum
             value = ctx.in_assignment().ID(0).getText(); // first values is the default
+
+            ST enum_t = templates.getInstanceOf("enum");
+
+            String enum_id = newVarName();
+            enum_t.add("var", enum_id);
+
+            for (TerminalNode id : ctx.in_assignment().ID()) {
+                enum_t.add("id", id);
+            }
+
+            value = newVarName();
+            enum_t.add("value", value);
+            
+            res.add("stat", enum_t.render()); // render the return value!
+
+        } else if (ctx.assignment() != null) {
+            // -> Expression
+            res.add("stat", visit(ctx.assignment()).render()); // render the return value!
+            value = ctx.assignment().varName;
+
         } else { 
             value = "DEFAULT_VALUE";  // TODO: TO_BE_IMPLEMENTED
             // TODO: make a good selection
@@ -558,18 +576,22 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
 
 //* modelStat
     @Override public ST visitModelStatInstantiation(AGLParser.ModelStatInstantiationContext ctx) {
+        ctx.isAction = null;
         return visit(ctx.instantiation());
     }
 
     @Override public ST visitModelStatBlockStatement(AGLParser.ModelStatBlockStatementContext ctx) {
+        ctx.isAction = null;
         return visit(ctx.blockStatement());
     }
 
     @Override public ST visitModelStatLongAssignment(AGLParser.ModelStatLongAssignmentContext ctx) {
+        ctx.isAction = null;
         return visit(ctx.longAssignment());
     }
 
     @Override public ST visitModelStatAction(AGLParser.ModelStatActionContext ctx) {
+        ctx.isAction = "true";
         return visit(ctx.action());
     }
 
@@ -580,7 +602,12 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
         res.add("modelName", ctx.ID().getText());
         
         for (AGLParser.ModelStatContext stat : ctx.modelStat()){
-            res.add("modelStat", visit(stat).render()); // render the return value!
+            if (stat.isAction != null) {
+                // TODO: not working!!
+                res.add("action", visit(stat).render()); // render the return value!
+            } else {
+                res.add("modelStat", visit(stat).render()); // render the return value!
+            }
         }
 
         return res;
@@ -588,7 +615,13 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
 
 //* action
     @Override public ST visitAction(AGLParser.ActionContext ctx) {
-        return  null; // TODO
+        ST res = templates.getInstanceOf("action");
+
+        res.add("var", getConcreteId(ctx.identifier(), res));
+
+        res.add("actionStat", visit(ctx.stat()).render()); // render the return value!
+        
+        return  res; 
     }
 
 //* ifStatement

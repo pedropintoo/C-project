@@ -125,7 +125,7 @@ playStatement
     : 'play' ID 'with' propertiesAssignment
     ;  
 
-modelStat
+modelStat returns [String isAction]
     : instantiation                             #ModelStatInstantiation
     | blockStatement                            #ModelStatBlockStatement
     | longAssignment ';'                        #ModelStatLongAssignment

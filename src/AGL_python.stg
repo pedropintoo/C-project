@@ -4,6 +4,7 @@ from AGLClasses import *
 import math
 import time, os, sys
 import copy
+from enum import Enum, auto
 
 #################################################################
 ## Auxiliar
@@ -27,7 +28,10 @@ stats(stat) ::= <<
 >>
 
 waitMouseClick(var) ::= <<
-<var> = last_view.waitClick()
+if model is not None:
+    model.<var> = model.view.waitClick()
+else:
+    <var> = last_view.waitClick()
 >>
 
 refresh(stat, view, delay) ::= <<
@@ -56,8 +60,12 @@ else:
 
 for(stat, var, range, instructions) ::= <<
 <stats(stat)>
-for <var> in <range>:
-    <instructions>
+if model is not None:
+    for model.<var> in <range>:
+        <instructions>
+else:
+    for <var> in <range>:
+        <instructions>
 >>
 
 range(start, end, step) ::= "range(<start>, <end>, <step>)"
@@ -85,7 +93,10 @@ while True:
 
 move(stat, var, destination, relative) ::= <<
 <stats(stat)>
-<if(relative)><var>.move_relative(<destination>)<else><var>.move_absolute(<destination>)<endif>
+if model is not None:
+     <if(relative)>model.<var>.move_relative(<destination>)<else>model.<var>.move_absolute(<destination>)<endif>
+else:
+    <if(relative)><var>.move_relative(<destination>)<else><var>.move_absolute(<destination>)<endif>
 >>
 
 close(view) ::= <<
@@ -97,6 +108,7 @@ assign(stat,var,value, varIfModel) ::= <<
 <if(value)><var> = <value><endif><if(varIfModel)>
 if model is not None: 
     model.<varIfModel> = <var>
+    model.last_<varIfModel> = <var>
 <endif>
 >>
 
@@ -127,23 +139,37 @@ else:
 <properties>
 >>
 
-model_creation(modelName, modelStat) ::= <<
+action(stat, var, actionStat) ::= <<
+<stats(stat)>
+
+if self.<var> != self.last_<var>:
+    <stats(actionStat)>
+    self.last_<var> = self.<var>
+
+>>
+
+model_creation(modelName, modelStat, action) ::= <<
 #################################################################
 ## Model
 #################################################################
-<modelName> = Model()
-model = <modelName>
-<stats(modelStat)>
-model = None
+class <modelName>(Model):
+    def __init__(self, root: Root = None, view: View = None, origin=(0,0)):
+        super().__init__(root=root, view=view, origin=origin)
+        model = self
+        <stats(modelStat)>
+        model = None
+        self.fixCoords()
+
+    def create_object(self, view):
+        <actions(action)>    
+
+        super().create_object(view)
 #################################################################
 >>
 
 model(var, modelName, origin) ::= <<
 
-<modelName>.root = root
-<modelName>.view = last_view
-<modelName>.origin = <origin>
-<var> = copy.deepcopy(<modelName>)
+<var> = <modelName>(root = root, view = last_view, origin = <origin>)
 
 >>
 
@@ -158,12 +184,26 @@ array(stat, var, field) ::= <<
 <var> = [<elements(field)>]
 >>
 
-enum(stat, var, field) ::= <<
-<var> = {<elements(field)>}
+enum(var, id, value) ::= <<
+class <var>(Enum):
+    <enum_auto(id)>
+<enum_assign(id)>
+<value> = <var>(1)  
+>>
+
+enum_auto(id) ::= <<
+<if(id)><id; separator=" = auto()\n"><endif>
+>>
+
+enum_assign(var, id) ::= <<
+<if(id)>global <id; separator="\n<id> = <var>.<id>\n"><endif>
 >>
 
 properties(field) ::= <<
-<if(field)><field; separator="\n"><endif>
+if model is not None:
+    <if(field)>model.<field; separator="\n"><endif>
+else:
+    <if(field)><field; separator="\n"><endif>
 >>
 
 elements(field) ::= <<
