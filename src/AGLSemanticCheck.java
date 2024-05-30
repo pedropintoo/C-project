@@ -11,6 +11,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    private final VectorType vectorType = new VectorType();
    private final BooleanType booleanType = new BooleanType();
    private final ObjectType scriptType = new ObjectType("Script");
+   private final EnumType enumType = new EnumType();
 
    @Override
    public Boolean visitProgram(AGLParser.ProgramContext ctx) {
@@ -150,7 +151,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       // instantiation: ID ':' (simpleStatement | blockStatement)
       Boolean res = true;
       String ID = ctx.ID().getText();
-
+      System.out.println("Check instantiation");
       if (AGLParser.symbolTable.containsKey(ID)) {
          ErrorHandling.printError("Variable \"" + ID + "\" already declared!");
          return false;
@@ -185,10 +186,12 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       // assignment = expression    and   expression returns [Type eType, String varName]
       // in_assignment: 'in' '{' ID (',' ID)* '}'
 
-      // System.out.println("Check simple statement");
+      System.out.println("Check simple statement");
 
       String type = ctx.typeID().getText();
+      System.out.println("Type: " + type);
       Type typeObject = ctx.typeID().res;
+      System.out.println("TypeObject: " + typeObject.name());
 
       // check if we have an expression and if we have typeObject must be a ObjectType()
       if (ctx.expression() != null) {
@@ -225,13 +228,12 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
             ErrorHandling.printError("Error: invalid simple statement");
             return false;
          }
-
          if (!ctx.assignment().eType.conformsTo(typeObject)) {
             ErrorHandling.printError("Expression type does not conform to variable type!");
             return false;
          }
       } else if (ctx.in_assignment() != null) {
-         
+         System.out.println("Check in assignment");
          Boolean res = visit(ctx.in_assignment());
          if (!res) {
             ErrorHandling.printError("Error: invalid simple statement");
@@ -322,6 +324,26 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
       return res;
 
+   }
+
+   @Override
+   public Boolean visitIn_assignment(AGLParser.In_assignmentContext ctx) {
+      // in_assignment: 'in' '{' ID (',' ID)* '}'
+      // System.out.println("Check in assignment");
+      Boolean res = true;
+
+      ctx.eType = new EnumType();
+
+      // if is an enum type then must be Open or Close
+      if (ctx.eType instanceof EnumType) {
+         if (!ctx.ID(0).getText().equals("Open") && !ctx.ID(0).getText().equals("Close")) {
+            ErrorHandling.printError(ctx, "Error: invalid enum type in in assignment (must be Open or Close)");
+            return false;
+         }
+      }
+      
+      return res;
+      
    }
 
 
@@ -810,6 +832,35 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
             ErrorHandling.printError("Error: invalid properties assignment in play statement");
             return false;
          }
+      }
+
+      return res;
+   }
+
+   @Override
+   public Boolean visitAction(AGLParser.ActionContext ctx) {
+      // action: 'action' 'on' identifier stat
+      // identifier : ID | ID('.' ID)+ | ID '[' expression ']';
+      Boolean res = true;
+      String id = ctx.identifier().getText();
+
+      if (!AGLParser.symbolTable.containsKey(id)) {
+         ErrorHandling.printError("Error: identifier \"" + id + "\" is not defined");
+         return false;
+      }
+
+      Type idType = AGLParser.symbolTable.get(id).type();
+
+      // id type must an EnumType and 
+      if (!idType.conformsTo(enumType)) {
+         ErrorHandling.printError("Error: identifier \"" + id + "\" is not an enum type");
+         return false; 
+      }
+
+      res = visit(ctx.stat());
+      if (!res) {
+         ErrorHandling.printError("Error: invalid statement in action");
+         return false;
       }
 
       return res;

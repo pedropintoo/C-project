@@ -62,7 +62,7 @@ assignment returns [Type eType, String varName]
     : '=' expression
     ;
 
-in_assignment
+in_assignment returns [Type eType]
     : 'in' '{' ID (',' ID)* '}'
     ;    
 
@@ -171,7 +171,7 @@ typeID returns[Type res]
     | 'Polygon'     {$res = new ObjectType("Polygon");}
     | 'Blob'        {$res = new ObjectType("Blob");}
     | 'Script'      {$res = new ObjectType("Script");}
-    | 'Enum'        {$res = new ObjectType("Enum");}    
+    | 'Enum'        {$res = new EnumType();}   
     | 'Array'       {$res = new ObjectType("Array");}
     | ID
     ;
