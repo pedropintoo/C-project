@@ -1,42 +1,7 @@
-cellSize : Integer = 200;
-
-l : Line at (-cellSize,cellSize) with {
-    length = (50,50);
-    fill = "red";
-}
-
-view : View with {
-    width = 601;
-    height = 601;
-    title = "Illustrating the minimum level graphical models";
-    background = "alice blue";
-}
-
-vector : Vector = (1,1) + (10, 10) - (2,-1);
-
-vector = vector * 0.5;
-vector = vector / 0.5;
-
-n : Number = a / b;
-
-refresh view after n ms;
-
-print "Press any mouse button to quit";
-
-refresh view after 0.2 ms;
-
-close view;
-
-move view by (10,0);
-
-for i in 10..1 do {
-    close view;
-}   
-
 while 1==1 do {
-    close view;
+    a: Integer;
 }
 
 repeat {
-    close view;
+    b: Integer;
 } until 2>1
