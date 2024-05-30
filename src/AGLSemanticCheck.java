@@ -158,7 +158,6 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       // instantiation: ID ':' (simpleStatement | blockStatement)
       Boolean res = true;
       String ID = ctx.ID().getText();
-      System.out.println("Instantiating variable: " + ID);
 
       if (AGLParser.symbolTable.containsKey(ID)) {
          ErrorHandling.printError("Variable \"" + ID + "\" already declared!");
@@ -177,7 +176,6 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
          Symbol sym = new VariableSymbol(ID, ctx.simpleStatement().typeID().res);
          sym.setValueDefined();
          AGLParser.symbolTable.put(ID, sym);
-         System.out.println("Added variable in simple statement: " + ID);
 
       } else if (ctx.blockStatement() != null) {
          res = visit(ctx.blockStatement());
@@ -188,7 +186,6 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
          Symbol sym = new VariableSymbol(ID, ctx.blockStatement().typeID().res);
          sym.setValueDefined();
          AGLParser.symbolTable.put(ID, sym);
-         System.out.println("Added variable in block statement: " + ID);
       }
 
       return res;
@@ -291,10 +288,8 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    @Override
    public Boolean visitPropertiesAssignment(AGLParser.PropertiesAssignmentContext ctx) {
        Boolean res = true;
-       System.out.println("Handling properties assignment");
    
        for (AGLParser.LongAssignmentContext longAssign : ctx.longAssignment()) {
-           System.out.println("Visiting long assignment: " + longAssign.identifier().getText());
            res = visit(longAssign);
            if (!res) {
                ErrorHandling.printError("Error: invalid properties assignment");
@@ -313,9 +308,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       // assignment : '=' expression;
       Boolean res = true;
       String id = ctx.identifier().getText();
-      System.out.println("Checking long assignment for variable: " + id);
 
-      System.out.println("Check long assignment");
       if (ctx.identifier().ID(1) == null) {
          if (!AGLParser.symbolTable.containsKey(id)) {
             ErrorHandling.printError(ctx, "Variable \"" + id + "\" does not exists!");
@@ -337,7 +330,6 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
                   res = false;
                } else {
                   sym.setValueDefined();
-                  System.out.println("Assignment successful: " + id);
                }
             } else {
                res = false;
@@ -391,12 +383,6 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       AGLParser.symbolTable.put(ID, sym);
 
       List<EnumValueType> enums = enumType.getEnums();
-
-      for (EnumValueType e : enums) {
-         System.out.println("Enum22: " + e.getEnumValue());
-      }
-
-      System.out.println(enumType.hashCode());
 
       ctx.eType = enumType;
 
@@ -577,10 +563,6 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
             EnumType e1 = (EnumType) s1.type();
 
             List <EnumValueType> enums = e1.getEnums();
-
-            for (EnumValueType e : enums) {
-               System.out.println("Enum: " + e.hashCode());
-            }
 
             Symbol s2 = AGLParser.symbolTable.get(ctx.e2.getText());
             EnumValueType e2 = (EnumValueType) s2.type();
@@ -874,7 +856,6 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    public Boolean visitWithStatement(AGLParser.WithStatementContext ctx) {
       Boolean res = true;
       String id = ctx.identifier().getText();
-      System.out.println("Check with statement");
 
       if (!AGLParser.symbolTable.containsKey(id)) {
          ErrorHandling.printError("Error: identifier \"" + id + "\" is not defined");
