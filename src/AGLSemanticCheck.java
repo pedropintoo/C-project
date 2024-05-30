@@ -45,7 +45,6 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       // stat: modelInstantiation;
       Boolean res = true;
       res = visit(ctx.modelInstantiation());
-      System.out.println("Check model instantiation");
       
       if (!res) {
          ErrorHandling.printError(ctx, "Error: invalid modelInstantiation");
@@ -154,7 +153,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       // instantiation: ID ':' (simpleStatement | blockStatement)
       Boolean res = true;
       String ID = ctx.ID().getText();
-      System.out.println("Check instantiation");
+
       if (AGLParser.symbolTable.containsKey(ID)) {
          ErrorHandling.printError("Variable \"" + ID + "\" already declared!");
          return false;
@@ -189,12 +188,8 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       // assignment = expression    and   expression returns [Type eType, String varName]
       // in_assignment: 'in' '{' ID (',' ID)* '}'
 
-      System.out.println("Check simple statement");
-
       String type = ctx.typeID().getText();
-      System.out.println("Type: " + type);
       Type typeObject = ctx.typeID().res;
-      System.out.println("TypeObject: " + typeObject.name());
 
       // check if we have an expression and if we have typeObject must be a ObjectType()
       if (ctx.expression() != null) {
@@ -236,7 +231,6 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
             return false;
          }
       } else if (ctx.in_assignment() != null) {
-         System.out.println("Check in assignment");
          Boolean res = visit(ctx.in_assignment());
          if (!res) {
             ErrorHandling.printError("Error: invalid simple statement");
@@ -918,7 +912,6 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       // identifier : ID | ID('.' ID)+ | ID '[' expression ']';
       Boolean res = true;
       String id = ctx.identifier().getText();
-      System.out.println("Check action");
 
       if (!AGLParser.symbolTable.containsKey(id)) {
          ErrorHandling.printError("Error: identifier \"" + id + "\" is not defined");
