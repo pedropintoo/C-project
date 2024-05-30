@@ -1,5 +1,3 @@
-import java.util.List;
-
 public abstract class Type {
     protected final String name;
 
