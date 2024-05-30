@@ -194,12 +194,11 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       // in_assignment: 'in' '{' ID (',' ID)* '}'
 
       String type = ctx.typeID().getText();
-      System.out.println("Type: " + type);
 
-      if (!isValidType(type)) { // check if type is valid
-         ErrorHandling.printError("Error: invalid type in simple statement");
-         return false;
-      }
+      // if (!isValidType(type)) { // check if type is valid
+      // ErrorHandling.printError("Error: invalid type in simple statement");
+      // return false;
+      // }
 
       Type typeObject = ctx.typeID().res;
 
@@ -264,10 +263,10 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
       String ID = ctx.typeID().getText();
 
-      if (!isValidType(ID)) { // check if type is valid
-         ErrorHandling.printError("Error: invalid type in block statement");
-         return false;
-      }
+      // if (!isValidType(ID)) { // check if type is valid
+      // ErrorHandling.printError("Error: invalid type in block statement");
+      // return false;
+      // }
 
       if (ctx.expression() != null) {
          res = visit(ctx.expression());
@@ -309,36 +308,36 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       return res;
    }
 
-   private boolean isValidType(String typeID) {
-      switch (typeID) {
-         case "Integer":
-         case "String":
-         case "Point":
-         case "Number":
-         case "Vector":
-         case "Time":
-         case "Boolean":
-         case "View":
-         case "Line":
-         case "Rectangle":
-         case "Ellipse":
-         case "Arc":
-         case "ArcChord":
-         case "PieSlice":
-         case "Text":
-         case "Dot":
-         case "PolyLine":
-         case "Spline":
-         case "Polygon":
-         case "Blob":
-         case "Script":
-         case "Enum":
-         case "Array":
-            return true;
-         default:
-            return false;
-      }
-   }
+   // private boolean isValidType(String typeID) {
+   // switch (typeID) {
+   // case "Integer":
+   // case "String":
+   // case "Point":
+   // case "Number":
+   // case "Vector":
+   // case "Time":
+   // case "Boolean":
+   // case "View":
+   // case "Line":
+   // case "Rectangle":
+   // case "Ellipse":
+   // case "Arc":
+   // case "ArcChord":
+   // case "PieSlice":
+   // case "Text":
+   // case "Dot":
+   // case "PolyLine":
+   // case "Spline":
+   // case "Polygon":
+   // case "Blob":
+   // case "Script":
+   // case "Enum":
+   // case "Array":
+   // return true;
+   // default:
+   // return false;
+   // }
+   // }
 
    @Override
    public Boolean visitLongAssignment(AGLParser.LongAssignmentContext ctx) {
