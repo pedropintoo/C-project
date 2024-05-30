@@ -62,7 +62,7 @@ assignment returns [Type eType, String varName]
     : '=' expression
     ;
 
-in_assignment returns [Type eType]
+in_assignment returns [Type eType, String varName]
     : 'in' '{' ID (',' ID)* '}'
     ;    
 

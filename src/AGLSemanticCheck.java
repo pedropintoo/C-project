@@ -1,3 +1,5 @@
+import java.util.List;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -163,11 +165,15 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
          return false;
       }
       if (ctx.simpleStatement() != null) {
+         ctx.simpleStatement().varName = ID;
          res = visit(ctx.simpleStatement());
          if (!res) {
             ErrorHandling.printError("Error: invalid simple statement instantiation");
             return false;
+         } else if (ctx.simpleStatement().in_assignment() != null) {
+            return true; // enum is defined in children visit!
          }
+
          Symbol sym = new VariableSymbol(ID, ctx.simpleStatement().typeID().res);
          sym.setValueDefined();
          AGLParser.symbolTable.put(ID, sym);
@@ -237,6 +243,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
             return false;
          }
       } else if (ctx.in_assignment() != null) {
+         ctx.in_assignment().varName = ctx.varName;
          Boolean res = visit(ctx.in_assignment());
          if (!res) {
             ErrorHandling.printError("Error: invalid simple statement");
@@ -365,15 +372,33 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       // System.out.println("Check in assignment");
       Boolean res = true;
 
-      ctx.eType = new EnumType();
+      EnumType enumType = new EnumType();
+      String ID = ctx.varName;
 
-      // if is an enum type then must be Open or Close
-      if (ctx.eType instanceof EnumType) {
-         if (!ctx.ID(0).getText().equals("Open") && !ctx.ID(0).getText().equals("Close")) {
-            ErrorHandling.printError(ctx, "Error: invalid enum type in in assignment (must be Open or Close)");
-            return false;
-         }
+      // store id's in list of enums
+      for (int i = 0; i < ctx.ID().size(); i++) {
+         String id = ctx.ID(i).getText();
+         EnumValueType enumValue = new EnumValueType(id);
+
+         Symbol sym = new VariableSymbol(id, enumValue);
+         sym.setValueDefined();
+         AGLParser.symbolTable.put(id, sym);
+
+         enumType.addEnum(enumValue);
       }
+      Symbol sym = new VariableSymbol(ID, enumType);
+      sym.setValueDefined();
+      AGLParser.symbolTable.put(ID, sym);
+
+      List<EnumValueType> enums = enumType.getEnums();
+
+      for (EnumValueType e : enums) {
+         System.out.println("Enum22: " + e.getEnumValue());
+      }
+
+      System.out.println(enumType.hashCode());
+
+      ctx.eType = enumType;
 
       return res;
       
@@ -535,27 +560,60 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    
    @Override
    public Boolean visitExprRelational(AGLParser.ExprRelationalContext ctx) {
-      // expression: expression RELATIONAL_OPERATOR expression and expression returns [Type eType, String varName]
+      // expression: e1=expression RELATIONAL_OPERATOR e2=expression and expression returns [Type eType, String varName]
       Boolean res = true;
 
-      // Visit the left expression and check if it is IntegerType
-      res = visit(ctx.expression(0));
-      Type leftType = ctx.expression(0).eType;
-      if (!leftType.conformsTo(integerType)) {
-         ErrorHandling.printError("Error: The left expression should be an integer");
-         return false;
-      }
-      
-      // Visit the right expression and check if it is IntegerType
-      res = visit(ctx.expression(0));
-      Type rightType = ctx.expression(0).eType;
-      if (!rightType.conformsTo(integerType)) {
-         ErrorHandling.printError("Error: The right expression should be an integer");
-         return false;
-      }
+      res = visit(ctx.e1) && visit(ctx.e2);
 
-      // Define the expression type as BooleanType: tx.eType = new BooleanType();
-      ctx.eType = new BooleanType();
+      if (res) {
+         // if e1 is a EnumType then e2 must be in enums list
+         if (ctx.e1.eType instanceof EnumType && !(ctx.e2.eType instanceof EnumType)) {
+            if(!(ctx.e2.eType instanceof EnumValueType)) {
+               ErrorHandling.printError(ctx, "Error: it must be an enum type or enum value type!");
+               return false;
+            }
+
+            Symbol s1 = AGLParser.symbolTable.get(ctx.e1.getText());
+            EnumType e1 = (EnumType) s1.type();
+
+            List <EnumValueType> enums = e1.getEnums();
+
+            for (EnumValueType e : enums) {
+               System.out.println("Enum: " + e.hashCode());
+            }
+
+            Symbol s2 = AGLParser.symbolTable.get(ctx.e2.getText());
+            EnumValueType e2 = (EnumValueType) s2.type();
+
+            if (!enums.contains(e2)) {
+               ErrorHandling.printError(ctx, "Error: invalid relational expression (enum type)");
+               return false;
+            }
+
+            ctx.eType = booleanType;
+            
+            return true;
+         }
+
+         if (!ctx.e1.eType.conformsTo(ctx.e2.eType)) {
+            ErrorHandling.printError(ctx, "Error: must be the same type in relational expression!");
+            return false;
+         }
+
+         if (ctx.e1.eType instanceof BooleanType) {
+            ErrorHandling.printError(ctx, "Error: invalid relational expression (boolean type)");
+            return false;
+         }
+
+         if (ctx.e1.eType instanceof PointType || ctx.e1.eType instanceof VectorType) {
+            ErrorHandling.printError(ctx, "Error: invalid relational expression (point or vector type)");
+            return false;
+         }
+
+         ctx.eType = booleanType;
+      } else {
+         ErrorHandling.printError(ctx, "Error: invalid relational expression");
+      }
 
       return true;
    }
@@ -970,12 +1028,13 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
       Type idType = AGLParser.symbolTable.get(id).type();
 
-      // id type must an EnumType and 
+      // id type must be an EnumType // TODO: FIX! 
       if (!idType.conformsTo(enumType)) {
          ErrorHandling.printError("Error: identifier \"" + id + "\" is not an enum type");
          return false; 
       }
-      
+
+
 
       res = visit(ctx.stat());
       if (!res) {
