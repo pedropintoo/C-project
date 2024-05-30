@@ -815,6 +815,41 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       return res;
    }
 
+   @Override
+   public Boolean visitIfStatement(AGLParser.IfStatementContext ctx) {
+      // ifStatement: 'if' expression 'do' stat ('else' 'do' stat)?
+      Boolean res = true;
+      res = visit(ctx.expression());
+      
+      if (!res) {
+         ErrorHandling.printError("Error: invalid expression in if statement");
+         return false;
+      }
+
+      Type exprType = ctx.expression().eType;
+      if (!(exprType instanceof BooleanType)) {
+         ErrorHandling.printError("Error: the expression in the if statement has to be a boolean");
+         return false;
+      }
+
+      res = visit(ctx.stat(0));
+
+      if (!res) {
+         ErrorHandling.printError("Error: invalid statement in if statement");
+         return false;
+      }
+
+      if (ctx.stat(1) != null) {
+         res = visit(ctx.stat(1));
+         if (!res) {
+            ErrorHandling.printError("Error: invalid statement in else statement");
+            return false;
+         }
+      }
+
+      return res;
+   }
+
 
    // -- Correct --
    private Boolean checkNumericType(Type t) {
