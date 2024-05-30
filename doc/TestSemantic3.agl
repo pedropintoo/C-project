@@ -1,2 +1,6 @@
-mouth : Enum in { Open, Close } 
-action on mouth
+Pacman :: Model {
+    mouth : Enum in { Open, Close } 
+    action on mouth {
+        print "aa";
+    }
+}    

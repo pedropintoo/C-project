@@ -11,6 +11,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    private final VectorType vectorType = new VectorType();
    private final BooleanType booleanType = new BooleanType();
    private final ObjectType scriptType = new ObjectType("Script");
+   private final ObjectType modelType = new ObjectType("Model");
    private final EnumType enumType = new EnumType();
 
    @Override
@@ -44,6 +45,8 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       // stat: modelInstantiation;
       Boolean res = true;
       res = visit(ctx.modelInstantiation());
+      System.out.println("Check model instantiation");
+      
       if (!res) {
          ErrorHandling.printError(ctx, "Error: invalid modelInstantiation");
       }
@@ -341,7 +344,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
             return false;
          }
       }
-      
+
       return res;
       
    }
@@ -838,11 +841,84 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    }
 
    @Override
+   public Boolean visitModelStatInstantiation(AGLParser.ModelStatInstantiationContext ctx) {
+      // modelStat : instantiation
+      Boolean res = true;
+      res = visit(ctx.instantiation());
+      if (!res) {
+         ErrorHandling.printError(ctx, "Error: invalid instantiation");
+      }
+      return res;
+   }
+
+   @Override
+   public Boolean visitModelStatBlockStatement(AGLParser.ModelStatBlockStatementContext ctx) {
+      // modelStat : blockStatement
+      Boolean res = true;
+      res = visit(ctx.blockStatement());
+      if (!res) {
+         ErrorHandling.printError(ctx, "Error: invalid block statement");
+      }
+      return res;
+   }
+
+   @Override
+   public Boolean visitModelStatLongAssignment(AGLParser.ModelStatLongAssignmentContext ctx) {
+      // modelStat : longAssignment ';' 
+      Boolean res = true;
+      res = visit(ctx.longAssignment());
+      if (!res) {
+         ErrorHandling.printError(ctx, "Error: invalid long assignment");
+      }
+      return res;
+   }
+
+   @Override
+   public Boolean visitModelStatAction(AGLParser.ModelStatActionContext ctx) {
+      // modelStat : action
+      Boolean res = true;
+      res = visit(ctx.action());
+      if (!res) {
+         ErrorHandling.printError(ctx, "Error: invalid action");
+      }
+      return res;
+   }
+
+   @Override
+   public Boolean visitModelInstantiation(AGLParser.ModelInstantiationContext ctx) {
+      // modelInstantiation : ID '::' 'Model' '{' (modelStat)+ '}';
+      Boolean res = true;
+      String ID = ctx.ID().getText();
+
+      if (AGLParser.symbolTable.containsKey(ID)) {
+         ErrorHandling.printError("Variable \"" + ID + "\" already declared!");
+         return false;
+      }
+
+      Symbol sym = new VariableSymbol(ID, modelType);
+      AGLParser.symbolTable.put(ID, sym);
+
+      for (AGLParser.ModelStatContext modelStat : ctx.modelStat()) {
+         res = visit(modelStat);
+         if (!res || res == null) {
+            return false;
+         }
+      }
+
+      return true;
+      
+   }
+
+
+
+
+   @Override
    public Boolean visitAction(AGLParser.ActionContext ctx) {
       // action: 'action' 'on' identifier stat
       // identifier : ID | ID('.' ID)+ | ID '[' expression ']';
       Boolean res = true;
       String id = ctx.identifier().getText();
+      System.out.println("Check action");
 
       if (!AGLParser.symbolTable.containsKey(id)) {
          ErrorHandling.printError("Error: identifier \"" + id + "\" is not defined");
@@ -856,6 +932,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
          ErrorHandling.printError("Error: identifier \"" + id + "\" is not an enum type");
          return false; 
       }
+      
 
       res = visit(ctx.stat());
       if (!res) {
