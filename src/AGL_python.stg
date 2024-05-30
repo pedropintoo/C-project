@@ -1,7 +1,10 @@
 module(stat) ::= <<
 from tkinter import *
 from AGLClasses import *
+import math
 import time, os, sys
+import copy
+from enum import Enum, auto
 
 #################################################################
 ## Auxiliar
@@ -11,6 +14,20 @@ last_refresh = time.time()
 last_view = None
 mouseX = None
 mouseY = None
+model = None
+action = None
+def get_nested_attribute(obj, attr_path):
+    if obj is None:
+        return None  
+
+    attributes = attr_path.split('.')
+    current_object = obj
+    for attr in attributes:
+        if hasattr(current_object, attr):
+            current_object = getattr(current_object, attr)
+        else:
+            return None 
+    return current_object
 #################################################################
 
 if __name__ == "__main__":
@@ -23,12 +40,11 @@ stats(stat) ::= <<
 <if(stat)><stat; separator="\n"><endif>
 >>
 
-properties(field) ::= <<
-<if(field)><field; separator=","><endif>
->>
-
 waitMouseClick(var) ::= <<
-<var> = last_view.waitClick()
+if action is not None:
+    <var> = action.view.waitClick()
+else:
+    <var> = last_view.waitClick()
 >>
 
 refresh(stat, view, delay) ::= <<
@@ -40,33 +56,76 @@ while (time.time() - last_refresh \<= <delay>):
 <endif>
 last_refresh = time.time()
 <view>.update()
+
 >>
 
 print(stat, output) ::= <<
 <stats(stat)>
-print(<output>)
+print(<output>)>>
+
+if_else(stat, condition, if_instructions, else_instructions) ::= <<
+<stats(stat)>
+if <condition>:
+    <if_instructions>
+else:
+    <else_instructions>
 >>
 
-for(stat, var, range, instruction) ::= <<
+for(stat, var, range, instructions) ::= <<
 <stats(stat)>
 for <var> in <range>:
-    <stats(instruction)>
+    <instructions>
 >>
 
 range(start, end, step) ::= "range(<start>, <end>, <step>)"
 
+while(stat, var, condition, instructions) ::= <<
+<stats(stat)>
+
+while <condition>:
+    <instructions>
+    # refresh the condition
+    <stats(stat)>
+    ##
+>>
+
+repeat(stat, var, condition, instructions) ::= <<
+<stats(stat)>
+while True:
+    <instructions>
+    # refresh the condition
+    <stats(stat)>
+    ##
+    if not <condition>:
+        break   # Repeat until condition is false
+>>
+
 move(stat, var, destination, relative) ::= <<
 <stats(stat)>
-<if(relative)><var>.move_relative(<destination>)<else><var>.move_absolute(<destination>)<endif>
+if action is not None:
+    action.<if(relative)><var>.move_relative(<destination>)<else><var>.move_absolute(<destination>)<endif>
+else:
+    <if(relative)><var>.move_relative(<destination>)<else><var>.move_absolute(<destination>)<endif>
 >>
 
 close(view) ::= <<
 <view>.close()
 >>
 
-assign(stat,var,value,attribute) ::= <<
+assign(stat,var,value, varIfModel) ::= <<
 <stats(stat)>
-<if(value)><var><if(attribute)>.<attribute> = <value><else> = <value><endif><endif>
+
+temp = get_nested_attribute(action, '<value>')
+if temp is None:
+    temp = <value>
+if action is not None and hasattr(action, "<var>".split('.')[0]):
+    action.<var> = temp
+else:
+    <var> = temp 
+<if(varIfModel)>
+if model is not None: 
+    model.<varIfModel> = <var>
+    model.last_<varIfModel> = copy.deepcopy(<var>)<endif>
 >>
 
 init(value) ::= "<if(value)> = <value><endif>"
@@ -82,26 +141,91 @@ unaryExpression(stat,var,op,e1) ::= <<
 <decl(var,[op," ",e1])>
 >>
 
-object(stat, var, type, origin, field, update_lastView) ::= <<
+object(stat, var, type, origin, properties, update_lastView) ::= <<
 <stats(stat)>
 
-<var> = <type>(root = root)
+if model is not None:
+    <var> = <type>()
+    model.add_object(<var>) # add object to model
+else:
+    <var> = <type>(root = root)
 <if(origin)><var>.origin = <origin><endif>
-<if(update_lastView)>last_view = <var><endif>
-<properties2(field)>
+<if(update_lastView)>last_view = <var>
+<endif>
+<properties>
 >>
 
-properties2(field) ::= <<
-<if(field)><field; separator="\n"><endif>
->>
-
-with(stat, var, field) ::= <<
+action(stat, var, actionStat) ::= <<
 <stats(stat)>
 
-<properties2(field)>
+if self.<var> != self.last_<var>:
+    <stats(actionStat)>
+    self.last_<var> = copy.deepcopy(self.<var>)
+
+>>
+
+model_creation(modelName, modelStat, action) ::= <<
+#################################################################
+## Model
+#################################################################
+class <modelName>(Model):
+    def __init__(self, root: Root = None, view: View = None, origin=(0,0)):
+        super().__init__(root=root, view=view, origin=origin)
+        model = self
+        <stats(modelStat)>
+        
+        self.fixCoords()
+
+    def create_object(self, view):
+        action = self
+        <stats(action)>    
+        action = None
+        super().create_object(view)
+        model = None
+
+#################################################################
+>>
+model(var, modelName, origin) ::= <<
+
+if model is not None:
+    model_backup = model
+    <var> = <modelName>() # this makes model = None in the end!
+    model = model_backup
+    model.add_object(<var>) # add object to model
+else:
+    <var> = <modelName>(root = root, view = last_view, origin = <origin>)
+
+>>
+
+block_properties(stat, field) ::= <<
+<stats(stat)>
+
+if action is not None:
+    <properties2(field)>
+else:
+    <properties(field)>
 >>
 
 array(stat, var, field) ::= <<
 <stats(stat)>
-<var> = [<properties(field)>]
+<var> = [<elements(field)>]
+>>
+
+enum(var, id, value) ::= <<
+class <var>(Enum):
+    <id: {id | <id> = auto()}; separator="\n"> 
+<id: {id | global <id>; <id> = <var>.<id>}; separator="\n">   
+<value> = <var>(1) # first is default
+>>
+
+properties(field) ::= <<
+<if(field)><field; separator="\n"><endif>
+>>
+
+properties2(field) ::= <<
+<if(field)><field: {field | action.<field>}; separator="\n"><endif>
+>>
+
+elements(field) ::= <<
+<if(field)><field; separator=","><endif>
 >>

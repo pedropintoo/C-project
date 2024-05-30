@@ -20,14 +20,17 @@
 # 
 
 #
-# The double-colon operator (::) is used to defined a new model
+# The doble-colon operator (::) is used to defined a new model
 #
 Pacman :: Model {
     # A Pacman is composed of a pie slice plus an ellipse representing an eye.
     # Its reference frame is at the center of the circle circumscribing the pie slice.
+    #
+    # Models can have their own properties, in which case a way to represent how they
+    # reshape the graphical object is mandatory
 
     # The main pacman shape, with a reference for future use
-    face : PieSlice at (0, 0) with {
+    face : PieSlice at (0,0) with {
         length = (50,50);
         fill = "pink";
         start = 30;
@@ -35,9 +38,65 @@ Pacman :: Model {
     }
 
     # the eye, without a reference
-    Ellipse at (20,35) with {
-        fill = "red";
+    eye : Ellipse at (20,35) with {
+        fill = "black";
         length = (5,5);
+    }
+    
+    fire : Rectangle at (55, 0) with {
+        length = (15, 2);
+        fill = "red";
+        state = "hidden";
+    }
+
+    action on eye.fill {
+        if eye.fill == "red" do {
+            print "The eye is red";
+            fire.state = "normal";
+            print fire;
+        }
+        else do {
+            print "The eye is black";
+            fire.state = "hidden";
+            print fire.state;
+        }
+    }
+
+    len_pac : Vector = (50,50); 
+    action on len_pac { 
+        with face do {
+            length = len_pac;
+        }
+    }
+
+    # properties and how they reshape children's properties
+    mouth : Enum in { Open, Close } # the first value is the default
+    action on mouth {
+        if mouth == Open do {
+            with face do {
+                start = 30;
+                extent = 300;
+            }
+            len_pac = (50,50);
+            with eye do {
+                fill = face.fill;
+                length = (5,5)
+            }
+            
+            move eye by (-5,-10);
+        }
+        else do {# has to be Close, since there are only two possible values
+            with face do {
+                start = 1;
+                extent = 359;
+            }
+            len_pac = (60,60);
+            with eye do {
+                fill = "red";
+                length = (10,10)
+            }
+            move eye by (5,10);
+        }
     }
 }
 
@@ -77,19 +136,13 @@ refresh view;
 # in the center of the view
 #
 for i in 1 .. 10 do {
-    with pacman.face do {
-        start = 1;
-        extent = 359;
-    }
-    refresh view after 20 ms;
-    with pacman.face do {
-        start = 30;
-        extent = 300;
-    }
-    refresh view after 25 ms;
+    pacman.mouth = Close;
+    refresh view after 175 ms;
+    pacman.mouth = Open;
+    refresh view after 175 ms;
     move pacman by (10,0);    # the 'by' makes the movement relative; the argument is a vector
     move view by (10,0);    # the 'by' makes the movement relative; the argument is a vector
-    refresh view;
+    refresh view after 175 ms;
 }
 
 print "Press any mouse button to quit";

@@ -46,4 +46,10 @@ Inside the `src` directory:
 ./run ../doc/ex04.agl                                [DONE]
 ```
 
+## To do
+
+```
+All agl vars must start with `__agl__`               [X]
+to avoid conflicts with python vars.
+```
 

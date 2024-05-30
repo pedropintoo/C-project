@@ -23,6 +23,8 @@ NUMBER  : 'Number';
 STRING_  : 'String';
 POINT   : 'Point';
 VECTOR  : 'Vector';
+TIME    : 'Time';
+BOOLEAN_ : 'Boolean';
 VIEW    : 'View';
 LINE    : 'Line';
 RECTANGLE: 'Rectangle';
@@ -36,6 +38,10 @@ POLYLINE: 'PolyLine';
 SPLINE  : 'Spline';
 POLYGON : 'Polygon';
 BLOB    : 'Blob';
+Model   : 'Model';
+Enum    : 'Enum';
+ARRAY   : 'Array';
+SCRIPT  : 'Script';
 
 
 // Keywords
@@ -47,7 +53,15 @@ CLOSE   : 'close';
 MOUSE   : 'mouse';
 CLICK   : 'click';
 WAIT    : 'wait';
+INPUT   : 'input';
+LOAD    : 'load';
+PLAY    : 'play';
 FOR     : 'for';
+WHILE   : 'while';
+REPEAT  : 'repeat';
+UNTIL   : 'until';
+IF      : 'if';
+ELSE    : 'else';
 IN      : 'in';
 DO      : 'do';
 AFTER   : 'after';
@@ -64,10 +78,22 @@ PLUS    : '+';
 MINUS   : '-';
 MUL     : '*';
 DIV     : '/';
-
+GT      : '>';
+LT      : '<';
+GTE     : '>=';
+LTE     : '<=';
+EQ      : '==';
+NEQ     : '!=';
+AND     : 'and';
+OR      : 'or';
+NOT     : 'not';
 
 // Identifier names
 ID      : LETTER (LETTER | DIGIT)*;
+NAME    : ID;
+
+// Boolean
+BOOLEAN : 'True' | 'False';
 
 // Numbers        
 INT     : DIGIT+;

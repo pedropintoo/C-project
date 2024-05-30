@@ -1,0 +1,135 @@
+
+
+Fire :: Model {
+    flame : Rectangle at (55, 0) with {
+        length = (15, 2);
+        fill = "red";
+        state = "hidden";
+    }
+
+    action on flame.state {
+        print "The flame is " + flame.state;
+    }
+}
+
+Pacman :: Model {
+
+    face : PieSlice at (0,0) with {
+        length = (50,50);
+        fill = "pink";
+        start = 30;
+        extent = 300;
+    }
+
+    # the eye, without a reference
+    eye : Ellipse at (20,35) with {
+        fill = "black";
+        length = (5,5);
+    }
+    
+    fire : Fire at (55, 0);
+
+    action on eye.fill {
+        if eye.fill == "red" do {
+            fire.flame.state = "normal";
+        }
+        else do {
+            fire.flame.state = "hidden";
+        }
+    }
+
+    len_pac : Vector = (50,50); 
+    action on len_pac { 
+        with face do {
+            length = len_pac;
+        }
+    }
+
+    # properties and how they reshape children's properties
+    mouth : Enum in { Open, Close } # the first value is the default
+    action on mouth {
+        if mouth == Open do {
+            with face do {
+                start = 30;
+                extent = 300;
+            }
+            len_pac = (50,50);
+            with eye do {
+                fill = face.fill;
+                length = (5,5)
+            }
+            
+            move eye by (-5,-10);
+        }
+        else do {# has to be Close, since there are only two possible values
+            with face do {
+                start = 1;
+                extent = 359;
+            }
+            len_pac = (60,60);
+            with eye do {
+                fill = "red";
+                length = (10,10)
+            }
+            move eye by (5,10);
+        }
+    }
+}
+
+
+Rectangle at (0,0) with {
+    length = (1000,70);
+    fill = "blue";
+}
+
+view : View with {
+    Ox = -450;
+    Oy = 0;
+    width = 401;
+    height = 401;
+    title = "Illustrating a moving pacman";
+    background = "alice blue";
+}
+
+
+pacman : Pacman at (-450, 0);
+
+
+refresh view;
+
+view2 : View with {
+    Ox = -450;
+    Oy = 0;
+    width = 400;
+    height = 400;
+    title = "Illustrating a moving pacman";
+    background = "alice blue";
+}
+
+
+
+refresh view2;
+
+
+for i in 1 .. 10 do {
+    pacman.mouth = Close;
+    refresh view2;
+    refresh view after 175 ms;
+    
+    pacman.mouth = Open;
+    refresh view2;
+    refresh view after 175 ms;
+    
+    move pacman by (10,0);    # the 'by' makes the movement relative; the argument is a vector
+    move view by (10,0);    # the 'by' makes the movement relative; the argument is a vector
+    move view2 by (10,0);    # the 'by' makes the movement relative; the argument is a vector
+    refresh view after 175 ms;
+    refresh view2 after 175 ms;
+}
+
+print "Press any mouse button to quit";
+pos : Point = wait mouse click; # instantiate a Point and waits for a mouse click
+
+close view;
+
+

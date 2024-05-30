@@ -20,13 +20,21 @@ program
 
 stat
     : instantiation                             #StatInstantiation
+    | modelInstantiation                        #StatModelInstantiation
     | blockStatement                            #StatBlockStatement
     | longAssignment ';'                        #StatLongAssignment
-    | command                                   #StatCommand
-    | for_loop                                  #StatForLoop
     | withStatement                             #StatWithStatement
-    | modelInstantiation                        #StatModelInstantiation
+    | playStatement                             #StatPlayStatement
+    | repetitiveStatement                       #StatRepetitiveStatement
     | ifStatement                               #StatIfStatement
+    | command                                   #StatCommand
+    | '{' stat+ '}'                             #StatBlock
+    ;
+
+repetitiveStatement
+    : forStatement                              #RepForStatement
+    | whileStatement                            #RepWhileStatement
+    | repeatStatement                           #RepRepeatStatement  
     ;
 
 instantiation
@@ -34,44 +42,55 @@ instantiation
     ;
 
 simpleStatement returns [String varName]
-    : typeID (assignment)? ';'
+    : typeID ('at' expression)? (assignment)? ';'
+    | typeID in_assignment
     ;
 
 blockStatement returns [String varName]
-    : typeID ('at' expression)? 'with' '{' propertiesAssignment '}'
+    : typeID ('at' expression)? 'with' propertiesAssignment 
     ;
 
-propertiesAssignment
-    : longAssignment ( ';' longAssignment)* ';'?
+propertiesAssignment returns [String idToAssign]
+    : '{' longAssignment ( ';' longAssignment)* ';'? '}'
     ;
 
 longAssignment
-    : ID ('.' ID)? assignment
+    : identifier assignment
     ;
 
 assignment returns [Type eType, String varName]
     : '=' expression
     ;
 
-expression returns [String varName]
-    : sign=('+'|'-') e=expression                 #ExprUnary
-    | '(' e=expression ')'                        #ExprParenthesis
-    | e1=expression op=('*' | '/') e2=expression      #ExprAddSubMultDiv
-    | e1=expression op=('+' | '-') e2=expression      #ExprAddSubMultDiv
-    | '(' x=expression ',' y=expression ')'     #ExprPoint
-    | number=(INT | FLOAT)                      #ExprNumber                  
-    | STRING                                    #ExprString                              
-    | ID                                        #ExprID
-    | 'wait' eventTrigger                       #ExprWait
-    | '[' expression (',' expression)* ']'      #ExprArray
-    | expression op=('<' | '>' | '<=' | '>=' | '==' | '!=') expression #ExprBoolean
+in_assignment
+    : 'in' '{' ID (',' ID)* '}'
+    ;    
+
+expression returns [Type eType, String varName]
+    : sign=('+'|'-'|'not') e=expression                     #ExprUnary
+    | '(' e=expression ')'                                  #ExprParenthesis
+    | e1=expression op=('*'|'/') e2=expression              #ExprAddSubMultDiv
+    | e1=expression op=('+'|'-') e2=expression              #ExprAddSubMultDiv
+    | e1=expression op=('>'|'<'|'>='|'<=') e2=expression    #ExprRelational
+    | e1=expression op=('=='|'!=') e2=expression            #ExprRelational
+    | e1=expression 'and' e2=expression                     #ExprAndOr
+    | e1=expression 'or' e2=expression                      #ExprAndOr
+    | '(' x=expression ',' y=expression ')'                 #ExprPoint
+    | '(' deg=expression ':' length=expression ')'          #ExprVector
+    | '[' expression (',' expression)* ']'                  #ExprArray
+    | number=(INT | FLOAT)                                  #ExprNumber
+    | BOOLEAN                                               #ExprBoolean                   
+    | STRING                                                #ExprString                              
+    | identifier                                            #ExprID
+    | 'wait' eventTrigger                                   #ExprWait
+    | op=('input'|'load') STRING                            #ExprScript
     ;
 
 command
     : 'refresh' ID ('after' expression suffix=('ms'|'s'))? ';'   #CommandRefresh
-    | 'print' expression ';'                    #CommandPrint
-    | 'close' ID ';'                            #CommandClose
-    | 'move' ID type=('by'|'to') expression ';'             #CommandMove
+    | 'print' expression ';'                                     #CommandPrint
+    | 'close' ID ';'                                             #CommandClose
+    | 'move' identifier type=('by'|'to') expression ';'          #CommandMove
     ;
 
 eventTrigger
@@ -82,33 +101,59 @@ mouseTrigger
     : 'click'
     ;    
 
-for_loop
-    : 'for' ID 'in' number_range 'do' '{' stat+ '}' 
+forStatement
+    : 'for' ID 'in' number_range 'do' stat 
     ;
+
+number_range
+    : expression '..' expression ('..' expression)?
+    ;    
+
+whileStatement
+    : 'while' expression 'do' stat
+    ;    
+
+repeatStatement
+    : 'repeat' stat 'until' expression ';'
+    ;    
 
 withStatement
-    : 'with' ID 'do' '{' propertiesAssignment '}' 
+    : 'with' identifier 'do' propertiesAssignment 
     ;
 
+playStatement
+    : 'play' ID 'with' propertiesAssignment
+    ;  
+
+modelStat returns [Boolean isAction]
+    : instantiation                             #ModelStatInstantiation
+    | blockStatement                            #ModelStatBlockStatement
+    | longAssignment ';'                        #ModelStatLongAssignment
+    | action                                    #ModelStatAction
+    ;
 
 modelInstantiation
-    : ID '::' typeID '{' (instantiation|action|longAssignment)+ '}'
+    : ID '::' 'Model' '{' (modelStat)+ '}'
     ;
 
 action
-    : 'action' 'on' ID '{' stat+ '}'
+    : 'action' 'on' identifier stat
     ;
 
 ifStatement
-    : 'if' expression 'do' stat+ ('else' 'do' stat+)?
+    : 'if' expression 'do' stat ('else' 'do' stat)?
     ;
 
-typeID returns[Type res]:
-    'Integer'
+ 
+
+typeID returns[Type res]
+    : 'Integer'
     | 'String'
     | 'Point'
     | 'Number'
     | 'Vector'
+    | 'Time'
+    | 'Boolean'
     | 'View'
     | 'Line'
     | 'Rectangle'
@@ -122,8 +167,15 @@ typeID returns[Type res]:
     | 'Spline'
     | 'Polygon'
     | 'Blob'
+    | 'Script'
+    | 'Enum'
+    | 'Array'
+    | ID
     ;
 
-number_range
-    : expression '..' expression ('..' expression)?
+identifier
+    : ID
+    | ID ('.' ID)+
+    | ID '[' expression ']'
     ;
+
