@@ -238,10 +238,17 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
             ErrorHandling.printError("Error: invalid simple statement");
             return false;
          }
+         System.out.println("Type: " + ctx.assignment().eType.name());
+         System.out.println("TypeObject: " + typeObject.name());
+
          if (!ctx.assignment().eType.conformsTo(typeObject)) {
-            ErrorHandling.printError("Expression type does not conform to variable type!");
-            return false;
+            // If eType is number may be integer or number
+            if (!(ctx.assignment().eType instanceof IntegerType && typeObject instanceof NumberType)) {
+               ErrorHandling.printError("Expression type does not conform to variable type!");
+               return false;
+            }
          }
+
       } else if (ctx.in_assignment() != null) {
          ctx.in_assignment().varName = ctx.varName;
          Boolean res = visit(ctx.in_assignment());
@@ -839,7 +846,8 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       // second expression can not be less than the first expression
       if (Integer.parseInt(ctx.number_range().expression(0).getText()) > Integer
             .parseInt(ctx.number_range().expression(1).getText())) {
-         ErrorHandling.printError("Error: second expression must be greater than the first expression in for statement");
+         ErrorHandling
+               .printError("Error: second expression must be greater than the first expression in for statement");
          return false;
       }
 
