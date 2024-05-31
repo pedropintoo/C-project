@@ -16,6 +16,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    private final BooleanType booleanType = new BooleanType();
    private final ObjectType scriptType = new ObjectType("Script");
    private final EnumType enumType = new EnumType();
+   private final ArrayType arrayType = new ArrayType();
 
    @Override
    public Boolean visitProgram(AGLParser.ProgramContext ctx) {
@@ -753,10 +754,13 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    public Boolean visitExprArray(AGLParser.ExprArrayContext ctx) {
       // expression: '[' (expression (',' expression)*)? ']' and expression returns
       // [Type eType, String varName]
-      // System.out.println("Check array expression");
+      System.out.println("Check array expression");
       Boolean res = true;
 
+      System.out.println("Array size: " + ctx.expression().size());
+
       for (AGLParser.ExpressionContext expr : ctx.expression()) {
+         System.out.println("Expression: " + expr.getText());
          res = visit(expr);
          if (!res) {
             ErrorHandling.printError("Error: invalid expression in array expression");
@@ -764,16 +768,20 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
          }
       }
 
-      // all expressions must be the same type
+      // the values of the array must be the same type
       Type type = ctx.expression(0).eType;
+      System.out.println("Type: " + type.name());
       for (AGLParser.ExpressionContext expr : ctx.expression()) {
          if (!expr.eType.conformsTo(type)) {
-            ErrorHandling.printError("Error: all expressions in array must be the same type!");
+            ErrorHandling.printError("Error: invalid expression type in array expression");
             return false;
          }
       }
 
-      ctx.eType = new ArrayType(type);
+      if (res) {
+         System.out.println("Array type: " + type.name());
+         ctx.eType = new ArrayType();
+      }
 
       return res;
    }
