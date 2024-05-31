@@ -690,14 +690,15 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    @Override
    public Boolean visitExprScript(AGLParser.ExprScriptContext ctx) {
       // expression: op=('input'|'load') STRING and expression returns [Type eType, String varName]
-      ctx.eType = scriptType;
 
+      ctx.eType = scriptType;
       return true;
    }
 
    @Override
    public Boolean visitExprDeepCopy(AGLParser.ExprDeepCopyContext ctx) {
-      // expression: 'deepcopy' identifier 'to' expression and expression returns [Type eType, String varName] identifier: ID | ID('.' ID)+ | ID '[' expression ']';
+      // expression: 'deepcopy' identifier 'to' expression and expression returns [Type eType, String varName]
+      // identifier: ID | ID('.' ID)+ | ID '[' expression ']';
 
       Boolean res = true;
       String id = ctx.identifier().getText();
@@ -827,7 +828,6 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       }
 
       return res;
-
    }
 
    @Override
@@ -863,10 +863,8 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       }
 
       // second expression can not be less than the first expression
-      if (Integer.parseInt(ctx.number_range().expression(0).getText()) > Integer
-            .parseInt(ctx.number_range().expression(1).getText())) {
-         ErrorHandling
-               .printError("Error: second expression must be greater than the first expression in for statement");
+      if (Integer.parseInt(ctx.number_range().expression(0).getText()) > Integer.parseInt(ctx.number_range().expression(1).getText())) {
+         ErrorHandling.printError("Error: second expression must be greater than the first expression in for statement");
          return false;
       }
 
@@ -1076,7 +1074,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
       Type idType = AGLParser.symbolTable.get(id).type();
 
-      // id type must be an EnumType // TODO: FIX!
+      // id type must be an EnumType 
       if (!idType.conformsTo(enumType)) {
          ErrorHandling.printError("Error: identifier \"" + id + "\" is not an enum type");
          return false;
