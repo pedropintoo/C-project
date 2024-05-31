@@ -154,6 +154,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       Boolean res = true;
       String ID = ctx.ID().getText();
 
+
       if (AGLParser.symbolTable.containsKey(ID)) {
          ErrorHandling.printError("Variable \"" + ID + "\" already declared!");
          return false;
@@ -192,13 +193,13 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       // in_assignment)
       // assignment = expression and expression returns [Type eType, String varName]
       // in_assignment: 'in' '{' ID (',' ID)* '}'
+      System.out.println("Check simple statement");
+      String typeID = ctx.typeID().getText();
 
-      String type = ctx.typeID().getText();
-
-      // if (!isValidType(type)) { // check if type is valid
-      // ErrorHandling.printError("Error: invalid type in simple statement");
-      // return false;
-      // }
+      if (!isValidType(typeID)) { // check if type is valid
+      ErrorHandling.printError("Error: invalid type in simple statement");
+      return false;
+      }
 
       Type typeObject = ctx.typeID().res;
 
@@ -219,7 +220,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
          }
 
          // typeObject must be a instanceof ObjectType
-         Type t = new ObjectType(type);
+         Type t = new ObjectType(typeID);
 
          if (!t.conformsTo(typeObject)) {
             ErrorHandling.printError("Error: invalid type in simple statement (must be an object type!)");
@@ -316,34 +317,38 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    }
 
    private boolean isValidType(String typeID) {
-   switch (typeID) {
-      case "Integer":
-      case "String":
-      case "Point":
-      case "Number":
-      case "Vector":
-      case "Time":
-      case "Boolean":
-      case "View":
-      case "Line":
-      case "Rectangle":
-      case "Ellipse":
-      case "Arc":
-      case "ArcChord":
-      case "PieSlice":
-      case "Text":
-      case "Dot":
-      case "PolyLine":
-      case "Spline":
-      case "Polygon":
-      case "Blob":
-      case "Script":
-      case "Enum":
-      case "Array":
-   return true;
-   default:
-   return false;
-   }
+      // Check if type is valid
+      System.out.println("Check type: " + typeID);
+      switch (typeID) {
+         case "Integer":
+         case "String":
+         case "Point":
+         case "Number":
+         case "Vector":
+         case "Time":
+         case "Boolean":
+         case "View":
+         case "Line":
+         case "Rectangle":
+         case "Ellipse":
+         case "Arc":
+         case "ArcChord":
+         case "PieSlice":
+         case "Text":
+         case "Dot":
+         case "PolyLine":
+         case "Spline":
+         case "Polygon":
+         case "Blob":
+         case "Script":
+         case "Enum":
+         case "Array":
+      return true;
+
+      // Check if it was a ID created in runtime
+      default:
+      return false;
+      }
    }
 
    @Override
