@@ -76,11 +76,6 @@ Pacman :: Model {
 }
 
 
-Rectangle at (0,0) with {
-    length = (1000,70);
-    fill = "blue";
-}
-
 view : View with {
     Ox = 0;
     Oy = 0;

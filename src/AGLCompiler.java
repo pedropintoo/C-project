@@ -6,6 +6,7 @@ import org.stringtemplate.v4.*;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.TerminalNode;
+import java.util.Iterator;
 
 @SuppressWarnings("CheckReturnValue")
 public class AGLCompiler extends AGLParserBaseVisitor<ST> {
@@ -185,6 +186,7 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
 
         } else { 
             value = "DEFAULT_VALUE";  // TODO: TO_BE_IMPLEMENTED
+            // Also to Line ...
 
             if (ctx.typeID().ID() != null) {
                 // -> Model
@@ -470,12 +472,26 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
     @Override public ST visitCommandRefresh(AGLParser.CommandRefreshContext ctx) {
         ST res = templates.getInstanceOf("refresh");
 
-        res.add("view", ctx.ID().getText());
+        Iterator<TerminalNode> it = ctx.ID().iterator();
+        TerminalNode current;
+        while(it.hasNext()) {
+            current = it.next();
+            
+            res.add("view", current.getText());
 
-        if (ctx.expression() != null) {
-            res.add("stat", visit(ctx.expression()).render()); // render the return value!
-            res.add("delay", ctx.expression().varName + (ctx.suffix.getText().equals("ms")? "/1000": ""));
+            if (ctx.expression() != null) {
+                res.add("stat", visit(ctx.expression()).render()); // render the return value!
+                res.add("delay", ctx.expression().varName + (ctx.suffix.getText().equals("ms")? "/1000": ""));
+            }
+            
+            if (it.hasNext()) {
+                String prev_refresh = res.render();
+                res = templates.getInstanceOf("refresh");
+                res.add("stat", prev_refresh);
+            }
         }
+
+        
 
         return res;
     }
@@ -492,7 +508,19 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
     @Override public ST visitCommandClose(AGLParser.CommandCloseContext ctx) {
         ST res = templates.getInstanceOf("close");
 
-        res.add("view", ctx.ID().getText());
+        Iterator<TerminalNode> it = ctx.ID().iterator();
+        TerminalNode current;
+        while(it.hasNext()) {
+            current = it.next();
+            
+            res.add("view", current.getText());
+
+            if (it.hasNext()) {
+                String prev_close = res.render();
+                res = templates.getInstanceOf("close");
+                res.add("stat", prev_close);
+            }
+        }
         
         return res;
     }
@@ -500,23 +528,38 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
     @Override public ST visitCommandMove(AGLParser.CommandMoveContext ctx) {
         ST res = templates.getInstanceOf("move");
 
-        String id = ctx.identifier().ID(0).getText();
-        if (ctx.identifier().ID(1) != null) { 
-            for (int i = 1; i < ctx.identifier().ID().size(); i++) {
-                id += "." + ctx.identifier().ID(i).getText();
+        Iterator<AGLParser.IdentifierContext> it = ctx.identifier().iterator();
+        AGLParser.IdentifierContext current;
+        String id; 
+        while (it.hasNext()) {
+            current = it.next();
+
+            id = current.ID(0).getText();
+
+            if (current.ID(1) != null) { 
+                for (int i = 1; i < current.ID().size(); i++) {
+                    id += "." + current.ID(i).getText();
+                }
+            } else if (current.expression() != null) {
+                res.add("stat", visit(current.expression()).render()); // render the return value!
+                id += "[" + current.expression().varName + "]";
             }
-        } else if (ctx.identifier().expression() != null) {
-            res.add("stat", visit(ctx.identifier().expression()).render()); // render the return value!
-            id += "[" + ctx.identifier().expression().varName + "]";
-        }
+    
+            res.add("var", id);
+            res.add("stat", visit(ctx.expression()).render()); // render the return value!
+            res.add("destination", ctx.expression().varName);
+    
+            if (ctx.type.getText().equals("by")) {
+                res.add("relative", "True"); 
+            } 
 
-        res.add("var", id);
-        res.add("stat", visit(ctx.expression()).render()); // render the return value!
-        res.add("destination", ctx.expression().varName);
+            if (it.hasNext()) {
+                String prev_close = res.render();
+                res = templates.getInstanceOf("move");
+                res.add("stat", prev_close);
+            }
 
-        if (ctx.type.getText().equals("by")) {
-            res.add("relative", "True"); 
-        } 
+        }        
 
         return res;
     }

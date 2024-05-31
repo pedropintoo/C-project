@@ -1295,9 +1295,9 @@ if __name__ == "__main__":
         v127 = temp 
 
 
-    temp = get_nested_attribute(action, '"Illustrating a moving pacman"')
+    temp = get_nested_attribute(action, '"1"')
     if temp is None:
-        temp = "Illustrating a moving pacman"
+        temp = "1"
     if action is not None and hasattr(action, "v128".split('.')[0]):
         action.v128 = temp
     else:
@@ -1509,9 +1509,9 @@ if __name__ == "__main__":
         v150 = temp 
 
 
-    temp = get_nested_attribute(action, '1000')
+    temp = get_nested_attribute(action, '401')
     if temp is None:
-        temp = 1000
+        temp = 401
     if action is not None and hasattr(action, "v151".split('.')[0]):
         action.v151 = temp
     else:
@@ -1536,9 +1536,9 @@ if __name__ == "__main__":
         v153 = temp 
 
 
-    temp = get_nested_attribute(action, '600')
+    temp = get_nested_attribute(action, '401')
     if temp is None:
-        temp = 600
+        temp = 401
     if action is not None and hasattr(action, "v154".split('.')[0]):
         action.v154 = temp
     else:
@@ -1563,9 +1563,9 @@ if __name__ == "__main__":
         v156 = temp 
 
 
-    temp = get_nested_attribute(action, '"Illustrating a moving pacman"')
+    temp = get_nested_attribute(action, '"2"')
     if temp is None:
-        temp = "Illustrating a moving pacman"
+        temp = "2"
     if action is not None and hasattr(action, "v157".split('.')[0]):
         action.v157 = temp
     else:
@@ -1705,8 +1705,32 @@ if __name__ == "__main__":
     if model is not None: 
         model.pacman2 = pacman2
         model.last_pacman2 = copy.deepcopy(pacman2)
-    last_refresh = time.time()
-    view.update()
+
+    temp = get_nested_attribute(action, '"wheat"')
+    if temp is None:
+        temp = "wheat"
+    if action is not None and hasattr(action, "v171".split('.')[0]):
+        action.v171 = temp
+    else:
+        v171 = temp 
+
+
+    temp = get_nested_attribute(action, 'v171')
+    if temp is None:
+        temp = v171
+    if action is not None and hasattr(action, "v172".split('.')[0]):
+        action.v172 = temp
+    else:
+        v172 = temp 
+
+
+    temp = get_nested_attribute(action, 'v172')
+    if temp is None:
+        temp = v172
+    if action is not None and hasattr(action, "pacman2.face.fill".split('.')[0]):
+        action.pacman2.face.fill = temp
+    else:
+        pacman2.face.fill = temp 
 
     last_refresh = time.time()
     view2.update()
@@ -1715,68 +1739,34 @@ if __name__ == "__main__":
     temp = get_nested_attribute(action, '1')
     if temp is None:
         temp = 1
-    if action is not None and hasattr(action, "v171".split('.')[0]):
-        action.v171 = temp
+    if action is not None and hasattr(action, "v173".split('.')[0]):
+        action.v173 = temp
     else:
-        v171 = temp 
+        v173 = temp 
 
 
     temp = get_nested_attribute(action, '10')
     if temp is None:
         temp = 10
-    if action is not None and hasattr(action, "v172".split('.')[0]):
-        action.v172 = temp
+    if action is not None and hasattr(action, "v174".split('.')[0]):
+        action.v174 = temp
     else:
-        v172 = temp 
+        v174 = temp 
 
-    for i in range(v171, v172, 1):
+    for i in range(v173, v174, 1):
 
         temp = get_nested_attribute(action, 'Close')
         if temp is None:
             temp = Close
-        if action is not None and hasattr(action, "v173".split('.')[0]):
-            action.v173 = temp
-        else:
-            v173 = temp 
-
-
-        temp = get_nested_attribute(action, 'v173')
-        if temp is None:
-            temp = v173
-        if action is not None and hasattr(action, "v174".split('.')[0]):
-            action.v174 = temp
-        else:
-            v174 = temp 
-
-
-        temp = get_nested_attribute(action, 'v174')
-        if temp is None:
-            temp = v174
-        if action is not None and hasattr(action, "pacman.mouth".split('.')[0]):
-            action.pacman.mouth = temp
-        else:
-            pacman.mouth = temp 
-
-         
-
-        temp = get_nested_attribute(action, '175')
-        if temp is None:
-            temp = 175
         if action is not None and hasattr(action, "v175".split('.')[0]):
             action.v175 = temp
         else:
             v175 = temp 
 
-        while (time.time() - last_refresh <= v175/1000):
-            time.sleep(REFRESH_RATE)   
 
-        last_refresh = time.time()
-        view.update()
-
-
-        temp = get_nested_attribute(action, 'Open')
+        temp = get_nested_attribute(action, 'v175')
         if temp is None:
-            temp = Open
+            temp = v175
         if action is not None and hasattr(action, "v176".split('.')[0]):
             action.v176 = temp
         else:
@@ -1786,25 +1776,32 @@ if __name__ == "__main__":
         temp = get_nested_attribute(action, 'v176')
         if temp is None:
             temp = v176
-        if action is not None and hasattr(action, "v177".split('.')[0]):
-            action.v177 = temp
-        else:
-            v177 = temp 
-
-
-        temp = get_nested_attribute(action, 'v177')
-        if temp is None:
-            temp = v177
         if action is not None and hasattr(action, "pacman.mouth".split('.')[0]):
             action.pacman.mouth = temp
         else:
             pacman.mouth = temp 
 
          
+         
 
-        temp = get_nested_attribute(action, '175')
+        temp = get_nested_attribute(action, '25')
         if temp is None:
-            temp = 175
+            temp = 25
+        if action is not None and hasattr(action, "v177".split('.')[0]):
+            action.v177 = temp
+        else:
+            v177 = temp 
+
+        while (time.time() - last_refresh <= v177/1000):
+            time.sleep(REFRESH_RATE)   
+
+        last_refresh = time.time()
+        view.update()
+
+
+        temp = get_nested_attribute(action, '25')
+        if temp is None:
+            temp = 25
         if action is not None and hasattr(action, "v178".split('.')[0]):
             action.v178 = temp
         else:
@@ -1814,164 +1811,157 @@ if __name__ == "__main__":
             time.sleep(REFRESH_RATE)   
 
         last_refresh = time.time()
-        view.update()
+        view2.update()
 
 
-        temp = get_nested_attribute(action, '10')
+        temp = get_nested_attribute(action, 'Open')
         if temp is None:
-            temp = 10
+            temp = Open
+        if action is not None and hasattr(action, "v179".split('.')[0]):
+            action.v179 = temp
+        else:
+            v179 = temp 
+
+
+        temp = get_nested_attribute(action, 'v179')
+        if temp is None:
+            temp = v179
         if action is not None and hasattr(action, "v180".split('.')[0]):
             action.v180 = temp
         else:
             v180 = temp 
 
 
-        temp = get_nested_attribute(action, '0')
+        temp = get_nested_attribute(action, 'v180')
         if temp is None:
-            temp = 0
+            temp = v180
+        if action is not None and hasattr(action, "pacman.mouth".split('.')[0]):
+            action.pacman.mouth = temp
+        else:
+            pacman.mouth = temp 
+
+         
+         
+
+        temp = get_nested_attribute(action, '25')
+        if temp is None:
+            temp = 25
         if action is not None and hasattr(action, "v181".split('.')[0]):
             action.v181 = temp
         else:
             v181 = temp 
 
-        v179 = (v180 , v181)
-        if action is not None:
-            action.pacman.move_relative(v179)
+        while (time.time() - last_refresh <= v181/1000):
+            time.sleep(REFRESH_RATE)   
+
+        last_refresh = time.time()
+        view.update()
+
+
+        temp = get_nested_attribute(action, '25')
+        if temp is None:
+            temp = 25
+        if action is not None and hasattr(action, "v182".split('.')[0]):
+            action.v182 = temp
         else:
-            pacman.move_relative(v179)
+            v182 = temp 
+
+        while (time.time() - last_refresh <= v182/1000):
+            time.sleep(REFRESH_RATE)   
+
+        last_refresh = time.time()
+        view2.update()
+
 
         temp = get_nested_attribute(action, '10')
         if temp is None:
             temp = 10
-        if action is not None and hasattr(action, "v183".split('.')[0]):
-            action.v183 = temp
-        else:
-            v183 = temp 
-
-
-        temp = get_nested_attribute(action, '0')
-        if temp is None:
-            temp = 0
         if action is not None and hasattr(action, "v184".split('.')[0]):
             action.v184 = temp
         else:
             v184 = temp 
 
-        v182 = (v183 , v184)
-        if action is not None:
-            action.view.move_relative(v182)
-        else:
-            view.move_relative(v182)
-         
 
-        temp = get_nested_attribute(action, '175')
+        temp = get_nested_attribute(action, '0')
         if temp is None:
-            temp = 175
+            temp = 0
         if action is not None and hasattr(action, "v185".split('.')[0]):
             action.v185 = temp
         else:
             v185 = temp 
 
-        while (time.time() - last_refresh <= v185/1000):
-            time.sleep(REFRESH_RATE)   
+        v183 = (v184 , v185)
+        if action is not None:
+            action.pacman.move_relative(v183)
+        else:
+            pacman.move_relative(v183)
 
-        last_refresh = time.time()
-        view.update()
-
-
-    temp = get_nested_attribute(action, '1')
-    if temp is None:
-        temp = 1
-    if action is not None and hasattr(action, "v186".split('.')[0]):
-        action.v186 = temp
-    else:
-        v186 = temp 
-
-
-    temp = get_nested_attribute(action, '10')
-    if temp is None:
-        temp = 10
-    if action is not None and hasattr(action, "v187".split('.')[0]):
-        action.v187 = temp
-    else:
-        v187 = temp 
-
-    for i in range(v186, v187, 1):
-
-        temp = get_nested_attribute(action, 'Close')
+        temp = get_nested_attribute(action, '10')
         if temp is None:
-            temp = Close
+            temp = 10
+        if action is not None and hasattr(action, "v187".split('.')[0]):
+            action.v187 = temp
+        else:
+            v187 = temp 
+
+
+        temp = get_nested_attribute(action, '0')
+        if temp is None:
+            temp = 0
         if action is not None and hasattr(action, "v188".split('.')[0]):
             action.v188 = temp
         else:
             v188 = temp 
 
-
-        temp = get_nested_attribute(action, 'v188')
-        if temp is None:
-            temp = v188
-        if action is not None and hasattr(action, "v189".split('.')[0]):
-            action.v189 = temp
+        v186 = (v187 , v188)
+        if action is not None:
+            action.view.move_relative(v186)
         else:
-            v189 = temp 
+            view.move_relative(v186)
 
-
-        temp = get_nested_attribute(action, 'v189')
+        temp = get_nested_attribute(action, '10')
         if temp is None:
-            temp = v189
-        if action is not None and hasattr(action, "pacman2.mouth".split('.')[0]):
-            action.pacman2.mouth = temp
-        else:
-            pacman2.mouth = temp 
-
-         
-
-        temp = get_nested_attribute(action, '175')
-        if temp is None:
-            temp = 175
+            temp = 10
         if action is not None and hasattr(action, "v190".split('.')[0]):
             action.v190 = temp
         else:
             v190 = temp 
 
-        while (time.time() - last_refresh <= v190/1000):
+
+        temp = get_nested_attribute(action, '0')
+        if temp is None:
+            temp = 0
+        if action is not None and hasattr(action, "v191".split('.')[0]):
+            action.v191 = temp
+        else:
+            v191 = temp 
+
+        v189 = (v190 , v191)
+        if action is not None:
+            action.view2.move_relative(v189)
+        else:
+            view2.move_relative(v189)
+         
+         
+
+        temp = get_nested_attribute(action, '25')
+        if temp is None:
+            temp = 25
+        if action is not None and hasattr(action, "v192".split('.')[0]):
+            action.v192 = temp
+        else:
+            v192 = temp 
+
+        while (time.time() - last_refresh <= v192/1000):
             time.sleep(REFRESH_RATE)   
 
         last_refresh = time.time()
         view.update()
 
 
-        temp = get_nested_attribute(action, 'Open')
+        temp = get_nested_attribute(action, '25')
         if temp is None:
-            temp = Open
-        if action is not None and hasattr(action, "v191".split('.')[0]):
-            action.v191 = temp
-        else:
-            v191 = temp 
-
-
-        temp = get_nested_attribute(action, 'v191')
-        if temp is None:
-            temp = v191
-        if action is not None and hasattr(action, "v192".split('.')[0]):
-            action.v192 = temp
-        else:
-            v192 = temp 
-
-
-        temp = get_nested_attribute(action, 'v192')
-        if temp is None:
-            temp = v192
-        if action is not None and hasattr(action, "pacman2.mouth".split('.')[0]):
-            action.pacman2.mouth = temp
-        else:
-            pacman2.mouth = temp 
-
-         
-
-        temp = get_nested_attribute(action, '175')
-        if temp is None:
-            temp = 175
+            temp = 25
         if action is not None and hasattr(action, "v193".split('.')[0]):
             action.v193 = temp
         else:
@@ -1981,109 +1971,44 @@ if __name__ == "__main__":
             time.sleep(REFRESH_RATE)   
 
         last_refresh = time.time()
-        view.update()
-
-
-        temp = get_nested_attribute(action, '10')
-        if temp is None:
-            temp = 10
-        if action is not None and hasattr(action, "v195".split('.')[0]):
-            action.v195 = temp
-        else:
-            v195 = temp 
-
-
-        temp = get_nested_attribute(action, '0')
-        if temp is None:
-            temp = 0
-        if action is not None and hasattr(action, "v196".split('.')[0]):
-            action.v196 = temp
-        else:
-            v196 = temp 
-
-        v194 = (v195 , v196)
-        if action is not None:
-            action.pacman2.move_relative(v194)
-        else:
-            pacman2.move_relative(v194)
-
-        temp = get_nested_attribute(action, '10')
-        if temp is None:
-            temp = 10
-        if action is not None and hasattr(action, "v198".split('.')[0]):
-            action.v198 = temp
-        else:
-            v198 = temp 
-
-
-        temp = get_nested_attribute(action, '0')
-        if temp is None:
-            temp = 0
-        if action is not None and hasattr(action, "v199".split('.')[0]):
-            action.v199 = temp
-        else:
-            v199 = temp 
-
-        v197 = (v198 , v199)
-        if action is not None:
-            action.view.move_relative(v197)
-        else:
-            view.move_relative(v197)
-         
-
-        temp = get_nested_attribute(action, '175')
-        if temp is None:
-            temp = 175
-        if action is not None and hasattr(action, "v200".split('.')[0]):
-            action.v200 = temp
-        else:
-            v200 = temp 
-
-        while (time.time() - last_refresh <= v200/1000):
-            time.sleep(REFRESH_RATE)   
-
-        last_refresh = time.time()
-        view.update()
-
-    last_refresh = time.time()
-    view2.update()
+        view2.update()
 
 
     temp = get_nested_attribute(action, '"Press any mouse button to quit"')
     if temp is None:
         temp = "Press any mouse button to quit"
-    if action is not None and hasattr(action, "v201".split('.')[0]):
-        action.v201 = temp
+    if action is not None and hasattr(action, "v194".split('.')[0]):
+        action.v194 = temp
     else:
-        v201 = temp 
+        v194 = temp 
 
-    print(v201)
+    print(v194)
     if action is not None:
-        v202 = action.view.waitClick()
+        v195 = action.view.waitClick()
     else:
-        v202 = last_view.waitClick()
+        v195 = last_view.waitClick()
 
-    temp = get_nested_attribute(action, 'v202')
+    temp = get_nested_attribute(action, 'v195')
     if temp is None:
-        temp = v202
-    if action is not None and hasattr(action, "v203".split('.')[0]):
-        action.v203 = temp
+        temp = v195
+    if action is not None and hasattr(action, "v196".split('.')[0]):
+        action.v196 = temp
     else:
-        v203 = temp 
+        v196 = temp 
 
 
-    temp = get_nested_attribute(action, 'v203')
+    temp = get_nested_attribute(action, 'v196')
     if temp is None:
-        temp = v203
-    if action is not None and hasattr(action, "v204".split('.')[0]):
-        action.v204 = temp
+        temp = v196
+    if action is not None and hasattr(action, "v197".split('.')[0]):
+        action.v197 = temp
     else:
-        v204 = temp 
+        v197 = temp 
 
 
-    temp = get_nested_attribute(action, 'v204')
+    temp = get_nested_attribute(action, 'v197')
     if temp is None:
-        temp = v204
+        temp = v197
     if action is not None and hasattr(action, "pos".split('.')[0]):
         action.pos = temp
     else:

@@ -88,7 +88,7 @@ view : View with {
     Oy = 0;
     width = 401;
     height = 401;
-    title = "Illustrating a moving pacman";
+    title = "1";
     background = "alice blue";
 }
 
@@ -100,52 +100,28 @@ move pacman by (0,100);
 view2 : View with {
     Ox = -450;
     Oy = 0;
-    width = 1000;
-    height = 600;
-    title = "Illustrating a moving pacman";
+    width = 401;
+    height = 401;
+    title = "2";
     background = "alice blue";
 }
 
 pacman2 : Pacman = deepcopy pacman to (-450,-100);
 
-refresh view;
-refresh view2;
+pacman2.face.fill = "wheat";
+
+refresh view,view2;
 
 for i in 1 .. 10 do {
     pacman.mouth = Close;
-    #refresh view2;
-    refresh view after 175 ms;
+    refresh view,view2 after 25 ms;
     
     pacman.mouth = Open;
-    #refresh view2;
-    refresh view after 175 ms;
+    refresh view,view2 after 25 ms;
     
-    move pacman by (10,0);    # the 'by' makes the movement relative; the argument is a vector
-    move view by (10,0);    # the 'by' makes the movement relative; the argument is a vector
-    #move view2 by (10,0);    # the 'by' makes the movement relative; the argument is a vector
-    refresh view after 175 ms;
-    #refresh view2 after 175 ms;  
+    move pacman, view, view2 by (10,0);    # the 'by' makes the movement relative; the argument is a vector
+    refresh view,view2 after 25 ms;
 }
-
-for i in 1 .. 10 do {
-    pacman2.mouth = Close;
-    #refresh view2;
-    refresh view after 175 ms;
-    
-    pacman2.mouth = Open;
-    #refresh view2;
-    refresh view after 175 ms;
-    
-    move pacman2 by (10,0);    # the 'by' makes the movement relative; the argument is a vector
-    move view by (10,0);    # the 'by' makes the movement relative; the argument is a vector
-    #move view2 by (10,0);    # the 'by' makes the movement relative; the argument is a vector
-    refresh view after 175 ms;
-    #refresh view2 after 175 ms;
-
-    
-}
-
-refresh view2;
 
 print "Press any mouse button to quit";
 pos : Point = wait mouse click; # instantiate a Point and waits for a mouse click
