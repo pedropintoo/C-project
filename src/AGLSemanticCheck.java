@@ -239,8 +239,6 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
             ErrorHandling.printError("Error: invalid simple statement");
             return false;
          }
-         System.out.println("Type: " + ctx.assignment().eType.name());
-         System.out.println("TypeObject: " + typeObject.name());
 
          if (!ctx.assignment().eType.conformsTo(typeObject)) {
             // If eType is number may be integer or number
