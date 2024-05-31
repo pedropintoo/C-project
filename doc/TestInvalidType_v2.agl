@@ -22,5 +22,24 @@ Pacman :: Model {
     }
 }
 
-# Create a pacman
+Fire :: Model {
+    flame : Line at (0,0) with {
+        length = (10,10);
+        fill = "yellow";
+    }
+}
+
+
+
+# Pacman não está instancionado, ou seja, não hà operações. Pacman é um ModelType("Pacman")
+# Create a pacman - a is a ObjectType("Pacman") - tenho que verificar se existe um Pacman do tipo ModelType("Pacman")
 a : Pacman at (100,100);
+c : Line at (200,300);
+
+fire : Fire at (100,100);
+
+b : Pacman = a; # Model = Pacman;
+
+#b : Pacman = deepcopy b in (0,2);
+
+

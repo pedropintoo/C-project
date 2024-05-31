@@ -173,7 +173,7 @@ typeID returns[Type res]
     | 'Script'      {$res = new ObjectType("Script");}
     | 'Enum'        {$res = new EnumType();}   
     | 'Array'       {$res = new ObjectType("Array");}
-    | ID
+    | ID            {$res = new ObjectType($ID.text);}
     ;
 
 identifier

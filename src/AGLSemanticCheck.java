@@ -15,7 +15,6 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    private final VectorType vectorType = new VectorType();
    private final BooleanType booleanType = new BooleanType();
    private final ObjectType scriptType = new ObjectType("Script");
-   private final ObjectType modelType = new ObjectType("Model");
    private final EnumType enumType = new EnumType();
 
    @Override
@@ -167,7 +166,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
          } else if (ctx.simpleStatement().in_assignment() != null) {
             return true; // enum is defined in children visit!
          }
-
+         
          Symbol sym = new VariableSymbol(ID, ctx.simpleStatement().typeID().res);
          sym.setValueDefined();
          AGLParser.symbolTable.put(ID, sym);
@@ -188,25 +187,31 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
    @Override
    public Boolean visitSimpleStatement(AGLParser.SimpleStatementContext ctx) {
-      // simpleStatement: typeID ('at' expression)? ((assignment)? ';' |
-      // in_assignment)
+      // simpleStatement: typeID ('at' expression | assignment)? ';' | typeID in_assignment
       // assignment = expression and expression returns [Type eType, String varName]
       // in_assignment: 'in' '{' ID (',' ID)* '}'
-      System.out.println("Check simple statement");
       String typeID = ctx.typeID().getText();
-      System.out.println("Type: " + typeID);
+
       if (!isValidType(typeID)) { // check if type is valid
          System.out.println("Type " + typeID + " is not valid");
          ErrorHandling.printError("Error: invalid type in simple statement");
          return false;
       }
 
-      Type typeObject = ctx.typeID().res;
+      Symbol s = AGLParser.symbolTable.get(typeID);
+      Type type;
 
-      // check if we have an expression and if we have typeObject must be a
-      // ObjectType()
+      if(s != null) {
+         // ModelType
+         type = new ModelType(typeID);
+
+      } else {
+         type = ctx.typeID().res;
+      }   
+
+      
+      // check if we have an expression and if we have, type must be a ObjectType()
       if (ctx.expression() != null) {
-         System.out.println("Check expression");
          Boolean res = visit(ctx.expression());
          if (!res) {
             ErrorHandling.printError("Error: invalid simple statement");
@@ -214,23 +219,25 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
          }
 
          // expression must be a PointType
-         Type pointType = new PointType();
          if (!ctx.expression().eType.conformsTo(pointType)) {
             ErrorHandling.printError("Error: invalid expression type in simple statement (must be point!)");
             return false;
          }
-         System.out.println("Expression type: " + ctx.expression().eType.name());
 
-         // typeObject must be a instanceof ObjectType
-
-         if (!(typeObject instanceof ObjectType)) {
-            ErrorHandling.printError("Error: invalid type in simple statement (must be an object type!)");
-            return false;
+         if(s != null) {
+            if (!(type instanceof ModelType) ) {
+               ErrorHandling.printError("Error: invalid type in simple statement (must be an model type!)");
+               return false;
+            }
+         } else {
+            if (!(type instanceof ObjectType) ) {
+               ErrorHandling.printError("Error: invalid type in simple statement (must be an object type!)");
+               return false;
+            }
          }
       }
 
-      // check if we have an assignment or a in_assignment and if it conforms to the
-      // type
+      // check if we have an assignment or a in_assignment and if it conforms to the type
       if (ctx.assignment() != null) {
          Boolean res = visit(ctx.assignment());
          // System.out.println("Check assignment");
@@ -240,9 +247,12 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
             return false;
          }
 
-         if (!ctx.assignment().eType.conformsTo(typeObject)) {
+         if (!ctx.assignment().eType.conformsTo(type)) {
             // If eType is number may be integer or number
-            if (!(ctx.assignment().eType instanceof IntegerType && typeObject instanceof NumberType)) {
+            System.out.println("Type (left): " + type.name());
+            System.out.println("Type (right): " + ctx.assignment().eType.name());
+            
+            if (!(ctx.assignment().eType instanceof IntegerType && type instanceof NumberType)) {
                ErrorHandling.printError("Expression type does not conform to variable type!");
                return false;
             }
@@ -258,6 +268,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
          return true;
       }
+      
 
       return true;
    }
@@ -319,7 +330,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       // 'Array' | ID
 
       // Check if type is valid
-      System.out.println("Check type: " + typeID);
+      
       switch (typeID) {
          case "Integer":
          case "String":
@@ -350,23 +361,16 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
       // typeID can be a ID
       if (!AGLParser.symbolTable.containsKey(typeID)) {
-         ErrorHandling.printError("Error: invalid type " + typeID);
+         ErrorHandling.printError("Error: type not exists: " + typeID);
          return false;
       }
 
-      // Check if type is an ObjectType
+      // must be a ModelType
       Symbol sym = AGLParser.symbolTable.get(typeID);
-      if (sym == null) {
-         ErrorHandling.printError("Error: Symbol for type " + typeID + " is null");
+      if (!(sym.type() instanceof ModelType)) {
+         ErrorHandling.printError("Error: invalid model type: " + typeID);
          return false;
       }
-
-      if (!(sym.type() instanceof ObjectType)) {
-         ErrorHandling.printError("Error: invalid type " + typeID);
-         return false;
-      }
-
-      System.out.println("Type " + typeID + " is valid");
 
       return true;
    }
@@ -1052,7 +1056,8 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
          ErrorHandling.printError("Variable \"" + ID + "\" already declared!");
          return false;
       }
-      System.out.println("Model Instantiation: " + ID);
+      
+      ModelType modelType = new ModelType(ID);
       Symbol sym = new VariableSymbol(ID, modelType);
       AGLParser.symbolTable.put(ID, sym);
 
