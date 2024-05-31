@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 
+
 @SuppressWarnings("CheckReturnValue")
 public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
@@ -250,10 +251,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
          }
 
          if (!ctx.assignment().eType.conformsTo(type)) {
-            // If eType is number may be integer or number
-            System.out.println("Type (left): " + type.name());
-            System.out.println("Type (right): " + ctx.assignment().eType.name());
-
+            // If eType is number may be integer or number      
             if (!(ctx.assignment().eType instanceof IntegerType && type instanceof NumberType)) {
                ErrorHandling.printError("Expression type does not conform to variable type!");
                return false;
@@ -747,40 +745,38 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
    @Override
    public Boolean visitExprDeepCopy(AGLParser.ExprDeepCopyContext ctx) {
-      return true;
-   }
-
-   @Override
-   public Boolean visitExprArray(AGLParser.ExprArrayContext ctx) {
-      // expression: '[' (expression (',' expression)*)? ']' and expression returns
-      // [Type eType, String varName]
-      System.out.println("Check array expression");
+      // expression: 'deepcopy' identifier 'to' expression and expression returns [Type eType, String varName]
+      // identifier: ID | ID('.' ID)+ | ID '[' expression ']';
       Boolean res = true;
+      String id = ctx.identifier().getText();
 
-      System.out.println("Array size: " + ctx.expression().size());
-
-      for (AGLParser.ExpressionContext expr : ctx.expression()) {
-         System.out.println("Expression: " + expr.getText());
-         res = visit(expr);
-         if (!res) {
-            ErrorHandling.printError("Error: invalid expression in array expression");
-            return false;
+      if (ctx.identifier().ID(1) == null) {
+         if (!AGLParser.symbolTable.containsKey(id)) {
+            ErrorHandling.printError(ctx, "Variable \"" + id + "\" does not exists!");
+            res = false;
+         } else {
+            Symbol sym = AGLParser.symbolTable.get(id);
+            if (!sym.valueDefined()) {
+               ErrorHandling.printError(ctx, "Variable \"" + id + "\" not defined!");
+               res = false;
+            } else {
+               ctx.eType = sym.type();
+            }
          }
+      } else {
+         ErrorHandling.printError("TO BE IMPLEMENTED ID ('.' ID)+ - attributes"); // TODO
       }
 
-      // the values of the array must be the same type
-      Type type = ctx.expression(0).eType;
-      System.out.println("Type: " + type.name());
-      for (AGLParser.ExpressionContext expr : ctx.expression()) {
-         if (!expr.eType.conformsTo(type)) {
-            ErrorHandling.printError("Error: invalid expression type in array expression");
-            return false;
-         }
+      res = visit(ctx.expression());
+      
+      if (!res) {
+         ErrorHandling.printError("Error: invalid expression in deepcopy command");
+         return false;
       }
-
-      if (res) {
-         System.out.println("Array type: " + type.name());
-         ctx.eType = new ArrayType();
+      // check if expression is a point
+      if (!ctx.expression().eType.conformsTo(pointType)) {
+         ErrorHandling.printError("Error: invalid expression type in deepcopy command (must be point!)");
+         return false;
       }
 
       return res;
