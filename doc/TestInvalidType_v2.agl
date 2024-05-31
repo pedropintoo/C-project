@@ -1,0 +1,26 @@
+Pacman :: Model {
+    # The main pacman shape, with a reference for future use
+    face : PieSlice at (0,0) with {
+        length = (50,50);
+        fill = "pink";
+        start = 30;
+        extent = 300;
+    }
+
+    # the eye, without a reference
+    Ellipse at (20,35) with {
+        fill = "black";
+        length = (5,5);
+    }
+
+    # properties and how they reshape children's properties
+    mouth : Enum in { Open, Close } # the first value is the default
+    mouth2 : Enum in { Opened, Closed } # the first value is the default
+    action on mouth {
+        if mouth == Open do 
+            print "Pacman is eating";
+    }
+}
+
+# Create a pacman
+a : Pacman at (100,100);

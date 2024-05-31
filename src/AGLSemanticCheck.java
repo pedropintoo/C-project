@@ -195,17 +195,18 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       // in_assignment: 'in' '{' ID (',' ID)* '}'
       System.out.println("Check simple statement");
       String typeID = ctx.typeID().getText();
-
+      System.out.println("Type: " + typeID);
       if (!isValidType(typeID)) { // check if type is valid
-      ErrorHandling.printError("Error: invalid type in simple statement");
-      return false;
+         System.out.println("Type " + typeID + " is not valid");
+         ErrorHandling.printError("Error: invalid type in simple statement");
+         return false;
       }
 
       Type typeObject = ctx.typeID().res;
 
-      // check if we have an expression and if we have typeObject must be a
-      // ObjectType()
+      // check if we have an expression and if we have typeObject must be a ObjectType()
       if (ctx.expression() != null) {
+         System.out.println("Check expression");
          Boolean res = visit(ctx.expression());
          if (!res) {
             ErrorHandling.printError("Error: invalid simple statement");
@@ -218,15 +219,14 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
             ErrorHandling.printError("Error: invalid expression type in simple statement (must be point!)");
             return false;
          }
+         System.out.println("Expression type: " + ctx.expression().eType.name());
 
          // typeObject must be a instanceof ObjectType
-         Type t = new ObjectType(typeID);
 
-         if (!t.conformsTo(typeObject)) {
+         if (!(typeObject instanceof ObjectType) ) {
             ErrorHandling.printError("Error: invalid type in simple statement (must be an object type!)");
             return false;
          }
-
       }
 
       // check if we have an assignment or a in_assignment and if it conforms to the
@@ -317,6 +317,8 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    }
 
    private boolean isValidType(String typeID) {
+      // typeID: 'Integer' | 'String' | 'Point' | 'Number' | 'Vector' | 'Time' | ... | 'Array' | ID
+
       // Check if type is valid
       System.out.println("Check type: " + typeID);
       switch (typeID) {
@@ -344,11 +346,29 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
          case "Enum":
          case "Array":
       return true;
+      };
 
-      // Check if it was a ID created in runtime
-      default:
-      return false;
+      // typeID can be a ID
+      if (!AGLParser.symbolTable.containsKey(typeID)) {
+         ErrorHandling.printError("Error: invalid type " + typeID);
+         return false;
       }
+
+      // Check if type is an ObjectType
+      Symbol sym = AGLParser.symbolTable.get(typeID);
+      if (sym == null) {
+         ErrorHandling.printError("Error: Symbol for type " + typeID + " is null");
+         return false;
+      }
+
+      if (!(sym.type() instanceof ObjectType)) {
+         ErrorHandling.printError("Error: invalid type " + typeID);
+         return false;
+      }
+      
+      System.out.println("Type " + typeID + " is valid");
+
+      return true;
    }
 
    @Override
@@ -1032,7 +1052,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
          ErrorHandling.printError("Variable \"" + ID + "\" already declared!");
          return false;
       }
-
+      System.out.println("Model Instantiation: " + ID);
       Symbol sym = new VariableSymbol(ID, modelType);
       AGLParser.symbolTable.put(ID, sym);
 
