@@ -744,6 +744,11 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       return true;
    }
 
+   @Override
+   public Boolean visitExprDeepCopy(AGLParser.ExprDeepCopyContext ctx) {
+      return true;
+   }
+
    // --------- End Visit Expression ---------
 
    @Override
