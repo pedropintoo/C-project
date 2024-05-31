@@ -1,3 +1,6 @@
+# Deve funcionar
+# Testar os if's statements
+
 s1 : Script = load "s0.xagl";
 
 play s1 with {

@@ -198,7 +198,6 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       String typeID = ctx.typeID().getText();
 
       if (!isValidType(typeID)) { // check if type is valid
-         System.out.println("Type " + typeID + " is not valid");
          ErrorHandling.printError("Error: invalid type in simple statement");
          return false;
       }
@@ -297,23 +296,12 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       }
 
       // we do not need PropertyAssignment visitor!
-      System.out.println("ID: " + ID);
       Type type = ctx.typeID().res;
       if (type == null) {
          ErrorHandling.printError("Error: invalid type in block statement");
          return false;
       }
-      System.out.println("Type: " + type.name());
-      
    
-      // check if type is valid
-      if (type instanceof ObjectType) {
-         System.out.println("Type is ObjectType");
-      } else {
-         System.out.println("Type is not ObjectType");
-      }
-
-
       // only object types can have properties
       if (ctx.propertiesAssignment() != null && !(type instanceof ObjectType) ) {
          ErrorHandling.printError("Error: only object types can have properties");
@@ -596,7 +584,6 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
             }
 
             ctx.eType = fetchType(ctx.e1.eType, ctx.e2.eType);
-            // System.out.println("Type: " + ctx.eType.name());
 
             if (ctx.eType == null) {
                ErrorHandling.printError(ctx, "Error: invalid type in arithmetic operation!");

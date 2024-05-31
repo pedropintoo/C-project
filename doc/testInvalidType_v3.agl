@@ -1,9 +1,0 @@
-# Apenas os ObjectType são permitidos com o uso de with
-Ellipse at (20,35) with {
-        fill = "black";
-        length = (5,5);
-    }
-
-a : Pacman at (100,100) with {
-    length = (50,50);
-}

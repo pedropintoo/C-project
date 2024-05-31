@@ -1,3 +1,5 @@
+# Neste exemplo, deve dar erro pois não existe o tipo Viewe
+
 view : Viewe with {
     Ox = -450;
     Oy = 0;
