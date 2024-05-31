@@ -5,6 +5,14 @@ import java.util.Map;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 
+import .antlr.AGLParser;
+
+import .antlr.AGLParser;
+
+import .antlr.AGLParser;
+
+import .antlr.AGLParser;
+
 
 @SuppressWarnings("CheckReturnValue")
 public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
@@ -786,8 +794,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
    @Override
    public Boolean visitCommandRefresh(AGLParser.CommandRefreshContext ctx) {
-      // 'refresh' ID ('after' expression suffix=('ms'|'s'))? ';' and Expression
-      // returns [Type eType, String varName]
+      // 'refresh' ID (',' ID)* ('after' expression suffix=('ms'|'s'))? ';' and Expression returns [Type eType, String varName]
       Boolean res = true;
       String id = ctx.ID().getText();
 
@@ -819,6 +826,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
    @Override
    public Boolean visitCommandPrint(AGLParser.CommandPrintContext ctx) {
+      // command: 'print' expression ';' and expression returns [Type eType, String varName]
       Boolean res = true;
       res = visit(ctx.expression());
 
@@ -831,7 +839,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
    @Override
    public Boolean visitCommandClose(AGLParser.CommandCloseContext ctx) {
-      // 'close' ID ';' #CommandClose
+      // command: 'close' ID (',' ID)* ';'
       Boolean res = true;
       String id = ctx.ID().getText();
 
@@ -845,7 +853,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
    @Override
    public Boolean visitCommandMove(AGLParser.CommandMoveContext ctx) {
-      // 'move' identifier type=('by'|'to') expression ';' #CommandMove
+      // command: 'move' identifier (',' identifier)* type=('by'|'to') expression ';'
       Boolean res = true;
       String id = ctx.identifier().getText();
 
