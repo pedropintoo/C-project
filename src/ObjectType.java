@@ -15,9 +15,21 @@ public class ObjectType extends Type {
                 break;
             case "PolyLine":
                 addAttribute("PolyLine", "state", new StringType());
-                addAttribute("PolyLine", "state", new PointType());
-                addAttribute("PolyLine", "state", new PointType());  // in need to especify that I can put a list of points
-                addAttribute("PolyLine", "state", new StringType());
+                addAttribute("PolyLine", "origin", new PointType());
+                addAttribute("PolyLine", "length", new PointType());  // in need to especify that I can put a list of points
+                addAttribute("PolyLine", "fill", new StringType());
+            case "Spline":
+                addAttribute("Spline", "state", new StringType());
+                addAttribute("Spline", "origin", new PointType());
+                addAttribute("Spline", "length", new PointType());  // in need to especify that I can put a list of points
+                addAttribute("Spline", "fill", new StringType());
+            case "Polygon":
+                addAttribute("Polygon", "root", null);  // need to define a RootType??
+                addAttribute("Polygon", "state", new StringType());
+                addAttribute("Polygon", "origin", new PointType());
+                addAttribute("Polygon", "points", new PointType());  // in need to especify that I can put a list of points
+                addAttribute("Polygon", "fill", new StringType());
+                addAttribute("Polygon", "outline", new StringType());
             default:
                 ErrorHandling.printError("Error: Invalid type");
                 break;
