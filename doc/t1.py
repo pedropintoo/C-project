@@ -250,10 +250,10 @@ if __name__ == "__main__":
     v19 = (v20 , v21)
 
     if model is not None:
-        v22 = PolyLine()
+        v22 = Blob()
         model.add_object(v22) # add object to model
     else:
-        v22 = PolyLine(root = root)
+        v22 = Blob(root = root)
     v22.origin = v19
 
     temp = get_nested_attribute(action, '0')
@@ -276,9 +276,9 @@ if __name__ == "__main__":
 
     v24 = (v25 , v26)
 
-    temp = get_nested_attribute(action, '10')
+    temp = get_nested_attribute(action, '100')
     if temp is None:
-        temp = 10
+        temp = 100
     if action is not None and hasattr(action, "v28".split('.')[0]):
         action.v28 = temp
     else:
@@ -295,18 +295,18 @@ if __name__ == "__main__":
 
     v27 = (v28 , v29)
 
-    temp = get_nested_attribute(action, '10')
+    temp = get_nested_attribute(action, '100')
     if temp is None:
-        temp = 10
+        temp = 100
     if action is not None and hasattr(action, "v31".split('.')[0]):
         action.v31 = temp
     else:
         v31 = temp 
 
 
-    temp = get_nested_attribute(action, '10')
+    temp = get_nested_attribute(action, '100')
     if temp is None:
-        temp = 10
+        temp = 100
     if action is not None and hasattr(action, "v32".split('.')[0]):
         action.v32 = temp
     else:
@@ -323,29 +323,19 @@ if __name__ == "__main__":
         v34 = temp 
 
 
-    temp = get_nested_attribute(action, '10')
+    temp = get_nested_attribute(action, '100')
     if temp is None:
-        temp = 10
+        temp = 100
     if action is not None and hasattr(action, "v35".split('.')[0]):
         action.v35 = temp
     else:
         v35 = temp 
 
     v33 = (v34 , v35)
-    v23 = [v24,v27,v30,v33]
 
-    temp = get_nested_attribute(action, 'v23')
+    temp = get_nested_attribute(action, '20')
     if temp is None:
-        temp = v23
-    if action is not None and hasattr(action, "v36".split('.')[0]):
-        action.v36 = temp
-    else:
-        v36 = temp 
-
-
-    temp = get_nested_attribute(action, 'v36')
-    if temp is None:
-        temp = v36
+        temp = 20
     if action is not None and hasattr(action, "v37".split('.')[0]):
         action.v37 = temp
     else:
@@ -353,18 +343,20 @@ if __name__ == "__main__":
 
             v35 = (v36 , v37); v35 = tuple(v35) if isinstance(v35, np.ndarray) else v35
 
-    temp = get_nested_attribute(action, '"black"')
+    temp = get_nested_attribute(action, '75')
     if temp is None:
-        temp = "black"
+        temp = 75
     if action is not None and hasattr(action, "v38".split('.')[0]):
         action.v38 = temp
     else:
         v38 = temp 
 
+    v36 = (v37 , v38)
+    v23 = [v24,v27,v30,v33,v36]
 
-    temp = get_nested_attribute(action, 'v38')
+    temp = get_nested_attribute(action, 'v23')
     if temp is None:
-        temp = v38
+        temp = v23
     if action is not None and hasattr(action, "v39".split('.')[0]):
         action.v39 = temp
     else:
@@ -380,9 +372,9 @@ if __name__ == "__main__":
         v40 = temp 
 
 
-    temp = get_nested_attribute(action, '2')
+    temp = get_nested_attribute(action, '"black"')
     if temp is None:
-        temp = 2
+        temp = "black"
     if action is not None and hasattr(action, "v41".split('.')[0]):
         action.v41 = temp
     else:
@@ -407,14 +399,41 @@ if __name__ == "__main__":
         v43 = temp 
 
 
-    if action is not None:
-        action.v22.points = v37
-        action.v22.color = v40
-        action.v22.width = v43
+    temp = get_nested_attribute(action, '2')
+    if temp is None:
+        temp = 2
+    if action is not None and hasattr(action, "v44".split('.')[0]):
+        action.v44 = temp
     else:
-        v22.points = v37
-        v22.color = v40
-        v22.width = v43
+        v44 = temp 
+
+
+    temp = get_nested_attribute(action, 'v44')
+    if temp is None:
+        temp = v44
+    if action is not None and hasattr(action, "v45".split('.')[0]):
+        action.v45 = temp
+    else:
+        v45 = temp 
+
+
+    temp = get_nested_attribute(action, 'v45')
+    if temp is None:
+        temp = v45
+    if action is not None and hasattr(action, "v46".split('.')[0]):
+        action.v46 = temp
+    else:
+        v46 = temp 
+
+
+    if action is not None:
+        action.v22.points = v40
+        action.v22.color = v43
+        action.v22.width = v46
+    else:
+        v22.points = v40
+        v22.color = v43
+        v22.width = v46
 
     temp = get_nested_attribute(action, 'v22')
     if temp is None:
@@ -434,32 +453,32 @@ if __name__ == "__main__":
     temp = get_nested_attribute(action, '1')
     if temp is None:
         temp = 1
-    if action is not None and hasattr(action, "v44".split('.')[0]):
-        action.v44 = temp
+    if action is not None and hasattr(action, "v47".split('.')[0]):
+        action.v47 = temp
     else:
-        v44 = temp 
+        v47 = temp 
 
 
     temp = get_nested_attribute(action, '10')
     if temp is None:
         temp = 10
-    if action is not None and hasattr(action, "v45".split('.')[0]):
-        action.v45 = temp
+    if action is not None and hasattr(action, "v48".split('.')[0]):
+        action.v48 = temp
     else:
-        v45 = temp 
+        v48 = temp 
 
-    for i in range(v44, v45, 1):
+    for i in range(v47, v48, 1):
          
 
         temp = get_nested_attribute(action, '25')
         if temp is None:
             temp = 25
-        if action is not None and hasattr(action, "v46".split('.')[0]):
-            action.v46 = temp
+        if action is not None and hasattr(action, "v49".split('.')[0]):
+            action.v49 = temp
         else:
-            v46 = temp 
+            v49 = temp 
 
-        while (time.time() - last_refresh <= v46/1000):
+        while (time.time() - last_refresh <= v49/1000):
             time.sleep(REFRESH_RATE)   
 
         last_refresh = time.time()
@@ -469,36 +488,37 @@ if __name__ == "__main__":
         temp = get_nested_attribute(action, '20')
         if temp is None:
             temp = 20
-        if action is not None and hasattr(action, "v48".split('.')[0]):
-            action.v48 = temp
+        if action is not None and hasattr(action, "v51".split('.')[0]):
+            action.v51 = temp
         else:
-            v48 = temp 
+            v51 = temp 
 
 
         temp = get_nested_attribute(action, '100')
         if temp is None:
             temp = 100
-        if action is not None and hasattr(action, "v49".split('.')[0]):
-            action.v49 = temp
+        if action is not None and hasattr(action, "v52".split('.')[0]):
+            action.v52 = temp
         else:
-            v49 = temp 
+            v52 = temp 
 
-        v47 = (v48 , v49)
+        v53 = - v52
+        v50 = (v51 , v53)
         if action is not None:
-            action.poly.move_absolute(v47)
+            action.poly.move_relative(v50)
         else:
-            poly.move_absolute(v47)
+            poly.move_relative(v50)
          
 
         temp = get_nested_attribute(action, '25')
         if temp is None:
             temp = 25
-        if action is not None and hasattr(action, "v50".split('.')[0]):
-            action.v50 = temp
+        if action is not None and hasattr(action, "v54".split('.')[0]):
+            action.v54 = temp
         else:
-            v50 = temp 
+            v54 = temp 
 
-        while (time.time() - last_refresh <= v50/1000):
+        while (time.time() - last_refresh <= v54/1000):
             time.sleep(REFRESH_RATE)   
 
         last_refresh = time.time()
@@ -508,22 +528,22 @@ if __name__ == "__main__":
         temp = get_nested_attribute(action, '0')
         if temp is None:
             temp = 0
-        if action is not None and hasattr(action, "v52".split('.')[0]):
-            action.v52 = temp
+        if action is not None and hasattr(action, "v56".split('.')[0]):
+            action.v56 = temp
         else:
-            v52 = temp 
+            v56 = temp 
 
 
         temp = get_nested_attribute(action, '0')
         if temp is None:
             temp = 0
-        if action is not None and hasattr(action, "v53".split('.')[0]):
-            action.v53 = temp
+        if action is not None and hasattr(action, "v57".split('.')[0]):
+            action.v57 = temp
         else:
-            v53 = temp 
+            v57 = temp 
 
-        v51 = (v52 , v53)
+        v55 = (v56 , v57)
         if action is not None:
-            action.poly.move_absolute(v51)
+            action.poly.move_absolute(v55)
         else:
-            poly.move_absolute(v51)
+            poly.move_absolute(v55)

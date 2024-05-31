@@ -218,7 +218,6 @@ class PolyLine(Object):
         self.object = self.view.canvas.create_line(self.view.coord(self.origin), *[self.view.coord(p) for p in self.points], fill=self.fill, state=self.state)
         self.view.objectsDrawn.append(self.object)
 
-    # TODO: override move_relative and move_absolute
     def move_relative(self, vector):
         super().move_relative(vector)  # move the origin point
         
@@ -257,7 +256,17 @@ class Spline(Object):
         self.object = self.view.canvas.create_line(self.view.coord(self.origin), *[self.view.coord(p) for p in self.points], fill=self.fill, state=self.state, smooth=True)
         self.view.objectsDrawn.append(self.object)
 
-    # TODO: override move_relative and move_absolute
+    def move_relative(self, vector):
+        super().move_relative(vector)
+        for i in range(len(self.points)):
+            self.points[i] = (self.points[i][0] + vector[0], self.points[i][1] + vector[1])
+    
+    def move_absolute(self, point):
+        temp_origin = self.origin 
+        super().move_absolute(point)  
+        move_vector = (self.origin[0] - temp_origin[0], self.origin[1] - temp_origin[1]) 
+        for i in range(len(self.points)):
+            self.points[i] = (self.points[i][0] + move_vector[0], self.points[i][1] + move_vector[1])
 
 class Polygon(Object):
     """
@@ -283,7 +292,17 @@ class Polygon(Object):
         self.object = self.view.canvas.create_polygon(self.view.coord(self.origin), *[self.view.coord(p) for p in self.points], fill=self.fill, outline=self.outline, state=self.state)
         self.view.objectsDrawn.append(self.object)
 
-    # TODO: override move_relative and move_absolute
+    def move_relative(self, vector):
+        super().move_relative(vector)
+        for i in range(len(self.points)):
+            self.points[i] = (self.points[i][0] + vector[0], self.points[i][1] + vector[1])
+    
+    def move_absolute(self, point):
+        temp_origin = self.origin 
+        super().move_absolute(point)  
+        move_vector = (self.origin[0] - temp_origin[0], self.origin[1] - temp_origin[1]) 
+        for i in range(len(self.points)):
+            self.points[i] = (self.points[i][0] + move_vector[0], self.points[i][1] + move_vector[1])
 
 class Blob(Object):
     """
@@ -309,7 +328,17 @@ class Blob(Object):
         self.object = self.view.canvas.create_polygon(self.view.coord(self.origin), *[self.view.coord(p) for p in self.points], fill=self.fill, outline=self.outline, state=self.state, smooth=True)
         self.view.objectsDrawn.append(self.object)
 
-    # TODO: override move_relative and move_absolute
+    def move_relative(self, vector):
+        super().move_relative(vector)
+        for i in range(len(self.points)):
+            self.points[i] = (self.points[i][0] + vector[0], self.points[i][1] + vector[1])
+    
+    def move_absolute(self, point):
+        temp_origin = self.origin 
+        super().move_absolute(point)  
+        move_vector = (self.origin[0] - temp_origin[0], self.origin[1] - temp_origin[1]) 
+        for i in range(len(self.points)):
+            self.points[i] = (self.points[i][0] + move_vector[0], self.points[i][1] + move_vector[1])
 
 class Rectangle(Object):
 

@@ -7,8 +7,8 @@ view : View with {
     background = "alice blue";
 }
 
-poly : PolyLine at (0,0) with {
-    points = [(0, 0), (10, 0), (10, 10), (0, 10)];
+poly : Blob at (0,0) with {
+    points = [(0, 0), (100, 0), (100, 100), (0, 100), (20, 75)];
     color = "black";
     width = 2;
 }
@@ -17,7 +17,7 @@ refresh view;
 
 for i in 1..10 do {
     refresh view after 25 ms;
-    move poly to (20,100); 
+    move poly by (20,100); 
     refresh view after 25 ms;
     move poly to (0, 0);
 }
