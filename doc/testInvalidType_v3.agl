@@ -1,8 +1,7 @@
-# TODO
+# Apenas os ObjectType são permitidos com o uso de with
 Integer with {
     value = 10;
 }
-
 
 a : Pacman at (100,100) with {
     length = (50,50);
