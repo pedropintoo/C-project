@@ -1,0 +1,20 @@
+a : Number = 2;
+type_ : String = "teste";
+name : String = "jorguinho";
+
+line: Line with {
+    length = (50,50);
+    fill = "red";
+}
+
+if (a >= 3) or (type_ == "teste") and (name == "jorguinho") do 
+{
+    for j in 1..10 do 
+        print "pedro diz que funciona";  
+    print "funciona mais que uma :)";
+    print line.fill;  
+}          
+else do
+    print "nao imprime :(";
+    print "imprime :)";  
+

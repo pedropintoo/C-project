@@ -1,0 +1,24 @@
+view : View with {
+    Ox = 0;
+    Oy = 0;
+    width = 401;
+    height = 401;
+    title = "Illustrating a moving pacman";
+    background = "alice blue";
+}
+
+poly : PolyLine at (0,0) with {
+    points = [(0, 0), (10, 0), (10, 10), (0, 10)];
+    color = "black";
+    width = 2;
+}
+
+refresh view;
+
+for i in 1..10 do {
+    refresh view after 25 ms;
+    move poly to (20,100); 
+    refresh view after 25 ms;
+    move poly to (0, 0);
+}
+

@@ -198,7 +198,7 @@ class Line(Object):
 class PolyLine(Object):
     """
     PolyLine is a line that needs to pass through a list of points.
-    It has an origin, and, if no points are given, it will have a default length of (1,1).
+    It has an origin, and, if no points are given, it will have a default point of (1,1).
     """
 
     def __init__(self, root: Root = None, view: View = None, state="normal", origin=(0,0), points=[(1,1)], fill="black"):
@@ -219,6 +219,20 @@ class PolyLine(Object):
         self.view.objectsDrawn.append(self.object)
 
     # TODO: override move_relative and move_absolute
+    def move_relative(self, vector):
+        super().move_relative(vector)  # move the origin point
+        
+        # move the points
+        for i in range(len(self.points)):
+            self.points[i] = (self.points[i][0] + vector[0], self.points[i][1] + vector[1])
+
+    def move_absolute(self, point):
+        temp_origin = self.origin  # save the origin point
+        super().move_absolute(point)  # move the origin point
+        move_vector = (self.origin[0] - temp_origin[0], self.origin[1] - temp_origin[1])  # take the resultant vector
+        for i in range(len(self.points)):
+            self.points[i] = (self.points[i][0] + move_vector[0], self.points[i][1] + move_vector[1])
+        
 
 class Spline(Object):
     """
