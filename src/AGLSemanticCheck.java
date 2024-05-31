@@ -154,7 +154,6 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       Boolean res = true;
       String ID = ctx.ID().getText();
 
-
       if (AGLParser.symbolTable.containsKey(ID)) {
          ErrorHandling.printError("Variable \"" + ID + "\" already declared!");
          return false;
@@ -204,7 +203,8 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
       Type typeObject = ctx.typeID().res;
 
-      // check if we have an expression and if we have typeObject must be a ObjectType()
+      // check if we have an expression and if we have typeObject must be a
+      // ObjectType()
       if (ctx.expression() != null) {
          System.out.println("Check expression");
          Boolean res = visit(ctx.expression());
@@ -223,7 +223,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
          // typeObject must be a instanceof ObjectType
 
-         if (!(typeObject instanceof ObjectType) ) {
+         if (!(typeObject instanceof ObjectType)) {
             ErrorHandling.printError("Error: invalid type in simple statement (must be an object type!)");
             return false;
          }
@@ -315,7 +315,8 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    }
 
    private boolean isValidType(String typeID) {
-      // typeID: 'Integer' | 'String' | 'Point' | 'Number' | 'Vector' | 'Time' | ... | 'Array' | ID
+      // typeID: 'Integer' | 'String' | 'Point' | 'Number' | 'Vector' | 'Time' | ... |
+      // 'Array' | ID
 
       // Check if type is valid
       System.out.println("Check type: " + typeID);
@@ -343,8 +344,9 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
          case "Script":
          case "Enum":
          case "Array":
-      return true;
-      };
+            return true;
+      }
+      ;
 
       // typeID can be a ID
       if (!AGLParser.symbolTable.containsKey(typeID)) {
@@ -363,7 +365,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
          ErrorHandling.printError("Error: invalid type " + typeID);
          return false;
       }
-      
+
       System.out.println("Type " + typeID + " is valid");
 
       return true;
