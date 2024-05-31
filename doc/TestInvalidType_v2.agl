@@ -33,7 +33,16 @@ Fire :: Model {
 
 # Pacman não está instancionado, ou seja, não hà operações. Pacman é um ModelType("Pacman")
 # Create a pacman - a is a ObjectType("Pacman") - tenho que verificar se existe um Pacman do tipo ModelType("Pacman")
-a : Pacman at (100,100);
+
+Integer with {
+    value = 10;
+}
+
+
+a : Pacman at (100,100) with {
+    length = (50,50);
+}
+
 c : Line at (200,300);
 
 fire : Fire at (100,100);
