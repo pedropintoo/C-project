@@ -102,7 +102,10 @@ public class ObjectType_v2 extends Type {
                 this.addFill();
                 break;
             case "Model":
-                // TODO: To be implemented
+                System.out.println("Arrived in model");
+                this.addState();
+                this.addOrigin();
+                break;
             default:
                 ErrorHandling.printError("Error: Invalid type");
                 break;

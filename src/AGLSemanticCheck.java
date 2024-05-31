@@ -768,36 +768,36 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       return true;
    }
 
-   @Override
-   public Boolean visitExprDeepCopy(AGLParser.ExprDeepCopyContext ctx) {
-      // expression: 'deepcopy' identifier 'to' expression and expression returns [Type eType, String varName]
-      // identifier: ID | ID('.' ID)+ | ID '[' expression ']';
-      Boolean res = true;
-      String id = ctx.identifier().getText();
+   // @Override
+   // public Boolean visitExprDeepCopy(AGLParser.ExprDeepCopyContext ctx) {
+   //    // expression: 'deepcopy' identifier 'to' expression and expression returns [Type eType, String varName]
+   //    // identifier: ID | ID('.' ID)+ | ID '[' expression ']';
+   //    Boolean res = true;
+   //    String id = ctx.identifier().getText();
 
-      // the values of the array must be the same type
-      Type type = null;
-      for (AGLParser.ExpressionContext expr : ctx.expression()) {
-         res = visit(expr);
-         if (!res) {
-            ErrorHandling.printError("Error: invalid expression in array expression");
-            return false;
-         }
-         if (type == null) {
-            type = expr.eType;
-         }
-         if (!expr.eType.conformsTo(type)) {
-            ErrorHandling.printError("Error: invalid expression type in array expression");
-            return false;
-         }
-      }
+   //    // the values of the array must be the same type
+   //    Type type = null;
+   //    for (AGLParser.ExpressionContext expr : ctx.expression()) {
+   //       res = visit(expr);
+   //       if (!res) {
+   //          ErrorHandling.printError("Error: invalid expression in array expression");
+   //          return false;
+   //       }
+   //       if (type == null) {
+   //          type = expr.eType;
+   //       }
+   //       if (!expr.eType.conformsTo(type)) {
+   //          ErrorHandling.printError("Error: invalid expression type in array expression");
+   //          return false;
+   //       }
+   //    }
 
-      if (res) {
-         ctx.eType = new ArrayType();
-      }
+   //    if (res) {
+   //       ctx.eType = new ArrayType();
+   //    }
 
-      return res;
-   }
+   //    return res;
+   // }
 
    // --------- End Visit Expression ---------
 
