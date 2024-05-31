@@ -57,3 +57,7 @@ to avoid conflicts with python vars.
 
 # Problemas:
  - precisamos de refresh para a view funcionar! (inicialização da view está mal feita)
+
+
+# Dependencias:
+ - numpy 

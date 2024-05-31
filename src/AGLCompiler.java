@@ -22,12 +22,19 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
 
     private ST binaryExpression(String e1Stats, String e2Stats, String var, String e1Var, String op, String e2Var) {
         ST res = templates.getInstanceOf("binaryExpression");
+        if (!op.equals(",")) {
+            e1Var = "np.array("+e1Var+")"; e2Var = "np.array("+e2Var+")";
+            if (op.equals("*")) {
+                e1Var = "np.dot(" + e1Var;
+                e2Var = e2Var + ")";
+            }
+        }
         res.add("stat", e1Stats);
         res.add("stat", e2Stats);
         res.add("var", var);
-        res.add("e1", (op=="," ? "(" : "")+e1Var);
-        res.add("op", op);
-        res.add("e2", e2Var+(op=="," ? ")" : ""));
+        res.add("e1", (op.equals(",") ? "(" : "")+e1Var);
+        res.add("op", !op.equals("*")? op : ",");
+        res.add("e2", e2Var+(op.equals(",") ? ")" : ""));
         return res;
     }
 
@@ -220,10 +227,6 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
 //* blockStatement
     @Override public ST visitBlockStatement(AGLParser.BlockStatementContext ctx) {
         ST res = null;
-        // todo: check if it is a model or a view
-        if (ctx.typeID().ID() != null) {
-
-        }
 
         res = templates.getInstanceOf("object");
         res.add("type", ctx.typeID().getText());
@@ -325,7 +328,7 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
     }
 
     @Override public ST visitExprAddSubMultDiv(AGLParser.ExprAddSubMultDivContext ctx) {
-        ctx.varName = newVarName(); // TODO: operations with points and vectors
+        ctx.varName = newVarName(); 
         return binaryExpression(visit(ctx.e1).render(), visit(ctx.e2).render(), ctx.varName, ctx.e1.varName, ctx.op.getText(), ctx.e2.varName);
     }
 
@@ -341,7 +344,7 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
     }
 
     @Override public ST visitExprPoint(AGLParser.ExprPointContext ctx) {
-        ctx.varName = newVarName(); // TODO: point type! add is different from scalar
+        ctx.varName = newVarName(); 
         return binaryExpression(visit(ctx.x).render(), visit(ctx.y).render(), ctx.varName, ctx.x.varName, ",", ctx.y.varName);
     }
 
@@ -363,7 +366,7 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
         String x = length + "*math.cos(math.radians(" + degree + "))";
         String y = length + "*math.sin(math.radians(" + degree + "))";
 
-        ctx.varName = newVarName(); // TODO: vector type!
+        ctx.varName = newVarName();
         return binaryExpression(assign.render(), assign2.render(), ctx.varName, x, ",", y);
     }
 
@@ -534,16 +537,7 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
         while (it.hasNext()) {
             current = it.next();
 
-            id = current.ID(0).getText();
-
-            if (current.ID(1) != null) { 
-                for (int i = 1; i < current.ID().size(); i++) {
-                    id += "." + current.ID(i).getText();
-                }
-            } else if (current.expression() != null) {
-                res.add("stat", visit(current.expression()).render()); // render the return value!
-                id += "[" + current.expression().varName + "]";
-            }
+            id = getConcreteId(current, res);
     
             res.add("var", id);
             res.add("stat", visit(ctx.expression()).render()); // render the return value!
@@ -556,6 +550,32 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
             if (it.hasNext()) {
                 String prev_close = res.render();
                 res = templates.getInstanceOf("move");
+                res.add("stat", prev_close);
+            }
+
+        }        
+
+        return res;
+    }
+
+    @Override public ST visitCommandRotate(AGLParser.CommandRotateContext ctx) {
+        ST res = templates.getInstanceOf("rotate");
+
+        Iterator<AGLParser.IdentifierContext> it = ctx.identifier().iterator();
+        AGLParser.IdentifierContext current;
+        String id; 
+        while (it.hasNext()) {
+            current = it.next();
+
+            id = getConcreteId(current, res);
+    
+            res.add("var", id);
+            res.add("stat", visit(ctx.expression()).render()); // render the return value!
+            res.add("degree", ctx.expression().varName);
+
+            if (it.hasNext()) {
+                String prev_close = res.render();
+                res = templates.getInstanceOf("rotate");
                 res.add("stat", prev_close);
             }
 

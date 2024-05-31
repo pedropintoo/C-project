@@ -69,6 +69,7 @@ AFTER   : 'after';
 MS      : 'ms';
 S       : 's';
 MOVE    : 'move';
+ROTATE  : 'rotate';
 BY      : 'by';
 TO      : 'to';
 ACTION  : 'action';
