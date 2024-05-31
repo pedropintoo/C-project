@@ -191,10 +191,10 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
    @Override
    public Boolean visitSimpleStatement(AGLParser.SimpleStatementContext ctx) {
-      // simpleStatement: typeID ('at' expression | assignment)? ';' | typeID
-      // in_assignment
+      // simpleStatement: typeID ('at' expression | assignment)? ';' | typeID in_assignment
       // assignment = expression and expression returns [Type eType, String varName]
       // in_assignment: 'in' '{' ID (',' ID)* '}'
+      
       String typeID = ctx.typeID().getText();
 
       if (!isValidType(typeID)) { // check if type is valid
@@ -214,7 +214,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
          type = ctx.typeID().res;
       }
 
-      // check if we have an expression and if we have, type must be a ObjectType()
+      // check if we have an expression 
       if (ctx.expression() != null) {
          Boolean res = visit(ctx.expression());
          if (!res) {
@@ -228,12 +228,12 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
             return false;
          }
 
-         if (s != null) {
+         if (s != null) { // ModelType
             if (!(type instanceof ModelType)) {
                ErrorHandling.printError("Error: invalid type in simple statement (must be an model type!)");
                return false;
             }
-         } else {
+         } else { // ObjectType
             if (!(type instanceof ObjectType)) {
                ErrorHandling.printError("Error: invalid type in simple statement (must be an object type!)");
                return false;
@@ -241,12 +241,9 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
          }
       }
 
-      // check if we have an assignment or a in_assignment and if it conforms to the
-      // type
+      // check if we have an assignment or a in_assignment and if it conforms to the type
       if (ctx.assignment() != null) {
          Boolean res = visit(ctx.assignment());
-         // System.out.println("Check assignment");
-         // System.out.println("Type: " + ctx.assignment().eType.name());
          if (!res) {
             ErrorHandling.printError("Error: invalid simple statement");
             return false;
@@ -276,15 +273,15 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
    @Override
    public Boolean visitBlockStatement(AGLParser.BlockStatementContext ctx) {
-      // blockStatement: typeID ('at' expression)? 'with' '{' propertiesAssignment '}'
+      // blockStatement: typeID ('at' expression)? 'with' propertiesAssignment
       Boolean res = true;
 
       String ID = ctx.typeID().getText();
 
-      // if (!isValidType(ID)) { // check if type is valid
-      // ErrorHandling.printError("Error: invalid type in block statement");
-      // return false;
-      // }
+      if (!isValidType(ID)) { // check if type is valid
+      ErrorHandling.printError("Error: invalid type in block statement");
+      return false;
+      }
 
       if (ctx.expression() != null) {
          res = visit(ctx.expression());
@@ -768,33 +765,42 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       return true;
    }
 
-   // @Override
-   // public Boolean visitExprDeepCopy(AGLParser.ExprDeepCopyContext ctx) {
-   //    // expression: 'deepcopy' identifier 'to' expression and expression returns [Type eType, String varName]
-   //    // identifier: ID | ID('.' ID)+ | ID '[' expression ']';
-   //    Boolean res = true;
-   //    String id = ctx.identifier().getText();
+   @Override
+   public Boolean visitExprDeepCopy(AGLParser.ExprDeepCopyContext ctx) {
+      // expression: 'deepcopy' identifier 'to' expression and expression returns [Type eType, String varName]
+      // identifier: ID | ID('.' ID)+ | ID '[' expression ']';
 
-   //    // the values of the array must be the same type
-   //    Type type = null;
-   //    for (AGLParser.ExpressionContext expr : ctx.expression()) {
-   //       res = visit(expr);
-   //       if (!res) {
-   //          ErrorHandling.printError("Error: invalid expression in array expression");
-   //          return false;
-   //       }
-   //       if (type == null) {
-   //          type = expr.eType;
-   //       }
-   //       if (!expr.eType.conformsTo(type)) {
-   //          ErrorHandling.printError("Error: invalid expression type in array expression");
-   //          return false;
-   //       }
-   //    }
+      Boolean res = true;
+      String id = ctx.identifier().getText();
 
-   //    if (res) {
-   //       ctx.eType = new ArrayType();
-   //    }
+      if (ctx.identifier().ID(1) == null) {
+         if (!AGLParser.symbolTable.containsKey(id)) {
+            ErrorHandling.printError(ctx, "Variable \"" + id + "\" does not exists!");
+            res = false;
+         } else {
+            Symbol sym = AGLParser.symbolTable.get(id);
+            if (!sym.valueDefined()) {
+               ErrorHandling.printError(ctx, "Variable \"" + id + "\" not defined!");
+               res = false;
+            } else {
+               ctx.eType = sym.type();
+            }
+         }
+      } else {
+         ErrorHandling.printError("TO BE IMPLEMENTED ID ('.' ID)+ - attributes"); // TODO
+      }
+
+      res = visit(ctx.expression());
+      
+      if (!res) {
+         ErrorHandling.printError("Error: invalid expression in deepcopy command");
+         return false;
+      }
+      // check if expression is a point
+      if (!ctx.expression().eType.conformsTo(pointType)) {
+         ErrorHandling.printError("Error: invalid expression type in deepcopy command (must be point!)");
+         return false;
+      }
 
    //    return res;
    // }
