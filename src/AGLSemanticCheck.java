@@ -308,36 +308,36 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       return res;
    }
 
-   // private boolean isValidType(String typeID) {
-   // switch (typeID) {
-   // case "Integer":
-   // case "String":
-   // case "Point":
-   // case "Number":
-   // case "Vector":
-   // case "Time":
-   // case "Boolean":
-   // case "View":
-   // case "Line":
-   // case "Rectangle":
-   // case "Ellipse":
-   // case "Arc":
-   // case "ArcChord":
-   // case "PieSlice":
-   // case "Text":
-   // case "Dot":
-   // case "PolyLine":
-   // case "Spline":
-   // case "Polygon":
-   // case "Blob":
-   // case "Script":
-   // case "Enum":
-   // case "Array":
-   // return true;
-   // default:
-   // return false;
-   // }
-   // }
+   private boolean isValidType(String typeID) {
+   switch (typeID) {
+      case "Integer":
+      case "String":
+      case "Point":
+      case "Number":
+      case "Vector":
+      case "Time":
+      case "Boolean":
+      case "View":
+      case "Line":
+      case "Rectangle":
+      case "Ellipse":
+      case "Arc":
+      case "ArcChord":
+      case "PieSlice":
+      case "Text":
+      case "Dot":
+      case "PolyLine":
+      case "Spline":
+      case "Polygon":
+      case "Blob":
+      case "Script":
+      case "Enum":
+      case "Array":
+   return true;
+   default:
+   return false;
+   }
+   }
 
    @Override
    public Boolean visitLongAssignment(AGLParser.LongAssignmentContext ctx) {

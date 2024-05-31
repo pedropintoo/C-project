@@ -22,3 +22,20 @@ Pacman :: Model {
     }
 }    
 
+a : Pacman at (100,100);
+
+a.face.length = (100,100);
+
+a.face.fill = "yellow";
+
+a.face.fill2 = "yellow";
+
+a.face.fill = 2;
+
+
+face : PieSlice at (0,0) with {
+    length = "asdadasdasdas";
+    fill = "pink";
+    start = 30;
+    extent = 300;
+}
