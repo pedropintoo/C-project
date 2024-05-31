@@ -166,7 +166,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
          } else if (ctx.simpleStatement().in_assignment() != null) {
             return true; // enum is defined in children visit!
          }
-         
+
          Symbol sym = new VariableSymbol(ID, ctx.simpleStatement().typeID().res);
          sym.setValueDefined();
          AGLParser.symbolTable.put(ID, sym);
@@ -187,7 +187,8 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
    @Override
    public Boolean visitSimpleStatement(AGLParser.SimpleStatementContext ctx) {
-      // simpleStatement: typeID ('at' expression | assignment)? ';' | typeID in_assignment
+      // simpleStatement: typeID ('at' expression | assignment)? ';' | typeID
+      // in_assignment
       // assignment = expression and expression returns [Type eType, String varName]
       // in_assignment: 'in' '{' ID (',' ID)* '}'
       String typeID = ctx.typeID().getText();
@@ -201,15 +202,14 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       Symbol s = AGLParser.symbolTable.get(typeID);
       Type type;
 
-      if(s != null) {
+      if (s != null) {
          // ModelType
          type = new ModelType(typeID);
 
       } else {
          type = ctx.typeID().res;
-      }   
+      }
 
-      
       // check if we have an expression and if we have, type must be a ObjectType()
       if (ctx.expression() != null) {
          Boolean res = visit(ctx.expression());
@@ -224,20 +224,21 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
             return false;
          }
 
-         if(s != null) {
-            if (!(type instanceof ModelType) ) {
+         if (s != null) {
+            if (!(type instanceof ModelType)) {
                ErrorHandling.printError("Error: invalid type in simple statement (must be an model type!)");
                return false;
             }
          } else {
-            if (!(type instanceof ObjectType) ) {
+            if (!(type instanceof ObjectType)) {
                ErrorHandling.printError("Error: invalid type in simple statement (must be an object type!)");
                return false;
             }
          }
       }
 
-      // check if we have an assignment or a in_assignment and if it conforms to the type
+      // check if we have an assignment or a in_assignment and if it conforms to the
+      // type
       if (ctx.assignment() != null) {
          Boolean res = visit(ctx.assignment());
          // System.out.println("Check assignment");
@@ -251,7 +252,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
             // If eType is number may be integer or number
             System.out.println("Type (left): " + type.name());
             System.out.println("Type (right): " + ctx.assignment().eType.name());
-            
+
             if (!(ctx.assignment().eType instanceof IntegerType && type instanceof NumberType)) {
                ErrorHandling.printError("Expression type does not conform to variable type!");
                return false;
@@ -268,7 +269,6 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
          return true;
       }
-      
 
       return true;
    }
@@ -330,7 +330,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       // 'Array' | ID
 
       // Check if type is valid
-      
+
       switch (typeID) {
          case "Integer":
          case "String":
@@ -749,6 +749,35 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       return true;
    }
 
+   @Override
+   public Boolean visitExprArray(AGLParser.ExprArrayContext ctx) {
+      // expression: '[' (expression (',' expression)*)? ']' and expression returns
+      // [Type eType, String varName]
+      // System.out.println("Check array expression");
+      Boolean res = true;
+
+      for (AGLParser.ExpressionContext expr : ctx.expression()) {
+         res = visit(expr);
+         if (!res) {
+            ErrorHandling.printError("Error: invalid expression in array expression");
+            return false;
+         }
+      }
+
+      // all expressions must be the same type
+      Type type = ctx.expression(0).eType;
+      for (AGLParser.ExpressionContext expr : ctx.expression()) {
+         if (!expr.eType.conformsTo(type)) {
+            ErrorHandling.printError("Error: all expressions in array must be the same type!");
+            return false;
+         }
+      }
+
+      ctx.eType = new ArrayType(type);
+
+      return res;
+   }
+
    // --------- End Visit Expression ---------
 
    @Override
@@ -878,8 +907,10 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       }
 
       // second expression can not be less than the first expression
-      if (Integer.parseInt(ctx.number_range().expression(0).getText()) > Integer.parseInt(ctx.number_range().expression(1).getText())) {
-         ErrorHandling.printError("Error: second expression must be greater than the first expression in for statement");
+      if (Integer.parseInt(ctx.number_range().expression(0).getText()) > Integer
+            .parseInt(ctx.number_range().expression(1).getText())) {
+         ErrorHandling
+               .printError("Error: second expression must be greater than the first expression in for statement");
          return false;
       }
 
@@ -1059,7 +1090,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
          ErrorHandling.printError("Variable \"" + ID + "\" already declared!");
          return false;
       }
-      
+
       ModelType modelType = new ModelType(ID);
       Symbol sym = new VariableSymbol(ID, modelType);
       AGLParser.symbolTable.put(ID, sym);
