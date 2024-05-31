@@ -1,0 +1,4 @@
+Line at (0,0) with {
+    length = (50,50);
+    fill = "red";
+}
