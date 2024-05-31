@@ -117,38 +117,27 @@ class Model(Object):
         super().__init__(root, view, origin, state)
         self.objects = []
 
-    def __deepcopy__(self, memo=None):
-        """Create a deep copy of the model."""
-        if memo is None:
-            memo = {} # this is required by the deepcopy protocol
-        new_model = Model(self.root, self.view, self.state, self.origin)
 
-        # copy all the attributes of the model
-        copied_objects = []
-        for k, v in self.__dict__.items():
-            if not hasattr(new_model, k):
-                copied_objects.append(v)
-                object_copy = copy.deepcopy(v)
-                old_relative = object_copy.origin
-                object_copy.move_absolute(self.origin)
-                object_copy.move_relative(old_relative)
-                setattr(new_model, k, object_copy) # deepcopy of the object
-                new_model.add_object(object_copy)
-
-        for o in self.objects:
-            if o not in copied_objects:
-                object_copy = copy.deepcopy(o)
-                new_model.add_object(object_copy)
-                old_relative = object_copy.origin
-                object_copy.move_absolute(self.origin)
-                object_copy.move_relative(old_relative)
-                
-        return new_model
         # TODO: copy object at origin;
         # Pacman.root = root
         # Pacman.view = last_view
         # Pacman.origin = v63
         # v62 = copy.deepcopy(Pacman)
+
+    def copyAttributesTo(self, new_model, draw=False):
+        new_model.objects = []
+        for k,v in self.__dict__.items():
+            print(k)
+            if isinstance(v, Root) or isinstance(v, View):
+                new_model.__dict__[k] = v
+            else:
+                new_model.__dict__[k] = copy.deepcopy(v)
+            if isinstance(v, Object) and not k.startswith("last"):
+                new_model.objects.append(new_model.__dict__[k])
+
+        if draw and self.root is not None:
+            self.root.add_object(new_model) # add the copy to the root
+
 
     def fixCoords(self):
         for o in self.objects:
@@ -170,9 +159,7 @@ class Model(Object):
 
     def move_absolute(self, point):
         for o in self.objects:
-            old_origin = o.origin
             old_relative = (o.origin[0] - self.origin[0], o.origin[1] - self.origin[1])
-            
             o.move_absolute(point) 
             o.move_relative(old_relative) 
         self.origin = point    

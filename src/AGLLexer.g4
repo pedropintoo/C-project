@@ -53,6 +53,7 @@ CLOSE   : 'close';
 MOUSE   : 'mouse';
 CLICK   : 'click';
 WAIT    : 'wait';
+DEEPCOPY: 'deepcopy';
 INPUT   : 'input';
 LOAD    : 'load';
 PLAY    : 'play';

@@ -436,6 +436,24 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
         return res;
     }
 
+    @Override public ST visitExprDeepCopy(AGLParser.ExprDeepCopyContext ctx) {
+        ST res = templates.getInstanceOf("deepcopy");
+        // 'deepcopy' identifier 'to' expression ';'
+
+        res.add("stat", visit(ctx.expression()).render());
+        res.add("origin", ctx.expression().varName);
+
+        res.add("object", getConcreteId(ctx.identifier(), res));
+
+        String id = newVarName();
+        ctx.varName = id;
+
+        res.add("var", id);
+
+        return res;
+    }
+
+
     @Override public ST visitExprScript(AGLParser.ExprScriptContext ctx) {
         return null; // TODO
     }

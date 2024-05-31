@@ -42,7 +42,7 @@ instantiation
     ;
 
 simpleStatement returns [String varName]
-    : typeID ('at' expression)? (assignment)? ';'
+    : typeID ('at' expression | assignment)? ';'
     | typeID in_assignment
     ;
 
@@ -83,6 +83,7 @@ expression returns [Type eType, String varName]
     | STRING                                                #ExprString                              
     | identifier                                            #ExprID
     | 'wait' eventTrigger                                   #ExprWait
+    | 'deepcopy' identifier 'to' expression                 #ExprDeepCopy
     | op=('input'|'load') STRING                            #ExprScript
     ;
 

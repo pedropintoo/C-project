@@ -66,9 +66,10 @@ print(<output>)>>
 if_else(stat, condition, if_instructions, else_instructions) ::= <<
 <stats(stat)>
 if <condition>:
-    <if_instructions>
+    <if_instructions><if(else_instructions)>    
 else:
     <else_instructions>
+<endif>    
 >>
 
 for(stat, var, range, instructions) ::= <<
@@ -183,6 +184,15 @@ class <modelName>(Model):
         super().create_object(view)
         model = None
 
+    def __deepcopy__(self, memo=None):
+        """Create a deep copy of the model."""
+        if memo is None:
+            memo = {} # this is required by the deepcopy protocol
+        new_model = <modelName>()
+
+        self.copyAttributesTo(new_model)
+        return new_model       
+
 #################################################################
 >>
 model(var, modelName, origin) ::= <<
@@ -228,4 +238,21 @@ properties2(field) ::= <<
 
 elements(field) ::= <<
 <if(field)><field; separator=","><endif>
+>>
+
+deepcopy(stat, var, object, origin) ::= <<
+<stats(stat)>
+
+if action is not None:
+    new_model = Pacman() ### TODO: !!!
+    action.<object>.copyAttributesTo(new_model, draw=True)
+    <var> = new_model
+    <var>.move_absolute(<origin>)
+    model.add_object(<var>) # add object to model
+else:
+    new_model = Pacman() ### TODO: !!!
+    <object>.copyAttributesTo(new_model, draw=True)
+    <var> = new_model
+    <var>.move_absolute(<origin>)
+
 >>
