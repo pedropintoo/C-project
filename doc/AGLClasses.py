@@ -1,6 +1,7 @@
 from tkinter import *
 import time
 import copy
+import math
 
 class Root:
 
@@ -194,6 +195,24 @@ class Line(Object):
         self.view = view # TODO: this id is for specific view!!! cannot be used in other views
         self.object = self.view.canvas.create_line(self.view.line(self.view.coord(self.origin), self.length), fill=self.fill, state=self.state)
         self.view.objectsDrawn.append(self.object)
+    
+    def rotate(self, angle):
+        angle_rad = math.radians(angle)
+        cos_val = math.cos(angle_rad)
+        sin_val = math.sin(angle_rad)
+
+        rel_x = self.length[0]
+        rel_y = self.length[1]
+
+        new_x = cos_val * rel_x - sin_val * rel_y  # cos(angle) * x - sin(angle) * y
+        new_y = sin_val * rel_x + cos_val * rel_y  # sin(angle) * x + cos(angle) * y
+
+        self.length = (new_x, new_y)
+
+        if self.object:
+            start_point = self.view.coord(self.origin)
+            end_point = self.view.coord((self.origin[0] + new_x, self.origin[1] + new_y))
+            self.view.canvas.coords(self.object, start_point[0], start_point[1], end_point[0], end_point[1])
 
 class PolyLine(Object):
     """
