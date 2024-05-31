@@ -857,7 +857,6 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       }
 
       Type exprType = ctx.expression().eType;
-      System.out.println("Expression type: " + exprType.name());
       if (!(exprType.conformsTo(booleanType))) {
          ErrorHandling.printError("Error: the expression in the while statement has to be a boolean");
          return false;
@@ -876,7 +875,6 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    public Boolean visitRepeatStatement(AGLParser.RepeatStatementContext ctx) {
       Boolean res = true;
       res = visit(ctx.stat());
-      System.out.println("Check repeat statement");
 
       if (!res) {
          ErrorHandling.printError("Error: invalid statement in repeat statement");
