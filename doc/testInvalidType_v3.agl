@@ -1,7 +1,8 @@
 # Apenas os ObjectType são permitidos com o uso de with
-Integer with {
-    value = 10;
-}
+Ellipse at (20,35) with {
+        fill = "black";
+        length = (5,5);
+    }
 
 a : Pacman at (100,100) with {
     length = (50,50);

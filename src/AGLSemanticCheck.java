@@ -5,13 +5,7 @@ import java.util.Map;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 
-import .antlr.AGLParser;
 
-import .antlr.AGLParser;
-
-import .antlr.AGLParser;
-
-import .antlr.AGLParser;
 
 
 @SuppressWarnings("CheckReturnValue")
@@ -306,6 +300,29 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       }
 
       // we do not need PropertyAssignment visitor!
+      System.out.println("ID: " + ID);
+      Type type = ctx.typeID().res;
+      if (type == null) {
+         ErrorHandling.printError("Error: invalid type in block statement");
+         return false;
+      }
+      System.out.println("Type: " + type.name());
+      
+   
+      // check if type is valid
+      if (type instanceof ObjectType) {
+         System.out.println("Type is ObjectType");
+      } else {
+         System.out.println("Type is not ObjectType");
+      }
+
+
+      // only object types can have properties
+      if (ctx.propertiesAssignment() != null && !(type instanceof ObjectType) ) {
+         ErrorHandling.printError("Error: only object types can have properties");
+         return false;
+      }
+
       for (AGLParser.LongAssignmentContext longAssign : ctx.propertiesAssignment().longAssignment()) {
          res = visit(longAssign.assignment());
          if (!res) {
@@ -788,7 +805,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    public Boolean visitCommandRefresh(AGLParser.CommandRefreshContext ctx) {
       // 'refresh' ID (',' ID)* ('after' expression suffix=('ms'|'s'))? ';' and Expression returns [Type eType, String varName]
       Boolean res = true;
-      String id = ctx.ID().getText();
+      String id = ctx.ID(0).getText();
 
       if (!AGLParser.symbolTable.containsKey(id)) {
          ErrorHandling.printError(ctx, "Variable \"" + id + "\" does not exists!");
@@ -833,7 +850,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    public Boolean visitCommandClose(AGLParser.CommandCloseContext ctx) {
       // command: 'close' ID (',' ID)* ';'
       Boolean res = true;
-      String id = ctx.ID().getText();
+      String id = ctx.ID(0).getText();
 
       if (!AGLParser.symbolTable.containsKey(id)) {
          ErrorHandling.printError(ctx, "Variable \"" + id + "\" does not exists!");
@@ -847,7 +864,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    public Boolean visitCommandMove(AGLParser.CommandMoveContext ctx) {
       // command: 'move' identifier (',' identifier)* type=('by'|'to') expression ';'
       Boolean res = true;
-      String id = ctx.identifier().getText();
+      String id = ctx.identifier(0).getText();
 
       if (!AGLParser.symbolTable.containsKey(id)) {
          ErrorHandling.printError(ctx, "Variable \"" + id + "\" does not exists!");
