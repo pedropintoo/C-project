@@ -278,8 +278,8 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       String ID = ctx.typeID().getText();
 
       if (!isValidType(ID)) { // check if type is valid
-      ErrorHandling.printError("Error: invalid type in block statement");
-      return false;
+         ErrorHandling.printError("Error: invalid type in block statement");
+         return false;
       }
 
       if (ctx.expression() != null) {
@@ -295,19 +295,19 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
          }
       }
 
-      // we do not need PropertyAssignment visitor!
       Type type = ctx.typeID().res;
       if (type == null) {
          ErrorHandling.printError("Error: invalid type in block statement");
          return false;
       }
    
-      // only object types can have properties
+      // only object types can have properties, should give an error if not
       if (ctx.propertiesAssignment() != null && !(type instanceof ObjectType) ) {
          ErrorHandling.printError("Error: only object types can have properties");
          return false;
       }
 
+      // we do not need PropertyAssignment visitor!
       for (AGLParser.LongAssignmentContext longAssign : ctx.propertiesAssignment().longAssignment()) {
          res = visit(longAssign.assignment());
          if (!res) {
@@ -334,56 +334,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       return res;
    }
 
-   private boolean isValidType(String typeID) {
-      // typeID: 'Integer' | 'String' | 'Point' | 'Number' | 'Vector' | 'Time' | ... |
-      // 'Array' | ID
-
-      // Check if type is valid
-
-      switch (typeID) {
-         case "Integer":
-         case "String":
-         case "Point":
-         case "Number":
-         case "Vector":
-         case "Time":
-         case "Boolean":
-         case "View":
-         case "Line":
-         case "Rectangle":
-         case "Ellipse":
-         case "Arc":
-         case "ArcChord":
-         case "PieSlice":
-         case "Text":
-         case "Dot":
-         case "PolyLine":
-         case "Spline":
-         case "Polygon":
-         case "Blob":
-         case "Script":
-         case "Enum":
-         case "Array":
-            return true;
-      }
-      ;
-
-      // typeID can be a ID
-      if (!AGLParser.symbolTable.containsKey(typeID)) {
-         ErrorHandling.printError("Error: type not exists: " + typeID);
-         return false;
-      }
-
-      // must be a ModelType
-      Symbol sym = AGLParser.symbolTable.get(typeID);
-      if (!(sym.type() instanceof ModelType)) {
-         ErrorHandling.printError("Error: invalid model type: " + typeID);
-         return false;
-      }
-
-      return true;
-   }
-
+   
    @Override
    public Boolean visitLongAssignment(AGLParser.LongAssignmentContext ctx) {
       // longAssignment : identifier assignment;
@@ -392,7 +343,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       Boolean res = true;
       String id = ctx.identifier().getText();
 
-      if (ctx.identifier().ID(1) == null) {
+      if (ctx.identifier().ID(1) == null) { // therefore it is a simple identifier (not an attribute)
          if (!AGLParser.symbolTable.containsKey(id)) {
             ErrorHandling.printError(ctx, "Variable \"" + id + "\" does not exists!");
             res = false;
@@ -401,7 +352,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
             if (resExpr) {
                Symbol sym = AGLParser.symbolTable.get(id);
                if (sym == null) {
-                  ErrorHandling.printError(ctx, "Simbol for variable " + id + " is null");
+                  ErrorHandling.printError(ctx, "Symbol for variable " + id + " is null");
                   return false;
                }
                if (ctx.assignment().eType == null) {
@@ -418,6 +369,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
                res = false;
             }
          }
+      
       } else {
          ErrorHandling.printError("TO BE IMPLEMENTED ID ('.' ID)+ - attributes"); // TODO
       }
@@ -428,7 +380,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    @Override
    public Boolean visitAssignment(AGLParser.AssignmentContext ctx) {
       // assignment '=' expression
-      // System.out.println("Check assignment");
+
       Boolean res = visit(ctx.expression());
 
       if (res) {
@@ -437,13 +389,12 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       }
 
       return res;
-
    }
 
    @Override
    public Boolean visitIn_assignment(AGLParser.In_assignmentContext ctx) {
       // in_assignment: 'in' '{' ID (',' ID)* '}'
-      // System.out.println("Check in assignment");
+
       Boolean res = true;
 
       EnumType enumType = new EnumType();
@@ -458,8 +409,9 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
          sym.setValueDefined();
          AGLParser.symbolTable.put(id, sym);
 
-         enumType.addEnum(enumValue);
+         enumType.addEnum(enumValue); // add enumValue to a list of enums in EnumType
       }
+
       Symbol sym = new VariableSymbol(ID, enumType);
       sym.setValueDefined();
       AGLParser.symbolTable.put(ID, sym);
@@ -469,17 +421,14 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       ctx.eType = enumType;
 
       return res;
-
    }
 
    // ------ Visit Expression ------
 
    @Override
    public Boolean visitExprUnary(AGLParser.ExprUnaryContext ctx) {
-      // expression: sign=('+'|'-'|'not') e=expression and expression returns [Type
-      // eType, String varName]
-      Boolean signal = ctx.sign.getText().equals("+") || ctx.sign.getText().equals("-")
-            || ctx.sign.getText().equals("not");
+      // expression: sign=('+'|'-'|'not') e=expression and expression returns [Type eType, String varName]
+      Boolean signal = ctx.sign.getText().equals("+") || ctx.sign.getText().equals("-") || ctx.sign.getText().equals("not");
 
       if (!signal) {
          ErrorHandling.printError(ctx, "Invalid unary operator!");
@@ -510,8 +459,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
    @Override
    public Boolean visitExprParenthesis(AGLParser.ExprParenthesisContext ctx) {
-      // expression: '(' e=expression ')' and expression returns [Type eType, String
-      // varName]
+      // expression: '(' e=expression ')' and expression returns [Type eType, String varName]
 
       Boolean res = visit(ctx.e);
       if (res)
@@ -521,9 +469,9 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
    // @Override
    public Boolean visitExprAddSubMultDivAndOr(AGLParser.ExprAddSubMultDivAndOrContext ctx) {
-      // expression: e1=expression op=('*'|'/'|'and') e2=expression | e1=expression
-      // op=('+'|'-'|'or') e2=expression
+      // expression: e1=expression op=('*'|'/'|'and') e2=expression | e1=expression op=('+'|'-'|'or') e2=expression
       // expression returns [Type eType, String varName]
+
       Boolean res = true;
 
       // if op is 'and' or 'or' then both expressions must be boolean
@@ -583,7 +531,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
                return false;
             }
 
-            ctx.eType = fetchType(ctx.e1.eType, ctx.e2.eType);
+            ctx.eType = fetchType(ctx.e1.eType, ctx.e2.eType, ctx.op.getText());
 
             if (ctx.eType == null) {
                ErrorHandling.printError(ctx, "Error: invalid type in arithmetic operation!");
@@ -600,27 +548,22 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
    @Override
    public Boolean visitExprPoint(AGLParser.ExprPointContext ctx) {
-      // expression: '(' x=expression ',' y=expression ')' and expression returns
-      // [Type eType, String varName]
-      // System.out.println("Check point expression");
-      // System.out.println("x: " + ctx.x.getText());
-      // System.out.println("y: " + ctx.y.getText());
-
+      // expression: '(' x=expression ',' y=expression ')' and expression returns [Type eType, String varName]
+      
       Boolean res = visit(ctx.x) && checkNumericType(ctx.x.eType) && visit(ctx.y) && checkNumericType(ctx.y.eType);
 
       // Define as PointType
       if (res) {
          ctx.eType = new PointType();
       } else {
-         ErrorHandling.printError(ctx, "aPoint creation requires numeric operands!");
+         ErrorHandling.printError(ctx, "Point creation requires numeric operands!");
       }
       return res;
    }
 
    @Override
    public Boolean visitExprVector(AGLParser.ExprVectorContext ctx) {
-      // '(' deg=expression ':' length=expression ')' and expression returns [Type
-      // eType, String varName]
+      // '(' deg=expression ':' length=expression ')' and expression returns [Type eType, String varName]
 
       Boolean res = visit(ctx.deg) && checkNumericType(ctx.deg.eType) && visit(ctx.length)
             && checkNumericType(ctx.length.eType);
@@ -636,8 +579,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
    @Override
    public Boolean visitExprRelational(AGLParser.ExprRelationalContext ctx) {
-      // expression: e1=expression RELATIONAL_OPERATOR e2=expression and expression
-      // returns [Type eType, String varName]
+      // expression: e1=expression RELATIONAL_OPERATOR e2=expression and expression returns [Type eType, String varName]
       Boolean res = true;
 
       res = visit(ctx.e1) && visit(ctx.e2);
@@ -721,9 +663,11 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    public Boolean visitExprID(AGLParser.ExprIDContext ctx) {
       // expression: identifier and expression returns [Type eType, String varName]
       // identifier : ID | ID('.' ID)+;
+
       Boolean res = true;
       String id = ctx.identifier().getText();
-      if (ctx.identifier().ID(1) == null) {
+
+      if (ctx.identifier().ID(1) == null) { // therefore it is a simple identifier (not an attribute)
          if (!AGLParser.symbolTable.containsKey(id)) {
             ErrorHandling.printError(ctx, "Variable \"" + id + "\" does not exists!");
             res = false;
@@ -745,17 +689,15 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
    @Override
    public Boolean visitExprScript(AGLParser.ExprScriptContext ctx) {
-      // expression: op=('input'|'load') STRING and expression returns [Type eType,
-      // String varName]
+      // expression: op=('input'|'load') STRING and expression returns [Type eType, String varName]
       ctx.eType = scriptType;
-      // System.out.println("Check script expression");
+
       return true;
    }
 
    @Override
    public Boolean visitExprDeepCopy(AGLParser.ExprDeepCopyContext ctx) {
-      // expression: 'deepcopy' identifier 'to' expression and expression returns [Type eType, String varName]
-      // identifier: ID | ID('.' ID)+ | ID '[' expression ']';
+      // expression: 'deepcopy' identifier 'to' expression and expression returns [Type eType, String varName] identifier: ID | ID('.' ID)+ | ID '[' expression ']';
 
       Boolean res = true;
       String id = ctx.identifier().getText();
@@ -1195,7 +1137,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       return res;
    }
 
-   private Type fetchType(Type t1, Type t2) {
+   private Type fetchType(Type t1, Type t2, String op) {
       Type res = null;
       if (t1.isNumeric() && t2.isNumeric()) {
          if ("Number".equals(t1.name())) {
@@ -1219,10 +1161,64 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       } else if (t1.isNumeric() && "Point".equals(t2.name())) {
          res = t2;
       } else if ("Vector".equals(t1.name()) && "Vector".equals(t2.name())) {
-         res = t1;
+         if ("*".equals(op)) {
+            res = numberType;
+         } else {
+            res = t1;
+         }
       }
 
       return res;
+   }
+
+   private boolean isValidType(String typeID) {
+      // typeID: 'Integer' | 'String' | 'Point' | 'Number' | 'Vector' | 'Time' | ... |
+      // 'Array' | ID
+
+      // Check if type is valid
+
+      switch (typeID) {
+         case "Integer":
+         case "String":
+         case "Point":
+         case "Number":
+         case "Vector":
+         case "Time":
+         case "Boolean":
+         case "View":
+         case "Line":
+         case "Rectangle":
+         case "Ellipse":
+         case "Arc":
+         case "ArcChord":
+         case "PieSlice":
+         case "Text":
+         case "Dot":
+         case "PolyLine":
+         case "Spline":
+         case "Polygon":
+         case "Blob":
+         case "Script":
+         case "Enum":
+         case "Array":
+            return true;
+      }
+      ;
+
+      // typeID can be a ID
+      if (!AGLParser.symbolTable.containsKey(typeID)) {
+         ErrorHandling.printError("Error: type not exists: " + typeID);
+         return false;
+      }
+
+      // must be a ModelType
+      Symbol sym = AGLParser.symbolTable.get(typeID);
+      if (!(sym.type() instanceof ModelType)) {
+         ErrorHandling.printError("Error: invalid model type: " + typeID);
+         return false;
+      }
+
+      return true;
    }
 
 }
