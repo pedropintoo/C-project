@@ -1,24 +1,24 @@
 
 
 Fire :: Model {
-    flame : Rectangle at (55, 0) with {
+    flame : Rectangle at (75, 0) with {
         length = (15, 2);
         fill = "red";
         state = "hidden";
     }
 
-    color_count : Integer = 0;
+    color: Enum in {red, blue}
 
     action on flame.state {
         print "The flame is " + flame.state;
         if flame.state == "normal" do {
-            if color_count == 0  do {
+            if color == blue  do {
                 flame.fill = "red";
-                color_count = 1;
+                color = red;
             }
             else do {
                 flame.fill = "blue";
-                color_count = 0;
+                color = blue;
             }
         }
         
@@ -27,7 +27,7 @@ Fire :: Model {
 
 Pacman :: Model {
 
-    face : PieSlice at (0,0) with {
+    face : PieSlice with {
         length = (50,50);
         fill = "pink";
         start = 30;
@@ -40,21 +40,20 @@ Pacman :: Model {
         length = (5,5);
     }
     
-    fire : Fire at (55, 0);
+    fire : Fire;
 
-    action on eye.fill {
-        if eye.fill == "red" do {
-            fire.flame.state = "normal";
+    action on fire.flame.state {
+        if fire.flame.state == "normal" do {
+            with eye do {
+                fill = "red";
+                length = (10,10)
+            }
         }
         else do {
-            fire.flame.state = "hidden";
-        }
-    }
-
-    len_pac : Vector = (50,50); 
-    action on len_pac { 
-        with face do {
-            length = len_pac;
+            with eye do {
+                fill = face.fill;
+                length = (5,5)
+            }
         }
     }
 
@@ -66,31 +65,20 @@ Pacman :: Model {
                 start = 30;
                 extent = 300;
             }
-            len_pac = (50,50);
-            with eye do {
-                fill = face.fill;
-                length = (5,5)
-            }
-            
-            move eye by (-5,-10);
+            fire.flame.state = "normal";
         }
         else do {# has to be Close, since there are only two possible values
             with face do {
                 start = 1;
                 extent = 359;
             }
-            len_pac = (60,60);
-            with eye do {
-                fill = "red";
-                length = (10,10)
-            }
-            move eye by (5,10);
+            fire.flame.state = "hidden";
         }
     }
 }
 
 
-Rectangle at (0,0) with {
+Rectangle with {
     length = (1000,70);
     fill = "blue";
 }
@@ -119,8 +107,6 @@ view2 : View with {
 }
 
 pacman2 : Pacman = deepcopy pacman to (-450,-100);
-
-
 
 refresh view;
 refresh view2;

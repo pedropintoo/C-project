@@ -53,3 +53,7 @@ All agl vars must start with `__agl__`               [X]
 to avoid conflicts with python vars.
 ```
 
+
+
+# Problemas:
+ - precisamos de refresh para a view funcionar! (inicialização da view está mal feita)

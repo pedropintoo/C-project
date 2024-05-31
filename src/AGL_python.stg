@@ -203,8 +203,8 @@ if model is not None:
     model = model_backup
     model.add_object(<var>) # add object to model
 else:
-    <var> = <modelName>(root = root, view = last_view, origin = <origin>)
-
+    <var> = <modelName>(root = root, view = last_view)
+<if(origin)><var>.move_absolute(<origin>)<endif>  
 >>
 
 block_properties(stat, field) ::= <<

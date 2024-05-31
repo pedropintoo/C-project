@@ -185,7 +185,6 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
 
         } else { 
             value = "DEFAULT_VALUE";  // TODO: TO_BE_IMPLEMENTED
-            // TODO: make a good selection
 
             if (ctx.typeID().ID() != null) {
                 // -> Model
@@ -194,9 +193,12 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
                 model.add("modelName", ctx.typeID().getText());
                 value = newVarName();
                 model.add("var", value);
-                res.add("stat", visit(ctx.expression()).render()); // render the return value!
-                model.add("origin", ctx.expression().varName);
-                
+
+                if (ctx.expression() != null) {
+                    res.add("stat", visit(ctx.expression()).render()); // render the return value!
+                    model.add("origin", ctx.expression().varName);
+                }
+
                 res.add("stat", model.render()); // render the return value!
             } 
         } 
@@ -216,6 +218,10 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
 //* blockStatement
     @Override public ST visitBlockStatement(AGLParser.BlockStatementContext ctx) {
         ST res = null;
+        // todo: check if it is a model or a view
+        if (ctx.typeID().ID() != null) {
+
+        }
 
         res = templates.getInstanceOf("object");
         res.add("type", ctx.typeID().getText());

@@ -88,10 +88,10 @@ expression returns [Type eType, String varName]
     ;
 
 command
-    : 'refresh' ID ('after' expression suffix=('ms'|'s'))? ';'   #CommandRefresh
-    | 'print' expression ';'                                     #CommandPrint
-    | 'close' ID ';'                                             #CommandClose
-    | 'move' identifier type=('by'|'to') expression ';'          #CommandMove
+    : 'refresh' ID (',' ID)* ('after' expression suffix=('ms'|'s'))? ';'   #CommandRefresh
+    | 'print' expression ';'                                               #CommandPrint
+    | 'close' ID (',' ID)* ';'                                             #CommandClose
+    | 'move' identifier (',' identifier)* type=('by'|'to') expression ';'  #CommandMove
     ;
 
 eventTrigger
