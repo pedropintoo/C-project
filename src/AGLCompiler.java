@@ -486,15 +486,18 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
 
         Iterator<TerminalNode> it = ctx.ID().iterator();
         TerminalNode current;
+        boolean isFirst = true;
         while(it.hasNext()) {
             current = it.next();
             
             res.add("view", current.getText());
 
-            if (ctx.expression() != null) {
+            if (isFirst && ctx.expression() != null) {
                 res.add("stat", visit(ctx.expression()).render()); // render the return value!
                 res.add("delay", ctx.expression().varName + (ctx.suffix.getText().equals("ms")? "/1000": ""));
             }
+
+            isFirst = false;
             
             if (it.hasNext()) {
                 String prev_refresh = res.render();
