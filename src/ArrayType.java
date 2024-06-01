@@ -1,6 +1,7 @@
 public class ArrayType extends Type {
 
     private Type elementType;
+    private int length;
 
     public ArrayType(String elementTypeName) {
         super(elementTypeName);
