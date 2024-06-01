@@ -7,17 +7,15 @@ view : View with {
     background = "alice blue";
 }
 
-arc : Arc at (0,0) with {
-    length = (50,50);
-    start = 30;
-    extent = 100;
-    outline = "tomato";
+text : Text at (0, 0) with {
+    text = "Bla bla ...";
+    fill = "purple";
 }
 
 refresh view;
 
 for i in 1..5 do {
-    move arc by (45,45); 
+    move text by (45,45); 
     refresh view after 1 s;
 }
 

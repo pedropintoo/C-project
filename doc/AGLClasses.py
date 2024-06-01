@@ -482,6 +482,7 @@ class Text(Object):
         super().__init__(root, view, origin, state)
         self.text = text
         self.fill = fill
+        self.angle = 0
 
     def __deepcopy__(self, memo=None):
         """Create a deep copy of the model."""
@@ -492,8 +493,12 @@ class Text(Object):
 
     def create_object(self, view):
         self.view = view
-        self.object = self.view.canvas.create_text(self.view.coord(self.origin), text=self.text, fill=self.fill, state=self.state)
+        self.object = self.view.canvas.create_text(self.view.coord(self.origin), text=self.text, fill=self.fill, state=self.state, angle=self.angle)
         self.view.objectsDrawn.append(self.object)
+    
+    def rotate(self, angle):
+        self.angle += angle
+
 
 class Dot(Object):
 
