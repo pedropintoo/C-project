@@ -145,6 +145,10 @@ public class ObjectType extends Type {
         }
         return true;
     }
+
+    public Map<String, List<Type>> getAttributes() {
+        return attributes;
+    }
     
     ////////////////////////////////////////////////////////////////////
 

@@ -362,7 +362,11 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       // quero saber o tipo da variavel do lado esquerdo -> usando a função getConcreteID
       // os visitores da expressao vão me dar os tipos do lado direito -> ctx.assignment().eType
 
-      Type type = getConcreteIDType(ctx.identifier());      
+      Type type = getConcreteIDType(ctx.identifier());   
+      if (type == null) {
+         ErrorHandling.printError("Variable does not exist");
+         return false;
+      }  
 
       // System.out.println("«««««« Type: " + type.name() + " »»»»»»");
 
@@ -388,20 +392,18 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
             
                if (!ctx.assignment().eType.conformsTo(sym.type())) {
                   ErrorHandling.printError(ctx, "Expression type does not conform to variable type!");
-                  res = false;
+                  return false;
                } else {
                   sym.setValueDefined();
                }
             } else {
-               res = false;
+               return false;
             }
          }
       
       } else {
          Boolean resExpr = visit(ctx.assignment());
          if (resExpr) {
-            
-
             if (ctx.assignment().eType == null) {
                ErrorHandling.printError(ctx, "Assignment type is null");
                return false;
@@ -411,7 +413,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
             if (!ctx.assignment().eType.conformsTo(type)) {
                ErrorHandling.printError(ctx, "----------------   Expression type does not conform to variable type!");
-               res = false;
+               return false;
             }
 
             // TODO: sym.setValueDefined();
@@ -422,11 +424,11 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
             sym.setValueDefined();
 
          } else {
-            res = false;
+            return false;
          }
       }
 
-      return res;
+      return true;
    }
 
    @Override
@@ -1350,133 +1352,71 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       String id = ctx.ID().getText();
       Type type = null;
 
+      System.out.println("getConcreteIDType: Analyzing ID: " + id);
+
       if (!AGLParser.symbolTable.containsKey(id)) {
          ErrorHandling.printError(ctx, "Variable \"" + id + "\" does not exists!");
          return null;
       }   
 
-      if (ctx.expression(0) != null) { // ID '[' expression ']' ('.' identifier)?
-         Boolean res = visit(ctx.expression(0));
-         if (!res) {
-            ErrorHandling.printError("Error: invalid simple statement");
-         }
+      if (ctx.expression(0) != null && !ctx.expression().isEmpty()) { // ID '[' expression ']' ('.' identifier)?
+         for (AGLParser.ExpressionContext exprCtx : ctx.expression()) {
+            Boolean res = visit(exprCtx);
+            if (!res) {
+               ErrorHandling.printError("Error: invalid simple statement");
+               return null;
+            }
 
-         // expression must be a IntegerType
-         if (!ctx.expression(0).eType.conformsTo(integerType)) {
-            ErrorHandling.printError("Error: invalid expression type in simple statement (must be integer!)");
+            if (!exprCtx.eType.conformsTo(integerType)) {
+               ErrorHandling.printError("Error: invalid expression type in simple statement (must be integer!)");
+               return null;
+            }
          }
-
-         System.out.println(ctx.expression(0).eType.name());
-         System.out.println("ID: " + id);
 
          Type elemType = AGLParser.symbolTable.get(id).type();
          
-         // return casted to ArrayType
-         return new ArrayType(((ArrayType)elemType).getElementType().name());
+         if (elemType instanceof ArrayType) {
+            for (int i = 0; i < ctx.expression().size(); i++) {
+               elemType = ((ArrayType) elemType).getElementType();
+            }
+            System.out.println("getConcreteIDType: Array element type: " + elemType.name());
+            return elemType;
+         } else {
+            ErrorHandling.printError("Error: " + id + " Not an array");
+            return null;
+         }
       } 
       
       if (ctx.identifier() != null) { // ID '.' identifier
          System.out.println("Attribute type");
          type = getConcreteIDType(ctx.identifier());
+         if (type instanceof ObjectType) {
+            ObjectType objectType = (ObjectType) type;
+            String attributeName = ctx.ID().getText();
+            List<Type> allowedTypes = objectType.getAttributes().get(attributeName);
+            if (allowedTypes != null && !allowedTypes.isEmpty()) {
+               System.out.println("getConcreteIDType: Attribute type: " + allowedTypes.get(0).name());
+               return allowedTypes.get(0);
+            } else {
+               ErrorHandling.printError("Error: Attribute inexistent in this type");
+               return null;
+            }
+         } else {
+            ErrorHandling.printError("Error: Variable not of object type");
+            return null;
+         }
       }
 
       // ID
       Symbol sym = AGLParser.symbolTable.get(id);
       if (!sym.valueDefined()) {
          ErrorHandling.printError(ctx, "Variable \"" + id + "\" not defined!"); // type will be null
+         return null;
       } else {
          type = sym.type(); 
       }
 
-      for (AGLParser.ExpressionContext exprCtx : ctx.expression()) {
-         if (type instanceof ArrayType) {
-            ArrayType arrayType = (ArrayType) type;
-            type = arrayType.getElementType();
-
-            if (!visit(exprCtx)) {
-               ErrorHandling.printError("Error: invalid expression in array index");
-               return null;
-            }
-
-            if (!exprCtx.eType.conformsTo(integerType)) {
-               ErrorHandling.printError("Error: array element must be an integer");
-               return null;
-            }
-         } else {
-            ErrorHandling.printError("Error: non-array type");
-            return null;
-         }
-      }
-
-      if (ctx.identifier() != null) {
-         if (!(type instanceof ObjectType)) {
-            ErrorHandling.printError("Error: not an objectType");
-            return null;
-         }
-
-         ObjectType objectType = (ObjectType) type;
-         Type attributeType = getConcreteID(ctx.identifier());
-
-         if (attributeType == null) {
-            ErrorHandling.printError("Error: invalid attribute type");
-            return null;
-         }
-
-         if (!objectType.checkAttributes(ctx.identifier().ID().getText(), attributeType)) {
-            ErrorHandling.printError("Error: invalid attribute type for this object type");
-            return null;
-         }
-
-         type = attributeType;
-      }
-
-      // if (ctx.identifier() != null) {
-      //    System.out.println("Attribute type");
-      //    Type parentType = type;
-      //    type = getConcreteID(ctx.identifier());
-
-      //    if (type == null) {
-      //       ErrorHandling.printError("Error: invalid attribute type");
-      //       return null;
-      //    }
-
-      //    if (parentType instanceof ObjectType) {
-      //       ObjectType objectType = (ObjectType) parentType;
-      //       if (!objectType.checkAttributes(ctx.identifier().ID().getText(), type)) {
-      //          ErrorHandling.printError("Error: invalid attribute type");
-      //          return null;
-      //       }
-      //    } else {
-      //       ErrorHandling.printError("Error: parentType is not an objectType");
-      //       return null;
-      //    }
-      // }
-
-      // if (ctx.expression() != null) {
-      //    System.out.println("Array Type");
-      //    Boolean res = visit(ctx.expression(0));
-      //    if (!res) {
-      //       ErrorHandling.printError("Error: invalid expression in identifier");
-      //       return null;
-      //    }
-
-      //    if (!ctx.expression(0).eType.conformsTo(integerType)) {
-      //       ErrorHandling.printError("Error: invalid expression type, should be integer");
-      //       return null;
-      //    }
-
-      //    if (type instanceof ArrayType) {
-      //       type = ((ArrayType) type).getElementType();
-      //    } else {
-      //       ErrorHandling.printError("Error: identifier should be of array type");
-      //       return null;
-      //    }
-
-      //    if (ctx.identifier() != null) {
-      //       type = getConcreteID(ctx.identifier());
-      //    }
-      // }
-
+      System.out.println("getConcreteIDType: Simple ID type: " + type.name());
       return type;
    }
 
