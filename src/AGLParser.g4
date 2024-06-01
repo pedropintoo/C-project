@@ -172,7 +172,7 @@ typeID returns[Type res]
     | 'Blob'        {$res = new ObjectType("Blob");}
     | 'Script'      {$res = new ObjectType("Script");}
     | 'Enum'        {$res = new EnumType();}   
-    | 'Array'       {$res = new ObjectType("Array");}
+    | 'Array'       {$res = new ArrayType();}
     | ID            {$res = new ModelType($ID.text);}
     ;
 

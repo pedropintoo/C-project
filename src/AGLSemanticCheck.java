@@ -6,8 +6,6 @@ import java.util.Map;
 import org.antlr.v4.runtime.ParserRuleContext;
 
 
-
-
 @SuppressWarnings("CheckReturnValue")
 public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
@@ -665,25 +663,19 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    public Boolean visitExprID(AGLParser.ExprIDContext ctx) {
       // expression: identifier and expression returns [Type eType, String varName]
       // identifier : ID | ID('.' ID)+;
+      System.out.println("Arrived in ExprID");
 
       Boolean res = true;
       String id = ctx.identifier().getText();
 
-      if (ctx.identifier().ID(1) == null) { // therefore it is a simple identifier (not an attribute)
-         if (!AGLParser.symbolTable.containsKey(id)) {
-            ErrorHandling.printError(ctx, "Variable \"" + id + "\" does not exists!");
-            res = false;
-         } else {
-            Symbol sym = AGLParser.symbolTable.get(id);
-            if (!sym.valueDefined()) {
-               ErrorHandling.printError(ctx, "Variable \"" + id + "\" not defined!");
-               res = false;
-            } else {
-               ctx.eType = sym.type();
-            }
-         }
+      Type type = getConcreteTypeID(ctx.identifier());
+
+      if (type == null) {
+         ErrorHandling.printError(ctx, "Error: invalid type in identifier");
+         return false;
       } else {
-         ErrorHandling.printError("TO BE IMPLEMENTED ID ('.' ID)+ - attributes"); // TODO
+         System.out.println("Type: " + type.name());
+         ctx.eType = type;
       }
 
       return res;
@@ -736,6 +728,36 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
       return res;
    }
+
+   @Override
+   public Boolean visitExprArray(AGLParser.ExprArrayContext ctx) {
+      // expression: '[' (expression (',' expression)*)? ']' and expression returns [Type eType, String varName]
+      
+      Boolean res = true;
+
+      // the values of the array must be the same type
+      Type type = null;
+      for (AGLParser.ExpressionContext expr : ctx.expression()) {
+         res = visit(expr);
+         if (!res) {
+            ErrorHandling.printError("Error: invalid expression in array expression");
+            return false;
+         }
+         if (type == null) {
+            type = expr.eType;
+         }
+         if (!expr.eType.conformsTo(type)) {
+            ErrorHandling.printError("Error: invalid expression type in array expression");
+            return false;
+         }
+      }
+
+      if (res) {
+         ctx.eType = new ArrayType();
+      }
+
+      return res;
+   }   
 
    // --------- End Visit Expression ---------
 
@@ -1220,5 +1242,47 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
       return true;
    }
+
+   private Type getConcreteTypeID(AGLParser.IdentifierContext ctx) {  
+      String id = ctx.ID(0).getText();
+      Type type = null;
+
+      if (ctx.ID(1) != null) { // ID ('.' ID)+
+         for (int i = 1; i < ctx.ID().size(); i++) {
+               id += "." + ctx.ID(i).getText();
+         }
+         // verificar se o proximo ID está nas propriedades do anterior.
+
+      } else if (ctx.expression() != null) { // ID '[' expression ']'
+         Boolean res = visit(ctx.expression());
+         if (!res) {
+            ErrorHandling.printError("Error: invalid simple statement");
+         }
+
+         // expression must be a IntegerType
+         if (!ctx.expression().eType.conformsTo(integerType)) {
+            ErrorHandling.printError("Error: invalid expression type in simple statement (must be integer!)");
+         }
+
+         id += "[" + ctx.expression().getText() + "]";
+
+         // TODO: get type
+
+      } else { // ID
+         if (!AGLParser.symbolTable.containsKey(id)) {
+            ErrorHandling.printError(ctx, "Variable \"" + id + "\" does not exists!"); // type will be null
+         } else {
+            Symbol sym = AGLParser.symbolTable.get(id);
+            if (!sym.valueDefined()) {
+               ErrorHandling.printError(ctx, "Variable \"" + id + "\" not defined!"); // type will be null
+            } else {
+               type = sym.type(); 
+            }
+         }   
+      }
+
+      return type;
+   }
+
 
 }
