@@ -249,6 +249,14 @@ class PolyLine(Object):
         move_vector = (self.origin[0] - temp_origin[0], self.origin[1] - temp_origin[1])  # take the resultant vector
         for i in range(len(self.points)):
             self.points[i] = (self.points[i][0] + move_vector[0], self.points[i][1] + move_vector[1])
+    
+    def rotate(self, angle):
+        angle_rad = math.radians(angle)
+        cos_val = math.cos(angle_rad)
+        sin_val = math.sin(angle_rad)
+
+        for i in range(len(self.points)):
+            self.points[i] = (cos_val * self.points[i][0] - sin_val * self.points[i][1], sin_val * self.points[i][0] + cos_val * self.points[i][1])
         
 
 class Spline(Object):
@@ -285,6 +293,14 @@ class Spline(Object):
         move_vector = (self.origin[0] - temp_origin[0], self.origin[1] - temp_origin[1]) 
         for i in range(len(self.points)):
             self.points[i] = (self.points[i][0] + move_vector[0], self.points[i][1] + move_vector[1])
+    
+    def rotate(self, angle):
+        angle_rad = math.radians(angle)
+        cos_val = math.cos(angle_rad)
+        sin_val = math.sin(angle_rad)
+
+        for i in range(len(self.points)):
+            self.points[i] = (cos_val * self.points[i][0] - sin_val * self.points[i][1], sin_val * self.points[i][0] + cos_val * self.points[i][1])
 
 class Polygon(Object):
     """
@@ -321,6 +337,14 @@ class Polygon(Object):
         move_vector = (self.origin[0] - temp_origin[0], self.origin[1] - temp_origin[1]) 
         for i in range(len(self.points)):
             self.points[i] = (self.points[i][0] + move_vector[0], self.points[i][1] + move_vector[1])
+    
+    def rotate(self, angle):
+        angle_rad = math.radians(angle)
+        cos_val = math.cos(angle_rad)
+        sin_val = math.sin(angle_rad)
+
+        for i in range(len(self.points)):
+            self.points[i] = (cos_val * self.points[i][0] - sin_val * self.points[i][1], sin_val * self.points[i][0] + cos_val * self.points[i][1])
 
 class Blob(Object):
     """
@@ -357,6 +381,14 @@ class Blob(Object):
         move_vector = (self.origin[0] - temp_origin[0], self.origin[1] - temp_origin[1]) 
         for i in range(len(self.points)):
             self.points[i] = (self.points[i][0] + move_vector[0], self.points[i][1] + move_vector[1])
+    
+    def rotate(self, angle):
+        angle_rad = math.radians(angle)
+        cos_val = math.cos(angle_rad)
+        sin_val = math.sin(angle_rad)
+
+        for i in range(len(self.points)):
+            self.points[i] = (cos_val * self.points[i][0] - sin_val * self.points[i][1], sin_val * self.points[i][0] + cos_val * self.points[i][1])
 
 class Rectangle(Object):
 
@@ -518,3 +550,6 @@ class Dot(Object):
         origin_coord = self.view.coord(self.origin)
         self.object = self.view.canvas.create_oval(origin_coord, origin_coord, fill=self.fill, state=self.state)
         self.view.objectsDrawn.append(self.object)
+    
+    def rotate(self, angle):
+        pass # Should a dot be rotated?

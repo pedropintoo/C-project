@@ -7,15 +7,16 @@ view : View with {
     background = "alice blue";
 }
 
-text : Text at (0, 0) with {
-    text = "Bla bla ...";
-    fill = "purple";
+polygon : Polygon at (0, 0) with {
+    points = [(0, 0), (100, 0), (100, 100), (0, 100), (25, 75)];
+    fill = "black";
 }
+
 
 refresh view;
 
 for i in 1..5 do {
-    move text by (45,45); 
+    move polygon by (45,45); 
     refresh view after 1 s;
 }
 
