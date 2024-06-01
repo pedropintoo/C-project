@@ -11,7 +11,7 @@ public abstract class Type {
     }
 
     public boolean conformsTo(Type other) {
-        return name.equals(other.name());
+        return name().equals(other.name());
     }
 
     public boolean isNumeric() {

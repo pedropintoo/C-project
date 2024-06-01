@@ -3,31 +3,40 @@ public class ArrayType extends Type {
     private Type elementType;
 
     public ArrayType(String elementTypeName) {
-        super("Array");
+        super(elementTypeName);
         
         String firstChild = elementTypeName.split("<")[0];
 
+        // check subtypes
+        if (!firstChild.equals(elementTypeName)) {
+            int start = elementTypeName.indexOf('<') + 1;
+            int end = elementTypeName.lastIndexOf('>');
+            String innerType = elementTypeName.substring(start, end).trim();
+            this.elementType = new ArrayType(innerType);
+            return;
+        }
+
         switch (firstChild) {
+            case "Integer":
+                this.elementType = new IntegerType();
+                break;
             
-            case "Point":
-                this.elementType = new PointType();
+            case "String":
+                this.elementType = new StringType();
                 break;
 
-            case "Array":
-                int start = elementTypeName.indexOf('<') + 1;
-                int end = elementTypeName.lastIndexOf('>');
-                System.out.println(elementTypeName);
-                System.out.println("start: " + start + " end: " + end);
-                String innerType = elementTypeName.substring(start, end).trim();
-                System.out.println("---- " + innerType);
-                this.elementType = new ArrayType(innerType);
+            case "Point":
+                this.elementType = new PointType();
                 break;
         }
     }
 
     @Override
-    public boolean isNumeric() {
-        return false;
+    public String name() {
+        if (elementType instanceof ArrayType) {
+            return "Array<" + elementType.name() + ">";
+        }
+        return name;
     }
 
     public Type getElementType() {

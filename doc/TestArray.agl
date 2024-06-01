@@ -1,16 +1,18 @@
 
-a : Array<Integer> = [0,2,3,4,5];
+#a : Array<Integer> = [0,2,3,4,5]; # correto
 
-b : Array<String> = ["a","b","c","d","e"];
+#b : Array<String> = ["a","b","c","d","e"]; # correto
 
-c : Array<Array<Point>>;
+c : Array<Array<Point>> = [[(1,2), (3,4)], [(1,2), (3,4)]]; # correto. 
+
+c = ["a","b","c","d","e"];
 
 
-c = [(1,2), (3,4), (5,6), (7,8), (9,10)];
+#c = [(1,2), (3,4), (5,6), (7,8), (9,10)];
 
-e : Array<Array<Point>> = [c, c, c, c]; # sintaticamente correto mas semânticamente errado
+#e : Array<Array<Point>> = [c, c, c, c]; # sintaticamente correto mas semânticamente errado
 
-d : Point = c[133];
+#d : Point = c[133];
 
 
 

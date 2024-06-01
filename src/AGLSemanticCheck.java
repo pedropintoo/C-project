@@ -1,5 +1,5 @@
 import java.util.List;
-
+import java.lang.reflect.Array;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -194,14 +194,26 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       // in_assignment: 'in' '{' ID (',' ID)* '}'
       
       String typeID = ctx.typeID().getText();
-      System.out.println("Type aa: " + typeID);
+      
       if (!isValidType(typeID)) { // check if type is valid
          ErrorHandling.printError("Error: invalid type in simple statement");
          return false;
       }
 
+      // Type type = getConcreteTypeID(ctx, typeID);
       Symbol s = AGLParser.symbolTable.get(typeID);
-      Type type = ctx.typeID().res;
+
+      Type type;
+
+      if (s != null) {
+         // ModelType
+         type = new ModelType(typeID);
+
+      } else {
+         type = ctx.typeID().res;
+      }
+
+      // TODO:
 
       // check if we have an expression 
       if (ctx.expression() != null) {
@@ -237,6 +249,12 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
             ErrorHandling.printError("Error: invalid simple statement");
             return false;
          }
+         
+         System.out.println("««««««");
+         System.out.println("Type: " + type.name());
+         System.out.println("Assignment type: " + ctx.assignment().eType.name());
+         System.out.println("««««««");
+
 
          if (type == null) {
             type=ctx.typeID().res;
@@ -337,10 +355,17 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       Boolean res = true;
       String id = ctx.identifier().getText();
 
+      // quero saber o tipo da variavel do lado esquerdo -> usando a função getConcreteID
+      // os visitores da expressao vão me dar os tipos do lado direito -> ctx.assignment().eType
+
+      
+
       if ( (ctx.identifier().expression() == null ) && (ctx.identifier().identifier() == null) ) { // therefore it is a simple identifier (not an attribute)
+         
          if (!AGLParser.symbolTable.containsKey(id)) {
             ErrorHandling.printError(ctx, "Variable \"" + id + "\" does not exists!");
             res = false;
+
          } else {
             Boolean resExpr = visit(ctx.assignment());
             if (resExpr) {
@@ -366,7 +391,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       
       } else {
          
-         ErrorHandling.printError("TO BE IMPLEMENTED ID ('.' ID)+ - attributes"); // TODO
+         ErrorHandling.printError("aTO BE IMPLEMENTED ID ('.' ID)+ - attributes"); // TODO
       }
 
       return res;
@@ -664,7 +689,6 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    public Boolean visitExprID(AGLParser.ExprIDContext ctx) {
       // expression: identifier and expression returns [Type eType, String varName]
       // identifier : ID | ID '.' identifier | ID '[' expression ']' ('.' identifier)? ;
-      System.out.println("Arrived in ExprID");
 
       Boolean res = true;
       String id = ctx.identifier().getText();
@@ -675,7 +699,6 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
          ErrorHandling.printError(ctx, "Error: invalid type in identifier");
          return false;
       } else {
-         System.out.println("Type: " + type.name());
          ctx.eType = type;
       }
 
@@ -737,24 +760,24 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       Boolean res = true;
 
       // the values of the array must be the same type
-      Type type = null;
+      Type elemType = null;
       for (AGLParser.ExpressionContext expr : ctx.expression()) {
          res = visit(expr);
          if (!res) {
             ErrorHandling.printError("Error: invalid expression in array expression");
             return false;
          }
-         if (type == null) {
-            type = expr.eType;
+         if (elemType == null) {
+            elemType = expr.eType;
          }
-         if (!expr.eType.conformsTo(type)) {
+         if (!expr.eType.conformsTo(elemType)) {
             ErrorHandling.printError("Error: invalid expression type in array expression");
             return false;
          }
       }
 
       if (res) {
-         ctx.eType = new ArrayType(type.name());
+         ctx.eType = new ArrayType("Array<" + elemType.name() + ">");
       }
 
       return res;
@@ -1231,7 +1254,6 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       // typeID can be a Array of a an array of a valid type. 
       // E.g: Array<Number>
       // E.g: Array<Array<Point>>
-      System.out.println("Type ID: " + typeID);
       if (typeID.startsWith("Array<") && typeID.endsWith(">")) {
          String arrayType = typeID.substring(6, typeID.length() - 1);
          return isValidType(arrayType);
@@ -1254,12 +1276,10 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    }
 
    // identifier : ID | ID '.' identifier | ID ('[' expression ']')+ ('.' identifier)? ;
-   // returns the type of a variable
+   // returns the type of the expression
    private Type getConcreteID(AGLParser.IdentifierContext ctx) {  
       String id = ctx.ID().getText();
       Type type = null;
-
-      System.out.println("ID: " + id);
 
       // if (ctx.expression(0) != null) { // ID '[' expression ']' ('.' identifier)?
       //    System.out.println("Array type");
@@ -1281,6 +1301,15 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
       //    // check id, and check the type of the array
       // } 
+      
+      if (ctx.identifier() != null) { // ID '.' identifier
+         type = getConcreteID(ctx.identifier());
+         
+
+
+         // check id, and check the type of the attribute
+
+      }
          
       // ID
       if (!AGLParser.symbolTable.containsKey(id)) {
@@ -1387,24 +1416,5 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
       return type;
    }
-
-   // give the type of TypeID
-   private Type getConcreteTypeID(AGLParser.TypeIDContext ctx, String typeID) {  
-      Symbol s = AGLParser.symbolTable.get(typeID);
-
-      Type type;
-
-      if (s != null) {
-         // ModelType
-         type = new ModelType(typeID);
-
-      } else {
-         type = ctx.typeID().res;
-      }
-
-      return type;
-
-   }
-
 
 }
