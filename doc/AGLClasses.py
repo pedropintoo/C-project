@@ -59,19 +59,23 @@ class View:
     def coord(self, point):
         x, y = point
         return (self.width/2-self.Ox+x, self.height/2+self.Oy-y)
-
+    
     def line(self, origin, point):
         return (origin[0],origin[1]),(origin[0]+point[0], origin[1]-point[1])
 
-    def rectangle(self, origin, length):
-        p0 = (origin[0]-length[0],origin[1]-length[1])
-        p1 = (origin[0]+length[0],origin[1]-length[1])
-        p2 = (origin[0]+length[0],origin[1]+length[1])
-        p3 = (origin[0]-length[0],origin[1]+length[1])
+    def rectangle(self, origin, length, angle):
+        angle_rad = math.radians(-angle)
+        cos_angle = math.cos(angle_rad)
+        sin_angle = math.sin(angle_rad)
+
+        p0 = (origin[0] - length[0] * cos_angle - length[1] * sin_angle, origin[1] - length[0] * sin_angle + length[1] * cos_angle)
+        p1 = (origin[0] + length[0] * cos_angle - length[1] * sin_angle, origin[1] + length[0] * sin_angle + length[1] * cos_angle)
+        p2 = (origin[0] + length[0] * cos_angle + length[1] * sin_angle, origin[1] + length[0] * sin_angle - length[1] * cos_angle)
+        p3 = (origin[0] - length[0] * cos_angle + length[1] * sin_angle, origin[1] - length[0] * sin_angle - length[1] * cos_angle)
         return p0,p1,p2,p3,p0
 
     def ellipse(self, origin, length):
-        return (origin[0]-length[0],origin[1]-length[1]),(origin[0]+length[0],origin[1]+length[1])
+        return (origin[0]-length[0], origin[1]-length[1]), (origin[0]+length[0], origin[1]+length[1])
 
     def onClick(self, event):
         self.mouseX, self.mouseY = event.x, event.y
@@ -208,11 +212,6 @@ class Line(Object):
         new_y = sin_val * rel_x + cos_val * rel_y  # sin(angle) * x + cos(angle) * y
 
         self.length = (new_x, new_y)
-
-        if self.object:
-            start_point = self.view.coord(self.origin)
-            end_point = self.view.coord((self.origin[0] + new_x, self.origin[1] + new_y))
-            self.view.canvas.coords(self.object, start_point[0], start_point[1], end_point[0], end_point[1])
 
 class PolyLine(Object):
     """
@@ -364,7 +363,8 @@ class Rectangle(Object):
     def __init__(self, root: Root = None, view: View = None, state="normal", origin=(0,0), length=(1,1), fill="black"):
         super().__init__(root, view, origin, state)
         self.length = length
-        self.fill = fill  
+        self.fill = fill
+        self.angle = 0
     
     def __deepcopy__(self, memo=None):
         """Create a deep copy of the model."""
@@ -375,9 +375,11 @@ class Rectangle(Object):
     
     def create_object(self, view):
         self.view = view
-        self.object = self.view.canvas.create_line(self.view.rectangle(self.view.coord(self.origin), self.length), fill=self.fill, state=self.state)
+        self.object = self.view.canvas.create_line(self.view.rectangle(self.view.coord(self.origin), self.length, self.angle), fill=self.fill, state=self.state)
         self.view.objectsDrawn.append(self.object)
-
+    
+    def rotate(self, angle):
+        self.angle += angle
 
 class Ellipse(Object):
 
@@ -395,9 +397,12 @@ class Ellipse(Object):
 
     def create_object(self, view):
         self.view = view
-        calc = self.view.ellipse(self.origin, self.length)
         self.object = self.view.canvas.create_oval(self.view.ellipse(self.view.coord(self.origin), self.length), fill=self.fill, state=self.state)
         self.view.objectsDrawn.append(self.object)
+    
+    def rotate(self, angle):
+        # TODO: implement rotation to Ellipse
+        pass
 
 class Arc(Object):
 

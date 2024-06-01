@@ -273,7 +273,7 @@ if __name__ == "__main__":
     else:
         v25 = temp 
 
-    v23 = (v24 , v25)
+    v23 = (20 , v25)
 
     temp = get_nested_attribute(action, 'v23')
     if temp is None:
@@ -351,33 +351,26 @@ if __name__ == "__main__":
         v31 = temp 
 
 
-    temp = get_nested_attribute(action, '10')
+    temp = get_nested_attribute(action, '5')
     if temp is None:
-        temp = 10
+        temp = 5
     if action is not None and hasattr(action, "v32".split('.')[0]):
         action.v32 = temp
     else:
         v32 = temp 
 
     for i in range(v31, v32, 1):
-         
 
-        temp = get_nested_attribute(action, '25')
+        temp = get_nested_attribute(action, '45')
         if temp is None:
-            temp = 25
-        if action is not None and hasattr(action, "v33".split('.')[0]):
-            action.v33 = temp
+            temp = 45
+        if action is not None and hasattr(action, "v34".split('.')[0]):
+            action.v34 = temp
         else:
-            v33 = temp 
-
-        while (time.time() - last_refresh <= v33/1000):
-            time.sleep(REFRESH_RATE)   
-
-        last_refresh = time.time()
-        view.update()
+            v34 = temp 
 
 
-        temp = get_nested_attribute(action, '90')
+        temp = get_nested_attribute(action, '45')
         if temp is None:
             temp = 45
         if action is not None and hasattr(action, "v35".split('.')[0]):
@@ -385,56 +378,24 @@ if __name__ == "__main__":
         else:
             v35 = temp 
 
+        v33 = (v34 , v35)
+        if action is not None:
+            action.line.move_relative(v33)
+        else:
+            line.rotate(45)
+         
 
-        temp = get_nested_attribute(action, '90')
+        temp = get_nested_attribute(action, '1')
         if temp is None:
-            temp = 90
+            temp = 1
         if action is not None and hasattr(action, "v36".split('.')[0]):
             action.v36 = temp
         else:
             v36 = temp 
 
-        v34 = (v35 , v36)
-        if action is not None:
-            action.line.move_relative(v34)
-        else:
-            line.rotate(v35)
-         
-
-        temp = get_nested_attribute(action, '25')
-        if temp is None:
-            temp = 25
-        if action is not None and hasattr(action, "v37".split('.')[0]):
-            action.v37 = temp
-        else:
-            v37 = temp 
-
-        while (time.time() - last_refresh <= v37/1000):
+        while (time.time() - last_refresh <= v36):
             time.sleep(REFRESH_RATE)   
 
         last_refresh = time.time()
         view.update()
 
-
-        temp = get_nested_attribute(action, '90')
-        if temp is None:
-            temp = -180
-        if action is not None and hasattr(action, "v39".split('.')[0]):
-            action.v39 = temp
-        else:
-            v39 = temp 
-
-
-        temp = get_nested_attribute(action, '90')
-        if temp is None:
-            temp = 90
-        if action is not None and hasattr(action, "v40".split('.')[0]):
-            action.v40 = temp
-        else:
-            v40 = temp 
-
-        v38 = (v39 , v40)
-        if action is not None:
-            action.line.move_absolute(v38)
-        else:
-            line.rotate(v39)
