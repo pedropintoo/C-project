@@ -1,4 +1,0 @@
-move m by (100,0);
-refresh v after 500 ms;
-move m by (100,0);
-refresh v after 500 ms;

@@ -1,4 +1,0 @@
-
-number : Number = 2.0 == 2;
-
-print number;
