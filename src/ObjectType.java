@@ -114,7 +114,10 @@ public class ObjectType extends Type {
                 break;
             case "View":
                 System.out.println("Arrived in view");
-                // TODO
+                this.addWidth();
+                this.addHeight();
+                this.addTitle();
+                this.addBackground();
                 break;
             default:
                 ErrorHandling.printError("Error: Invalid type!");
@@ -195,6 +198,26 @@ public class ObjectType extends Type {
     private void addText() {
         ArrayList<Type> typesAllowed = new ArrayList<>(List.of(new StringType()));
         this.attributes.put("text", typesAllowed);
+    }
+
+    private void addWidth() {
+        ArrayList<Type> typesAllowed = new ArrayList<>(List.of(new IntegerType()));
+        this.attributes.put("width", typesAllowed);
+    }
+
+    private void addHeight() {
+        ArrayList<Type> typesAllowed = new ArrayList<>(List.of(new IntegerType()));
+        this.attributes.put("height", typesAllowed); 
+    }
+
+    private void addTitle() {
+        ArrayList<Type> typesAllowed = new ArrayList<>(List.of(new StringType()));
+        this.attributes.put("title", typesAllowed);
+    }
+
+    private void addBackground() {
+        ArrayList<Type> typesAllowed = new ArrayList<>(List.of(new StringType()));
+        this.attributes.put("background", typesAllowed);
     }
     
     private void addSubTypes() {

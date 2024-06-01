@@ -1354,29 +1354,43 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
       System.out.println("getConcreteIDType: Analyzing ID: " + id);
 
-      if (!AGLParser.symbolTable.containsKey(id)) {
-         ErrorHandling.printError(ctx, "Variable \"" + id + "\" does not exists!");
-         return null;
-      }   
-
-      if (ctx.expression(0) != null && !ctx.expression().isEmpty()) { // ID '[' expression ']' ('.' identifier)?
-         for (AGLParser.ExpressionContext exprCtx : ctx.expression()) {
-            Boolean res = visit(exprCtx);
-            if (!res) {
-               ErrorHandling.printError("Error: invalid simple statement");
-               return null;
-            }
-
-            if (!exprCtx.eType.conformsTo(integerType)) {
-               ErrorHandling.printError("Error: invalid expression type in simple statement (must be integer!)");
-               return null;
-            }
+      if (ctx.identifier() != null) { // ID '.' identifier
+         System.out.println("Attribute type");
+         type = getConcreteIDType(ctx.identifier());
+         if (type == null) {
+            ErrorHandling.printError("Type is null");
+            return null;
          }
 
+         if (!(type instanceof ObjectType)) {
+            ErrorHandling.printError("Error: Variable not of object type");
+            return null;
+         }
+         ObjectType objectType = (ObjectType) type;
+         List<Type> allowedTypes = objectType.getAttributes().get(id);
+         if (allowedTypes != null && !allowedTypes.isEmpty()) {
+            System.out.println("getConcreteIDType: Attribute type: " + allowedTypes.get(0).name());
+            return allowedTypes.get(0);
+         } else {
+            ErrorHandling.printError("Error: Attribute inexistent in this type");
+            return null;
+         }
+      }
+
+      if (ctx.expression() != null && !ctx.expression().isEmpty()) { // ID '[' expression ']' ('.' identifier)?
          Type elemType = AGLParser.symbolTable.get(id).type();
-         
          if (elemType instanceof ArrayType) {
-            for (int i = 0; i < ctx.expression().size(); i++) {
+            for (AGLParser.ExpressionContext exprCtx : ctx.expression()) {
+               Boolean res = visit(exprCtx);
+               if (!res) {
+                  ErrorHandling.printError("Error: invalid simple statement");
+                  return null;
+               }
+   
+               if (!exprCtx.eType.conformsTo(integerType)) {
+                  ErrorHandling.printError("Error: invalid expression type in simple statement (must be integer!)");
+                  return null;
+               }
                elemType = ((ArrayType) elemType).getElementType();
             }
             System.out.println("getConcreteIDType: Array element type: " + elemType.name());
@@ -1386,26 +1400,11 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
             return null;
          }
       } 
-      
-      if (ctx.identifier() != null) { // ID '.' identifier
-         System.out.println("Attribute type");
-         type = getConcreteIDType(ctx.identifier());
-         if (type instanceof ObjectType) {
-            ObjectType objectType = (ObjectType) type;
-            String attributeName = ctx.ID().getText();
-            List<Type> allowedTypes = objectType.getAttributes().get(attributeName);
-            if (allowedTypes != null && !allowedTypes.isEmpty()) {
-               System.out.println("getConcreteIDType: Attribute type: " + allowedTypes.get(0).name());
-               return allowedTypes.get(0);
-            } else {
-               ErrorHandling.printError("Error: Attribute inexistent in this type");
-               return null;
-            }
-         } else {
-            ErrorHandling.printError("Error: Variable not of object type");
-            return null;
-         }
-      }
+
+      if (!AGLParser.symbolTable.containsKey(id)) {
+         ErrorHandling.printError(ctx, "Variable \"" + id + "\" does not exists!");
+         return null;
+      }   
 
       // ID
       Symbol sym = AGLParser.symbolTable.get(id);
