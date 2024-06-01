@@ -5,10 +5,12 @@ import java.util.Map;
 
 public class ObjectType extends Type {
     private Map<String, List<Type>> attributes;
+    private List<ObjectType> subTypes;
 
     protected ObjectType(String name) {
         super(name);
         this.attributes = new HashMap<String, List<Type>>();
+        this.subTypes = new ArrayList<ObjectType>();
         switch (name) {
             case "Line":
                 System.out.println("Arrived in Line");
@@ -102,12 +104,13 @@ public class ObjectType extends Type {
                 this.addFill();
                 break;
             case "Model":
-                System.out.println("Arrived in model");
+                System.out.println("Arrived in Model");
                 this.addState();
                 this.addOrigin();
+                this.addSubTypes();
                 break;
             case "Script":
-                System.out.println("Arrived in script");
+                System.out.println("Arrived in Script");
                 break;
             default:
                 ErrorHandling.printError("Error: Invalid type!");
@@ -128,6 +131,14 @@ public class ObjectType extends Type {
             return false;
         }
         
+        return true;
+    }
+
+    public boolean checkSubType(ObjectType subType) {
+        if (!subTypes.contains(subType)) {
+            ErrorHandling.printError("That subtype is not allowed");
+            return false;
+        }
         return true;
     }
     
@@ -178,4 +189,18 @@ public class ObjectType extends Type {
         this.attributes.put("text", typesAllowed);
     }
     
+    private void addSubTypes() {
+        this.subTypes.add(new ObjectType("Line"));
+        this.subTypes.add(new ObjectType("PolyLine"));
+        this.subTypes.add(new ObjectType("Spline"));
+        this.subTypes.add(new ObjectType("Polygon"));
+        this.subTypes.add(new ObjectType("Blob"));
+        this.subTypes.add(new ObjectType("Rectangle"));
+        this.subTypes.add(new ObjectType("Ellipse"));
+        this.subTypes.add(new ObjectType("Arc"));
+        this.subTypes.add(new ObjectType("ArcChord"));
+        this.subTypes.add(new ObjectType("PieSlice"));
+        this.subTypes.add(new ObjectType("Text"));
+        this.subTypes.add(new ObjectType("Dot"));
+    }
 }              

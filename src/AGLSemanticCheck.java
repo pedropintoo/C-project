@@ -202,7 +202,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
       // TODO: getConcreteTypeID
       Symbol s = AGLParser.symbolTable.get(typeID);
-      Type type;
+      Type type = null;
 
       
 
@@ -221,11 +221,13 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
          }
 
          if (s != null) { // ModelType
+            type = new ModelType(typeID);
             if (!(type instanceof ModelType)) {
                ErrorHandling.printError("Error: invalid type in simple statement (must be an model type!)");
                return false;
             }
          } else { // ObjectType
+            type = new ObjectType(typeID);
             if (!(type instanceof ObjectType)) {
                ErrorHandling.printError("Error: invalid type in simple statement (must be an object type!)");
                return false;
@@ -239,6 +241,10 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
          if (!res) {
             ErrorHandling.printError("Error: invalid simple statement");
             return false;
+         }
+
+         if (type == null) {
+            type=ctx.typeID().res;
          }
 
          if (!ctx.assignment().eType.conformsTo(type)) {
