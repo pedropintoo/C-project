@@ -358,7 +358,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       // quero saber o tipo da variavel do lado esquerdo -> usando a função getConcreteID
       // os visitores da expressao vão me dar os tipos do lado direito -> ctx.assignment().eType
 
-      
+
 
       if ( (ctx.identifier().expression() == null ) && (ctx.identifier().identifier() == null) ) { // therefore it is a simple identifier (not an attribute)
          
@@ -1277,30 +1277,30 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
    // identifier : ID | ID '.' identifier | ID ('[' expression ']')+ ('.' identifier)? ;
    // returns the type of the expression
-   private Type getConcreteID(AGLParser.IdentifierContext ctx) {  
+   private Type getConcreteIDType(AGLParser.IdentifierContext ctx) {  
       String id = ctx.ID().getText();
       Type type = null;
 
-      // if (ctx.expression(0) != null) { // ID '[' expression ']' ('.' identifier)?
-      //    System.out.println("Array type");
-      //    Boolean res = visit(ctx.expression(0));
-      //    if (!res) {
-      //       ErrorHandling.printError("Error: invalid simple statement");
-      //    }
+      if (ctx.expression(0) != null) { // ID '[' expression ']' ('.' identifier)?
+         System.out.println("Array type");
+         Boolean res = visit(ctx.expression(0));
+         if (!res) {
+            ErrorHandling.printError("Error: invalid simple statement");
+         }
 
-      //    // expression must be a IntegerType
-      //    if (!ctx.expression(0).eType.conformsTo(integerType)) {
-      //       ErrorHandling.printError("Error: invalid expression type in simple statement (must be integer!)");
-      //    }
+         // expression must be a IntegerType
+         if (!ctx.expression(0).eType.conformsTo(integerType)) {
+            ErrorHandling.printError("Error: invalid expression type in simple statement (must be integer!)");
+         }
 
-      //    System.out.println(ctx.expression(0).eType.name());
+         System.out.println(ctx.expression(0).eType.name());
 
-      //    Type elemType = AGLParser.symbolTable.get(id).type();
-      //    System.out.println("Array Name: " + id);
-      //    System.out.println("Array Type: " + ((ArrayType)elemType).getElementType());
+         Type elemType = AGLParser.symbolTable.get(id).type();
+         System.out.println("Array Name: " + id);
+         System.out.println("Array Type: " + ((ArrayType)elemType).getElementType());
 
-      //    // check id, and check the type of the array
-      // } 
+         // check id, and check the type of the array
+      } 
       
       if (ctx.identifier() != null) { // ID '.' identifier
          type = getConcreteID(ctx.identifier());
