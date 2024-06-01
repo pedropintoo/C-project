@@ -313,13 +313,19 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
         ST res = templates.getInstanceOf("unaryExpression");
 
         res.add("stat", visit(ctx.expression()).render()); // render the return value!
+        String e1Var = ctx.expression().varName;
+        String op = ctx.sign.getText();
         
         String id = newVarName();
         ctx.varName = id;
 
         res.add("var", id);
-        res.add("op", ctx.sign.getText()); // ('+' | '-' | 'not')
-        res.add("e1", ctx.expression().varName); // render the return value!
+        res.add("op", op); // ('+' | '-' | 'not')
+        
+        if (!op.equals("not")) {
+            e1Var = "np.array("+e1Var+")";
+        }
+        res.add("e1", e1Var);
         
         return res;
     }

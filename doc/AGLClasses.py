@@ -489,7 +489,7 @@ class Ellipse(Object):
         self.object = self.view.canvas.create_oval(self.view.ellipse(self.view.coord(self.origin), self.length), fill=self.fill, state=self.state)
         self.view.objectsDrawn.append(self.object)
     
-    def rotate(self, angle):
+    def rotate(self, angle, origin=None):
         # TODO: implement rotation to Ellipse
         pass
 

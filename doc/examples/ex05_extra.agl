@@ -60,7 +60,7 @@ Pacman :: Model {
 
     # properties and how they reshape children's properties
     mouth : Enum in { Open, Close } # the first value is the default
-    action on face {
+    action on mouth {
         if mouth == Open do {
             with face do {
                 start = 30;
@@ -114,37 +114,63 @@ pacman2.face.fill = "wheat";
 
 refresh view,view2;
 
-print "Press any mouse button to quit";
+print "Press any mouse button to start the first animation";
 pos : Point = wait mouse click; # instantiate a Point and waits for a mouse click
 
+walk_vector : Vector = (0:10);
 
-for i in 1 .. 10 do {
+for i in 1 .. 100 do {
     pacman.mouth = Close;
-    refresh view,view2 after 100 ms;
+    refresh view,view2 after 1 ms;
     
     pacman.mouth = Open;
-    refresh view,view2 after 100 ms;
+    refresh view,view2 after 1 ms;
     
-    move pacman, view2 by (10,0);    # the 'by' makes the movement relative; the argument is a vector
-    refresh view2 after 100 ms;
+    move pacman, view2 by walk_vector;    # the 'by' makes the movement relative; the argument is a vector
+    refresh view2 after 1 ms;
 }
 
-print "Press any mouse button to quit";
+print "Press any mouse button to start the second animation";
 pos : Point = wait mouse click; # instantiate a Point and waits for a mouse click
 
 move view2 to pacman2.origin;
 
 refresh view,view2;
 
-for i in 1 .. 10 do {
+for i in 1 .. 100 do {
     pacman2.mouth = Close;
-    refresh view,view2 after 100 ms;
+    refresh view,view2 after 1 ms;
     
     pacman2.mouth = Open;
-    refresh view,view2 after 100 ms;
+    refresh view,view2 after 1 ms;
     
-    move pacman2, view2 by (10,0);    # the 'by' makes the movement relative; the argument is a vector
-    refresh view, view2 after 100 ms;
+    move pacman2, view2 by walk_vector;    # the 'by' makes the movement relative; the argument is a vector
+    refresh view, view2 after 1 ms;
+}
+
+print "Press any mouse button to rotate the pacmans";
+pos: Point = wait mouse click;
+
+rotate pacman, pacman2 by 180;
+
+walk_vector = -walk_vector;
+
+refresh view,view2;
+
+print "Press any mouse button to start the third animation";
+pos: Point = wait mouse click;
+
+for i in 1 .. 100 do {
+    pacman2.mouth = Close;
+    pacman.mouth = Open;
+    refresh view,view2 after 1 ms;
+    
+    pacman2.mouth = Open;
+    pacman.mouth = Close;
+    refresh view,view2 after 1 ms;
+    
+    move pacman2, pacman, view2 by walk_vector;    # the 'by' makes the movement relative; the argument is a vector
+    refresh view, view2 after 1 ms;
 }
 
 print "Press any mouse button to quit";
