@@ -449,6 +449,9 @@ class ArcChord(Object):
         self.object = self.view.canvas.create_arc(self.view.ellipse(self.view.coord(self.origin), self.length), style=CHORD, start=self.start, extent=self.extent, fill=self.fill, state=self.state)
         self.view.objectsDrawn.append(self.object)
 
+    def rotate(self, angle):
+        self.start += angle
+
 class PieSlice(Object):
 
     def __init__(self, root: Root = None, view: View = None, state="normal", origin=(0,0), length=(1,1), start=0, extent=100, fill="black"):
