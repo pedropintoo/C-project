@@ -38,18 +38,21 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
         return res;
     }
 
-   private String getConcreteId(AGLParser.IdentifierContext ctx, ST res){  
-        String id = ctx.ID(0).getText();
-        if (ctx.ID(1) != null) { 
-            for (int i = 1; i < ctx.ID().size(); i++) {
-                id += "." + ctx.ID(i).getText();
+    private String getConcreteId(AGLParser.IdentifierContext ctx, ST res){  
+        String id = ctx.ID().getText();
+        if (ctx.expression() != null) {
+            for (AGLParser.ExpressionContext expression : ctx.expression()) {
+                res.add("stat", visit(expression).render()); // render the return value!
+                id += "[" + expression.varName + "]";
             }
-        } else if (ctx.expression() != null) {
-            res.add("stat", visit(ctx.expression()).render()); // render the return value!
-            id += "[" + ctx.expression().varName + "]";
+        } 
+
+        if (ctx.identifier() != null) {
+            id += '.' + getConcreteId(ctx.identifier(), res);
         }
+        
         return id;
-   }
+    }
 
 
 /*

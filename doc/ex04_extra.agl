@@ -118,6 +118,12 @@ food1.state = "hidden";
 refresh view;
 refresh view2;
 
+
+print "Press any mouse button to quit";
+pos = wait mouse click; # instantiate a Point and waits for a mouse click
+
+close view2;
+
 print "Press any mouse button to quit";
 pos : Point = wait mouse click; # instantiate a Point and waits for a mouse click
 

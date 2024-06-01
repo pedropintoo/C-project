@@ -10,8 +10,9 @@ import numpy as np
 #################################################################
 ## Auxiliar
 #################################################################
-REFRESH_RATE = 0.1
+REFRESH_RATE = 0.001
 last_refresh = time.time()
+views = []
 last_view = None
 mouseX = None
 mouseY = None
@@ -49,8 +50,8 @@ else:
 >>
 
 refresh(stat, view, delay) ::= <<
-<if(delay)> 
 <stats(stat)>
+<if(delay)> 
 while (time.time() - last_refresh \<= <delay>):
     time.sleep(REFRESH_RATE)   
 
@@ -119,7 +120,8 @@ else:
 >>
 
 close(view) ::= <<
-<view>.close()
+<view>.close(); views.remove(<view>) if last_view != <view> else None
+last_view = (views.pop(-1) if len(views) > 0 else None) if last_view == <view> else last_view
 >>
 
 assign(stat,var,value, varIfModel) ::= <<
@@ -160,7 +162,9 @@ if model is not None:
 else:
     <var> = <type>(root = root)
 <if(origin)><var>.origin = <origin><endif>
-<if(update_lastView)>last_view = <var>
+<if(update_lastView)>if last_view is not None:
+    views.append(last_view)    
+last_view = <var>
 <endif>
 <properties>
 >>

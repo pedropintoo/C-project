@@ -10,7 +10,8 @@ Fire :: Model {
     color: Enum in {red, blue}
 
     action on flame.state {
-        print "The flame is " + flame.state;
+        print "The flame is ";
+        print flame.state;
         if flame.state == "normal" do {
             if color == blue  do {
                 flame.fill = "red";
@@ -79,14 +80,14 @@ Pacman :: Model {
 
 
 Rectangle with {
-    length = (1000,70);
+    length = (650,70);
     fill = "blue";
 }
 
 view : View with {
-    Ox = -450;
+    Ox = 30;
     Oy = 0;
-    width = 401;
+    width = 1800;
     height = 401;
     title = "1";
     background = "alice blue";
@@ -100,31 +101,59 @@ move pacman by (0,100);
 view2 : View with {
     Ox = -450;
     Oy = 0;
-    width = 401;
-    height = 401;
+    width = 200;
+    height = 200;
     title = "2";
     background = "alice blue";
 }
 
-pacman2 : Pacman = deepcopy pacman to (-450,-100);
+move view2 to pacman.origin;
 
+pacman2 : Pacman = deepcopy pacman to (-450,-100);
 pacman2.face.fill = "wheat";
 
 refresh view,view2;
 
-for i in 1 .. 10 do {
+print "Press any mouse button to quit";
+pos : Point = wait mouse click; # instantiate a Point and waits for a mouse click
+
+
+for i in 1 .. 100 do {
     pacman.mouth = Close;
-    refresh view,view2 after 25 ms;
+    refresh view,view2 after 1 ms;
     
     pacman.mouth = Open;
-    refresh view,view2 after 25 ms;
+    refresh view,view2 after 1 ms;
     
-    move pacman, view, view2 by (10,0);    # the 'by' makes the movement relative; the argument is a vector
-    refresh view,view2 after 25 ms;
+    move pacman, view2 by (10,0);    # the 'by' makes the movement relative; the argument is a vector
+    refresh view2 after 1 ms;
 }
 
 print "Press any mouse button to quit";
 pos : Point = wait mouse click; # instantiate a Point and waits for a mouse click
+
+move view2 to pacman2.origin;
+
+refresh view,view2;
+
+for i in 1 .. 100 do {
+    pacman2.mouth = Close;
+    refresh view,view2 after 1 ms;
+    
+    pacman2.mouth = Open;
+    refresh view,view2 after 1 ms;
+    
+    move pacman2, view2 by (10,0);    # the 'by' makes the movement relative; the argument is a vector
+    refresh view, view2 after 1 ms;
+}
+
+print "Press any mouse button to quit";
+pos : Point = wait mouse click; # instantiate a Point and waits for a mouse click
+
+close view2;
+
+print "Press any mouse button to quit";
+pos = wait mouse click; # instantiate a Point and waits for a mouse click
 
 close view;
 

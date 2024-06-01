@@ -177,7 +177,6 @@ typeID returns[Type res]
 
 identifier
     : ID
-    | ID ('.' ID)+
-    | ID '[' expression ']'
+    | ID '.' identifier
+    | ID ('[' expression ']')+ ('.' identifier)?
     ;
-
