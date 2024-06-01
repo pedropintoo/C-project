@@ -110,7 +110,7 @@ public class ObjectType extends Type {
                 System.out.println("Arrived in script");
                 break;
             default:
-                ErrorHandling.printError("Error: Invalid typeeeeeee");
+                ErrorHandling.printError("Error: Invalid type!");
                 break;
         }
         System.out.println("Attributes initialized for " + name + ": " + this.attributes.keySet());

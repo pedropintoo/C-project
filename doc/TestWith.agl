@@ -6,8 +6,6 @@ a: Rectangle with {
     height = 200;
 }
 
-a: Integer = 0;
-
 with pacman do {
     a = 1;
 }

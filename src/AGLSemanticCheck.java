@@ -23,6 +23,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
    @Override
    public Boolean visitProgram(AGLParser.ProgramContext ctx) {
+      // program: stat* EOF;
       Boolean res = true;
 
       for (AGLParser.StatContext stat : ctx.stat()) {
@@ -371,6 +372,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
          }
       
       } else {
+         
          ErrorHandling.printError("TO BE IMPLEMENTED ID ('.' ID)+ - attributes"); // TODO
       }
 
@@ -732,8 +734,8 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
          return false;
       }
 
-   //    return res;
-   // }
+      return res;
+   }
 
    // --------- End Visit Expression ---------
 
@@ -973,7 +975,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       Type idType = AGLParser.symbolTable.get(ID).type();
 
       // id type must be "Script" that is an ObjectType
-      if (!idType.conformsTo(new ObjectType("Script"))) {
+      if (!idType.conformsTo(scriptType)) {
          ErrorHandling.printError("Error: identifier \"" + ID + "\" is not a script type");
          return false;
       }
