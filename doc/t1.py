@@ -253,7 +253,7 @@ if __name__ == "__main__":
         v22 = Arc()
         model.add_object(v22) # add object to model
     else:
-        v22 = ArcChord(root = root)
+        v22 = PieSlice(root = root)
     v22.origin = v19
 
     temp = get_nested_attribute(action, '50')

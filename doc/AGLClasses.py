@@ -473,6 +473,8 @@ class PieSlice(Object):
         self.object = self.view.canvas.create_arc(self.view.ellipse(self.view.coord(self.origin), self.length), style=PIESLICE, start=self.start, extent=self.extent, fill=self.fill, state=self.state)
         self.view.objectsDrawn.append(self.object)
 
+    def rotate(self, angle):
+        self.start += angle
 
 class Text(Object):
     
