@@ -611,8 +611,12 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
          }
 
          if (!ctx.e1.eType.conformsTo(ctx.e2.eType)) {
-            ErrorHandling.printError(ctx, "Error: must be the same type in relational expression!");
-            return false;
+            // If eType is number may be integer or number
+            if (!(ctx.e1.eType instanceof IntegerType && ctx.e2.eType instanceof NumberType)
+            && !(ctx.e1.eType instanceof NumberType && ctx.e2.eType instanceof IntegerType)) {
+               ErrorHandling.printError(ctx, "Error: must be the same type in relational expression!");
+               return false;
+            }
          }
 
          if (ctx.e1.eType instanceof BooleanType) {
@@ -624,6 +628,8 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
             ErrorHandling.printError(ctx, "Error: invalid relational expression (point or vector type)");
             return false;
          }
+
+         // TODO: 2.0 == 2
 
          ctx.eType = booleanType;
       } else {
