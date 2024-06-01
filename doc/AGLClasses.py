@@ -424,6 +424,9 @@ class Arc(Object):
         self.view = view
         self.object = self.view.canvas.create_arc(self.view.ellipse(self.view.coord(self.origin), self.length), style=ARC, start=self.start, extent=self.extent, outline=self.outline, state=self.state)
         self.view.objectsDrawn.append(self.object)
+    
+    def rotate(self, angle):
+        self.start += angle
 
 class ArcChord(Object):
 

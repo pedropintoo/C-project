@@ -7,15 +7,17 @@ view : View with {
     background = "alice blue";
 }
 
-line : Line at (90,90) with {
-    length = (90,90);
-    fill = "red";
+arc : Arc at (0,0) with {
+    length = (50,50);
+    start = 30;
+    extent = 100;
+    outline = "tomato";
 }
 
 refresh view;
 
 for i in 1..5 do {
-    move line by (45,45); 
+    move arc by (45,45); 
     refresh view after 1 s;
 }
 
