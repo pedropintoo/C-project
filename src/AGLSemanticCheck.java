@@ -350,16 +350,26 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    @Override
    public Boolean visitLongAssignment(AGLParser.LongAssignmentContext ctx) {
       // longAssignment : identifier assignment;
+
       // identifier : ID | ID '.' identifier | ID '[' expression ']' ('.' identifier)? ;
       // assignment : '=' expression;
+      
       Boolean res = true;
       String id = ctx.identifier().getText();
 
+
+      // TODO: 
       // quero saber o tipo da variavel do lado esquerdo -> usando a função getConcreteID
       // os visitores da expressao vão me dar os tipos do lado direito -> ctx.assignment().eType
 
+      System.out.println("«««««« Visit Long Assignment »»»»»»");
+
+      Type type = getConcreteIDType(ctx.identifier());      
 
 
+      System.out.println("«««««« Type: " + type.name() + " »»»»»»");
+
+      
       if ( (ctx.identifier().expression() == null ) && (ctx.identifier().identifier() == null) ) { // therefore it is a simple identifier (not an attribute)
          
          if (!AGLParser.symbolTable.containsKey(id)) {
@@ -391,7 +401,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       
       } else {
          
-         ErrorHandling.printError("aTO BE IMPLEMENTED ID ('.' ID)+ - attributes"); // TODO
+         ErrorHandling.printError("TO BE IMPLEMENTED ID ('.' ID)+ - attributes"); // TODO
       }
 
       return res;
@@ -693,7 +703,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       Boolean res = true;
       String id = ctx.identifier().getText();
 
-      Type type = getConcreteID(ctx.identifier());
+      Type type = getConcreteIDType(ctx.identifier());
 
       if (type == null) {
          ErrorHandling.printError(ctx, "Error: invalid type in identifier");
@@ -1275,6 +1285,8 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       return true;
    }
 
+
+   // TODO: 
    // identifier : ID | ID '.' identifier | ID ('[' expression ']')+ ('.' identifier)? ;
    // returns the type of the expression
    private Type getConcreteIDType(AGLParser.IdentifierContext ctx) {  
@@ -1282,7 +1294,9 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       Type type = null;
 
       if (ctx.expression(0) != null) { // ID '[' expression ']' ('.' identifier)?
+         
          System.out.println("Array type");
+
          Boolean res = visit(ctx.expression(0));
          if (!res) {
             ErrorHandling.printError("Error: invalid simple statement");
@@ -1296,14 +1310,17 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
          System.out.println(ctx.expression(0).eType.name());
 
          Type elemType = AGLParser.symbolTable.get(id).type();
-         System.out.println("Array Name: " + id);
-         System.out.println("Array Type: " + ((ArrayType)elemType).getElementType());
+         
 
-         // check id, and check the type of the array
+         System.out.println("Array Name: " + id);
+         System.out.println("Array Type: " + ((ArrayType)elemType).name());
+         
+         // return casted to ArrayType
+         return new ArrayType(((ArrayType)elemType).name());
       } 
       
       if (ctx.identifier() != null) { // ID '.' identifier
-         type = getConcreteID(ctx.identifier());
+         type = getConcreteIDType(ctx.identifier());
          
 
 
