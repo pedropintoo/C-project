@@ -1,0 +1,19 @@
+view : View with {
+    width = 601;
+    height = 601;
+    title = "Illustrating the minimum level graphical models";
+    background = "alice blue";
+}
+
+line: Line at (0,0) with {
+    length = (50,50);
+    fill = "red";
+}
+
+refresh view;
+
+for i in 1..5 do {
+    move line by (45,45); 
+    refresh view after 1 s;
+}
+

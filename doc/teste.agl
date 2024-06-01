@@ -1,22 +1,35 @@
+Fire :: Model {
+    flame : Line at (75, 0) with {
+        length = (100, 0);
+        fill = "red";
+    }
+}
+
+Pacman :: Model {
+
+    face : PieSlice with {
+        length = (50,50);
+        fill = "pink";
+        start = 30;
+        extent = 300;
+    }
+    fire : Fire;
+}
+
+pacman : Pacman at (-450, 0);
 view : View with {
-    Ox = 0;
+    Ox = -450;
     Oy = 0;
     width = 401;
     height = 401;
-    title = "Illustrating a moving pacman";
+    title = "1";
     background = "alice blue";
 }
-
-polygon : Polygon at (0, 0) with {
-    points = [(0, 0), (100, 0), (100, 100), (0, 100), (25, 75)];
-    fill = "black";
-}
-
 
 refresh view;
 
 for i in 1..5 do {
-    move polygon by (45,45); 
+    move pacman by (45,45); 
     refresh view after 1 s;
 }
 

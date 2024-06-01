@@ -177,7 +177,14 @@ class Model(Object):
             old_relative = (o.origin[0] - self.origin[0], o.origin[1] - self.origin[1])
             o.move_absolute(point) 
             o.move_relative(old_relative) 
-        self.origin = point    
+        self.origin = point   
+
+    def rotate(self, angle, origin=None):
+        if origin is None:
+            origin = self.origin
+
+        for o in self.objects:
+            o.rotate(angle, origin)
 
 # TODO: override move_relative and move_absolute
 
@@ -200,18 +207,28 @@ class Line(Object):
         self.object = self.view.canvas.create_line(self.view.line(self.view.coord(self.origin), self.length), fill=self.fill, state=self.state)
         self.view.objectsDrawn.append(self.object)
     
-    def rotate(self, angle):
+    def rotate(self, angle, origin=None):
         angle_rad = math.radians(angle)
         cos_val = math.cos(angle_rad)
         sin_val = math.sin(angle_rad)
 
+        if origin == None:
+            origin = self.origin
+        
         rel_x = self.length[0]
         rel_y = self.length[1]
 
-        new_x = cos_val * rel_x - sin_val * rel_y  # cos(angle) * x - sin(angle) * y
-        new_y = sin_val * rel_x + cos_val * rel_y  # sin(angle) * x + cos(angle) * y
+        new_x = cos_val * rel_x - sin_val * rel_y
+        new_y = sin_val * rel_x + cos_val * rel_y
 
         self.length = (new_x, new_y)
+
+        if origin != None:
+            vector_from_origin = (self.origin[0] - origin[0], self.origin[1] - origin[1])
+            # rotate the vector_from_origin around the origin by the angle
+            new_x = cos_val * vector_from_origin[0] - sin_val * vector_from_origin[1]
+            new_y = sin_val * vector_from_origin[0] + cos_val * vector_from_origin[1]
+            self.origin = (origin[0] + new_x, origin[1] + new_y)
 
 class PolyLine(Object):
     """
@@ -505,7 +522,9 @@ class PieSlice(Object):
         self.object = self.view.canvas.create_arc(self.view.ellipse(self.view.coord(self.origin), self.length), style=PIESLICE, start=self.start, extent=self.extent, fill=self.fill, state=self.state)
         self.view.objectsDrawn.append(self.object)
 
-    def rotate(self, angle):
+    def rotate(self, angle, origin=None):
+        if origin is None:
+            origin = self.origin
         self.start += angle
 
 class Text(Object):
