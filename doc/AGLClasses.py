@@ -491,7 +491,8 @@ class Ellipse(Object):
     
     def rotate(self, angle, origin=None):
         # TODO: implement rotation to Ellipse
-        pass
+        if origin != None:
+            self.origin = self.view.rotateByOrigin(angle, origin, self.origin)
 
 class Arc(Object):
 
@@ -627,4 +628,6 @@ class Dot(Object):
         self.view.objectsDrawn.append(self.object)
     
     def rotate(self, angle, origin=None):
-        pass # Should a dot be rotated?
+        # Should a dot be rotated?
+        if origin != None:
+            self.origin = self.view.rotateByOrigin(angle, origin, self.origin)

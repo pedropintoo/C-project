@@ -99,7 +99,7 @@ while True:
     # refresh the condition
     <stats(stat)>
     ##
-    if not <condition>:
+    if <condition>:
         break   # Repeat until condition is false
 >>
 

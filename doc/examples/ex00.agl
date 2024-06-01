@@ -1,5 +1,5 @@
 
-number : Boolean = not True;
+number : Boolean = np.not True;
 
 a : Array = [[1, 2, 3], [4, 5, 6], [7, 8, 9]];
 
