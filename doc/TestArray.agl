@@ -1,6 +1,17 @@
 
-a : Array = [0,2,3,4,5];
+a : Array<Integer> = [0,2,3,4,5];
 
-b : Array = ["a","b","c","d","e"];
+b : Array<String> = ["a","b","c","d","e"];
 
-c : Array = [(1,2), (3,4), (5,6), (7,8), (9,10)];
+c : Array<Array<Point>>;
+
+
+c = [(1,2), (3,4), (5,6), (7,8), (9,10)];
+
+e : Array<Array<Point>> = [c, c, c, c]; # sintaticamente correto mas semânticamente errado
+
+d : Point = c[133];
+
+
+
+#e : Array = [c[0], c[1], c[2], 10];

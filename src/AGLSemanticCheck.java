@@ -17,7 +17,6 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    private final BooleanType booleanType = new BooleanType();
    private final ObjectType scriptType = new ObjectType("Script");
    private final EnumType enumType = new EnumType();
-   private final ArrayType arrayType = new ArrayType();
 
    @Override
    public Boolean visitProgram(AGLParser.ProgramContext ctx) {
@@ -195,22 +194,17 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       // in_assignment: 'in' '{' ID (',' ID)* '}'
       
       String typeID = ctx.typeID().getText();
-
+      System.out.println("Type aa: " + typeID);
       if (!isValidType(typeID)) { // check if type is valid
          ErrorHandling.printError("Error: invalid type in simple statement");
          return false;
       }
 
+      // TODO: getConcreteTypeID
       Symbol s = AGLParser.symbolTable.get(typeID);
       Type type;
 
-      if (s != null) {
-         // ModelType
-         type = new ModelType(typeID);
-
-      } else {
-         type = ctx.typeID().res;
-      }
+      
 
       // check if we have an expression 
       if (ctx.expression() != null) {
@@ -337,12 +331,12 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    @Override
    public Boolean visitLongAssignment(AGLParser.LongAssignmentContext ctx) {
       // longAssignment : identifier assignment;
-      // identifier : ID | ID('.' ID)+;
+      // identifier : ID | ID '.' identifier | ID '[' expression ']' ('.' identifier)? ;
       // assignment : '=' expression;
       Boolean res = true;
       String id = ctx.identifier().getText();
 
-      if (ctx.identifier().ID(1) == null) { // therefore it is a simple identifier (not an attribute)
+      if ( (ctx.identifier().expression() == null ) && (ctx.identifier().identifier() == null) ) { // therefore it is a simple identifier (not an attribute)
          if (!AGLParser.symbolTable.containsKey(id)) {
             ErrorHandling.printError(ctx, "Variable \"" + id + "\" does not exists!");
             res = false;
@@ -668,13 +662,13 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    @Override
    public Boolean visitExprID(AGLParser.ExprIDContext ctx) {
       // expression: identifier and expression returns [Type eType, String varName]
-      // identifier : ID | ID('.' ID)+;
+      // identifier : ID | ID '.' identifier | ID '[' expression ']' ('.' identifier)? ;
       System.out.println("Arrived in ExprID");
 
       Boolean res = true;
       String id = ctx.identifier().getText();
 
-      Type type = getConcreteTypeID(ctx.identifier());
+      Type type = getConcreteID(ctx.identifier());
 
       if (type == null) {
          ErrorHandling.printError(ctx, "Error: invalid type in identifier");
@@ -698,12 +692,12 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    @Override
    public Boolean visitExprDeepCopy(AGLParser.ExprDeepCopyContext ctx) {
       // expression: 'deepcopy' identifier 'to' expression and expression returns [Type eType, String varName]
-      // identifier: ID | ID('.' ID)+ | ID '[' expression ']';
+      // identifier : ID | ID '.' identifier | ID '[' expression ']' ('.' identifier)? ;
 
       Boolean res = true;
       String id = ctx.identifier().getText();
 
-      if (ctx.identifier().ID(1) == null) {
+      if ( (ctx.identifier().expression() == null ) && (ctx.identifier().identifier() == null) ) {
          if (!AGLParser.symbolTable.containsKey(id)) {
             ErrorHandling.printError(ctx, "Variable \"" + id + "\" does not exists!");
             res = false;
@@ -759,7 +753,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       }
 
       if (res) {
-         ctx.eType = new ArrayType();
+         ctx.eType = new ArrayType(type.name());
       }
 
       return res;
@@ -1093,7 +1087,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    @Override
    public Boolean visitAction(AGLParser.ActionContext ctx) {
       // action: 'action' 'on' identifier stat
-      // identifier : ID | ID('.' ID)+ | ID '[' expression ']';
+      // identifier : ID | ID '.' identifier | ID '[' expression ']' ('.' identifier)? ;
       Boolean res = true;
       String id = ctx.identifier().getText();
 
@@ -1233,6 +1227,15 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       }
       ;
 
+      // typeID can be a Array of a an array of a valid type. 
+      // E.g: Array<Number>
+      // E.g: Array<Array<Point>>
+      System.out.println("Type ID: " + typeID);
+      if (typeID.startsWith("Array<") && typeID.endsWith(">")) {
+         String arrayType = typeID.substring(6, typeID.length() - 1);
+         return isValidType(arrayType);
+      }
+   
       // typeID can be a ID
       if (!AGLParser.symbolTable.containsKey(typeID)) {
          ErrorHandling.printError("Error: type not exists: " + typeID);
@@ -1249,45 +1252,77 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       return true;
    }
 
-   private Type getConcreteTypeID(AGLParser.IdentifierContext ctx) {  
-      String id = ctx.ID(0).getText();
+   // identifier : ID | ID '.' identifier | ID ('[' expression ']')+ ('.' identifier)? ;
+   // returns the type of a variable
+   private Type getConcreteID(AGLParser.IdentifierContext ctx) {  
+      String id = ctx.ID().getText();
+
       Type type = null;
 
-      if (ctx.ID(1) != null) { // ID ('.' ID)+
-         for (int i = 1; i < ctx.ID().size(); i++) {
-               id += "." + ctx.ID(i).getText();
-         }
-         // verificar se o proximo ID está nas propriedades do anterior.
+      System.out.println("ID: " + id);
 
-      } else if (ctx.expression() != null) { // ID '[' expression ']'
-         Boolean res = visit(ctx.expression());
-         if (!res) {
-            ErrorHandling.printError("Error: invalid simple statement");
-         }
+      // if (ctx.expression(0) != null) { // ID '[' expression ']' ('.' identifier)?
+      //    System.out.println("Array type");
+      //    Boolean res = visit(ctx.expression(0));
+      //    if (!res) {
+      //       ErrorHandling.printError("Error: invalid simple statement");
+      //    }
 
-         // expression must be a IntegerType
-         if (!ctx.expression().eType.conformsTo(integerType)) {
-            ErrorHandling.printError("Error: invalid expression type in simple statement (must be integer!)");
-         }
+      //    // expression must be a IntegerType
+      //    if (!ctx.expression(0).eType.conformsTo(integerType)) {
+      //       ErrorHandling.printError("Error: invalid expression type in simple statement (must be integer!)");
+      //    }
 
-         id += "[" + ctx.expression().getText() + "]";
+      //    System.out.println(ctx.expression(0).eType.name());
 
-         // TODO: get type
+      //    Type elemType = AGLParser.symbolTable.get(id).type();
+      //    System.out.println("Array Name: " + id);
+      //    System.out.println("Array Type: " + ((ArrayType)elemType).getElementType());
 
-      } else { // ID
-         if (!AGLParser.symbolTable.containsKey(id)) {
-            ErrorHandling.printError(ctx, "Variable \"" + id + "\" does not exists!"); // type will be null
+      //    // check id, and check the type of the array
+      // } 
+      
+      if (ctx.identifier() != null) { // ID '.' identifier
+         System.out.println("Attribute type");
+         type = getConcreteID(ctx.identifier());
+         
+
+
+         // check id, and check the type of the attribute
+
+      }
+         
+      // ID
+      if (!AGLParser.symbolTable.containsKey(id)) {
+         ErrorHandling.printError(ctx, "Variable \"" + id + "\" does not exists!"); // type will be null
+      } else {
+         Symbol sym = AGLParser.symbolTable.get(id);
+         if (!sym.valueDefined()) {
+            ErrorHandling.printError(ctx, "Variable \"" + id + "\" not defined!"); // type will be null
          } else {
-            Symbol sym = AGLParser.symbolTable.get(id);
-            if (!sym.valueDefined()) {
-               ErrorHandling.printError(ctx, "Variable \"" + id + "\" not defined!"); // type will be null
-            } else {
-               type = sym.type(); 
-            }
-         }   
+            type = sym.type(); 
+         }
+      }   
+
+      return type;
+   }
+
+   // give the type of TypeID
+   private Type getConcreteTypeID(AGLParser.TypeIDContext ctx, String typeID) {  
+      Symbol s = AGLParser.symbolTable.get(typeID);
+
+      Type type;
+
+      if (s != null) {
+         // ModelType
+         type = new ModelType(typeID);
+
+      } else {
+         type = ctx.typeID().res;
       }
 
       return type;
+
    }
 
 

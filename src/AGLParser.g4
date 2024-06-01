@@ -150,33 +150,34 @@ ifStatement
  
 
 typeID returns[Type res]
-    : 'Integer'     {$res = new IntegerType();}
-    | 'String'      {$res = new StringType();}
-    | 'Point'       {$res = new PointType();}
-    | 'Number'      {$res = new NumberType();}
-    | 'Vector'      {$res = new VectorType();}
-    | 'Time'        {$res = new TimeType();}
-    | 'Boolean'     {$res = new BooleanType();}
-    | 'View'        {$res = new ObjectType("View");}
-    | 'Line'        {$res = new ObjectType("Line");} 
-    | 'Rectangle'   {$res = new ObjectType("Rectangle");}
-    | 'Ellipse'     {$res = new ObjectType("Ellipse");}
-    | 'Arc'         {$res = new ObjectType("Arc");}
-    | 'ArcChord'    {$res = new ObjectType("ArcChord");}
-    | 'PieSlice'    {$res = new ObjectType("PieSlice");}
-    | 'Text'        {$res = new ObjectType("Text");}
-    | 'Dot'         {$res = new ObjectType("Dot");}
-    | 'PolyLine'    {$res = new ObjectType("PolyLine");}
-    | 'Spline'      {$res = new ObjectType("Spline");}   
-    | 'Polygon'     {$res = new ObjectType("Polygon");}
-    | 'Blob'        {$res = new ObjectType("Blob");}
-    | 'Script'      {$res = new ObjectType("Script");}
-    | 'Enum'        {$res = new EnumType();}   
-    | 'Array'       {$res = new ArrayType();}
-    | ID            {$res = new ModelType($ID.text);}
+    : 'Integer'                 {$res = new IntegerType();}
+    | 'String'                  {$res = new StringType();}
+    | 'Point'                   {$res = new PointType();}
+    | 'Number'                  {$res = new NumberType();}
+    | 'Vector'                  {$res = new VectorType();}
+    | 'Time'                    {$res = new TimeType();}
+    | 'Boolean'                 {$res = new BooleanType();}
+    | 'View'                    {$res = new ObjectType("View");}
+    | 'Line'                    {$res = new ObjectType("Line");} 
+    | 'Rectangle'               {$res = new ObjectType("Rectangle");}
+    | 'Ellipse'                 {$res = new ObjectType("Ellipse");}
+    | 'Arc'                     {$res = new ObjectType("Arc");}
+    | 'ArcChord'                {$res = new ObjectType("ArcChord");}
+    | 'PieSlice'                {$res = new ObjectType("PieSlice");}
+    | 'Text'                    {$res = new ObjectType("Text");}
+    | 'Dot'                     {$res = new ObjectType("Dot");}
+    | 'PolyLine'                {$res = new ObjectType("PolyLine");}
+    | 'Spline'                  {$res = new ObjectType("Spline");}   
+    | 'Polygon'                 {$res = new ObjectType("Polygon");}
+    | 'Blob'                    {$res = new ObjectType("Blob");}
+    | 'Script'                  {$res = new ObjectType("Script");}
+    | 'Enum'                    {$res = new EnumType();}   
+    | 'Array' '<' typeID '>'    {$res = new ArrayType($typeID.text);}
+    | ID                        {$res = new ModelType($ID.text);}
     ;
 
 identifier
     : ID
     | ID '.' identifier
     | ID ('[' expression ']')+ ('.' identifier)?
+    ;
