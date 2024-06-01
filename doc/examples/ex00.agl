@@ -1,6 +1,45 @@
+elipse : Ellipse at (-650, 0) with {
+    length = (100, 35);
+    fill = "black";
+}
 
-number : Boolean = np.not True;
+pieslice : PieSlice at (-650, 0) with {
+    fill = "red";
+    length = (100,35);
+    start = 30;
+    extent = 45;
+}
 
-a : Array = [[1, 2, 3], [4, 5, 6], [7, 8, 9]];
+pieslice2 : PieSlice at (-350, 0) with {
+    fill = "blue";
+    length = (100,35);
+    start = 30;
+    extent = 45;
+}
 
-print number;
+view : View with {
+    Ox = 30;
+    Oy = 0;
+    width = 1800;
+    height = 401;
+    title = "1";
+    background = "alice blue";
+}
+
+
+refresh view;
+
+for i in 0..20 do {
+    rotate pieslice by 35;
+    rotate pieslice2 by 35;
+    refresh view after 1s;
+}
+
+
+
+print "Press any mouse button to quit";
+
+p : Point = wait mouse click; # instantiate a Point and waits for a mouse click
+print p;
+
+close view;

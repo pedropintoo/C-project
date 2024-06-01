@@ -236,9 +236,6 @@ class Line(Object):
         self.view.objectsDrawn.append(self.object)
     
     def rotate(self, angle, origin=None):
-        if origin == None:
-            origin = self.origin
-        
         self.length = self.view.rotateLength(self.length, angle)
         
         if origin != None:
@@ -502,6 +499,7 @@ class Arc(Object):
         self.start = start
         self.extent = extent   
         self.outline = outline
+        self.angle = 0
 
     def __deepcopy__(self, memo=None):
         """Create a deep copy of the model."""
@@ -512,13 +510,11 @@ class Arc(Object):
 
     def create_object(self, view):
         self.view = view
-        self.object = self.view.canvas.create_arc(self.view.ellipse(self.view.coord(self.origin), self.length), style=ARC, start=self.start, extent=self.extent, outline=self.outline, state=self.state)
+        self.object = self.view.canvas.create_arc(self.view.ellipse(self.view.coord(self.origin), self.length), style=ARC, start=self.start + self.angle, extent=self.extent, outline=self.outline, state=self.state)
         self.view.objectsDrawn.append(self.object)
     
     def rotate(self, angle, origin=None):
-        self.start += angle
-
-        self.length = self.view.rotateLength(self.length, angle)
+        self.angle += angle
 
         if origin != None:
             self.origin = self.view.rotateByOrigin(angle, origin, self.origin)
@@ -531,6 +527,7 @@ class ArcChord(Object):
         self.start = start
         self.extent = extent   
         self.fill = fill
+        self.angle = 0
 
     def __deepcopy__(self, memo=None):
         """Create a deep copy of the model."""
@@ -541,14 +538,12 @@ class ArcChord(Object):
 
     def create_object(self, view):
         self.view = view
-        self.object = self.view.canvas.create_arc(self.view.ellipse(self.view.coord(self.origin), self.length), style=CHORD, start=self.start, extent=self.extent, fill=self.fill, state=self.state)
+        self.object = self.view.canvas.create_arc(self.view.ellipse(self.view.coord(self.origin), self.length), style=CHORD, start=self.start + self.angle, extent=self.extent, fill=self.fill, state=self.state)
         self.view.objectsDrawn.append(self.object)
 
     def rotate(self, angle, origin=None):
-        self.start += angle
-
-        self.length = self.view.rotateLength(self.length, angle)
-
+        self.angle += angle
+        
         if origin != None:
             self.origin = self.view.rotateByOrigin(angle, origin, self.origin)
 
@@ -560,6 +555,7 @@ class PieSlice(Object):
         self.start = start
         self.extent = extent   
         self.fill = fill  
+        self.angle = 0
 
     def __deepcopy__(self, memo=None):
         """Create a deep copy of the model."""
@@ -570,13 +566,11 @@ class PieSlice(Object):
 
     def create_object(self, view):
         self.view = view
-        self.object = self.view.canvas.create_arc(self.view.ellipse(self.view.coord(self.origin), self.length), style=PIESLICE, start=self.start, extent=self.extent, fill=self.fill, state=self.state)
+        self.object = self.view.canvas.create_arc(self.view.ellipse(self.view.coord(self.origin), self.length), style=PIESLICE, start=self.start + self.angle, extent=self.extent, fill=self.fill, state=self.state)
         self.view.objectsDrawn.append(self.object)
 
     def rotate(self, angle, origin=None):
-        self.start += angle
-
-        self.length = self.view.rotateLength(self.length, angle)
+        self.angle += angle
 
         if origin != None:
             self.origin = self.view.rotateByOrigin(angle, origin, self.origin)
