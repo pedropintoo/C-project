@@ -34,6 +34,7 @@ public class ArrayType extends Type {
 
     @Override
     public String name() {
+        
         if (elementType instanceof ArrayType) {
             return "Array<" + elementType.name() + ">";
         }

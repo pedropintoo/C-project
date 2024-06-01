@@ -250,10 +250,10 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
             return false;
          }
          
-         System.out.println("««««««");
-         System.out.println("Type: " + type.name());
-         System.out.println("Assignment type: " + ctx.assignment().eType.name());
-         System.out.println("««««««");
+         // System.out.println("««««««");
+         // System.out.println("Type: " + type.name());
+         // System.out.println("Assignment type: " + ctx.assignment().eType.name());
+         // System.out.println("««««««");
 
 
          if (type == null) {
@@ -362,12 +362,9 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       // quero saber o tipo da variavel do lado esquerdo -> usando a função getConcreteID
       // os visitores da expressao vão me dar os tipos do lado direito -> ctx.assignment().eType
 
-      System.out.println("«««««« Visit Long Assignment »»»»»»");
-
       Type type = getConcreteIDType(ctx.identifier());      
 
-
-      System.out.println("«««««« Type: " + type.name() + " »»»»»»");
+      // System.out.println("«««««« Type: " + type.name() + " »»»»»»");
 
       
       if ( (ctx.identifier().expression() == null ) && (ctx.identifier().identifier() == null) ) { // therefore it is a simple identifier (not an attribute)
@@ -410,7 +407,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
                return false;
             }
             
-            System.out.println("«««««« Assignment Type: " + ctx.assignment().eType.name() + " »»»»»»");
+            // System.out.println("«««««« Assignment Type: " + ctx.assignment().eType.name() + " »»»»»»");
 
             if (!ctx.assignment().eType.conformsTo(type)) {
                ErrorHandling.printError(ctx, "----------------   Expression type does not conform to variable type!");
@@ -435,11 +432,46 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    @Override
    public Boolean visitAssignment(AGLParser.AssignmentContext ctx) {
       // assignment '=' expression
+      //  '[' expression (',' expression)* ']'   #ExprArray
 
       Boolean res = visit(ctx.expression());
-
+      String exprText = ctx.expression().getText();
+   
+      // If expression have more than one index then we have to check the last index
+      // E.g. a[1] is a Array<Array<Point>> but a[1][2] is a Array<Point>
       if (res) {
-         ctx.eType = ctx.expression().eType;
+         Type type = ctx.expression().eType;
+
+         // if it's an access to an array element: exprText = varName[1]
+         String varName = exprText.split("\\[")[0];
+
+         // if it's an access to an array element: varName[1], varName belongs to symbol table
+         if (ctx.expression().eType instanceof ArrayType && AGLParser.symbolTable.containsKey(varName)) {
+            // check the number of indexes in exprText, by counting the number of '['
+            int count = 0;
+            for (int i = 0; i < exprText.length(); i++) {
+               if (exprText.charAt(i) == '[') {
+                  count++;
+               }
+            }
+
+            // if count > 1 then we have to check the last index
+            if (count > 1) {
+   
+               String typeStr = type.name();
+
+               // remove from "typeStr" the first (count-1) "<Array>"
+               for (int i = 0; i < count - 1; i++) {
+                  int start = typeStr.indexOf('<') + 1;
+                  int end = typeStr.lastIndexOf('>');
+                  typeStr = typeStr.substring(start, end);
+               }
+
+               type = new ArrayType(typeStr);
+            }
+         }
+
+         ctx.eType = type;
       }
 
       return res;
@@ -1318,9 +1350,12 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       String id = ctx.ID().getText();
       Type type = null;
 
-      if (ctx.expression(0) != null) { // ID '[' expression ']' ('.' identifier)?
-         
+      if (!AGLParser.symbolTable.containsKey(id)) {
+         ErrorHandling.printError(ctx, "Variable \"" + id + "\" does not exists!");
+         return null;
+      }   
 
+      if (ctx.expression(0) != null) { // ID '[' expression ']' ('.' identifier)?
          Boolean res = visit(ctx.expression(0));
          if (!res) {
             ErrorHandling.printError("Error: invalid simple statement");
@@ -1332,12 +1367,9 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
          }
 
          System.out.println(ctx.expression(0).eType.name());
+         System.out.println("ID: " + id);
 
          Type elemType = AGLParser.symbolTable.get(id).type();
-         
-
-         System.out.println("Array Name: " + id);
-         System.out.println("Array Type: " + ((ArrayType)elemType).getElementType().name());
          
          // return casted to ArrayType
          return new ArrayType(((ArrayType)elemType).getElementType().name());
@@ -1345,29 +1377,16 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       
       if (ctx.identifier() != null) { // ID '.' identifier
          System.out.println("Attribute type");
-
          type = getConcreteIDType(ctx.identifier());
-         
-         // check id, and check the type of the attribute
-
       }
 
-      System.out.println("Simple type");
-         
       // ID
-      if (!AGLParser.symbolTable.containsKey(id)) {
-         ErrorHandling.printError(ctx, "Variable \"" + id + "\" does not exists!"); // type will be null
-         return null;
+      Symbol sym = AGLParser.symbolTable.get(id);
+      if (!sym.valueDefined()) {
+         ErrorHandling.printError(ctx, "Variable \"" + id + "\" not defined!"); // type will be null
       } else {
-         Symbol sym = AGLParser.symbolTable.get(id);
-         if (!sym.valueDefined()) {
-            ErrorHandling.printError(ctx, "Variable \"" + id + "\" not defined!"); // type will be null
-            return null;
-         } else {
-            type = sym.type(); 
-            System.out.println("Type: " + type.name());
-         }
-      }   
+         type = sym.type(); 
+      }
 
       for (AGLParser.ExpressionContext exprCtx : ctx.expression()) {
          if (type instanceof ArrayType) {

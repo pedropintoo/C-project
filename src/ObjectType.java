@@ -112,6 +112,10 @@ public class ObjectType extends Type {
             case "Script":
                 System.out.println("Arrived in Script");
                 break;
+            case "View":
+                System.out.println("Arrived in view");
+                // TODO
+                break;
             default:
                 ErrorHandling.printError("Error: Invalid type!");
                 break;
