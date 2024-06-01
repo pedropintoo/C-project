@@ -1,7 +1,9 @@
 Fire :: Model {
-    flame : Line at (75, 0) with {
-        length = (100, 0);
-        fill = "red";
+    flame : Arc at (100,56) with {
+        length = (50,25);
+        start = 30;
+        extent = 100;
+        outline = "tomato";
     }
 }
 
