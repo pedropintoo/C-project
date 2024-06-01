@@ -200,11 +200,8 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
          return false;
       }
 
-      // TODO: getConcreteTypeID
       Symbol s = AGLParser.symbolTable.get(typeID);
-      Type type = null;
-
-      
+      Type type = ctx.typeID().res;
 
       // check if we have an expression 
       if (ctx.expression() != null) {
@@ -220,14 +217,12 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
             return false;
          }
 
-         if (s != null) { // ModelType
-            type = new ModelType(typeID);
+         if (s != null && type instanceof ModelType) {
             if (!(type instanceof ModelType)) {
                ErrorHandling.printError("Error: invalid type in simple statement (must be an model type!)");
                return false;
             }
-         } else { // ObjectType
-            type = new ObjectType(typeID);
+         } else {
             if (!(type instanceof ObjectType)) {
                ErrorHandling.printError("Error: invalid type in simple statement (must be an object type!)");
                return false;
@@ -1262,7 +1257,6 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    // returns the type of a variable
    private Type getConcreteID(AGLParser.IdentifierContext ctx) {  
       String id = ctx.ID().getText();
-
       Type type = null;
 
       System.out.println("ID: " + id);
@@ -1287,28 +1281,109 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
       //    // check id, and check the type of the array
       // } 
-      
-      if (ctx.identifier() != null) { // ID '.' identifier
-         System.out.println("Attribute type");
-         type = getConcreteID(ctx.identifier());
-         
-
-
-         // check id, and check the type of the attribute
-
-      }
          
       // ID
       if (!AGLParser.symbolTable.containsKey(id)) {
          ErrorHandling.printError(ctx, "Variable \"" + id + "\" does not exists!"); // type will be null
+         return null;
       } else {
          Symbol sym = AGLParser.symbolTable.get(id);
          if (!sym.valueDefined()) {
             ErrorHandling.printError(ctx, "Variable \"" + id + "\" not defined!"); // type will be null
+            return null;
          } else {
             type = sym.type(); 
          }
       }   
+
+      for (AGLParser.ExpressionContext exprCtx : ctx.expression()) {
+         if (type instanceof ArrayType) {
+            ArrayType arrayType = (ArrayType) type;
+            type = arrayType.getElementType();
+
+            if (!visit(exprCtx)) {
+               ErrorHandling.printError("Error: invalid expression in array index");
+               return null;
+            }
+
+            if (!exprCtx.eType.conformsTo(integerType)) {
+               ErrorHandling.printError("Error: array element must be an integer");
+               return null;
+            }
+         } else {
+            ErrorHandling.printError("Error: non-array type");
+            return null;
+         }
+      }
+
+      if (ctx.identifier() != null) {
+         if (!(type instanceof ObjectType)) {
+            ErrorHandling.printError("Error: not an objectType");
+            return null;
+         }
+
+         ObjectType objectType = (ObjectType) type;
+         Type attributeType = getConcreteID(ctx.identifier());
+
+         if (attributeType == null) {
+            ErrorHandling.printError("Error: invalid attribute type");
+            return null;
+         }
+
+         if (!objectType.checkAttributes(ctx.identifier().ID().getText(), attributeType)) {
+            ErrorHandling.printError("Error: invalid attribute type for this object type");
+            return null;
+         }
+
+         type = attributeType;
+      }
+
+      // if (ctx.identifier() != null) {
+      //    System.out.println("Attribute type");
+      //    Type parentType = type;
+      //    type = getConcreteID(ctx.identifier());
+
+      //    if (type == null) {
+      //       ErrorHandling.printError("Error: invalid attribute type");
+      //       return null;
+      //    }
+
+      //    if (parentType instanceof ObjectType) {
+      //       ObjectType objectType = (ObjectType) parentType;
+      //       if (!objectType.checkAttributes(ctx.identifier().ID().getText(), type)) {
+      //          ErrorHandling.printError("Error: invalid attribute type");
+      //          return null;
+      //       }
+      //    } else {
+      //       ErrorHandling.printError("Error: parentType is not an objectType");
+      //       return null;
+      //    }
+      // }
+
+      // if (ctx.expression() != null) {
+      //    System.out.println("Array Type");
+      //    Boolean res = visit(ctx.expression(0));
+      //    if (!res) {
+      //       ErrorHandling.printError("Error: invalid expression in identifier");
+      //       return null;
+      //    }
+
+      //    if (!ctx.expression(0).eType.conformsTo(integerType)) {
+      //       ErrorHandling.printError("Error: invalid expression type, should be integer");
+      //       return null;
+      //    }
+
+      //    if (type instanceof ArrayType) {
+      //       type = ((ArrayType) type).getElementType();
+      //    } else {
+      //       ErrorHandling.printError("Error: identifier should be of array type");
+      //       return null;
+      //    }
+
+      //    if (ctx.identifier() != null) {
+      //       type = getConcreteID(ctx.identifier());
+      //    }
+      // }
 
       return type;
    }
