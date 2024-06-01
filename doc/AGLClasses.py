@@ -113,6 +113,19 @@ class View:
         new_y = sin_val * vector_from_origin[0] + cos_val * vector_from_origin[1]
         return (originRef[0] + new_x, originRef[1] + new_y)
 
+    def rotateLength(self, length, angle):
+        angle_rad = math.radians(angle)
+        cos_val = math.cos(angle_rad)
+        sin_val = math.sin(angle_rad)
+
+        rel_x = length[0]
+        rel_y = length[1]
+
+        new_x = cos_val * rel_x - sin_val * rel_y
+        new_y = sin_val * rel_x + cos_val * rel_y
+
+        return (new_x, new_y)
+
 # ---------------------------------------------------------------
 # AGL Objects
 # ---------------------------------------------------------------
@@ -223,21 +236,11 @@ class Line(Object):
         self.view.objectsDrawn.append(self.object)
     
     def rotate(self, angle, origin=None):
-        angle_rad = math.radians(angle)
-        cos_val = math.cos(angle_rad)
-        sin_val = math.sin(angle_rad)
-
         if origin == None:
             origin = self.origin
         
-        rel_x = self.length[0]
-        rel_y = self.length[1]
-
-        new_x = cos_val * rel_x - sin_val * rel_y
-        new_y = sin_val * rel_x + cos_val * rel_y
-
-        self.length = (new_x, new_y)
-
+        self.length = self.view.rotateLength(self.length, angle)
+        
         if origin != None:
             self.origin = self.view.rotateByOrigin(angle, origin, self.origin)
 
@@ -283,11 +286,11 @@ class PolyLine(Object):
         cos_val = math.cos(angle_rad)
         sin_val = math.sin(angle_rad)
 
-        if origin == None:
-            origin = self.origin
-
         for i in range(len(self.points)):
-            self.points[i] = (cos_val * self.points[i][0] - sin_val * self.points[i][1], sin_val * self.points[i][0] + cos_val * self.points[i][1])
+            if origin != None:
+                self.points[i] = self.view.rotateByOrigin(angle, origin, self.points[i])
+            else:
+                self.points[i] = (cos_val * self.points[i][0] - sin_val * self.points[i][1], sin_val * self.points[i][0] + cos_val * self.points[i][1])
         
         if origin != None:
             self.origin = self.view.rotateByOrigin(angle, origin, self.origin)
@@ -332,12 +335,12 @@ class Spline(Object):
         cos_val = math.cos(angle_rad)
         sin_val = math.sin(angle_rad)
 
-        if origin == None:
-            origin = self.origin
-
         for i in range(len(self.points)):
-            self.points[i] = (cos_val * self.points[i][0] - sin_val * self.points[i][1], sin_val * self.points[i][0] + cos_val * self.points[i][1])
-
+            if origin != None:
+                self.points[i] = self.view.rotateByOrigin(angle, origin, self.points[i])
+            else:
+                self.points[i] = (cos_val * self.points[i][0] - sin_val * self.points[i][1], sin_val * self.points[i][0] + cos_val * self.points[i][1])
+        
         if origin != None:
             self.origin = self.view.rotateByOrigin(angle, origin, self.origin)
 
@@ -347,7 +350,7 @@ class Polygon(Object):
     It can be filled or not.
     """
 
-    def __init__(self, root: Root, view: View = None, state="normal", origin=(0,0), points=[(1,1)], fill="black", outline="black"):
+    def __init__(self, root: Root = None, view: View = None, state="normal", origin=(0,0), points=[(1,1)], fill="black", outline="black"):
         super().__init__(root, view, origin, state)
         self.points = points
         self.fill = fill
@@ -383,7 +386,10 @@ class Polygon(Object):
         sin_val = math.sin(angle_rad)
 
         for i in range(len(self.points)):
-            self.points[i] = (cos_val * self.points[i][0] - sin_val * self.points[i][1], sin_val * self.points[i][0] + cos_val * self.points[i][1])
+            if origin != None:
+                self.points[i] = self.view.rotateByOrigin(angle, origin, self.points[i])
+            else:
+                self.points[i] = (cos_val * self.points[i][0] - sin_val * self.points[i][1], sin_val * self.points[i][0] + cos_val * self.points[i][1])
         
         if origin != None:
             self.origin = self.view.rotateByOrigin(angle, origin, self.origin)
@@ -429,12 +435,12 @@ class Blob(Object):
         cos_val = math.cos(angle_rad)
         sin_val = math.sin(angle_rad)
 
-        if origin == None:
-            origin = self.origin
-
         for i in range(len(self.points)):
-            self.points[i] = (cos_val * self.points[i][0] - sin_val * self.points[i][1], sin_val * self.points[i][0] + cos_val * self.points[i][1])
-
+            if origin != None:
+                self.points[i] = self.view.rotateByOrigin(angle, origin, self.points[i])
+            else:
+                self.points[i] = (cos_val * self.points[i][0] - sin_val * self.points[i][1], sin_val * self.points[i][0] + cos_val * self.points[i][1])
+        
         if origin != None:
             self.origin = self.view.rotateByOrigin(angle, origin, self.origin)
 
@@ -460,7 +466,7 @@ class Rectangle(Object):
     
     def rotate(self, angle, origin=None):
         self.angle += angle
-        
+
         if origin != None:
             self.origin = self.view.rotateByOrigin(angle, origin, self.origin)
 
@@ -511,17 +517,7 @@ class Arc(Object):
     def rotate(self, angle, origin=None):
         self.start += angle
 
-        angle_rad = math.radians(angle)
-        cos_val = math.cos(angle_rad)
-        sin_val = math.sin(angle_rad)
-
-        rel_x = self.length[0]
-        rel_y = self.length[1]
-
-        new_x = cos_val * rel_x - sin_val * rel_y
-        new_y = sin_val * rel_x + cos_val * rel_y
-
-        self.length = (new_x, new_y)
+        self.length = self.view.rotateLength(self.length, angle)
 
         if origin != None:
             self.origin = self.view.rotateByOrigin(angle, origin, self.origin)
@@ -550,18 +546,7 @@ class ArcChord(Object):
     def rotate(self, angle, origin=None):
         self.start += angle
 
-        angle_rad = math.radians(angle)
-        cos_val = math.cos(angle_rad)
-        sin_val = math.sin(angle_rad)
-
-        rel_x = self.length[0]
-        rel_y = self.length[1]
-
-        new_x = cos_val * rel_x - sin_val * rel_y
-        new_y = sin_val * rel_x + cos_val * rel_y
-
-        self.length = (new_x, new_y)
-
+        self.length = self.view.rotateLength(self.length, angle)
 
         if origin != None:
             self.origin = self.view.rotateByOrigin(angle, origin, self.origin)
@@ -590,18 +575,7 @@ class PieSlice(Object):
     def rotate(self, angle, origin=None):
         self.start += angle
 
-        angle_rad = math.radians(angle)
-        cos_val = math.cos(angle_rad)
-        sin_val = math.sin(angle_rad)
-
-        rel_x = self.length[0]
-        rel_y = self.length[1]
-
-        new_x = cos_val * rel_x - sin_val * rel_y
-        new_y = sin_val * rel_x + cos_val * rel_y
-
-        self.length = (new_x, new_y)
-
+        self.length = self.view.rotateLength(self.length, angle)
 
         if origin != None:
             self.origin = self.view.rotateByOrigin(angle, origin, self.origin)
