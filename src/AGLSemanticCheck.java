@@ -324,6 +324,12 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       for (AGLParser.LongAssignmentContext longAssign : ctx.propertiesAssignment().longAssignment()) {
          System.out.println(longAssign.getText());
          System.out.println(longAssign.identifier().getText());
+
+         if (!identifierIsValid(longAssign.identifier().getText())) {
+            ErrorHandling.printError("Error: invalid properties assignment in block statement");
+            return false;
+         }
+
          res = visit(longAssign.assignment());
          if (!res) {
             ErrorHandling.printError("Error: invalid properties assignment in block statement");
@@ -1421,22 +1427,34 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       return type;
    }
 
-   // private boolean identifierIsValid(String id) {
-   //    switch (id) {
-   //       case "fill":
-   //       case "length":
-   //       case "origin":
-   //       case "state":
-   //       case "start":
-   //       case "extend":
-   //       case "outline":
-   //       case "points":
-   //       case "text":
-   //       case "width":
-   //       case "height":
-   //       case "title":
-   //          return true;
-   //    }
-   // }
+   private boolean identifierIsValid(String id) {
+      switch (id) {
+         case "fill":
+         case "length":
+         case "origin":
+         case "state":
+         case "start":
+         case "extend":
+         case "outline":
+         case "points":
+         case "text":
+         case "width":
+         case "height":
+         case "title":
+         case "Ox":
+         case "Oy":
+         case "background":
+            return true;
+      }
+
+      for (String key : AGLParser.symbolTable.keySet()) {
+         System.out.println("Key: " + key);
+         if (key.equals(id)) {
+            return true;
+         }
+      }
+
+      return false;
+   }
 
 }
