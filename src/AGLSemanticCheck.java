@@ -334,24 +334,6 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       return res;
    }
 
-   // private boolean identifierIsValid(String id) {
-   //    switch (id) {
-   //       case "fill":
-   //       case "length":
-   //       case "origin":
-   //       case "state":
-   //       case "start":
-   //       case "extend":
-   //       case "outline":
-   //       case "points":
-   //       case "text":
-   //       case "width":
-   //       case "height":
-   //       case "title":
-   //          return true;
-   //    }
-   // }
-
    @Override
    public Boolean visitPropertiesAssignment(AGLParser.PropertiesAssignmentContext ctx) {
       Boolean res = true;
@@ -1438,5 +1420,23 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       System.out.println("getConcreteIDType: Simple ID type: " + type.name());
       return type;
    }
+
+   // private boolean identifierIsValid(String id) {
+   //    switch (id) {
+   //       case "fill":
+   //       case "length":
+   //       case "origin":
+   //       case "state":
+   //       case "start":
+   //       case "extend":
+   //       case "outline":
+   //       case "points":
+   //       case "text":
+   //       case "width":
+   //       case "height":
+   //       case "title":
+   //          return true;
+   //    }
+   // }
 
 }
