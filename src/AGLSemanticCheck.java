@@ -381,7 +381,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
          return false;
       }  
 
-      // System.out.println("«««««« Type: " + type.name() + " »»»»»»");
+      System.out.println("«««««« Type: " + type.name() + " »»»»»»");
 
       
       if ( (ctx.identifier().expression() == null ) && (ctx.identifier().identifier() == null) ) { // therefore it is a simple identifier (not an attribute)
@@ -401,6 +401,8 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
                   ErrorHandling.printError(ctx, "Assignment type is null");
                   return false;
                }
+
+               System.out.println("«««««« Assignment Type: " + ctx.assignment().eType.name() + " »»»»»»");
             
                if (!ctx.assignment().eType.conformsTo(sym.type())) {
                   ErrorHandling.printError(ctx, "Expression type does not conform to variable type!");
@@ -421,9 +423,22 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
                return false;
             }
             
-            // System.out.println("«««««« Assignment Type: " + ctx.assignment().eType.name() + " »»»»»»");
+            System.out.println("«««««« Assignment Type: " + ctx.assignment().eType.name() + " »»»»»»");
 
-            if (!ctx.assignment().eType.conformsTo(type)) {
+            if (ctx.identifier().identifier() != null) {
+               String attributeName = ctx.identifier().identifier().getText();
+               if (type instanceof ObjectType) {
+                  ObjectType objectType = (ObjectType) type;
+                  if (!objectType.checkAttributes(attributeName, ctx.assignment().eType)) {
+                     ErrorHandling.printError("--------------------- Expression type does not conform to attribute type");
+                     return false;
+                  }
+               } else {
+                  ErrorHandling.printError(ctx, "----------------   Type is not an ObjectType!");
+                  return false;
+               }
+            }
+            else if (!ctx.assignment().eType.conformsTo(type)) {
                ErrorHandling.printError(ctx, "----------------   Expression type does not conform to variable type!");
                return false;
             }
