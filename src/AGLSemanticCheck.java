@@ -322,8 +322,8 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
       // we do not need PropertyAssignment visitor!
       for (AGLParser.LongAssignmentContext longAssign : ctx.propertiesAssignment().longAssignment()) {
-         System.out.println(longAssign.getText());
-         System.out.println(longAssign.identifier().getText());
+         // System.out.println(longAssign.getText());
+         // System.out.println(longAssign.identifier().getText());
 
          if (!identifierIsValid(longAssign.identifier().getText())) {
             ErrorHandling.printError("Error: invalid properties assignment in block statement");
@@ -1448,7 +1448,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       }
 
       for (String key : AGLParser.symbolTable.keySet()) {
-         System.out.println("Key: " + key);
+         // System.out.println("Key: " + key);
          if (key.equals(id)) {
             return true;
          }
