@@ -77,7 +77,7 @@ class View:
     def ellipse(self, origin, length):
         return (origin[0]-length[0], origin[1]-length[1]), (origin[0]+length[0], origin[1]+length[1])
 
-    def poly_oval(self, x0, y0, x1, y1, steps=20, rotation=0):
+    def poly_oval(self, x0, y0, x1, y1, start = 0, extent = 360, steps=250, rotation=0):
         a = (x1 - x0) / 2.0
         b = (y1 - y0) / 2.0
 
@@ -86,15 +86,19 @@ class View:
 
         point_list = []
 
+        start_rad = math.radians(start)
+        extent_rad = math.radians(extent)
+        rotation_rad = math.radians(rotation)
+
         for i in range(steps):
 
-            theta = (math.pi * 2) * (float(i) / steps)
+            theta = start_rad + (extent_rad * i / steps)
 
             x1 = a * math.cos(theta)
             y1 = b * math.sin(theta)
 
-            x = (x1 * math.cos(rotation)) + (y1 * math.sin(rotation))
-            y = (y1 * math.cos(rotation)) - (x1 * math.sin(rotation))
+            x = (x1 * math.cos(rotation_rad)) + (y1 * math.sin(rotation_rad))
+            y = (y1 * math.cos(rotation_rad)) - (x1 * math.sin(rotation_rad))
 
             point_list.append(round(x + xc))
             point_list.append(round(y + yc))
@@ -494,10 +498,11 @@ class Rectangle(Object):
 
 class Ellipse(Object):
 
-    def __init__(self, root: Root = None, view: View = None, state="normal", origin=(0,0), length=(1,1), fill="black"):
+    def __init__(self, root: Root = None, view: View = None, state="normal", origin=(0,0), length=(1,1), fill="black", outline="black"):
         super().__init__(root, view, origin, state)
         self.length = length
         self.fill = fill
+        self.outline = outline
         self.angle = 0
 
     def __deepcopy__(self, memo=None):
@@ -510,11 +515,10 @@ class Ellipse(Object):
     def create_object(self, view):
         self.view = view
         top_left, bottom_right = self.view.ellipse(self.view.coord(self.origin), self.length)
-        self.object = self.view.canvas.create_polygon(tuple(self.view.poly_oval(top_left[0], top_left[1], bottom_right[0], bottom_right[1], steps=250, rotation=self.angle)), fill=self.fill, state=self.state)
+        self.object = self.view.canvas.create_polygon(tuple(self.view.poly_oval(top_left[0], top_left[1], bottom_right[0], bottom_right[1], steps=250, rotation=self.angle)), fill=self.fill, state=self.state, smooth=True, outline=self.outline)
         self.view.objectsDrawn.append(self.object)
     
     def rotate(self, angle, origin=None):
-        # TODO: implement rotation to Ellipse
         self.angle += angle
         if origin != None:
             self.origin = self.view.rotateByOrigin(angle, origin, self.origin)
@@ -538,7 +542,8 @@ class Arc(Object):
 
     def create_object(self, view):
         self.view = view
-        self.object = self.view.canvas.create_arc(self.view.ellipse(self.view.coord(self.origin), self.length), style=ARC, start=self.start + self.angle, extent=self.extent, outline=self.outline, state=self.state)
+        top_left, bottom_right = self.view.ellipse(self.view.coord(self.origin), self.length)
+        self.object = self.view.canvas.create_line(tuple(self.view.poly_oval(top_left[0], top_left[1], bottom_right[0], bottom_right[1], start=self.start, extent=self.extent, steps=250, rotation=self.angle)), fill = self.outline, state=self.state, smooth=True)
         self.view.objectsDrawn.append(self.object)
     
     def rotate(self, angle, origin=None):
@@ -549,13 +554,14 @@ class Arc(Object):
 
 class ArcChord(Object):
 
-    def __init__(self, root: Root = None, view: View = None, state="normal", origin=(0,0), length=(1,1), start=0, extent=100, fill="black"):
+    def __init__(self, root: Root = None, view: View = None, state="normal", origin=(0,0), length=(1,1), start=0, extent=100, fill="black", outline="black"):
         super().__init__(root, view, origin, state)
         self.length = length
         self.start = start
         self.extent = extent   
         self.fill = fill
         self.angle = 0
+        self.outline = outline
 
     def __deepcopy__(self, memo=None):
         """Create a deep copy of the model."""
@@ -566,7 +572,8 @@ class ArcChord(Object):
 
     def create_object(self, view):
         self.view = view
-        self.object = self.view.canvas.create_arc(self.view.ellipse(self.view.coord(self.origin), self.length), style=CHORD, start=self.start + self.angle, extent=self.extent, fill=self.fill, state=self.state)
+        top_left, bottom_right = self.view.ellipse(self.view.coord(self.origin), self.length)
+        self.object = self.view.canvas.create_polygon(tuple(self.view.poly_oval(top_left[0], top_left[1], bottom_right[0], bottom_right[1], start=self.start, extent=self.extent, steps=250, rotation=self.angle)), fill=self.fill, state=self.state, outline=self.outline)
         self.view.objectsDrawn.append(self.object)
 
     def rotate(self, angle, origin=None):
@@ -577,12 +584,13 @@ class ArcChord(Object):
 
 class PieSlice(Object):
 
-    def __init__(self, root: Root = None, view: View = None, state="normal", origin=(0,0), length=(1,1), start=0, extent=100, fill="black"):
+    def __init__(self, root: Root = None, view: View = None, state="normal", origin=(0,0), length=(1,1), start=0, extent=100, fill="black", outline="black"):
         super().__init__(root, view, origin, state)
         self.length = length
         self.start = start
         self.extent = extent   
         self.fill = fill  
+        self.outline = outline
         self.angle = 0
 
     def __deepcopy__(self, memo=None):
@@ -594,7 +602,8 @@ class PieSlice(Object):
 
     def create_object(self, view):
         self.view = view
-        self.object = self.view.canvas.create_arc(self.view.ellipse(self.view.coord(self.origin), self.length), style=PIESLICE, start=self.start + self.angle, extent=self.extent, fill=self.fill, state=self.state)
+        top_left, bottom_right = self.view.ellipse(self.view.coord(self.origin), self.length)   
+        self.object = self.view.canvas.create_polygon(self.view.coord(self.origin), tuple(self.view.poly_oval(top_left[0], top_left[1], bottom_right[0], bottom_right[1], start=self.start, extent=self.extent, steps=250, rotation=self.angle)), fill=self.fill, state=self.state, outline=self.outline)
         self.view.objectsDrawn.append(self.object)
 
     def rotate(self, angle, origin=None):

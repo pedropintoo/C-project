@@ -34,6 +34,34 @@ view5 : View with {
     background = "alice blue";
 }
 
+view6 : View with {
+    width = 200;
+    height = 200;
+    title = "Arc";
+    background = "alice blue";
+}
+
+view7 : View with {
+    width = 200;
+    height = 200;
+    title = "ArcChord";
+    background = "alice blue";
+}
+
+view8 : View with {
+    width = 200;
+    height = 200;
+    title = "PieSlice";
+    background = "alice blue";
+}
+
+view9 : View with {
+    width = 200;
+    height = 200;
+    title = "Dot";
+    background = "alice blue";
+}
+
 Ex1 :: Model {
 
     cellSize : Number = 200;
@@ -58,11 +86,36 @@ Ex1 :: Model {
         fill = "purple";
     }
 
+    arc : Arc at (-cellSize,0) with {
+        length = (50,50);
+        start = 30;
+        extent = 100;
+        outline = "tomato";
+    }
+
+    arcC : ArcChord at (cellSize,0) with {
+        length = (50,50);
+        start = 30;
+        extent = 150;
+        fill = "cyan";
+    }
+
+    pieS : PieSlice at (-cellSize,-cellSize) with {
+        length = (50,50);
+        start = 30;
+        extent = 300;
+        fill = "blue";
+    }
+
+    dot : Dot at (cellSize, -cellSize) with {
+        fill = "black";
+    }
+
 }
 
 ex1 : Ex1;
 
-refresh view, view2, view3, view4, view5 after 0.5 s;
+refresh view, view2, view3, view4, view5, view6, view7, view8, view9 after 0.5 s;
 
 for i in 1..1000 do {
     rotate ex1 by 1;
@@ -70,7 +123,11 @@ for i in 1..1000 do {
     move view3 to ex1.rec.origin;
     move view4 to ex1.ell.origin;
     move view5 to ex1.text.origin;
-    refresh view, view2, view3, view4, view5 after 10 ms;
+    move view6 to ex1.arc.origin;
+    move view7 to ex1.arcC.origin;
+    move view8 to ex1.pieS.origin;
+    move view9 to ex1.dot.origin;
+    refresh view, view2, view3, view4, view5, view6, view7, view8, view9 after 10 ms;
 }
 
 print "Press any mouse button to quit";
