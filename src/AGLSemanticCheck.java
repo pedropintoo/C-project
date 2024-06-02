@@ -1428,13 +1428,14 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    }
 
    private boolean identifierIsValid(String id) {
+      System.out.println("identifierIsValid: " + id);
       switch (id) {
          case "fill":
          case "length":
          case "origin":
          case "state":
          case "start":
-         case "extend":
+         case "extent":
          case "outline":
          case "points":
          case "text":
@@ -1446,7 +1447,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
          case "background":
             return true;
       }
-
+      
       for (String key : AGLParser.symbolTable.keySet()) {
          // System.out.println("Key: " + key);
          if (key.equals(id)) {
