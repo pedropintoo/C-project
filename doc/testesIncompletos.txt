@@ -1,0 +1,9 @@
+testes:
+- ex00.agl;
+- ex01.agl;
+- ex02.agl;
+- ex03.agl;
+- ex04.agl;
+- ex05.agl;
+- ex06.agl;
+- attributeTest.agl;
