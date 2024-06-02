@@ -1,5 +1,6 @@
 import java.util.List;
 import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -320,11 +321,28 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       }
 
       // we do not need PropertyAssignment visitor!
-      for (AGLParser.LongAssignmentContext longAssign : ctx.propertiesAssignment().longAssignment()) {
-         res = visit(longAssign.assignment());
-         if (!res) {
-            ErrorHandling.printError("Error: invalid properties assignment in block statement");
-            return false;
+      if (ctx.propertiesAssignment() != null) {
+         ObjectType objectType = (ObjectType) type;
+         for (AGLParser.LongAssignmentContext longAssign : ctx.propertiesAssignment().longAssignment()) {
+            String propertyName = longAssign.identifier().getText();
+            res = visit(longAssign.assignment());
+            if (!res) {
+               ErrorHandling.printError("Error: invalid assignment");
+               return false;
+            }
+
+            if (longAssign.assignment().eType == null) {
+               ErrorHandling.printError("Error: Property Type is null");
+               return false;
+            }
+
+            Symbol propertySymbol = new VariableSymbol(propertyName, longAssign.assignment().eType);
+            AGLParser.symbolTable.put(propertyName, propertySymbol);
+
+            if (!objectType.getAttributes().containsKey(propertyName)) {
+               objectType.getAttributes().put(propertyName, new ArrayList<>());
+            }
+            objectType.getAttributes().get(propertyName).add(longAssign.assignment().eType);
          }
       }
 
@@ -375,8 +393,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
          
          if (!AGLParser.symbolTable.containsKey(id)) {
             ErrorHandling.printError(ctx, "Variable \"" + id + "\" does not exists!");
-            res = false;
-
+            return false;
          } else {
             Boolean resExpr = visit(ctx.assignment());
             if (resExpr) {
@@ -1166,8 +1183,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       AGLParser.symbolTable.put(ID, sym);
 
       for (AGLParser.ModelStatContext modelStat : ctx.modelStat()) {
-         res = visit(modelStat);
-         if (!res || res == null) {
+         if (!visit(modelStat)) {
             return false;
          }
       }
@@ -1366,6 +1382,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
             ErrorHandling.printError("Error: Variable not of object type");
             return null;
          }
+
          ObjectType objectType = (ObjectType) type;
          List<Type> allowedTypes = objectType.getAttributes().get(id);
          if (allowedTypes != null && !allowedTypes.isEmpty()) {
