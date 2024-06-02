@@ -77,6 +77,31 @@ class View:
     def ellipse(self, origin, length):
         return (origin[0]-length[0], origin[1]-length[1]), (origin[0]+length[0], origin[1]+length[1])
 
+    def poly_oval(self, x0, y0, x1, y1, steps=20, rotation=0):
+        a = (x1 - x0) / 2.0
+        b = (y1 - y0) / 2.0
+
+        xc = x0 + a
+        yc = y0 + b
+
+        point_list = []
+
+        for i in range(steps):
+
+            theta = (math.pi * 2) * (float(i) / steps)
+
+            x1 = a * math.cos(theta)
+            y1 = b * math.sin(theta)
+
+            x = (x1 * math.cos(rotation)) + (y1 * math.sin(rotation))
+            y = (y1 * math.cos(rotation)) - (x1 * math.sin(rotation))
+
+            point_list.append(round(x + xc))
+            point_list.append(round(y + yc))
+
+        return point_list
+
+
     def onClick(self, event):
         self.mouseX, self.mouseY = event.x, event.y
 
@@ -473,6 +498,7 @@ class Ellipse(Object):
         super().__init__(root, view, origin, state)
         self.length = length
         self.fill = fill
+        self.angle = 0
 
     def __deepcopy__(self, memo=None):
         """Create a deep copy of the model."""
@@ -483,11 +509,13 @@ class Ellipse(Object):
 
     def create_object(self, view):
         self.view = view
-        self.object = self.view.canvas.create_oval(self.view.ellipse(self.view.coord(self.origin), self.length), fill=self.fill, state=self.state)
+        top_left, bottom_right = self.view.ellipse(self.view.coord(self.origin), self.length)
+        self.object = self.view.canvas.create_polygon(tuple(self.view.poly_oval(top_left[0], top_left[1], bottom_right[0], bottom_right[1], steps=250, rotation=self.angle)), fill=self.fill, state=self.state)
         self.view.objectsDrawn.append(self.object)
     
     def rotate(self, angle, origin=None):
         # TODO: implement rotation to Ellipse
+        self.angle += angle
         if origin != None:
             self.origin = self.view.rotateByOrigin(angle, origin, self.origin)
 

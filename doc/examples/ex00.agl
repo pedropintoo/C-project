@@ -1,20 +1,6 @@
 elipse : Ellipse at (-650, 0) with {
-    length = (100, 35);
+    length = (200, 135);
     fill = "black";
-}
-
-pieslice : PieSlice at (-650, 0) with {
-    fill = "red";
-    length = (100,35);
-    start = 30;
-    extent = 45;
-}
-
-pieslice2 : PieSlice at (-350, 0) with {
-    fill = "blue";
-    length = (100,35);
-    start = 30;
-    extent = 45;
 }
 
 view : View with {
@@ -30,8 +16,7 @@ view : View with {
 refresh view;
 
 for i in 0..20 do {
-    rotate pieslice by 35;
-    rotate pieslice2 by 35;
+    rotate elipse by 35;
     refresh view after 1s;
 }
 
