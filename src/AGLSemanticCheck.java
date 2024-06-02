@@ -321,33 +321,36 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       }
 
       // we do not need PropertyAssignment visitor!
-      if (ctx.propertiesAssignment() != null) {
-         ObjectType objectType = (ObjectType) type;
-         for (AGLParser.LongAssignmentContext longAssign : ctx.propertiesAssignment().longAssignment()) {
-            String propertyName = longAssign.identifier().getText();
-            res = visit(longAssign.assignment());
-            if (!res) {
-               ErrorHandling.printError("Error: invalid assignment");
-               return false;
-            }
-
-            if (longAssign.assignment().eType == null) {
-               ErrorHandling.printError("Error: Property Type is null");
-               return false;
-            }
-
-            Symbol propertySymbol = new VariableSymbol(propertyName, longAssign.assignment().eType);
-            AGLParser.symbolTable.put(propertyName, propertySymbol);
-
-            if (!objectType.getAttributes().containsKey(propertyName)) {
-               objectType.getAttributes().put(propertyName, new ArrayList<>());
-            }
-            objectType.getAttributes().get(propertyName).add(longAssign.assignment().eType);
+      for (AGLParser.LongAssignmentContext longAssign : ctx.propertiesAssignment().longAssignment()) {
+         System.out.println(longAssign.getText());
+         System.out.println(longAssign.identifier().getText());
+         res = visit(longAssign.assignment());
+         if (!res) {
+            ErrorHandling.printError("Error: invalid properties assignment in block statement");
+            return false;
          }
       }
 
       return res;
    }
+
+   // private boolean identifierIsValid(String id) {
+   //    switch (id) {
+   //       case "fill":
+   //       case "length":
+   //       case "origin":
+   //       case "state":
+   //       case "start":
+   //       case "extend":
+   //       case "outline":
+   //       case "points":
+   //       case "text":
+   //       case "width":
+   //       case "height":
+   //       case "title":
+   //          return true;
+   //    }
+   // }
 
    @Override
    public Boolean visitPropertiesAssignment(AGLParser.PropertiesAssignmentContext ctx) {
