@@ -212,6 +212,9 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
       } else {
          type = ctx.typeID().res;
+         if (type == null) {
+            type = AGLParser.symbolTable.get(typeID).type();
+         }
       }
 
       // TODO:
@@ -812,7 +815,13 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
             }
          }
       } else {
-         ErrorHandling.printError("TO BE IMPLEMENTED ID ('.' ID)+ - attributes"); // TODO
+         Type type = getConcreteIDType(ctx.identifier());
+         if (type == null) {
+            ErrorHandling.printError("Error: invalid type in identifier");
+            return false;
+         } else {
+            ctx.eType = type;
+         }
       }
 
       res = visit(ctx.expression());
