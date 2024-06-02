@@ -1360,71 +1360,44 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       String id = ctx.ID().getText();
       Type type = null;
 
-      System.out.println("getConcreteIDType: Analyzing ID: " + id);
-
-      if (ctx.identifier() != null) { // ID '.' identifier
-         System.out.println("Attribute type");
-         type = getConcreteIDType(ctx.identifier());
-         if (type == null) {
-            ErrorHandling.printError("Type is null");
-            return null;
-         }
-
-         if (!(type instanceof ObjectType)) {
-            ErrorHandling.printError("Error: Variable not of object type");
-            return null;
-         }
-
-         ObjectType objectType = (ObjectType) type;
-         List<Type> allowedTypes = objectType.getAttributes().get(id);
-         if (allowedTypes != null && !allowedTypes.isEmpty()) {
-            System.out.println("getConcreteIDType: Attribute type: " + allowedTypes.get(0).name());
-            return allowedTypes.get(0);
-         } else {
-            ErrorHandling.printError("Error: Attribute inexistent in this type");
-            return null;
-         }
-      }
-
-      if (ctx.expression() != null && !ctx.expression().isEmpty()) { // ID '[' expression ']' ('.' identifier)?
-         Type elemType = AGLParser.symbolTable.get(id).type();
-         if (elemType instanceof ArrayType) {
-            for (AGLParser.ExpressionContext exprCtx : ctx.expression()) {
-               Boolean res = visit(exprCtx);
-               if (!res) {
-                  ErrorHandling.printError("Error: invalid simple statement");
-                  return null;
-               }
-   
-               if (!exprCtx.eType.conformsTo(integerType)) {
-                  ErrorHandling.printError("Error: invalid expression type in simple statement (must be integer!)");
-                  return null;
-               }
-               elemType = ((ArrayType) elemType).getElementType();
-            }
-            System.out.println("getConcreteIDType: Array element type: " + elemType.name());
-            return elemType;
-         } else {
-            ErrorHandling.printError("Error: " + id + " Not an array");
-            return null;
-         }
-      } 
-
       if (!AGLParser.symbolTable.containsKey(id)) {
          ErrorHandling.printError(ctx, "Variable \"" + id + "\" does not exists!");
          return null;
       }   
 
+      if (ctx.expression(0) != null) { // ID '[' expression ']' ('.' identifier)?
+         Boolean res = visit(ctx.expression(0));
+         if (!res) {
+            ErrorHandling.printError("Error: invalid simple statement");
+         }
+
+         // expression must be a IntegerType
+         if (!ctx.expression(0).eType.conformsTo(integerType)) {
+            ErrorHandling.printError("Error: invalid expression type in simple statement (must be integer!)");
+         }
+
+         System.out.println(ctx.expression(0).eType.name());
+         System.out.println("ID: " + id);
+
+         Type elemType = AGLParser.symbolTable.get(id).type();
+         
+         // return casted to ArrayType
+         return new ArrayType(((ArrayType)elemType).getElementType().name());
+      } 
+      
+      if (ctx.identifier() != null) { // ID '.' identifier
+         System.out.println("Attribute type");
+         type = getConcreteIDType(ctx.identifier());
+      }
+
       // ID
       Symbol sym = AGLParser.symbolTable.get(id);
       if (!sym.valueDefined()) {
          ErrorHandling.printError(ctx, "Variable \"" + id + "\" not defined!"); // type will be null
-         return null;
       } else {
          type = sym.type(); 
       }
 
-      System.out.println("getConcreteIDType: Simple ID type: " + type.name());
       return type;
    }
 
@@ -1454,6 +1427,22 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
          if (key.equals(value)) {
             return true;
          }
+      }
+
+      return false;
+   }
+
+   private boolean checkTypeConformance(Type lhsType, Type rhsType) {
+      if (lhsType == null || rhsType == null) {
+         return false;
+      }
+
+      if (lhsType.equals(rhsType)) {
+         return true;
+      }
+
+      if (lhsType instanceof ArrayType && rhsType instanceof ArrayType) {
+         return checkTypeConformance(((ArrayType) lhsType).getElementType(), ((ArrayType) rhsType).getElementType());
       }
 
       return false;
