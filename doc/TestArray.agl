@@ -27,7 +27,7 @@ c : Array<Array<Point>> = [[(1,2), (3,4)], [(1,2), (3,4)]]; # correto. Type: Arr
 
 # j : Array<Array<Point>> = e[0];  # funciona. Type: Array<Array<Point>> ; Assignment Type: Array<Array<Point>>
 
-# k : Array<Point> = e[0][0]; # funciona Type: Array<Point> ; Assignment Type: Array<Array<Point>>
+# k : Array<Point> = e[0][0]; # funciona Type: Array<Point> ; Assignment Type: Array<Point>
 
 # l : Point = e[0][0][0]; # funciona. Type: Point ; Assignment Type: Point
 

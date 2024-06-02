@@ -43,4 +43,4 @@ fire : Fire at (100,100);
 
 b : Pacman = a; # Model = Pacman;
 
-k : Pacman = deepcopy b to (0,2);
+k : Pacman = deepcopy b to (0,2);   # não devia dar erro mas está a dar
