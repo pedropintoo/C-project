@@ -1,0 +1,3 @@
+c : Array<Array<Point>> = [[(1,2), (3,4)], [(1,2), (3,4)]]; # correto. Type: Array<Array<Point>> ; Assignment Type: Array<Array<Point>>
+
+c[0] = "a"; # dá erro. Type: Array<Point> ; Assignment Type: String

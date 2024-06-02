@@ -19,7 +19,7 @@ c : Array<Array<Point>> = [[(1,2), (3,4)], [(1,2), (3,4)]]; # correto. Type: Arr
 
 # c = [ [(1,2), (3,4), (5,6), (7,8), (9,10)] , [(1,2), (3,4), (5,6), (7,8), (9,10)] ]; # funciona.  Type: Array<Array<Point>> ; Assignment Type: Array<Array<Point>>
 
-# e : Array<Array<Array<Point>>> = [c, c, c, c]; # funciona. Type: Array<Array<Array<Point>>> ; Assignment Type: Array<Array<Array<Point>>>
+e : Array<Array<Array<Point>>> = [c, c, c, c]; # funciona. Type: Array<Array<Array<Point>>> ; Assignment Type: Array<Array<Array<Point>>>
 
 # f : Array<Array<Array<Point>>> = [c, c[0], c, c]; # sintaticamente correto mas semânticamente errado. Dá erro: c[0] é do tipo Array<Point>, devia ser do tipo Array<Array<Point>>.
 
@@ -27,7 +27,7 @@ c : Array<Array<Point>> = [[(1,2), (3,4)], [(1,2), (3,4)]]; # correto. Type: Arr
 
 # j : Array<Array<Point>> = e[0];  # funciona. Type: Array<Array<Point>> ; Assignment Type: Array<Array<Point>>
 
-# k : Array<Point> = e[0][0]; # funciona Type: Array<Point> ; Assignment Type: Array<Point>
+k : Array<Point> = e[0][0]; # funciona Type: Array<Point> ; Assignment Type: Array<Point>
 
 # l : Point = e[0][0][0]; # funciona. Type: Point ; Assignment Type: Point
 
