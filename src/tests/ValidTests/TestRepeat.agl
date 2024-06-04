@@ -1,0 +1,5 @@
+# Deve funcionar
+
+repeat {
+    a: Integer = 3;
+} until 2>1
