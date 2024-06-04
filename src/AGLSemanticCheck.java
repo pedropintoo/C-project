@@ -428,7 +428,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
             if (ctx.identifier().identifier() != null) {
                String attributeName = ctx.identifier().identifier().getText();
                if (type instanceof ObjectType) {
-                  ObjectType objectType = (ObjectType) type;
+                  ObjectType objectType = new ObjectType(type.name());
                   if (!objectType.checkAttributes(attributeName, ctx.assignment().eType)) {
                      ErrorHandling.printError("--------------------- Expression type does not conform to attribute type");
                      return false;
