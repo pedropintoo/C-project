@@ -334,16 +334,10 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
          // Type typeAttribute = longAssign.assignment().expression().eType;
          // System.out.println("Type: " + typeAttribute);
 
-         // get the type of the attribute
-         ObjectType objectType = (ObjectType) type;
-         // System.out.println("Attributes: " + objectType.getAttributes());
-         // System.out.println("Attributes: " + objectType.getAttributes().keySet());
-         // System.out.println("Attributes: " + objectType.getAttributes().values());
-         Type typeAttribute = objectType.getAttributes().get(longAssign.identifier().getText()).get(0);
-         // System.out.println("Type: " + typeAttribute);
-         // objectType.checkAttributes(longAssign.identifier().getText(), longAssign.assignment().expression().eType);
+         // type of longAssign.assignment().expression()
+         // System.out.println("«««««« Type: " + longAssign.assignment().eType.name() + " »»»»»»");
 
-         if (!identifierIsValid(longAssign.identifier().getText(), longAssign.assignment().expression().getText(), ID, typeAttribute)) {
+         if (!identifierIsValid(longAssign.identifier().getText(), longAssign.assignment().expression().getText(), ID)) {
             ErrorHandling.printError("Error: invalid properties assignment in block statement");
             return false;
          }
@@ -1477,11 +1471,18 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       return type;
    }
 
-   private boolean identifierIsValid(String id, String value, String ID, Type typeID) {
+   private boolean identifierIsValid(String id, String value, String ID) {
       System.out.println("ID: " + ID);
       System.out.println("identifierIsValid: " + id);
       System.out.println("value: " + value);
-      System.out.println("typeID: " + typeID.name());
+
+      // get the type of the String value
+      Type type2 = new PointType();
+
+      // visit the value and get the type
+
+      // type of string value
+      // System.out.println("Type: " + );
       
       // ObjectType objectType = new ObjectType(ID);
       // System.out.println("ObjectType: " + objectType.name());
@@ -1507,7 +1508,15 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
       if (id.equals("fill") || id.equals("length") || id.equals("origin") || id.equals("state") || id.equals("start") || id.equals("extent") || id.equals("outline") || id.equals("points") || id.equals("text") || id.equals("width") || id.equals("height") || id.equals("title") || id.equals("Ox") || id.equals("Oy") || id.equals("background")) {
          ObjectType objectType = new ObjectType(ID);
-         if (objectType.checkAttributes(id, typeID)) {
+         Type type = objectType.getAttributes().get(id).get(0);
+         System.out.println("Type: " + type.name());
+
+         type.conformsTo(type2);
+
+         System.out.println("Type: " + type.name());
+         System.out.println("Type2: " + type2.name());
+
+         if (objectType.checkAttributes(id, type2)) {
             return true;
          }
       }
