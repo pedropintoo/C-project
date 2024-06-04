@@ -14,9 +14,9 @@ echo "tests/ValidTests:"
 for file in tests/ValidTests/*.agl; do
     #in green if output has last line "Semantic check passed." or red otherwise
     if cat $file | antlr4-run 2>&1 | grep -q "Semantic check passed."; then
-        echo "\e[32m $(basename "$file"): OK\e[0m"
+        echo -e "\e[32m $(basename "$file"): OK\e[0m"
     else
-        echo "\e[31m $(basename "$file"): FAIL\e[0m"
+        echo -e "\e[31m $(basename "$file"): FAIL\e[0m"
     fi
 done
 
@@ -24,9 +24,9 @@ echo "tests/InvalidTests:"
 for file in tests/InvalidTests/*.agl; do
     #in green if output has last line "Semantic check failed." or red otherwise
     if cat $file | antlr4-run 2>&1 | grep -q "Semantic check failed."; then
-        echo "\e[32m $(basename "$file"): OK\e[0m"
+        echo -e "\e[32m $(basename "$file"): OK\e[0m"
     else
-        echo "\e[31m $(basename "$file"): FAIL\e[0m"
+        echo -e "\e[31m $(basename "$file"): FAIL\e[0m"
     fi
 done
 
