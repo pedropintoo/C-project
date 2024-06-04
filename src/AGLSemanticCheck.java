@@ -327,9 +327,23 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       for (AGLParser.LongAssignmentContext longAssign : ctx.propertiesAssignment().longAssignment()) {
          // System.out.println(longAssign.getText());
          // System.out.println(longAssign.identifier().getText());
-         // System.out.println("ola" + longAssign.assignment().expression().getText());
 
-         if (!identifierIsValid(longAssign.identifier().getText(), longAssign.assignment().expression().getText())) {
+         // Symbol s1 = AGLParser.symbolTable.get(longAssign.identifier().getText());
+         // System.out.println("ola" + s1.type().name());
+         // get type of the expression longAssign.assignment().expression()
+         // Type typeAttribute = longAssign.assignment().expression().eType;
+         // System.out.println("Type: " + typeAttribute);
+
+         // get the type of the attribute
+         ObjectType objectType = (ObjectType) type;
+         // System.out.println("Attributes: " + objectType.getAttributes());
+         // System.out.println("Attributes: " + objectType.getAttributes().keySet());
+         // System.out.println("Attributes: " + objectType.getAttributes().values());
+         Type typeAttribute = objectType.getAttributes().get(longAssign.identifier().getText()).get(0);
+         // System.out.println("Type: " + typeAttribute);
+         // objectType.checkAttributes(longAssign.identifier().getText(), longAssign.assignment().expression().eType);
+
+         if (!identifierIsValid(longAssign.identifier().getText(), longAssign.assignment().expression().getText(), ID, typeAttribute)) {
             ErrorHandling.printError("Error: invalid properties assignment in block statement");
             return false;
          }
@@ -1463,25 +1477,39 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       return type;
    }
 
-   private boolean identifierIsValid(String id, String value) {
-      // System.out.println("identifierIsValid: " + id);
-      switch (id) {
-         case "fill":
-         case "length":
-         case "origin":
-         case "state":
-         case "start":
-         case "extent":
-         case "outline":
-         case "points":
-         case "text":
-         case "width":
-         case "height":
-         case "title":
-         case "Ox":
-         case "Oy":
-         case "background":
+   private boolean identifierIsValid(String id, String value, String ID, Type typeID) {
+      System.out.println("ID: " + ID);
+      System.out.println("identifierIsValid: " + id);
+      System.out.println("value: " + value);
+      System.out.println("typeID: " + typeID.name());
+      
+      // ObjectType objectType = new ObjectType(ID);
+      // System.out.println("ObjectType: " + objectType.name());
+
+      // switch (id) {
+      //    case "fill":
+      //    case "length":
+      //    case "origin":
+      //    case "state":
+      //    case "start":
+      //    case "extent":
+      //    case "outline":
+      //    case "points":
+      //    case "text":
+      //    case "width":
+      //    case "height":
+      //    case "title":
+      //    case "Ox":
+      //    case "Oy":
+      //    case "background":
+      //       return true;
+      // }
+
+      if (id.equals("fill") || id.equals("length") || id.equals("origin") || id.equals("state") || id.equals("start") || id.equals("extent") || id.equals("outline") || id.equals("points") || id.equals("text") || id.equals("width") || id.equals("height") || id.equals("title") || id.equals("Ox") || id.equals("Oy") || id.equals("background")) {
+         ObjectType objectType = new ObjectType(ID);
+         if (objectType.checkAttributes(id, typeID)) {
             return true;
+         }
       }
       
       for (String key : AGLParser.symbolTable.keySet()) {
