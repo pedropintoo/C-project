@@ -465,7 +465,12 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
       Boolean res = visit(ctx.expression());
       String exprText = ctx.expression().getText();
+      System.out.println("AAA " + exprText);
    
+      if (res == null) {
+         ErrorHandling.printError("ERROR: Expression is null");
+         return false;
+      }
       // If expression have more than one index then we have to check the last index
       // E.g. a[1] is a Array<Array<Point>> but a[1][2] is a Array<Point>
       if (res) {
@@ -883,6 +888,12 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
       return res;
    }   
+
+   @Override
+   public Boolean visitExprWait(AGLParser.ExprWaitContext ctx) {
+      ctx.eType = pointType;
+      return true;
+   }
 
    // --------- End Visit Expression ---------
 
