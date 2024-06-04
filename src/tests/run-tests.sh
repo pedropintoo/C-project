@@ -1,3 +1,5 @@
+#!/bin/bash
+
 if [ "$(basename "$PWD")" = "src" ]; then
     :
 elif [ "$(basename "$PWD")" = "tests" ]; then
@@ -16,7 +18,7 @@ for file in tests/ValidTests/*.agl; do
     if cat $file | antlr4-run 2>&1 | grep -q "Semantic check passed."; then
         echo -e "\e[32m $(basename "$file"): OK\e[0m"
     else
-        echo -e "\e[31m $(basename "$file"): FAIL\e[0m"
+        echo -e "\e[31m $(basename "$file"): FAIL\e[0m" 
     fi
 done
 
