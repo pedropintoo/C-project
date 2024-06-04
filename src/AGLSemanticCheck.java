@@ -465,7 +465,6 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
       Boolean res = visit(ctx.expression());
       String exprText = ctx.expression().getText();
-      System.out.println("AAA " + exprText);
    
       if (res == null) {
          ErrorHandling.printError("ERROR: Expression is null");
