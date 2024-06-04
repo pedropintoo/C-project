@@ -1,5 +1,6 @@
 # Deve funcionar
 
 repeat {
-    a: Integer = 3;
-} until 2>1
+    a: String = 3;
+} until a == 3
+
