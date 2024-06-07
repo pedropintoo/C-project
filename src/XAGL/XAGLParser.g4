@@ -10,7 +10,6 @@ program
 
 stat
     : instantiation                             #StatInstantiation
-    | modelInstantiation                        #StatModelInstantiation
     | longAssignment ';'                        #StatLongAssignment
     | withStatement                             #StatWithStatement
     | forStatement                              #RepForStatement

@@ -30,9 +30,6 @@ class Interpreter(XAGLParserVisitor):
    def visitStatInstantiation(self, ctx:XAGLParser.StatInstantiationContext):
       return self.visitChildren(ctx)
 
-   def visitStatModelInstantiation(self, ctx:XAGLParser.StatModelInstantiationContext):
-      return self.visitChildren(ctx)
-
    def visitStatBlockStatement(self, ctx:XAGLParser.StatBlockStatementContext):
       return self.visitChildren(ctx)
 
