@@ -67,6 +67,14 @@ Por exemplo, no ficheiro `InvalidTests/TestMoveInvalid2.agl` ....
 Por exemplo, o ficheiro `ValidTests/TestWhile.agl` mostra verificações válidas para este tipo de estruturas.
 
 
+9. **Verificação dos atributos dos ObjectType**:
+   - Verificação dos atributos: Para cada ObjectType (por exemplo "Blob", "Arc", ...) foi feita uma verificação dos possíveis atributos nessas estruturas.
+   - Verificação das atribuições de variáveis: Para cada atribuição feita dentro de um ObjectType (por exemplo "outline", "fill", ...) foi feita uma verificação do tipo de variável possível para essa verificação. Para a atribuição de "points" o tipo de variável terá de ser um array de pontos.
+
+Por exemplo, o ficheiro `InvalidTests/TestAttributes5.agl` demontra que numa View não pode haver a definição de uma "origin".
+
+Por exemplo, o ficheiro `InvalidTests/TestAttributes4.agl` demontra que à variável "height" não pode ser atribuido um ponto (uma vez que tem de ser um inteiro).
+
 ## Como Executar
 
 Para executar o analisador semântico e verificar os testes, siga os passos abaixo:
