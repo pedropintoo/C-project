@@ -3,7 +3,9 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 
@@ -20,6 +22,8 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    private final ObjectType viewType = new ObjectType("View");
    private final ObjectType modelType = new ObjectType("Model");
    private final EnumType enumType = new EnumType();
+
+   private Set<String> modelDefinitions = new HashSet<>();
 
    @Override
    public Boolean visitProgram(AGLParser.ProgramContext ctx) {
@@ -1309,6 +1313,8 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       Boolean res = true;
       String ID = ctx.ID().getText();
 
+      System.out.println(ID);
+
       if (AGLParser.symbolTable.containsKey(ID)) {
          ErrorHandling.printError("Variable \"" + ID + "\" already declared!");
          return false;
@@ -1318,21 +1324,27 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       Symbol sym = new VariableSymbol(ID, modelType);
       AGLParser.symbolTable.put(ID, sym);
 
-      // List<String> modelDefinition = new ArrayList<>();
-
       for (AGLParser.ModelStatContext modelStat : ctx.modelStat()) {
          if (!visit(modelStat)) {
             return false;
          }
 
-         // if (modelStat.ID().getText() != null) {
-         //    modelDefinition.add(modelStat.ID().getText());
-         // } else if (modelStat.typeID().getText() != null) {
-         //    modelDefinition.add(modelStat.typeID().getText());
-         // } else if (modelStat.identifier().getText() != null) {
-         //    modelDefinition.add(modelStat.identifier().getText());
-         // }
+         if (modelStat instanceof AGLParser.ModelStatInstantiationContext) {
+            String varName = ((AGLParser.ModelStatInstantiationContext) modelStat).instantiation().ID().getText();
+            System.out.println("AA" + varName);
+            modelDefinitions.add(varName);
+         } else if (modelStat instanceof AGLParser.ModelStatLongAssignmentContext) {
+            String varName = ((AGLParser.ModelStatLongAssignmentContext) modelStat).longAssignment().identifier().ID().getText();
+            System.out.println("BB" + varName);
+            modelDefinitions.add(varName);
+         } else if (modelStat instanceof AGLParser.ModelStatActionContext) {
+            String varName = ((AGLParser.ModelStatActionContext) modelStat).action().identifier().getText();
+            System.out.println("CC" + varName);
+            modelDefinitions.add(varName);
+         }
       }
+      // TODO: não sei como fazer para o caso de uma ellipse como no ex06
+
 
       return true;
 
@@ -1345,12 +1357,24 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       Boolean res = true;
       String id = ctx.identifier().getText();
 
+      System.out.println(id);
+
       if (!AGLParser.symbolTable.containsKey(id)) {
          ErrorHandling.printError("Error: identifier \"" + id + "\" is not defined");
          return false;
       }
 
-      // Teria de fazer a confirmação se o id estava no Array
+      // Confirm if id is defined within the model
+      Symbol symbol = AGLParser.symbolTable.get(id);
+      if (symbol == null) {
+         ErrorHandling.printError("Error: Symbol for identifier " + id + " is null");
+         return false;
+      }
+
+      if (!modelDefinitions.contains(id)) {
+         ErrorHandling.printError("Error: \"" + id + "\" is not defined");
+         return false;
+      }
 
       Type idType = AGLParser.symbolTable.get(id).type();
 
