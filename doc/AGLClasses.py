@@ -3,6 +3,7 @@ import time
 import copy
 import math
 
+
 class Root:
 
     def __init__(self, views, last_view):
@@ -16,6 +17,11 @@ class Root:
         self.last_view = last_view
 
         self.tk.withdraw()
+
+        self.objects = []
+        self.views = []
+        self.last_refresh = time.time()
+        self.REFRESH_RATE = 0.001       
 
     def add_object(self, obj):
         self.objects.append(obj)
@@ -51,7 +57,7 @@ class View:
 
     def __init__(self, root: Root, Ox=0, Oy=0, height=201, width=201, title="No title", background="black"):
         self.root = root
-        self.top = None
+        self.top = Toplevel(self.root.tk)
         self.Ox = Ox
         self.Oy = Oy
         self.height = height
@@ -63,13 +69,20 @@ class View:
         self.mouseY = None
 
         self.canvas = None
-
-        self.top = Toplevel(self.root.tk)
         
         self.objectsDrawn = []
-        self.canvas = Canvas(self.top, height=self.height, width=self.width, background=self.background)  
+        #self.canvas = Canvas(self.top, height=self.height, width=self.width, background=self.background)
 
-    def update(self):
+        self.root.views.append(self)
+
+    def update(self, delay = 0):
+        if not self.canvas:
+            self.canvas = Canvas(self.top, height=self.height, width=self.width, background=self.background) 
+        if delay:
+            while (time.time() - self.root.last_refresh <= delay):
+                time.sleep(self.root.REFRESH_RATE)
+
+        self.root.last_refresh = time.time()
         self.top.title(self.title)
         self.canvas.config(height=self.height, width=self.width, background=self.background)
         self.canvas.pack()
@@ -169,6 +182,9 @@ class View:
         new_y = sin_val * rel_x + cos_val * rel_y
 
         return (new_x, new_y)
+    
+    def Dict(self):
+        return vars(self)
 
 # ---------------------------------------------------------------
 # AGL Objects
@@ -192,6 +208,9 @@ class Object:
     def move_absolute(self, point):
         self.origin = (point[0], point[1])
 
+    def Dict(self):
+        return vars(self)
+    
 class Model(Object):
     
     def __init__(self, root: Root = None, view: View = None, state="normal", origin=(0,0)):
@@ -482,6 +501,7 @@ class Rectangle(Object):
         self.length = length
         self.fill = fill
         self.angle = 0
+        self.array = []
     
     def __deepcopy__(self, memo=None):
         """Create a deep copy of the model."""
