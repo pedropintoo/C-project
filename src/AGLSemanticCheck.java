@@ -99,6 +99,10 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
     "gray93", "gray94", "gray95", "gray97", "gray98", "gray99", "black"
 };
 
+   String[] STATES = {
+      "normal", "hidden"
+   };
+
 
    @Override
    public Boolean visitProgram(AGLParser.ProgramContext ctx) {
@@ -1673,6 +1677,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       // System.out.println("value: " + value);
 
       List<String> colorsList = Arrays.asList(COLORS);
+      List<String> statesList = Arrays.asList(STATES);
       
       // switch (id) {
       //    case "fill":
@@ -1695,8 +1700,18 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
       if (id.equals("fill")) {
          String valueString = value.substring(1, value.length() - 1);
-         System.out.println("ValueString: " + valueString);
+         // System.out.println("ValueString: " + valueString);
          if (!colorsList.contains(valueString)) {
+            return false;
+         }
+      }
+
+      if (id.equals("state")) {
+         // System.out.println("Value: " + value);
+         // System.out.println("Here");
+         String valueString = value.substring(1, value.length() - 1);
+         // System.out.println("ValueString: " + valueString);
+         if (!statesList.contains(valueString)) {
             return false;
          }
       }
