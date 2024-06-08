@@ -41,12 +41,22 @@ Tower :: Model {
         }
     }
 
+    action on numberOfDisks {
+        if (numberOfDisks < 0) do 
+            numberOfDisks = 0;
+    }
+
     active : Boolean = False;
     action on active {
-        if (active) do
-            disks[numberOfDisks-1].wood.fill = "green";
+        if (active) do {
+            if (numberOfDisks != 0) do
+                disks[numberOfDisks-1].wood.fill = "green";
+            else do
+                active = False;
+        }
         else do
-            disks[numberOfDisks-1].wood.fill = "brown";
+            if (numberOfDisks != 0) do
+                disks[numberOfDisks-1].wood.fill = "brown";
     }
 }
 
@@ -86,43 +96,76 @@ view3: View with {
 
 game : Game;
 
-game.tower1.numberOfDisks = 2;
-game.tower1.disks = [game.diskL, game.diskS];
+game.tower1.numberOfDisks = 3;
+game.tower1.disks = [game.diskL, game.diskM,game.diskS];
 
-refresh view1; refresh view1;
+refresh view1;
 refresh view2;
 refresh view3;
-
-p : Point = wait mouse click; 
-print p;
 
 refresh view1;
 refresh view2;
 refresh view3;
 
 while True do {
-    p : Point = wait mouse click;
+    p1 : Point = wait mouse click;
     
-    print p;
-    if p[0] < 250 do {
-        print "Tower 1"; # Ativa a torre1 -> ultimo da lista fica selecionado
-                         # Tem se de ficar á espera do segundo click
-                         # No segundo click sabe-se a torre destino
-                         # E poe se o disco na array da torre destino
-                         # Funciona como se fosse stack, 
-                         # Põe-se no fim da array e tira-se do fim da array
-                         # Só é válido colocar no fim da array discos menores que o último colocado
-                         # Dentro das torres está a lógica de, cada vez que a array muda, colocar os mans bem
-    
+    print p1;
+
+    # Ativa algum disco de alguma torre
+    if p1[0] < 250 do {
+        print "Tower 1";
+        game.tower1.active = True;
+        game.tower2.active = False;
+        game.tower3.active = False;
+        refresh view1;
     }
     else do 
-        if p[0] < 750 do 
+        if p1[0] < 750 do {
             print "Tower 2";
+            game.tower2.active = True;
+            game.tower1.active = False;
+            game.tower3.active = False;
+            refresh view2;
+        }
         else do {
             print "Tower 3";
+            game.tower3.active = True;
+            game.tower1.active = False;
+            game.tower2.active = False;
+            refresh view3;
         }
+    refresh view1, view2, view3;
 
+
+    p2 : Point = wait mouse click;
+    if p2[0] < 250 do {
+        print "Tower 1";  
+    }
+    else do 
+        if p2[0] < 750 do {
+            print "Tower 2";
+            if p1[0] < 250 or p1[0] >= 750 do {
+                if game.tower1.active do {
+                    size_of_tower1 = game.tower1.numberOfDisks;
+                    last_disk = game.tower1.disks[size_of_tower1 - 1];
+                    game.tower1.numberOfDisks = game.tower1.numberOfDisks - 1;
+                    game.tower2.numberOfDisks = game.tower2.numberOfDisks + 1;
+                    game.tower2.disks = game.tower2.disks + last_disk;
+                }
+            }  
+            refresh view2;
+        }
+        else do {
+            print "Tower 3";
+            game.tower3.active = True;
+            game.tower1.active = False;
+            game.tower2.active = False;
+            refresh view3;
+        }
    refresh view1, view2, view3;
+   refresh view1, view2, view3;
+
 }
 
 
