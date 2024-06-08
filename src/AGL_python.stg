@@ -18,18 +18,40 @@ mouseX = None
 mouseY = None
 model = None
 action = None
-def get_nested_attribute(obj, attr_path):
+def get_nested_attribute(obj, attr_path, local_dict):
     if obj is None:
-        return None  
+        return None
+    if attr_path == '':
+        return obj    
 
-    attributes = attr_path.split('.')
-    current_object = obj
-    for attr in attributes:
-        if hasattr(current_object, attr):
-            current_object = getattr(current_object, attr)
+    # recursive approach
+    attr = attr_path.split('.')[0]
+    if '[' in attr:
+        attr, index = attr.split('[')
+        varIndex = index[:-1]
+        # consider []...[]
+        idx = None
+        if varIndex in local_dict:
+            idx = local_dict[varIndex]
         else:
-            return None 
-    return current_object
+            idx = int(varIndex)
+
+        if hasattr(obj, attr):
+            obj = getattr(obj, attr)
+            obj = obj[idx]
+        else:
+            return None
+    else:
+        if hasattr(obj, attr):
+            obj = getattr(obj, attr)
+        else:
+            return None
+    
+    if '.' in attr_path:
+        attr_path = '.'.join(attr_path.split('.')[1:])
+        return get_nested_attribute(obj, attr_path, local_dict) 
+    else:
+        return obj
 #################################################################
 
 if __name__ == "__main__":
@@ -127,10 +149,10 @@ last_view = (views.pop(-1) if len(views) > 0 else None) if last_view == <view> e
 assign(stat,var,value, varIfModel) ::= <<
 <stats(stat)>
 
-temp = get_nested_attribute(action, '<value>')
+temp = get_nested_attribute(action, '<value>', locals())
 if temp is None:
     temp = <value>
-if action is not None and hasattr(action, "<var>".split('.')[0]):
+if action is not None and hasattr(action, "<var>".split('[')[0].split('.')[0]):
     action.<var> = temp
 else:
     <var> = temp 

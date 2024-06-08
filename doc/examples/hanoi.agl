@@ -1,0 +1,117 @@
+
+
+Disk :: Model {
+
+    size : Number = 1;
+    action on size {
+        wood.length = (50 + 25 * size, 15);
+    }
+
+    wood: Rectangle with {
+        length = (75,15);
+        fill = "brown";
+    }
+}
+
+Base :: Model {
+    rec : Rectangle with {
+        length = (200,20);
+        fill = "brown";
+    }
+
+    Text with {
+        text = "Base";
+    }
+
+    stick: Rectangle at (0,120) with {
+        length = (10,100);
+        fill = "brown";
+    }
+}
+
+Tower :: Model {
+    base : Base;
+    numberOfDisks : Number = 3;
+    action on numberOfDisks {
+        for d in numberOfDisks..3 do {
+            disks[d].state = "hidden";
+        }
+    }
+
+    disk3 : Disk; disk3.size = 3;
+    disk2 : Disk; disk2.size = 2;
+    disk1 : Disk;
+    
+    disks : Array = [disk3, disk2, disk1]; # Array<Disk>
+    action on disks {
+        for d in 0..numberOfDisks do {
+            move disks[d].wood to (disks[d].wood.origin[0], (d+1)*30 - 45 );
+        }
+    }
+
+    active : Boolean = False;
+    action on active {
+        if (active) do
+            disks[numberOfDisks-1].wood.fill = "green";
+        else do
+            disks[numberOfDisks-1].wood.fill = "brown";
+    }
+}
+
+
+view1: View with {
+    width = 500;
+    height = 500;
+    title = "Tower 1";
+    background = "wheat";
+}
+
+view2: View with {
+    Ox = 500;
+    width = 500;
+    height = 500;
+    title = "Tower 2";
+    background = "wheat";
+}
+
+view3: View with {
+    Ox = 1000;
+    width = 500;
+    height = 500;
+    title = "Tower 3";
+    background = "wheat";
+}
+
+tower1 : Tower at (0,-50);
+tower2 : Tower at (500, -50);
+tower3 : Tower at (1000, -50);
+
+refresh view1;
+refresh view2;
+refresh view3;
+
+p : Point = wait mouse click; 
+print p;
+
+tower1.active = True;
+refresh view1;
+
+p = wait mouse click; 
+
+tower1.numberOfDisks = tower1.numberOfDisks - 1;
+refresh view1;
+
+p = wait mouse click; 
+
+
+
+tower1.numberOfDisks = tower1.numberOfDisks - 1;
+refresh view1;
+
+p = wait mouse click;
+
+
+close view1;
+
+
+
