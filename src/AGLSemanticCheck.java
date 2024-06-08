@@ -1034,8 +1034,6 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
          return false;
       }
 
-      
-
       res = visit(ctx.expression());
       if (!res) {
          ErrorHandling.printError("Error: invalid expression in move command");
@@ -1069,6 +1067,15 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
          ErrorHandling.printError(ctx, "Variable \"" + id + "\" does not exists!");
          res = false;
       }
+
+      Type type = AGLParser.symbolTable.get(id).type();
+      System.out.println("Type: " + type.name());
+      // must conforms to object type (except views because we cannot rotate views) or model type 
+      if ( !(type instanceof ObjectType) && !type.conformsTo(modelType) || (type.conformsTo(viewType)) ) {
+         ErrorHandling.printError(ctx, "Error: invalid type in rotate command (must be an object or model type!)");
+         return false;
+      }
+
 
       res = visit(ctx.expression());
       if (!res) {
