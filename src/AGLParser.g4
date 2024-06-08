@@ -92,7 +92,7 @@ command
     | 'print' expression ';'                                               #CommandPrint
     | 'close' ID (',' ID)* ';'                                             #CommandClose
     | 'move' identifier (',' identifier)* type=('by'|'to') expression ';'  #CommandMove
-    | 'rotate' identifier (',' identifier)* 'by' expression ';'                              #CommandRotate
+    | 'rotate' identifier (',' identifier)* 'by' expression ';'            #CommandRotate
     ;
 
 eventTrigger

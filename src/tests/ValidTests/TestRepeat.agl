@@ -1,6 +1,5 @@
 # Deve funcionar
 
 repeat {
-    a: String = 3;
-} until a == 3
-
+    a: String = "joao";
+} until a == "boi";

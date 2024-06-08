@@ -6,7 +6,6 @@ import java.util.Map;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 
-
 @SuppressWarnings("CheckReturnValue")
 public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
@@ -630,25 +629,10 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    }
 
    // @Override
-   public Boolean visitExprAddSubMultDivAndOr(AGLParser.ExprAddSubMultDivAndOrContext ctx) {
-      // expression: e1=expression op=('*'|'/'|'and') e2=expression | e1=expression op=('+'|'-'|'or') e2=expression
+   public Boolean visitExprAddSubMultDiv(AGLParser.ExprAddSubMultDivContext ctx) {
+      // expression: e1=expression op=('*'|'/') e2=expression | e1=expression op=('+'|'-') e2=expression
       // expression returns [Type eType, String varName]
-
       Boolean res = true;
-
-      // if op is 'and' or 'or' then both expressions must be boolean
-      if (ctx.op.getText().equals("and") || ctx.op.getText().equals("or")) {
-         res = visit(ctx.e1) && visit(ctx.e2);
-         if (res) {
-            if (!ctx.e1.eType.conformsTo(booleanType) || !ctx.e2.eType.conformsTo(booleanType)) {
-               ErrorHandling.printError(ctx, "The operator " + ctx.op.getText() + " requires boolean operands!");
-               res = false;
-            } else {
-               ctx.eType = booleanType;
-            }
-         }
-         return res;
-      }
 
       // if op is '+','-','*','/' then both expressions must be numeric
       if (ctx.op.getText().equals("+") || ctx.op.getText().equals("-") || ctx.op.getText().equals("*")
@@ -709,6 +693,24 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    }
 
    @Override
+   public Boolean visitExprAndOr(AGLParser.ExprAndOrContext ctx) {
+      // expression: e1=expression 'and' e2=expression | e1=expression 'or' e2=expression
+      Boolean res = true;
+
+      // if op is 'and' or 'or' then both expressions must be boolean
+      res = visit(ctx.e1) && visit(ctx.e2);
+      if (res) {
+         if (!ctx.e1.eType.conformsTo(booleanType) || !ctx.e2.eType.conformsTo(booleanType)) {
+            ErrorHandling.printError(ctx, "The operator and or or requires boolean operands!");
+            res = false;
+         } else {
+            ctx.eType = booleanType;
+         }
+      }
+      return res;
+   }
+
+   @Override
    public Boolean visitExprPoint(AGLParser.ExprPointContext ctx) {
       // expression: '(' x=expression ',' y=expression ')' and expression returns [Type eType, String varName]
       
@@ -741,9 +743,9 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
    @Override
    public Boolean visitExprRelational(AGLParser.ExprRelationalContext ctx) {
-      // expression: e1=expression RELATIONAL_OPERATOR e2=expression and expression returns [Type eType, String varName]
+      // e1=expression op=('>'|'<'|'>='|'<=') e2=expression |  e1=expression op=('=='|'!=') e2=expression
+      // expression returns [Type eType, String varName]
       Boolean res = true;
-
       res = visit(ctx.e1) && visit(ctx.e2);
 
       if (res) {
@@ -1032,6 +1034,32 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    }
 
    @Override
+   public Boolean visitCommandRotate(AGLParser.CommandRotateContext ctx) {
+      // command : 'rotate' identifier (',' identifier)* 'by' expression ';'
+      Boolean res = true;
+      String id = ctx.identifier(0).getText();
+
+      if (!AGLParser.symbolTable.containsKey(id)) {
+         ErrorHandling.printError(ctx, "Variable \"" + id + "\" does not exists!");
+         res = false;
+      }
+
+      res = visit(ctx.expression());
+      if (!res) {
+         ErrorHandling.printError("Error: invalid expression in rotate command");
+         return false;
+      }
+
+      // expression must be a number
+      if (!ctx.expression().eType.conformsTo(numberType) && !ctx.expression().eType.conformsTo(integerType)) {
+         ErrorHandling.printError("Error: invalid expression type in rotate command (must be a number!)");
+         return false;
+      }
+
+      return res;
+   }   
+
+   @Override
    public Boolean visitForStatement(AGLParser.ForStatementContext ctx) {
       // forStatement : 'for' ID 'in' number_range 'do' stat;
       // number_range : expression '..' expression ('..' expression)?
@@ -1099,6 +1127,8 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
    @Override
    public Boolean visitRepeatStatement(AGLParser.RepeatStatementContext ctx) {
+      // repeatStatement : 'repeat' stat 'until' expression;
+
       Boolean res = true;
       res = visit(ctx.stat());
 
