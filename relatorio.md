@@ -62,9 +62,9 @@ Por exemplo, no ficheiro `InvalidTests/TestMoveInvalid2.agl` ....
 
 
 7. **Verificação de estruturas de repetição**
-   - Verificação de expressões condicionais: O analisador semântico verifica se as condições escritas dentro das estruturas de repetição (`while`) são válidas.
+   - Verificação de expressões condicionais: O analisador semântico assegura que as expressões condicionais utilizadas nas estruturas de repetição (`while`) sejam válidas e do tipo booleano.
 
-Por exemplo, o ficheiro `ValidTests/TestWhile.agl` mostra verificações válidas para este tipo de estruturas.
+Por exemplo, o ficheiro `ValidTests/TestWhile.agl` demonstra exemplos de verificações válidas para as estruturas de repetição. Neste ficheiro, as condições dentro das instruções ´while´ são corretamente verificadas pelo analisador semântico para garantir que sejam do tipo booleano.
 
 
 9. **Verificação dos atributos dos ObjectType**:
