@@ -1307,10 +1307,20 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       Symbol sym = new VariableSymbol(ID, modelType);
       AGLParser.symbolTable.put(ID, sym);
 
+      // List<String> modelDefinition = new ArrayList<>();
+
       for (AGLParser.ModelStatContext modelStat : ctx.modelStat()) {
          if (!visit(modelStat)) {
             return false;
          }
+
+         // if (modelStat.ID().getText() != null) {
+         //    modelDefinition.add(modelStat.ID().getText());
+         // } else if (modelStat.typeID().getText() != null) {
+         //    modelDefinition.add(modelStat.typeID().getText());
+         // } else if (modelStat.identifier().getText() != null) {
+         //    modelDefinition.add(modelStat.identifier().getText());
+         // }
       }
 
       return true;
@@ -1328,6 +1338,8 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
          ErrorHandling.printError("Error: identifier \"" + id + "\" is not defined");
          return false;
       }
+
+      // Teria de fazer a confirmação se o id estava no Array
 
       Type idType = AGLParser.symbolTable.get(id).type();
 
