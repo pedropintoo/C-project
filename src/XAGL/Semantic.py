@@ -84,12 +84,6 @@ class Semantic(XAGLParserVisitor):
    def visitCommandRotate(self, ctx:XAGLParser.CommandRotateContext):
       return self.visitChildren(ctx)
 
-   def visitEventTrigger(self, ctx:XAGLParser.EventTriggerContext):
-      return self.visitChildren(ctx)
-
-   def visitMouseTrigger(self, ctx:XAGLParser.MouseTriggerContext):
-      return self.visitChildren(ctx)
-
    def visitForStatement(self, ctx:XAGLParser.ForStatementContext):
       return self.visitChildren(ctx)
 

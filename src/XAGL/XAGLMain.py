@@ -8,10 +8,10 @@ from AGLClasses import *
 
 
 def main(argv):
-   r = Root()
-   v = View(r, 0, 0, height=500, width=500)
-   m = Rectangle(r,length=(50,50), fill='white', origin=(0,0))
-   vars = {"m":m , "v":v}
+   root = Root()
+   v = View(root, 0, 0, height=500, width=500)
+   m = Rectangle(root,length=(50,50), fill='white', origin=(0,0))
+   vars = {"root":root, "m":m , "v":v}
    visitor0 = Semantic()
    visitor1 = Interpreter(vars)
    input_stream = StdinStream()

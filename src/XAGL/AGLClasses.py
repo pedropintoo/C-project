@@ -8,20 +8,43 @@ class Root:
 
     def __init__(self):
         self.tk = Tk()
-        self.objects = []
-        self.last_refresh = time.time()
-        self.REFRESH_RATE = 0.001
-
         self.tk.withdraw()
+
+        self.objects = []
+        self.views = []
+        self.last_refresh = time.time()
+        self.REFRESH_RATE = 0.001       
 
     def add_object(self, obj):
         self.objects.append(obj)
+
+    def onClick(self, event, view):
+        self.mouseX = event.x - view.width/2 + view.Ox
+        self.mouseY = view.height/2 + view.Oy - event.y
+
+    def getMouse(self):
+        for v in self.views:
+            v.canvas.pack()
+            v.canvas.update()
+
+        self.mouseX = None; self.mouseY = None
+        while self.mouseX == None:
+            time.sleep(.1)
+
+            for v in self.views:
+                v.canvas.update()
+
+    def waitClick(self):
+        for v in self.views:
+            v.canvas.bind("<Button-1>", lambda event, view=v : self.onClick(event,view))   
+        self.getMouse()    
+        return self.mouseX, self.mouseY
 
 class View:
 
     def __init__(self, root: Root, Ox=0, Oy=0, height=201, width=201, title="No title", background="black"):
         self.root = root
-        self.top = None
+        self.top = Toplevel(self.root.tk)
         self.Ox = Ox
         self.Oy = Oy
         self.height = height
@@ -33,11 +56,11 @@ class View:
         self.mouseY = None
 
         self.canvas = None
-
-        self.top = Toplevel(self.root.tk)
         
         self.objectsDrawn = []
-        #self.canvas = Canvas(self.top, height=self.height, width=self.width, background=self.background)  
+        #self.canvas = Canvas(self.top, height=self.height, width=self.width, background=self.background)
+
+        self.root.views.append(self)
 
     def update(self, delay = 0):
         if not self.canvas:

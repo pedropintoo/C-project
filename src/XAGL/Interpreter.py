@@ -88,8 +88,9 @@ class Interpreter(XAGLParserVisitor):
       return self.visit(ctx.expression())
 
    def visitExprWait(self, ctx:XAGLParser.ExprWaitContext):
-      
-      return self.visitChildren(ctx)
+      root = self.getVar("root")
+      x, y = root.waitClick()
+      return np.array((x,y))
 
    def visitExprString(self, ctx:XAGLParser.ExprStringContext):
       return ctx.STRING().getText()
