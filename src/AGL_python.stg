@@ -65,10 +65,7 @@ stats(stat) ::= <<
 >>
 
 waitMouseClick(var) ::= <<
-if action is not None:
-    <var> = action.root.waitClick()
-else:
-    <var> = root.waitClick()
+<var> = root.waitClick()
 >>
 
 refresh(stat, view, delay) ::= <<
@@ -141,7 +138,8 @@ else:
     <var>.rotate(<degree>)
 >>
 
-close(view) ::= <<
+close(view, stat) ::= <<
+<stats(stat)>
 <view>.close(); views.remove(<view>) if last_view != <view> else None
 last_view = (views.pop(-1) if len(views) > 0 else None) if last_view == <view> else last_view
 root.last_view = last_view

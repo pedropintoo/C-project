@@ -22,7 +22,7 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
 
     private ST binaryExpression(String e1Stats, String e2Stats, String var, String e1Var, String op, String e2Var) {
         ST res = templates.getInstanceOf("binaryExpression");
-        if (!op.equals(",")) {
+        if (!op.equals(",") && !op.equals("or") && !op.equals("and")) {
             e1Var = "np.array("+e1Var+")"; e2Var = "np.array("+e2Var+")";
             if (op.equals("*")) {
                 e1Var = "np.dot(" + e1Var;
