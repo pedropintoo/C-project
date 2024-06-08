@@ -1,0 +1,11 @@
+# Deve funcionar.
+
+while 1==1 do {
+    a: Integer = 1;
+}
+
+b: Integer;
+
+while abc do {
+    b = 2;
+}
