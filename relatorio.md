@@ -60,6 +60,11 @@ Por exemplo, o ficheiro `InvalidTests/TestMoveInvalid1.agl` contém um exemplo q
 
 Por exemplo, no ficheiro `InvalidTests/TestMoveInvalid2.agl` ....
 
+
+7. **Verificação de estruturas de repetição**
+
+
+
 ## Como Executar
 
 Para executar o analisador semântico e verificar os testes, siga os passos abaixo:
