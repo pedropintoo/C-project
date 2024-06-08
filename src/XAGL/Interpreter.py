@@ -241,7 +241,7 @@ class Interpreter(XAGLParserVisitor):
       condition = self.visit(ctx.expression())
       if condition:
          self.visit(ctx.stat())
-      if ctx.elseStatement():
+      elif ctx.elseStatement():
          self.visit(ctx.elseStatement())
 
    def visitElseStatement(self, ctx:XAGLParser.ElseStatementContext):
