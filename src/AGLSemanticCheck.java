@@ -509,7 +509,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
          return false;
       }  
 
-      System.out.println("«««««« Type: " + type.name() + " »»»»»»");
+      // System.out.println("«««««« Type: " + type.name() + " »»»»»»");
 
       
       if ( (ctx.identifier().expression() == null ) && (ctx.identifier().identifier() == null) ) { // therefore it is a simple identifier (not an attribute)
@@ -530,10 +530,10 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
                   return false;
                }
 
-               System.out.println("«««««« Assignment Type: " + ctx.assignment().eType.name() + " »»»»»»");
+               // System.out.println("«««««« Assignment Type: " + ctx.assignment().eType.name() + " »»»»»»");
             
                if (!ctx.assignment().eType.conformsTo(sym.type())) {
-                  ErrorHandling.printError(ctx, "Expression type does not conform to variable type!");
+                  ErrorHandling.printError(ctx, "---Expression type does not conform to variable type!");
                   return false;
                } else {
                   sym.setValueDefined();
@@ -551,24 +551,27 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
                return false;
             }
             
-            System.out.println("«««««« Assignment Type: " + ctx.assignment().eType.name() + " »»»»»»");
+            // System.out.println("«««««« Assignment Type: " + ctx.assignment().eType.name() + " »»»»»»");
 
             if (ctx.identifier().identifier() != null) {
                String attributeName = ctx.identifier().identifier().getText();
                if (type instanceof ObjectType) {
                   ObjectType objectType = new ObjectType(type.name());
                   if (!objectType.checkAttributes(attributeName, ctx.assignment().eType)) {
-                     ErrorHandling.printError("--------------------- Expression type does not conform to attribute type");
+                     ErrorHandling.printError("Expression type does not conform to attribute type");
                      return false;
                   }
                } else {
-                  ErrorHandling.printError(ctx, "----------------   Type is not an ObjectType!");
+                  ErrorHandling.printError(ctx, "Type is not an ObjectType!");
                   return false;
                }
             }
             else if (!ctx.assignment().eType.conformsTo(type)) {
-               ErrorHandling.printError(ctx, "----------------   Expression type does not conform to variable type!");
-               return false;
+               // If eType is number may be integer or number      
+               if (!(ctx.assignment().eType instanceof IntegerType && type instanceof NumberType)) {
+                  ErrorHandling.printError("Expression type does not conform to variable type!");
+                  return false;
+               }
             }
 
             // TODO: sym.setValueDefined();
@@ -1596,11 +1599,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       String id = ctx.ID().getText();
       Type type = null;
 
-      System.out.println("Checking identifier: " + id);
-
-      for (String symbol : AGLParser.symbolTable.keySet()) {
-         System.out.println(symbol);
-      }
+      // System.out.println("Checking identifier: " + id);
 
       if (!AGLParser.symbolTable.containsKey(id)) {
          ErrorHandling.printError(ctx, "VariableFFF \"" + id + "\" does not exists!");

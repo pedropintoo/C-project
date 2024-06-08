@@ -13,28 +13,28 @@ public class ObjectType extends Type {
         this.subTypes = new ArrayList<ObjectType>();
         switch (name) {
             case "Line":
-                System.out.println("Arrived in Line");
+                // System.out.println("Arrived in Line");
                 this.addState();
                 this.addOrigin();
                 this.addLength();
                 this.addFill();
                 break;
             case "PolyLine":
-                System.out.println("Arrived in PolyLine");
+                // System.out.println("Arrived in PolyLine");
                 this.addState();
                 this.addOrigin();
                 this.addPoints();
                 this.addFill();
                 break;
             case "Spline":
-                System.out.println("Arrived in Spline");
+                // System.out.println("Arrived in Spline");
                 this.addState();
                 this.addOrigin();
                 this.addPoints();
                 this.addFill();
                 break;
             case "Polygon":
-                System.out.println("Arrived in Polygon");
+                // System.out.println("Arrived in Polygon");
                 this.addState();
                 this.addOrigin();
                 this.addPoints();
@@ -42,7 +42,7 @@ public class ObjectType extends Type {
                 this.addOutline();
                 break;
             case "Blob":
-                System.out.println("Arrived in Blob");
+                // System.out.println("Arrived in Blob");
                 this.addState();
                 this.addOrigin();
                 this.addPoints();
@@ -50,21 +50,21 @@ public class ObjectType extends Type {
                 this.addOutline();
                 break;
             case "Rectangle":
-                System.out.println("Arrived in Rectangle");
+                // System.out.println("Arrived in Rectangle");
                 this.addState();
                 this.addOrigin();
                 this.addLength();
                 this.addFill();
                 break;
             case "Ellipse":
-                System.out.println("Arrived in Ellipse");
+                // System.out.println("Arrived in Ellipse");
                 this.addState();
                 this.addOrigin();
                 this.addLength();
                 this.addFill();
                 break;
             case "Arc":
-                System.out.println("Arrived in Arc");
+                // System.out.println("Arrived in Arc");
                 this.addState();
                 this.addOrigin();
                 this.addLength();
@@ -73,7 +73,7 @@ public class ObjectType extends Type {
                 this.addOutline();
                 break;
             case "ArcChord":
-                System.out.println("Arrived in ArcChord");
+                // System.out.println("Arrived in ArcChord");
                 this.addState();
                 this.addOrigin();
                 this.addLength();
@@ -82,7 +82,7 @@ public class ObjectType extends Type {
                 this.addFill();
                 break;
             case "PieSlice":
-                System.out.println("Arrived in PieSlice");
+                // System.out.println("Arrived in PieSlice");
                 this.addState();
                 this.addOrigin();
                 this.addLength();
@@ -91,29 +91,29 @@ public class ObjectType extends Type {
                 this.addFill();
                 break;
             case "Text":
-                System.out.println("Arrived in Text");
+                // System.out.println("Arrived in Text");
                 this.addState();
                 this.addOrigin();
                 this.addText();
                 this.addFill();
                 break;
             case "Dot":
-                System.out.println("Arrived in Dot");
+                // System.out.println("Arrived in Dot");
                 this.addState();
                 this.addOrigin();
                 this.addFill();
                 break;
             case "Model":
-                System.out.println("Arrived in Model");
+                // System.out.println("Arrived in Model");
                 this.addState();
                 this.addOrigin();
                 this.addSubTypes();
                 break;
             case "Script":
-                System.out.println("Arrived in Script");
+                // System.out.println("Arrived in Script");
                 break;
             case "View":
-                System.out.println("Arrived in view");
+                // System.out.println("Arrived in view");
                 this.addWidth();
                 this.addHeight();
                 this.addTitle();
@@ -125,7 +125,7 @@ public class ObjectType extends Type {
                 ErrorHandling.printError("Error: Invalid type!");
                 break;
         }
-        System.out.println("Attributes initialized for " + name + ": " + this.attributes.keySet());
+        // System.out.println("Attributes initialized for " + name + ": " + this.attributes.keySet());
     }
 
     public boolean checkAttributes(String attributeName, Type type) {

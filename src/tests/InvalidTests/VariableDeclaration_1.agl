@@ -1,0 +1,5 @@
+cellSize : Number = 200;
+
+cellSize = 250; # OK
+
+cellSize = "Joao"; # Erro
