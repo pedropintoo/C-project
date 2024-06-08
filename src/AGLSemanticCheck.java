@@ -16,6 +16,8 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    private final VectorType vectorType = new VectorType();
    private final BooleanType booleanType = new BooleanType();
    private final ObjectType scriptType = new ObjectType("Script");
+   private final ObjectType viewType = new ObjectType("View");
+   private final ObjectType modelType = new ObjectType("Model");
    private final EnumType enumType = new EnumType();
 
    @Override
@@ -951,6 +953,14 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
          res = false;
       }
 
+      Type type = AGLParser.symbolTable.get(id).type();
+      // must conforms to view type
+      if (!type.conformsTo(viewType)) {
+         ErrorHandling.printError(ctx, "Error: invalid type in refresh command (must be a view type!)");
+         return false;
+      }
+
+
       if (ctx.expression() != null) {
          res = visit(ctx.expression());
          if (!res) {
@@ -996,6 +1006,13 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
          res = false;
       }
 
+      Type type = AGLParser.symbolTable.get(id).type();
+      // must conforms to view type
+      if (!type.conformsTo(viewType)) {
+         ErrorHandling.printError(ctx, "Error: invalid type in close command (must be a view type!)");
+         return false;
+      }
+
       return res;
    }
 
@@ -1009,6 +1026,15 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
          ErrorHandling.printError(ctx, "VariableEEE \"" + id + "\" does not exists!");
          res = false;
       }
+
+      Type type = AGLParser.symbolTable.get(id).type();
+      // must conforms to object type or model type or view type
+      if ( !(type instanceof ObjectType) && !type.conformsTo(modelType) && !type.conformsTo(viewType)) {
+         ErrorHandling.printError(ctx, "Error: invalid type in move command (must be an object, model or view type!)");
+         return false;
+      }
+
+      
 
       res = visit(ctx.expression());
       if (!res) {
