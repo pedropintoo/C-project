@@ -361,17 +361,46 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
    @Override
    public Boolean visitPropertiesAssignment(AGLParser.PropertiesAssignmentContext ctx) {
-      Boolean res = true;
-
-      for (AGLParser.LongAssignmentContext longAssign : ctx.longAssignment()) {
-         res = visit(longAssign);
-         if (!res) {
-            ErrorHandling.printError("Error: invalid properties assignment");
-            return false;
-         }
-      }
-
-      return res;
+       Boolean res = true;
+   
+       for (AGLParser.LongAssignmentContext longAssign : ctx.longAssignment()) {
+           String id = longAssign.identifier().getText();
+   
+           // Visit the assignment to get its type
+           res = visit(longAssign.assignment());
+           if (!res) {
+               ErrorHandling.printError("Error: invalid long assignment in properties assignment");
+               return false;
+           }
+   
+           // Get the type of the assignment's expression
+           Type typeAttribute = longAssign.assignment().eType;
+           if (typeAttribute == null) {
+               ErrorHandling.printError("Error: type of assignment is null for identifier: " + id);
+               return false;
+           }
+           System.out.println("Type of assignment for " + id + ": " + typeAttribute.name());
+   
+           // Check if the identifier is already in the symbol table
+           if (!AGLParser.symbolTable.containsKey(id)) {
+               // If not, create a new symbol and add it to the symbol table
+               Symbol sym = new VariableSymbol(id, typeAttribute);
+               sym.setValueDefined();
+               AGLParser.symbolTable.put(id, sym);
+               System.out.println("Added new symbol for identifier: " + id);
+           } else {
+               // If the symbol already exists, ensure the types conform
+               Symbol sym = AGLParser.symbolTable.get(id);
+               if (!typeAttribute.conformsTo(sym.type())) {
+                   ErrorHandling.printError("Error: type mismatch for identifier: " + id);
+                   return false;
+               }
+               sym.setValueDefined();
+               System.out.println("Updated existing symbol for identifier: " + id);
+           }
+       }
+   
+       return res;
    }
 
    
@@ -402,7 +431,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       if ( (ctx.identifier().expression() == null ) && (ctx.identifier().identifier() == null) ) { // therefore it is a simple identifier (not an attribute)
          
          if (!AGLParser.symbolTable.containsKey(id)) {
-            ErrorHandling.printError(ctx, "Variable \"" + id + "\" does not exists!");
+            ErrorHandling.printError(ctx, "VariableAAA \"" + id + "\" does not exists!");
             return false;
          } else {
             Boolean resExpr = visit(ctx.assignment());
@@ -738,7 +767,6 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
                ErrorHandling.printError(ctx, "Error: invalid relational expression (enum type)");
                return false;
             }
-
             ctx.eType = booleanType;
 
             return true;
@@ -837,7 +865,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
       if ( (ctx.identifier().expression() == null ) && (ctx.identifier().identifier() == null) ) {
          if (!AGLParser.symbolTable.containsKey(id)) {
-            ErrorHandling.printError(ctx, "Variable \"" + id + "\" does not exists!");
+            ErrorHandling.printError(ctx, "VariableBBB \"" + id + "\" does not exists!");
             res = false;
          } else {
             Symbol sym = AGLParser.symbolTable.get(id);
@@ -918,7 +946,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       String id = ctx.ID(0).getText();
 
       if (!AGLParser.symbolTable.containsKey(id)) {
-         ErrorHandling.printError(ctx, "Variable \"" + id + "\" does not exists!");
+         ErrorHandling.printError(ctx, "VariableCCC \"" + id + "\" does not exists!");
          res = false;
       }
 
@@ -963,7 +991,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       String id = ctx.ID(0).getText();
 
       if (!AGLParser.symbolTable.containsKey(id)) {
-         ErrorHandling.printError(ctx, "Variable \"" + id + "\" does not exists!");
+         ErrorHandling.printError(ctx, "VariableDDD \"" + id + "\" does not exists!");
          res = false;
       }
 
@@ -977,7 +1005,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       String id = ctx.identifier(0).getText();
 
       if (!AGLParser.symbolTable.containsKey(id)) {
-         ErrorHandling.printError(ctx, "Variable \"" + id + "\" does not exists!");
+         ErrorHandling.printError(ctx, "VariableEEE \"" + id + "\" does not exists!");
          res = false;
       }
 
@@ -1115,6 +1143,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
          return false;
       }
 
+      ObjectType objectType = (ObjectType) symbol.type();
       Map<String, Symbol> previousScope = new HashMap<>(AGLParser.symbolTable);
       try {
          res = visit(ctx.propertiesAssignment());
@@ -1409,8 +1438,14 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       String id = ctx.ID().getText();
       Type type = null;
 
+      System.out.println("Checking identifier: " + id);
+
+      for (String symbol : AGLParser.symbolTable.keySet()) {
+         System.out.println(symbol);
+      }
+
       if (!AGLParser.symbolTable.containsKey(id)) {
-         ErrorHandling.printError(ctx, "Variable \"" + id + "\" does not exists!");
+         ErrorHandling.printError(ctx, "VariableFFF \"" + id + "\" does not exists!");
          return null;
       }   
 
