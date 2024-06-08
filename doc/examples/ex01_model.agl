@@ -117,7 +117,7 @@ ex1 : Ex1;
 
 refresh view, view2, view3, view4, view5, view6, view7, view8, view9 after 0.5 s;
 
-for i in 1..1000 do {
+for i in 1..10 do {
     rotate ex1 by 1;
     move view2 to ex1.line.origin;
     move view3 to ex1.rec.origin;
@@ -137,3 +137,42 @@ print p;
 
 close view;
 
+p = wait mouse click; # waits for another mouse click
+print p;
+
+close view2;
+
+p = wait mouse click; # waits for another mouse click
+print p;
+
+close view3;
+
+p = wait mouse click; # waits for another mouse click
+print p;
+
+close view4;
+
+p = wait mouse click; # waits for another mouse click
+print p;
+
+close view5;
+
+p = wait mouse click; # waits for another mouse click
+print p;
+
+close view6;
+
+p = wait mouse click; # waits for another mouse click
+print p;
+
+close view7;
+
+p = wait mouse click; # waits for another mouse click
+print p;
+
+close view8;
+
+p = wait mouse click; # waits for another mouse click
+print p;
+
+close view9;

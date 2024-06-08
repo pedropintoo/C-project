@@ -113,7 +113,7 @@ while True do {
                          # Põe-se no fim da array e tira-se do fim da array
                          # Só é válido colocar no fim da array discos menores que o último colocado
                          # Dentro das torres está a lógica de, cada vez que a array muda, colocar os mans bem
-                         # E 
+    
     }
     else do 
         if p[0] < 750 do 
