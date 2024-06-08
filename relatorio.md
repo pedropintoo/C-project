@@ -69,6 +69,11 @@ Por exemplo, o ficheiro `ValidTests/TestWhile.agl` demonstra exemplos de verific
 Para além disso, foi criado um exemplo `InvalidTest/TestWhileFail.agl`, que contém exemplos de estruturas `while` com expressões inválidas, como a expressão 'abc', que não é do tipo booleano. Este teste ilustra como o analisador semântico identifica erros relativos a este tipo de estruturas.
 
 
+8. **Verificação das estruturas de ação**
+   - Verificação de elementos: É assegurado que dentro de uma action apenas podem ser englobadas ações com atributos previamente definidos dentro do Model (ver este texto).
+   - Verificação de Instantiation: É também assegurado que não pode ser feita uma instanciação dentro de uma action.
+
+
 9. **Verificação dos atributos dos ObjectType**:
    - Verificação dos atributos: Para cada ObjectType (por exemplo "Blob", "Arc", ...) foi feita uma verificação dos possíveis atributos nessas estruturas.
    - Verificação das atribuições de variáveis: Para cada atribuição feita dentro de um ObjectType (por exemplo "outline", "fill", ...) foi feita uma verificação do tipo de variável possível para essa verificação. Para a atribuição de "points" o tipo de variável terá de ser um array de pontos.
