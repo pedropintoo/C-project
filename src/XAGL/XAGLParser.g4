@@ -47,8 +47,8 @@ expression
     | e1=expression op=('+'|'-') e2=expression              #ExprAddSubMultDiv
     | e1=expression op=('>'|'<'|'>='|'<=') e2=expression    #ExprRelational
     | e1=expression op=('=='|'!=') e2=expression            #ExprRelational
-    | e1=expression 'and' e2=expression                     #ExprAndOr
-    | e1=expression 'or' e2=expression                      #ExprAndOr
+    | e1=expression 'and' e2=expression                     #ExprAnd
+    | e1=expression 'or' e2=expression                      #ExprOr
     | '(' x=expression ',' y=expression ')'                 #ExprPoint
     | '(' deg=expression ':' length=expression ')'          #ExprVector
     | '[' expression (',' expression)* ']'                  #ExprArray
@@ -57,7 +57,6 @@ expression
     | STRING                                                #ExprString                              
     | identifier                                            #ExprID
     | 'wait' eventTrigger                                   #ExprWait
-    | 'deepcopy' identifier 'to' expression                 #ExprDeepCopy
     ;
 
 command
@@ -97,7 +96,11 @@ withStatement
     ;
 
 ifStatement
-    : 'if' expression 'do' stat ('else' 'do' stat)?
+    : 'if' expression 'do' stat elseStatement?
+    ;
+
+elseStatement
+    : 'else' 'do' stat
     ;
 
 typeID
@@ -114,5 +117,5 @@ typeID
 identifier
     : ID
     | ID '.' identifier
-    | identifier '[' expression ']'
+    | ID ('[' expression ']')+ ('.' identifier)?
     ;

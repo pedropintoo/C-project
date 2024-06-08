@@ -2,6 +2,9 @@ from antlr4 import *
 from XAGLParser import XAGLParser
 from XAGLParserVisitor import XAGLParserVisitor
 from AGLClasses import *
+import numpy as np
+import re
+
 
 class Interpreter(XAGLParserVisitor):
    def __init__(self, vars = {}):
@@ -11,18 +14,48 @@ class Interpreter(XAGLParserVisitor):
       id_arr = long_id.split(".")
       var = None
       for id in id_arr:
-         var = self.vars[id] if not var else var.Dict()[id]
+         if '[' in id:
+            var = self.array_GetValue(id, self.vars if not var else var.Dict())
+         else:
+            var = self.vars[id] if not var else var.Dict()[id]
       return var
    
+   def array_GetValue(self, array, dict):
+      array = re.split(r'\[|\]', array)
+      array_name = array[0]
+      index = int(array[1])
+      var = dict[array_name]
+      return var[index]
+
    def setVar(self, long_id, value):
       id_arr = long_id.split(".")
+      print(long_id)
       if len(id_arr) == 1:
-            self.vars[id_arr[0]] = value
+            id = id_arr[0]
+            if '[' in id:
+               self.array_SetValue(id, value, self.vars)
+            else:
+               self.vars[id] = value
       else:
          var = self.vars[id_arr[0]]
          for id in id_arr[1:-1]:
-            var = var.Dict()[id]
-         var.Dict()[id_arr[-1]] = value
+            if '[' in id:
+               var = self.array_GetValue(id, var.Dict())
+            else:
+               var = var.Dict()[id]
+
+         id = id_arr[-1]
+         if '[' in id:
+               self.array_SetValue(id, value, var.Dict())
+         else:
+            var.Dict()[id] = value
+
+   def array_SetValue(self, array, value, dict):
+      array = re.split(r'\[|\]', array)
+      array_name = array[0]
+      index = int(array[1])
+      var = dict[array_name]
+      var[index] = value
 
    def visitProgram(self, ctx:XAGLParser.ProgramContext):
       return self.visitChildren(ctx)
@@ -56,6 +89,7 @@ class Interpreter(XAGLParserVisitor):
       return self.visit(ctx.expression())
 
    def visitExprWait(self, ctx:XAGLParser.ExprWaitContext):
+      #TODO
       return self.visitChildren(ctx)
 
    def visitExprString(self, ctx:XAGLParser.ExprStringContext):
@@ -64,50 +98,67 @@ class Interpreter(XAGLParserVisitor):
    def visitExprPoint(self, ctx:XAGLParser.ExprPointContext):
       x = float(self.visit(ctx.x))
       y = float(self.visit(ctx.y))
-      return (x,y)
+      return np.array((x,y))
 
    def visitExprBoolean(self, ctx:XAGLParser.ExprBooleanContext):
       value = ctx.BOOLEAN().getText()
-      print(value)
       return True if value == "True" else False
 
    def visitExprParenthesis(self, ctx:XAGLParser.ExprParenthesisContext):
       return self.visit(ctx.e)
 
    def visitExprRelational(self, ctx:XAGLParser.ExprRelationalContext):
-      return self.visitChildren(ctx)
+      e1 = self.visit(ctx.e1)
+      e2 = self.visit(ctx.e2)
+      if ctx.GT(): r = e1 > e2
+      elif ctx.LT(): r = e1 < e2
+      elif ctx.GTE(): r = e1 >= e2
+      elif ctx.LTE(): r = e1 <= e2
+      elif ctx.EQ(): r = e1 == e2
+      elif ctx.NEQ(): r = e1 != e2
+      return r
 
-   def visitExprAndOr(self, ctx:XAGLParser.ExprAndOrContext):
-      return self.visitChildren(ctx)
+   def visitExprAnd(self, ctx:XAGLParser.ExprAndContext):
+      e1 = self.visit(ctx.e1)
+      e2 = self.visit(ctx.e2)
+      return e1 and e2
+   
+   def visitExprOr(self, ctx:XAGLParser.ExprOrContext):
+      e1 = self.visit(ctx.e1)
+      e2 = self.visit(ctx.e2)
+      return e1 or e2
 
    def visitExprArray(self, ctx:XAGLParser.ExprArrayContext):
-      return self.visitChildren(ctx)
-
-   def visitExprDeepCopy(self, ctx:XAGLParser.ExprDeepCopyContext):
-      return self.visitChildren(ctx)
+      arr = []
+      for expr in ctx.expression():
+         arr.append(self.visit(expr)) 
+      return arr
 
    def visitExprAddSubMultDiv(self, ctx:XAGLParser.ExprAddSubMultDivContext):
       e1 = self.visit(ctx.e1)
       e2 = self.visit(ctx.e2)
-      op = ctx.op
-      if op == '+': r = e1 + e2
-      elif op == '-': r = e1 - e2
-      elif op == '*': r = e1 * e2
-      elif op == '/': r = e1 / e2
+      if ctx.PLUS(): r = e1 + e2
+      elif ctx.MINUS(): r = e1 - e2
+      elif ctx.MUL(): r = e1 * e2
+      elif ctx.DIV(): r = e1 / e2
       return r
 
    def visitExprVector(self, ctx:XAGLParser.ExprVectorContext):
-      return self.visitChildren(ctx)
+      x = float(self.visit(ctx.x))
+      y = float(self.visit(ctx.y))
+      return np.array((x,y))
 
    def visitExprUnary(self, ctx:XAGLParser.ExprUnaryContext):
-      return self.visitChildren(ctx)
+      e = self.visit(ctx.expression())
+      if ctx.MINUS(): r = -e
+      if ctx.NOT(): r = not r
+      return r
 
    def visitExprNumber(self, ctx:XAGLParser.ExprNumberContext):
       return int(ctx.INT().getText()) if ctx.INT() else float(ctx.FLOAT().getText())
 
    def visitExprID(self, ctx:XAGLParser.ExprIDContext):
       id = self.visit(ctx.identifier())
-      print(id)
       return self.getVar(id)
 
    def visitCommandRefresh(self, ctx:XAGLParser.CommandRefreshContext):
@@ -120,13 +171,15 @@ class Interpreter(XAGLParserVisitor):
             delay = delay/1000         
    
       var.update(delay)
-      return self.visitChildren(ctx)
 
    def visitCommandPrint(self, ctx:XAGLParser.CommandPrintContext):
       print(self.visit(ctx.expression()))
 
    def visitCommandClose(self, ctx:XAGLParser.CommandCloseContext):
-      return self.visitChildren(ctx)
+      id = self.visit(ctx.identifier())
+      var = self.getVar(id)
+      var.close()
+      
 
    def visitCommandMove(self, ctx:XAGLParser.CommandMoveContext):
       p = self.visit(ctx.expression())
@@ -138,32 +191,62 @@ class Interpreter(XAGLParserVisitor):
             var.move_absolute(p)
 
    def visitCommandRotate(self, ctx:XAGLParser.CommandRotateContext):
-      return self.visitChildren(ctx)
+      angle = self.visit(ctx.expression())
+      for id in ctx.identifier():
+         var = self.getVar(self.visit(id))
+         var.rotate(angle)
 
    def visitEventTrigger(self, ctx:XAGLParser.EventTriggerContext):
+      #TODO
       return self.visitChildren(ctx)
 
    def visitMouseTrigger(self, ctx:XAGLParser.MouseTriggerContext):
+      #TODO
       return self.visitChildren(ctx)
 
    def visitForStatement(self, ctx:XAGLParser.ForStatementContext):
-      return self.visitChildren(ctx)
+      rnge = self.visit(ctx.number_range())
+      id = ctx.ID().getText()
+      for i in rnge:
+         self.vars[id] = i
+         self.visit(ctx.stat())
 
    def visitNumber_range(self, ctx:XAGLParser.Number_rangeContext):
-      return self.visitChildren(ctx)
+      e1 = self.visit(ctx.expression(0))
+      e2 = self.visit(ctx.expression(1))
+      if ctx.expression(2):
+         e3 = self.visit(ctx.expression(2))
+         rnge = range(e1,e2+1,e3)
+      else:
+         rnge = range(e1,e2+1)
+      return rnge
 
    def visitWhileStatement(self, ctx:XAGLParser.WhileStatementContext):
-      return self.visitChildren(ctx)
+      condition = self.visit(ctx.expression())
+      while condition:
+         self.visit(ctx.stat())
+         condition = self.visit(ctx.expression())
 
    def visitRepeatStatement(self, ctx:XAGLParser.RepeatStatementContext):
-      return self.visitChildren(ctx)
+      while True:
+         self.visit(ctx.stat())
+         condition = self.visit(ctx.expression())
+         if condition:
+            break
 
    def visitWithStatement(self, ctx:XAGLParser.WithStatementContext):
       self.visit(ctx.identifier())
       self.visit(ctx.propertiesAssignment())
 
    def visitIfStatement(self, ctx:XAGLParser.IfStatementContext):
-      return self.visitChildren(ctx)
+      condition = self.visit(ctx.expression())
+      if condition:
+         self.visit(ctx.stat())
+      if ctx.elseStatement():
+         self.visit(ctx.elseStatement())
+
+   def visitElseStatement(self, ctx:XAGLParser.ElseStatementContext):
+      self.visit(ctx.stat())
 
    def visitTypeID(self, ctx:XAGLParser.TypeIDContext):
       if ctx.INTEGER():
@@ -183,9 +266,15 @@ class Interpreter(XAGLParserVisitor):
       return default
 
    def visitIdentifier(self, ctx:XAGLParser.IdentifierContext):
-      if ctx.ID():
-         id = ctx.ID().getText()
+      id = ctx.ID().getText()
+
+      if ctx.expression():
+         for expr in ctx.expression():
+            e = self.visit(expr)
+            id += f'[{e}]'
+         
       if ctx.identifier():
-         id += "."+self.visit(ctx.identifier())
+            id += "."+self.visit(ctx.identifier())
+
       return id
 

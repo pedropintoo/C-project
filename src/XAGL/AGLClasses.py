@@ -462,6 +462,7 @@ class Rectangle(Object):
         self.length = length
         self.fill = fill
         self.angle = 0
+        self.array = []
     
     def __deepcopy__(self, memo=None):
         """Create a deep copy of the model."""
