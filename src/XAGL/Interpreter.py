@@ -88,7 +88,7 @@ class Interpreter(XAGLParserVisitor):
       return self.visit(ctx.expression())
 
    def visitExprWait(self, ctx:XAGLParser.ExprWaitContext):
-      #TODO
+      
       return self.visitChildren(ctx)
 
    def visitExprString(self, ctx:XAGLParser.ExprStringContext):
@@ -194,14 +194,6 @@ class Interpreter(XAGLParserVisitor):
       for id in ctx.identifier():
          var = self.getVar(self.visit(id))
          var.rotate(angle)
-
-   def visitEventTrigger(self, ctx:XAGLParser.EventTriggerContext):
-      #TODO
-      return self.visitChildren(ctx)
-
-   def visitMouseTrigger(self, ctx:XAGLParser.MouseTriggerContext):
-      #TODO
-      return self.visitChildren(ctx)
 
    def visitForStatement(self, ctx:XAGLParser.ForStatementContext):
       rnge = self.visit(ctx.number_range())

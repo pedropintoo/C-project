@@ -56,7 +56,7 @@ expression
     | BOOLEAN                                               #ExprBoolean                   
     | STRING                                                #ExprString                              
     | identifier                                            #ExprID
-    | 'wait' eventTrigger                                   #ExprWait
+    | 'wait' 'mouse' 'click'                                #ExprWait
     ;
 
 command
@@ -65,15 +65,7 @@ command
     | 'close' identifier ';'                                                #CommandClose
     | 'move' identifier (',' identifier)* type=('by'|'to') expression ';'   #CommandMove
     | 'rotate' identifier (',' identifier)* 'by' expression ';'             #CommandRotate
-    ;
-
-eventTrigger
-    : 'mouse' mouseTrigger
-    ;
-
-mouseTrigger
-    : 'click'
-    ;    
+    ;   
 
 forStatement
     : 'for' ID 'in' number_range 'do' stat 

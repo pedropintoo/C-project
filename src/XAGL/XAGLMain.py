@@ -12,7 +12,6 @@ def main(argv):
    v = View(r, 0, 0, height=500, width=500)
    m = Rectangle(r,length=(50,50), fill='white', origin=(0,0))
    vars = {"m":m , "v":v}
-   v.update()
    visitor0 = Semantic()
    visitor1 = Interpreter(vars)
    input_stream = StdinStream()
@@ -24,7 +23,6 @@ def main(argv):
       visitor0.visit(tree)
       if not visitor0.num_errors:
          visitor1.visit(tree)
-   v.waitClick()
 
 if __name__ == '__main__':
    main(sys.argv)

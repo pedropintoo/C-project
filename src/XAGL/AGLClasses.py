@@ -37,9 +37,11 @@ class View:
         self.top = Toplevel(self.root.tk)
         
         self.objectsDrawn = []
-        self.canvas = Canvas(self.top, height=self.height, width=self.width, background=self.background)  
+        #self.canvas = Canvas(self.top, height=self.height, width=self.width, background=self.background)  
 
     def update(self, delay = 0):
+        if not self.canvas:
+            self.canvas = Canvas(self.top, height=self.height, width=self.width, background=self.background) 
         if delay:
             while (time.time() - self.root.last_refresh <= delay):
                 time.sleep(self.root.REFRESH_RATE)
