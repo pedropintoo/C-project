@@ -1384,6 +1384,11 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
          return false;
       }
 
+      if (ctx.stat() instanceof AGLParser.StatInstantiationContext) {
+         ErrorHandling.printError("Error: can't have an instantiation inside an action");
+         return false;
+      }
+
       res = visit(ctx.stat());
       if (!res) {
          ErrorHandling.printError("Error: invalid statement in action");
