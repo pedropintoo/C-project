@@ -543,7 +543,7 @@ Inside the `src` directory:
 ```
 antlr4-main AGLParser.g4 program -v AGLSemanticCheck.java
 antlr4-build
-cat src/tests/ValidTests/ex05.agl | antlr4-run
+cat tests/ValidTests/ex05.agl | antlr4-run
 ```
 
 ## Test Semantic Check
