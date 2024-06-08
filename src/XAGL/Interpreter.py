@@ -29,7 +29,6 @@ class Interpreter(XAGLParserVisitor):
 
    def setVar(self, long_id, value):
       id_arr = long_id.split(".")
-      print(long_id)
       if len(id_arr) == 1:
             id = id_arr[0]
             if '[' in id:
@@ -66,7 +65,7 @@ class Interpreter(XAGLParserVisitor):
    def visitInstantiation(self, ctx:XAGLParser.InstantiationContext):
       var = ctx.ID().getText()
       value = self.visit(ctx.simpleStatement())
-      self.vars[var] = value
+      self.setVar(var, value)
 
    def visitSimpleStatement(self, ctx:XAGLParser.SimpleStatementContext):
       if ctx.assignment():
@@ -254,7 +253,7 @@ class Interpreter(XAGLParserVisitor):
       elif ctx.STRING_():
          default = ""
       elif ctx.POINT() or ctx.VECTOR():
-         default = (0.0, 0.0)
+         default = np.array((0.0, 0.0))
       elif ctx.NUMBER():
          default = 0.0
       elif ctx.BOOLEAN_():
