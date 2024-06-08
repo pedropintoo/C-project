@@ -17,7 +17,7 @@ class Interpreter(XAGLParserVisitor):
    def setVar(self, long_id, value):
       id_arr = long_id.split(".")
       if len(id_arr) == 1:
-            self.vars[id] = value
+            self.vars[id_arr[0]] = value
       else:
          var = self.vars[id_arr[0]]
          for id in id_arr[1:-1]:
@@ -27,58 +27,33 @@ class Interpreter(XAGLParserVisitor):
    def visitProgram(self, ctx:XAGLParser.ProgramContext):
       return self.visitChildren(ctx)
 
-   def visitStatInstantiation(self, ctx:XAGLParser.StatInstantiationContext):
-      return self.visitChildren(ctx)
-
-   def visitStatBlockStatement(self, ctx:XAGLParser.StatBlockStatementContext):
-      return self.visitChildren(ctx)
-
-   def visitStatLongAssignment(self, ctx:XAGLParser.StatLongAssignmentContext):
-      return self.visitChildren(ctx)
-
-   def visitStatWithStatement(self, ctx:XAGLParser.StatWithStatementContext):
-      return self.visitChildren(ctx)
-
-   def visitRepForStatement(self, ctx:XAGLParser.RepForStatementContext):
-      return self.visitChildren(ctx)
-
-   def visitRepWhileStatement(self, ctx:XAGLParser.RepWhileStatementContext):
-      return self.visitChildren(ctx)
-
-   def visitRepRepeatStatement(self, ctx:XAGLParser.RepRepeatStatementContext):
-      return self.visitChildren(ctx)
-
-   def visitStatIfStatement(self, ctx:XAGLParser.StatIfStatementContext):
-      return self.visitChildren(ctx)
-
-   def visitStatCommand(self, ctx:XAGLParser.StatCommandContext):
-      return self.visitChildren(ctx)
-
-   def visitStatBlock(self, ctx:XAGLParser.StatBlockContext):
+   def visitStat(self, ctx:XAGLParser.StatContext):
       return self.visitChildren(ctx)
 
    def visitInstantiation(self, ctx:XAGLParser.InstantiationContext):
-      return self.visitChildren(ctx)
+      var = ctx.ID().getText()
+      value = self.visit(ctx.simpleStatement())
+      self.vars[var] = value
 
    def visitSimpleStatement(self, ctx:XAGLParser.SimpleStatementContext):
-      return self.visitChildren(ctx)
-
-   def visitBlockStatement(self, ctx:XAGLParser.BlockStatementContext):
-      return self.visitChildren(ctx)
+      if ctx.assignment():
+         value = self.visit(ctx.assignment())
+      else:
+         value = self.visit(ctx.typeID())
+      return value
 
    def visitPropertiesAssignment(self, ctx:XAGLParser.PropertiesAssignmentContext):
-      return self.visitChildren(ctx)
+      for assign in ctx.longAssignment():
+         self.visit(assign)
 
    def visitLongAssignment(self, ctx:XAGLParser.LongAssignmentContext):
-      id = self.visit(ctx.identifier())
+      var = self.visit(ctx.identifier())
       e = self.visit(ctx.assignment())
+      id = var if not ctx.varName else ctx.varName+"."+var
       self.setVar(id, e)
 
    def visitAssignment(self, ctx:XAGLParser.AssignmentContext):
       return self.visit(ctx.expression())
-
-   def visitIn_assignment(self, ctx:XAGLParser.In_assignmentContext):
-      return self.visitChildren(ctx)
 
    def visitExprWait(self, ctx:XAGLParser.ExprWaitContext):
       return self.visitChildren(ctx)
@@ -92,7 +67,9 @@ class Interpreter(XAGLParserVisitor):
       return (x,y)
 
    def visitExprBoolean(self, ctx:XAGLParser.ExprBooleanContext):
-      return self.visitChildren(ctx)
+      value = ctx.BOOLEAN().getText()
+      print(value)
+      return True if value == "True" else False
 
    def visitExprParenthesis(self, ctx:XAGLParser.ExprParenthesisContext):
       return self.visit(ctx.e)
@@ -130,6 +107,7 @@ class Interpreter(XAGLParserVisitor):
 
    def visitExprID(self, ctx:XAGLParser.ExprIDContext):
       id = self.visit(ctx.identifier())
+      print(id)
       return self.getVar(id)
 
    def visitCommandRefresh(self, ctx:XAGLParser.CommandRefreshContext):
@@ -145,7 +123,7 @@ class Interpreter(XAGLParserVisitor):
       return self.visitChildren(ctx)
 
    def visitCommandPrint(self, ctx:XAGLParser.CommandPrintContext):
-      return self.visitChildren(ctx)
+      print(self.visit(ctx.expression()))
 
    def visitCommandClose(self, ctx:XAGLParser.CommandCloseContext):
       return self.visitChildren(ctx)
@@ -181,34 +159,28 @@ class Interpreter(XAGLParserVisitor):
       return self.visitChildren(ctx)
 
    def visitWithStatement(self, ctx:XAGLParser.WithStatementContext):
-      return self.visitChildren(ctx)
-
-   def visitPlayStatement(self, ctx:XAGLParser.PlayStatementContext):
-      return self.visitChildren(ctx)
-
-   def visitModelInstantiation(self, ctx:XAGLParser.ModelInstantiationContext):
-      return self.visitChildren(ctx)
-
-   def visitModelStatInstantiation(self, ctx:XAGLParser.ModelStatInstantiationContext):
-      return self.visitChildren(ctx)
-
-   def visitModelStatBlockStatement(self, ctx:XAGLParser.ModelStatBlockStatementContext):
-      return self.visitChildren(ctx)
-
-   def visitModelStatLongAssignment(self, ctx:XAGLParser.ModelStatLongAssignmentContext):
-      return self.visitChildren(ctx)
-
-   def visitModelStatAction(self, ctx:XAGLParser.ModelStatActionContext):
-      return self.visitChildren(ctx)
-
-   def visitAction(self, ctx:XAGLParser.ActionContext):
-      return self.visitChildren(ctx)
+      self.visit(ctx.identifier())
+      self.visit(ctx.propertiesAssignment())
 
    def visitIfStatement(self, ctx:XAGLParser.IfStatementContext):
       return self.visitChildren(ctx)
 
    def visitTypeID(self, ctx:XAGLParser.TypeIDContext):
-      return self.visitChildren(ctx)
+      if ctx.INTEGER():
+         default = 0
+      elif ctx.STRING_():
+         default = ""
+      elif ctx.POINT() or ctx.VECTOR():
+         default = (0.0, 0.0)
+      elif ctx.NUMBER():
+         default = 0.0
+      elif ctx.BOOLEAN_():
+         default = None
+      elif ctx.TIME():
+         default = None
+      elif ctx.ARRAY():
+         default = []
+      return default
 
    def visitIdentifier(self, ctx:XAGLParser.IdentifierContext):
       if ctx.ID():

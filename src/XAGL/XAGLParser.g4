@@ -9,15 +9,15 @@ program
     ;
 
 stat
-    : instantiation                             #StatInstantiation
-    | longAssignment ';'                        #StatLongAssignment
-    | withStatement                             #StatWithStatement
-    | forStatement                              #RepForStatement
-    | whileStatement                            #RepWhileStatement
-    | repeatStatement                           #RepRepeatStatement 
-    | ifStatement                               #StatIfStatement
-    | command                                   #StatCommand
-    | '{' stat+ '}'                             #StatBlock
+    : instantiation                             
+    | longAssignment[None] ';'                        
+    | withStatement                             
+    | forStatement                              
+    | whileStatement                            
+    | repeatStatement                            
+    | ifStatement                               
+    | command                                   
+    | '{' stat+ '}'                             
     ;
 
 instantiation
@@ -26,23 +26,18 @@ instantiation
 
 simpleStatement
     : typeID assignment? ';'
-    | typeID in_assignment
     ;
 
-propertiesAssignment
-    : '{' longAssignment ( ';' longAssignment)* ';'? '}'
+propertiesAssignment[varName]
+    : '{' longAssignment[$varName] ( ';' longAssignment[$varName])* ';'? '}'
     ;
 
-longAssignment
+longAssignment[varName]
     : identifier assignment
     ;
 
 assignment
     : '=' expression
-    ;
-
-in_assignment
-    : 'in' '{' ID (',' ID)* '}'
     ;
 
 expression
@@ -98,7 +93,7 @@ repeatStatement
     ;    
 
 withStatement
-    : 'with' identifier 'do' propertiesAssignment 
+    : 'with' Id=identifier 'do' propertiesAssignment[$Id.text]
     ;
 
 ifStatement
@@ -113,23 +108,7 @@ typeID
     | 'Vector'
     | 'Time'
     | 'Boolean'
-    | 'View'
-    | 'Line'
-    | 'Rectangle'
-    | 'Ellipse'
-    | 'Arc'
-    | 'ArcChord'
-    | 'PieSlice'
-    | 'Text'
-    | 'Dot'
-    | 'PolyLine'
-    | 'Spline'
-    | 'Polygon'
-    | 'Blob'
-    | 'Script'
-    | 'Enum'
     | 'Array'
-    | ID
     ;
 
 identifier
