@@ -117,6 +117,8 @@ public class ObjectType extends Type {
                 this.addWidth();
                 this.addHeight();
                 this.addTitle();
+                this.addOx();
+                this.addOy();
                 this.addBackground();
                 break;
             default:
@@ -191,7 +193,7 @@ public class ObjectType extends Type {
     }
 
     private void addPoints() {
-        ArrayList<Type> typesAllowed = new ArrayList<>(List.of(new PointType()));
+        ArrayList<Type> typesAllowed = new ArrayList<>(List.of(new ArrayType("Point")));
         this.attributes.put("points", typesAllowed);
     }
 
@@ -218,6 +220,16 @@ public class ObjectType extends Type {
     private void addBackground() {
         ArrayList<Type> typesAllowed = new ArrayList<>(List.of(new StringType()));
         this.attributes.put("background", typesAllowed);
+    }
+
+    private void addOx() {
+        ArrayList<Type> typesAllowed = new ArrayList<>(List.of(new IntegerType()));
+        this.attributes.put("Ox", typesAllowed);
+    }
+
+    private void addOy() {
+        ArrayList<Type> typesAllowed = new ArrayList<>(List.of(new IntegerType()));
+        this.attributes.put("Oy", typesAllowed);
     }
     
     private void addSubTypes() {
