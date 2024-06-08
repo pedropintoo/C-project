@@ -1,0 +1,18 @@
+
+a : Array<Integer> = [0,2,3,4,5]; # correto
+
+b : Array<String> = ["a","b","c","d","e"]; # correto
+
+c : Array<Array<Point>> = [[(1,2), (3,4)], [(1,2), (3,4)]]; # correto. Type: Array<Array<Point>> ; Assignment Type: Array<Array<Point>>
+
+c = [ [(1,2), (3,4), (5,6), (7,8), (9,10)] , [(1,2), (3,4), (5,6), (7,8), (9,10)] ]; # funciona.  Type: Array<Array<Point>> ; Assignment Type: Array<Array<Point>>
+
+e : Array<Array<Array<Point>>> = [c, c, c, c]; # funciona. Type: Array<Array<Array<Point>>> ; Assignment Type: Array<Array<Array<Point>>>
+
+i : Array<Array<Point>> = [c[0], c[1]]; # funciona. Type: Array<Array<Point>> ; Assignment Type: Array<Array<Point>>
+
+j : Array<Array<Point>> = e[0];  # funciona. Type: Array<Array<Point>> ; Assignment Type: Array<Array<Point>>
+
+k : Array<Point> = e[0][0]; # funciona Type: Array<Point> ; Assignment Type: Array<Point>
+
+# l : Point = e[0][0][0]; # funciona. Type: Point ; Assignment Type: Point

@@ -1,0 +1,5 @@
+cellSize : Number = 200;
+
+cellSize = 250; # OK
+
+cellSize = "Joao"; # Error. Expression type does not conform to variable type!

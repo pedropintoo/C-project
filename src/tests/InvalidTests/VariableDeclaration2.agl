@@ -1,0 +1,3 @@
+cellSize : Number = 200;
+
+cellSize : String = "Joao"; # Error. Variable "cellSize" already declared!

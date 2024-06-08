@@ -1,19 +1,10 @@
-
-#a : Array<Integer> = [0,2,3,4,5]; # correto
-
-#b : Array<String> = ["a","b","c","d","e"]; # correto
-
 c : Array<Array<Point>> = [[(1,2), (3,4)], [(1,2), (3,4)]]; # correto. Type: Array<Array<Point>> ; Assignment Type: Array<Array<Point>>
-
-# d : Integer;
-
-# print d; # não dá erro.
 
 # NOTA: Deixar o código abaixo comentado. Ir descomentando linha a linha deixando a linha anterior descomentada para testar o código
 
 # c = ["a","b","c","d","e"]; # dá erro. Type:  Array<Array<Point>> ; Assignment Type: Array<String>
 
-# c[0] = "a"; # dá erro. Type: Array<Point> ; Assignment Type: String
+c[0] = "a"; # dá erro. Type: Array<Point> ; Assignment Type: String
 
 # c = [(1,2), (3,4), (5,6), (7,8), (9,10)]; # dá erro. Type:  Array<Array<Point>> ; Assignment Type: Array<Point>
 
