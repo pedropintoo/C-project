@@ -1156,7 +1156,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       }
 
       Type type = AGLParser.symbolTable.get(id).type();
-      System.out.println("Type: " + type.name());
+      // System.out.println("Type: " + type.name());
       // must conforms to object type (except views because we cannot rotate views) or model type 
       if ( !(type instanceof ObjectType) && !type.conformsTo(modelType) || (type.conformsTo(viewType)) ) {
          ErrorHandling.printError(ctx, "Error: invalid type in rotate command (must be an object or model type!)");
@@ -1617,8 +1617,8 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
             ErrorHandling.printError("Error: invalid expression type in simple statement (must be integer!)");
          }
 
-         System.out.println(ctx.expression(0).eType.name());
-         System.out.println("ID: " + id);
+         // System.out.println(ctx.expression(0).eType.name());
+         // System.out.println("ID: " + id);
 
          Type elemType = AGLParser.symbolTable.get(id).type();
 
@@ -1632,7 +1632,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       } 
       
       if (ctx.identifier() != null) { // ID '.' identifier
-         System.out.println("Attribute type");
+         // System.out.println("Attribute type");
          type = AGLParser.symbolTable.get(id).type();
          if (!(type instanceof ObjectType)) {
             ErrorHandling.printError("Variable \"" + id + " is not of object type");
@@ -1646,8 +1646,8 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
             type = null;
          }
          type = allowedTypes.get(0);
-         System.out.println(attributeName);
-         System.out.println(type);
+         // System.out.println(attributeName);
+         // System.out.println(type);
 
          if (type == null) {
             ErrorHandling.printError("Attribute " + attributeName + " does not exist in type " + id);
