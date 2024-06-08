@@ -342,7 +342,6 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
          // visit(expression) to get type
          visit(longAssign.assignment());
          valueType = longAssign.assignment().eType;
-         System.out.println("«««««« Type KING BIGFHDSHSK: " + valueType.name() + " »»»»»»");
          
          if (!identifierIsValid(longAssign.identifier().getText(), longAssign.assignment().expression().getText(), valueType ,ID)) {
             ErrorHandling.printError("Error: invalid properties assignment in block statement");
