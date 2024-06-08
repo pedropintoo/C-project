@@ -133,6 +133,9 @@ class View:
         new_y = sin_val * rel_x + cos_val * rel_y
 
         return (new_x, new_y)
+    
+    def Dict(self):
+        return vars(self)
 
 # ---------------------------------------------------------------
 # AGL Objects
