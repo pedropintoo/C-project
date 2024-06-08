@@ -31,21 +31,13 @@ Base :: Model {
 
 Tower :: Model {
     base : Base;
-    numberOfDisks : Number = 3;
-    action on numberOfDisks {
-        for d in numberOfDisks..3 do {
-            disks[d].state = "hidden";
-        }
-    }
 
-    disk3 : Disk; disk3.size = 3;
-    disk2 : Disk; disk2.size = 2;
-    disk1 : Disk;
+    numberOfDisks : Number = 0;
     
-    disks : Array = [disk3, disk2, disk1]; # Array<Disk>
+    disks : Array = [None]; # Array<Disk>
     action on disks {
         for d in 0..numberOfDisks do {
-            move disks[d].wood to (disks[d].wood.origin[0], (d+1)*30 - 45 );
+            move disks[d] to (base.origin[0], (d+1)*30 - 45);
         }
     }
 
@@ -58,6 +50,16 @@ Tower :: Model {
     }
 }
 
+Game :: Model {
+
+    diskL : Disk; diskL.size = 3;
+    diskM : Disk; diskM.size = 2;
+    diskS : Disk; diskS.size = 1;
+
+    tower1 : Tower at (0,-50);
+    tower2 : Tower at (500, -50);
+    tower3 : Tower at (1000, -50);
+}
 
 view1: View with {
     width = 500;
@@ -82,36 +84,49 @@ view3: View with {
     background = "wheat";
 }
 
-tower1 : Tower at (0,-50);
-tower2 : Tower at (500, -50);
-tower3 : Tower at (1000, -50);
+game : Game;
 
-refresh view1;
+game.tower1.numberOfDisks = 3;
+game.tower1.disks = [game.diskL, game.diskM, game.diskS];
+
+refresh view1; refresh view1;
 refresh view2;
 refresh view3;
 
 p : Point = wait mouse click; 
 print p;
 
-tower1.active = True;
 refresh view1;
+refresh view2;
+refresh view3;
 
-p = wait mouse click; 
+while True do {
+    p : Point = wait mouse click;
+    
+    print p;
+    if p[0] < 250 do {
+        print "Tower 1"; # Ativa a torre1 -> ultimo da lista fica selecionado
+                         # Tem se de ficar á espera do segundo click
+                         # No segundo click sabe-se a torre destino
+                         # E poe se o disco na array da torre destino
+                         # Funciona como se fosse stack, 
+                         # Põe-se no fim da array e tira-se do fim da array
+                         # Só é válido colocar no fim da array discos menores que o último colocado
+                         # Dentro das torres está a lógica de, cada vez que a array muda, colocar os mans bem
+                         # E 
+    }
+    else do 
+        if p[0] < 750 do 
+            print "Tower 2";
+        else do {
+            print "Tower 3";
+        }
 
-tower1.numberOfDisks = tower1.numberOfDisks - 1;
-refresh view1;
-
-p = wait mouse click; 
+   refresh view1, view2, view3;
+}
 
 
 
-tower1.numberOfDisks = tower1.numberOfDisks - 1;
-refresh view1;
-
-p = wait mouse click;
-
-
-close view1;
 
 
 

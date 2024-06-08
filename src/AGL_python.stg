@@ -55,7 +55,7 @@ def get_nested_attribute(obj, attr_path, local_dict):
 #################################################################
 
 if __name__ == "__main__":
-    root = Root()
+    root = Root(views, last_view)
 
     <stats(stat)>
 >>
@@ -66,9 +66,9 @@ stats(stat) ::= <<
 
 waitMouseClick(var) ::= <<
 if action is not None:
-    <var> = action.view.waitClick()
+    <var> = action.root.waitClick()
 else:
-    <var> = last_view.waitClick()
+    <var> = root.waitClick()
 >>
 
 refresh(stat, view, delay) ::= <<
@@ -144,6 +144,7 @@ else:
 close(view) ::= <<
 <view>.close(); views.remove(<view>) if last_view != <view> else None
 last_view = (views.pop(-1) if len(views) > 0 else None) if last_view == <view> else last_view
+root.last_view = last_view
 >>
 
 assign(stat,var,value, varIfModel) ::= <<
@@ -187,6 +188,7 @@ else:
 <if(update_lastView)>if last_view is not None:
     views.append(last_view)    
 last_view = <var>
+root.last_view = last_view
 <endif>
 <properties>
 >>

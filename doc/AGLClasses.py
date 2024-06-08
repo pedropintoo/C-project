@@ -5,14 +5,47 @@ import math
 
 class Root:
 
-    def __init__(self):
+    def __init__(self, views, last_view):
         self.tk = Tk()
         self.objects = []
+
+        self.mouseX = None
+        self.mouseY = None
+
+        self.views = views
+        self.last_view = last_view
 
         self.tk.withdraw()
 
     def add_object(self, obj):
         self.objects.append(obj)
+
+    def onClick(self, event, view):
+        self.mouseX = event.x - view.width/2 + view.Ox
+        self.mouseY = view.height/2 + view.Oy - event.y
+
+    def getMouse(self):
+        for v in self.views:
+            v.canvas.pack()
+            v.canvas.update()
+        self.last_view.canvas.pack()
+        self.last_view.canvas.update()
+
+        self.mouseX = None; self.mouseY = None
+        while self.mouseX == None:
+            time.sleep(.1)
+
+            for v in self.views:
+                v.canvas.update()
+            self.last_view.canvas.update()
+
+    def waitClick(self):
+        for v in self.views:
+            v.canvas.bind("<Button-1>", lambda event, view=v : self.onClick(event,view))
+        self.last_view.canvas.bind("<Button-1>", lambda event, view=self.last_view : self.onClick(event,view))    
+        self.getMouse()    
+        return self.mouseX, self.mouseY
+
 
 class View:
 
@@ -104,24 +137,6 @@ class View:
             point_list.append(round(y + yc))
 
         return point_list
-
-
-    def onClick(self, event):
-        self.mouseX, self.mouseY = event.x, event.y
-
-    def getMouse(self):
-        self.canvas.pack()
-        self.canvas.update()
-        self.mouseX = None; self.mouseY = None
-        while self.mouseX == None:
-            time.sleep(.1)
-            self.canvas.update()
-
-    def waitClick(self):
-        self.canvas.bind("<Button-1>", self.onClick)
-        self.getMouse()
-        return self.mouseX-self.width/2+self.Ox, self.height/2+self.Oy-self.mouseY
-    
 
     def close(self):
         self.canvas.destroy()
