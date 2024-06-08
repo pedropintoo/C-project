@@ -7,8 +7,8 @@ view : View with {
     background = "alice blue";
 }
 
-refresh view;
+refresh view; # funciona
 
 a : Integer = 2;
 
-refresh a; 
+refresh a; # Error: invalid type in refresh command (must be a view type!)

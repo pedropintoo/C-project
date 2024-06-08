@@ -471,7 +471,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
                Symbol sym = new VariableSymbol(id, typeAttribute);
                sym.setValueDefined();
                AGLParser.symbolTable.put(id, sym);
-               System.out.println("Added new symbol for identifier: " + id);
+               // System.out.println("Added new symbol for identifier: " + id);
            } else {
                // If the symbol already exists, ensure the types conform
                Symbol sym = AGLParser.symbolTable.get(id);
@@ -480,7 +480,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
                    return false;
                }
                sym.setValueDefined();
-               System.out.println("Updated existing symbol for identifier: " + id);
+               // System.out.println("Updated existing symbol for identifier: " + id);
            }
        }
    

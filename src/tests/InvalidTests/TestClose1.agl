@@ -14,4 +14,4 @@ close view;
 
 a : Integer = 0;
 
-close a; # dá erro
+close a; # Error: invalid type in close command (must be a view type!)

@@ -40,63 +40,36 @@ No ficheiro `InvalidTests/TestArray4.agl`, foram realizados diversos testes para
 
 No ficheiro `ValidTests/TestArray1.agl`, encontram-se atribuições válidas como, por exemplo: atribuição de um array de inteiros; atribuição de um array de arrays de pontos, etc ...
 
-4. **Propriedades dos Modelos Gráficos**:
-   - Verificação da validade das propriedades dos diferentes modelos gráficos.
-   - As propriedades devem ser definidas corretamente e estar de acordo com os modelos gráficos correspondentes.
+4. **Propriedades dos objetos**:
+   - Verificação de Propriedades Válidas: O analisador semântico verifica se as propriedades atribuídas aos objetos gráficos existem e são válidas.
+   - Verificação de Valores Válidos: o analisador garante que os valores atribuídos a estas propriedades sejam válidos e compatíveis com o esperado.
 
-4. **Instanciação de Vistas**:
-   - Verificação das ações suportadas pelas vistas, como `move`, `refresh`, `wait` e `close`.
+Por exemplo, os ficheiros InvalidTests/TestAttributes{1,2,3}.agl contêm exemplos que ilustram estas verificações. No ficheiro InvalidTests/TestAttributes1.agl, tentou-se definir uma propriedade fill2 para um retângulo, mas esta propriedade não existe, e o analisador semântico detetou o erro. Outro exemplo, no ficheiro InvalidTests/TestAttributes2.agl, mostra uma tentativa de atribuir um valor inválido à propriedade fill, que não é uma cor reconhecida pelo Tkinter, o que também foi identificado como erro pelo analisador. Por fim, no ficheiro InvalidTests/TestAttributes3.agl, tentou-se definir a propriedade state para um retângulo, que não possui esta propriedade, resultando num erro detetado pelo analisador semântico.
+
+5. **Operação de refresh/close**:
+   - Tipo de ID em Refresh/Close: Todas as IDs usadas nas operações de refresh e close devem ser do tipo View.
+   - Expressão de Tempo em Refresh: No caso da operação refresh, a expressão após after deve ser do tipo Number, garantindo que o valor temporal fornecido seja válido.
+
+Por exemplo, os ficheiros `InvalidTests/TestRefresh1.agl` e `InvalidTests/TestClose1.agl` contêm exemplos que ilustram estas verificações. No ficheiro `InvalidTests/TestRefresh1.agl`, a operação refresh é aplicada corretamente a uma variável do tipo View, mas falha ao ser aplicada a uma variável do tipo Integer, sendo este erro corretamente detetado pelo analisador semântico. De maneira similar, no ficheiro `InvalidTests/TestClose1.agl`, a operação close é corretamente aplicada a uma View, mas um erro é detetado quando se tenta aplicar close a uma variável do tipo Integer.
+
+6. **Operação de move**:
+   - Tipos de ID em Move: Os IDs usados na operação de move podem ser objetos, do tipo model ou do tipo view.
+   - Uso de "by" e "to": Quando a operação move utiliza by, deve ser seguida por um Point ou um Vector, permitindo movimentos relativos. Quando a operação move utiliza to, deve ser seguida por um elemento do tipo Point, especificando uma posição absoluta para o movimento.
+
+Por exemplo, o ficheiro `InvalidTests/TestMoveInvalid1.agl` contém um exemplo que ilustra esta verificação. Neste ficheiro, a operação move é aplicada a um Point, mas isso é inválido, pois Point não é considerado um objeto. Este erro é corretamente detetado pelo analisador semântico.
+
+Por exemplo, no ficheiro `InvalidTests/TestMoveInvalid2.agl` ....
 
 ## Como Executar
 
 Para executar o analisador semântico e verificar os testes, siga os passos abaixo:
 
-1. Navegue até o diretório `src`:
-   ```sh
-   cd src
-   ```
+Dentro do diretório `src`: 
 
-2. Execute o script de testes:
+1. Execute o script de testes:
    ```sh
    ./tests/run-tests.sh
    ```
 
 O script irá executar todos os testes presentes nos diretórios `ValidTests` e `InvalidTests`, verificando se o comportamento esperado é obtido.
 
-## Exemplos de Teste
-
-### Testes Válidos
-
-Exemplo de um ficheiro .agl válido (`ValidTests/example1.agl`):
-```agl
-// Comentário de linha
-view v1 {
-    move(10, 20);
-}
-dot d1 {
-    move(15, 25);
-}
-```
-
-### Testes Inválidos
-
-Exemplo de um ficheiro .agl inválido (`InvalidTests/example1.agl`):
-```agl
-dot d1 {
-    move(10, 20);
-}
-move(15, 25); // Erro: move sem instância
-```
-
-## Notas
-
-- Certifique-se de que tem o ANTLR4 instalado e configurado corretamente no seu sistema.
-- Os testes são projetados para garantir que o analisador semântico detecte corretamente os erros e valide os programas AGL.
-
-## Conclusão
-
-Este projeto implementa um analisador semântico robusto para a linguagem AGL, proporcionando uma camada adicional de verificação que garante a corretude dos programas antes da sua execução.
-
----
-
-Sente-se à vontade para adicionar ou modificar qualquer seção conforme necessário. Se desejares incluir exemplos específicos ou o código do analisador semântico, podes fornecê-los que eu posso integrar ao README.
