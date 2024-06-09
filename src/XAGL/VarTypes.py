@@ -20,7 +20,7 @@ class Var():
     def Dict(self):
         #TODO
         if self.type == View:
-            return {"Ox":Type.Number, "Oy":Type.Number}
+            return {"Ox":Type.Number, "Oy":Type.Number, "width":Type.Integer, "height":Type.Integer, "title":Type.String, "background":Type.String}
         elif self.type == Line or self.type == Rectangle or self.type == Ellipse:
             return {"length":Type.Vector, "fill":Type.String, "state":Type.String}
         else:
