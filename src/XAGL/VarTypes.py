@@ -1,5 +1,7 @@
 from enum import Enum
 from AGLClasses import *
+import re
+import numpy
 
 class Type(Enum):
     Integer = 0
@@ -17,7 +19,7 @@ class Type(Enum):
 class Var():
     def __init__(self, var):
         self.type = self.getType(var)
-        self.var = var # Para models
+        self.var = var # Para models e enum
 
     def getType(self, var):
         if type(var) == Type:
@@ -31,6 +33,28 @@ class Var():
         
         elif issubclass(type(var), Enum):
             return Type.Enum
+        
+        elif type(var) == int:
+            return Type.Integer
+        
+        elif type(var) == float:
+            return Type.Number
+        
+        elif type(var) == numpy.ndarray:
+            return Type.Point
+        
+        elif type(var) == str and re.fullmatch(r"\d+ m?s", var):
+            return Type.Time
+        
+        elif type(var) == str:
+            return Type.String
+        
+        elif type(var) == list:
+            return Type.Array
+        
+        elif type(var) == bool:
+            return Type.Boolean
+
 
     def Dict(self):
         if self.type == View:
@@ -84,19 +108,24 @@ class Var():
                     "outline":Type.String,
                     "state":Type.String
                     }
-        elif type(self.type) == Type or self.type == Enum: 
+        
+        elif self.type == Type.Model:
+            return {attr:Var(value) for attr, value in self.var.attributes.items()}
+        
+        elif type(self.type) == Type or self.type == Type.Enum: 
             return {}
-    
-        elif self.type == Model:
-            return {attr:Var(value) for attr, value in self.var.attributes}
         
 
     def canAssign(self, var):
+      var1 = self.var
+      var2 = var.var
       type1 = self.type
       type2 = var.type
-      return ( type1 == type2 or
-               type1 == Type.Number and type2 == Type.Integer or
-               type1 == Type.Point and type2 == Type.ImplicitPoint or 
+      print(type1, var1, type2, var2)
+      return ( type1 == Type.Enum and type2 == Type.Enum and type(var1) == type(var2) or # verificar se os enums são do mesmo tipo
+               type1 == type2 and type1 != Type.Enum or
+               type1 == Type.Number and type2 == Type.Integer or    # Number pode recber Number ou Integer
+               type1 == Type.Point and type2 == Type.ImplicitPoint or # ImplicitPoint pode ser atribuido em Point e Vector
                type1 == Type.Vector and type2 == Type.ImplicitPoint
             )
     

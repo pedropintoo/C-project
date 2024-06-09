@@ -4,11 +4,28 @@ from XAGLParserVisitor import XAGLParserVisitor
 from AGLClasses import *
 import numpy as np
 import re
+from enum import Enum
 
 
 class Interpreter(XAGLParserVisitor):
    def __init__(self, vars = {}):
       self.vars = vars
+      self.handle_enum()
+
+   def handle_enum(self):
+      temp = {}
+      for value in self.vars.values():
+         if issubclass(type(value), Enum):
+            for member in value.__class__:
+               temp[member.name] = member
+
+         if issubclass(type(value), Model):
+            for attr in value.Dict().values():
+               if issubclass(type(attr), Enum):
+                  for member in attr.__class__:
+                     temp[member.name] = member
+
+      self.vars.update(temp)
 
    def getVar(self, long_id):
       id_arr = long_id.split(".")

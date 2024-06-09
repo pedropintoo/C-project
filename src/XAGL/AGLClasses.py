@@ -186,6 +186,11 @@ class Model(Object):
     def addAttributes(self, attr, value):
         self.attributes[attr] = value
 
+    def Dict(self):
+        dic = vars(self)
+        dic.update(self.attributes)
+        return dic
+
     def copyAttributesTo(self, new_model, draw=False):
         new_model.objects = []
 
