@@ -24,6 +24,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    private final EnumType enumType = new EnumType();
 
    private Set<String> modelDefinitions = new HashSet<>();
+   private boolean inAction = false;
 
    @Override
    public Boolean visitProgram(AGLParser.ProgramContext ctx) {
@@ -44,6 +45,10 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    @Override
    public Boolean visitStatInstantiation(AGLParser.StatInstantiationContext ctx) {
       // stat: instantiation;
+      if (inAction) {
+         ErrorHandling.printError("Error: instantiation is not allowed inside an action");
+        return false;
+      }
       Boolean res = true;
       res = visit(ctx.instantiation());
       if (!res) {
@@ -55,6 +60,10 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    @Override
    public Boolean visitStatModelInstantiation(AGLParser.StatModelInstantiationContext ctx) {
       // stat: modelInstantiation;
+      if (inAction) {
+         ErrorHandling.printError("Error: model instantiation is not allowed inside an action");
+        return false;
+      }
       Boolean res = true;
       res = visit(ctx.modelInstantiation());
 
@@ -1343,8 +1352,6 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
             modelDefinitions.add(varName);
          }
       }
-      // TODO: não sei como fazer para o caso de uma ellipse como no ex06
-
 
       return true;
 
@@ -1379,17 +1386,22 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       Type idType = AGLParser.symbolTable.get(id).type();
 
       // id type must be an EnumType 
-      if (!idType.conformsTo(enumType)) {
-         ErrorHandling.printError("Error: identifier \"" + id + "\" is not an enum type");
-         return false;
-      }
+      // if (!idType.conformsTo(enumType)) {
+      //    ErrorHandling.printError("Error: identifier \"" + id + "\" is not an enum type");
+      //    return false;
+      // }
 
-      if (ctx.stat() instanceof AGLParser.StatInstantiationContext) {
-         ErrorHandling.printError("Error: can't have an instantiation inside an action");
-         return false;
-      }
+      inAction = true;
+
+      // if (ctx.stat() instanceof AGLParser.StatInstantiationContext) {
+      //    ErrorHandling.printError("Error: can't have an instantiation inside an action");
+      //    return false;
+      // }
 
       res = visit(ctx.stat());
+
+      inAction = false;
+
       if (!res) {
          ErrorHandling.printError("Error: invalid statement in action");
          return false;
@@ -1590,14 +1602,15 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
          List<Type> allowedTypes = objectType.getAttributes().get(attributeName);
          if (allowedTypes == null || allowedTypes.isEmpty()) {
             type = null;
+         } else {
+            type = allowedTypes.get(0);
          }
-         type = allowedTypes.get(0);
          // System.out.println(attributeName);
          // System.out.println(type);
 
          if (type == null) {
-            ErrorHandling.printError("Attribute " + attributeName + " does not exist in type " + id);
-            return null;
+             ErrorHandling.printError("Attribute " + attributeName + " does not exist in type " + id);
+             return null;
          }
          if (ctx.identifier().identifier() != null) {
             return getConcreteIDType(ctx.identifier());
