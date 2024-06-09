@@ -1377,9 +1377,9 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       // action: 'action' 'on' identifier stat
       // identifier : ID | ID '.' identifier | ID '[' expression ']' ('.' identifier)? ;
       Boolean res = true;
-      String id = ctx.identifier().getText();
+      String id = ctx.identifier().ID().getText();
 
-      System.out.println(id);
+      System.out.println("Action " + id);
 
       if (!AGLParser.symbolTable.containsKey(id)) {
          ErrorHandling.printError("Error: identifier \"" + id + "\" is not defined");
@@ -1400,10 +1400,38 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
       Type idType = AGLParser.symbolTable.get(id).type();
 
-      if (ctx.stat() instanceof AGLParser.StatInstantiationContext) {
-         ErrorHandling.printError("Error: can't have an instantiation inside an action");
-         return false;
+      // id type must be an EnumType 
+      // if (!idType.conformsTo(enumType)) {
+      //    ErrorHandling.printError("Error: identifier \"" + id + "\" is not an enum type");
+      //    return false;
+      // }
+
+      // if (ctx.stat() instanceof AGLParser.StatInstantiationContext) {
+      //    ErrorHandling.printError("Error: can't have an instantiation inside an action");
+      //    return false;
+      // }
+
+    // Check if the action is on a valid property
+      AGLParser.IdentifierContext currentIdentifierContext = ctx.identifier();
+      while (currentIdentifierContext.identifier() != null) {
+         String propertyId = currentIdentifierContext.identifier().ID().getText();
+
+         System.out.println("Property: " + propertyId);
+
+         ObjectType objectType = (ObjectType) idType;
+         List<Type> allowedTypes = objectType.getAttributes().get(propertyId);
+
+         if (allowedTypes == null || allowedTypes.isEmpty()) {
+               ErrorHandling.printError("Error: \"" + propertyId + "\" is not a valid property of \"" + id + "\"");
+               return false;
+         }
+
+         // Mudar para o próximo nível do identificador
+         idType = allowedTypes.get(0);
+         currentIdentifierContext = currentIdentifierContext.identifier();
       }
+
+      inAction = true;
 
       res = visit(ctx.stat());
 
