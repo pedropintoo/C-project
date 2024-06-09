@@ -433,15 +433,12 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       // quero saber o tipo da variavel do lado esquerdo -> usando a função getConcreteID
       // os visitores da expressao vão me dar os tipos do lado direito -> ctx.assignment().eType
 
-      System.out.println("CALLING LONG ASSIGNMENT");
       Type type = getConcreteIDType(ctx.identifier());   
 
       if (type == null) {
          ErrorHandling.printError("Variable does not exist");
          return false;
       }  
-
-      
 
       // System.out.println("«««««« Type: " + type.name() + " »»»»»»");
 
@@ -488,6 +485,8 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
             // System.out.println("«««««« Assignment Type: " + ctx.assignment().eType.name() + " »»»»»»");
 
             if (ctx.identifier().identifier() != null) {
+               // System.out.println("Identifier: " + ctx.identifier().identifier().getText());
+
                String attributeName = ctx.identifier().identifier().getText();
 
                // if contains '.' attribute name should be the last identifier. e.g: tower2.disks[0].state -> state
@@ -497,7 +496,6 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
                }
 
                // System.out.println("Attribute name: " + attributeName);
-
                if (type instanceof ObjectType) {
                   ObjectType objectType = new ObjectType(type.name());
                   if (!objectType.checkAttributes(attributeName, ctx.assignment().eType)) {
@@ -517,6 +515,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
                   return false;
                }
             }
+
 
             // TODO: sym.setValueDefined();
 
@@ -1393,7 +1392,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       Boolean res = true;
       String id = ctx.identifier().ID().getText();
 
-      System.out.println("Action " + id);
+      // System.out.println("Action " + id);
 
       if (!AGLParser.symbolTable.containsKey(id)) {
          ErrorHandling.printError("Error: identifier \"" + id + "\" is not defined");
@@ -1430,7 +1429,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       while (currentIdentifierContext.identifier() != null) {
          String propertyId = currentIdentifierContext.identifier().ID().getText();
 
-         System.out.println("Property: " + propertyId);
+         // System.out.println("Property: " + propertyId);
 
          ObjectType objectType = (ObjectType) idType;
          List<Type> allowedTypes = objectType.getAttributes().get(propertyId);
@@ -1641,10 +1640,11 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
          }
 
          // if type name don't have <Array> then it is a simple type
-         if (((ArrayType)elemType).getElementType().name().indexOf("<Array>") == -1) {
+         if (((ArrayType)elemType).getElementType().name().indexOf("Array") == -1) {
             return new ObjectType(((ArrayType)elemType).getElementType().name());
          }
          
+
          // return casted to ArrayType
          return new ArrayType(((ArrayType)elemType).getElementType().name());
       } 
@@ -1664,7 +1664,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
             // ModelType
             ModelType modelType = (ModelType) type;
             attributeName = ctx.identifier().ID().getText();
-            System.out.println(attributeName);
+            // System.out.println(attributeName);
 
          } else {
             // ObjectType
@@ -1704,9 +1704,9 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    }
 
    private boolean identifierIsValid(String id, String value, Type valueType, String ID) {
-      System.out.println("ID: " + ID);
-      System.out.println("identifierIsValid: " + id);
-      System.out.println("value: " + value);
+      // System.out.println("ID: " + ID);
+      // System.out.println("identifierIsValid: " + id);
+      // System.out.println("value: " + value);
 
       List<String> colorsList = Arrays.asList(COLORS);
       List<String> statesList = Arrays.asList(STATES);
