@@ -198,7 +198,7 @@ class Model(Object):
         super().__init__(root, view, origin, state)
         self.objects = []
 
-    def copyAttributesTo(self, new_model, draw=False):
+    def copyAttributesTo(self, new_model):
         new_model.objects = []
 
         for k,v in self.__dict__.items():
@@ -212,9 +212,6 @@ class Model(Object):
                 # print(self.__class__.__name__ + "." + k)
                 new_model.objects.append(new_model.__dict__[k])
             
-        if draw and self.root is not None:
-            self.root.add_object(new_model) # add the copy to the root
-
 
     def fixCoords(self):
         for o in self.objects:
@@ -517,7 +514,8 @@ class Ellipse(Object):
         """Create a deep copy of the model."""
         if memo is None:
             memo = {}
-        new_ellipse = Ellipse(self.root, self.view, self.state, self.origin, self.length, self.fill)   
+        new_ellipse = Ellipse(self.root, self.view, self.state, self.origin, self.length, self.fill, self.outline)   
+        new_ellipse.angle = self.angle
         return new_ellipse
 
     def create_object(self, view):

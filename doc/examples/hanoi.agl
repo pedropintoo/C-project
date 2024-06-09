@@ -137,6 +137,11 @@ refresh view1;
 refresh view2;
 refresh view3;
 
+from_tower : Tower;
+from_tower.state = "hidden"; # only to store the value
+to_tower : Tower;
+to_tower.state = "hidden"; # only to store the value
+
 repeat {
     
     p1 : Point = wait mouse click;
@@ -147,7 +152,7 @@ repeat {
         game.tower1.active = True;
         game.tower2.active = False;
         game.tower3.active = False;
-        from_tower : Tower = game.tower1;
+        from_tower = game.tower1;
     }
     else do 
         if p1[0] < 750 do {
@@ -155,14 +160,14 @@ repeat {
             game.tower2.active = True;
             game.tower1.active = False;
             game.tower3.active = False;
-            from_tower : Tower = game.tower2;
+            from_tower = game.tower2;
         }
         else do {
             print "From Tower 3";
             game.tower3.active = True;
             game.tower1.active = False;
             game.tower2.active = False;
-            from_tower : Tower = game.tower3;
+            from_tower = game.tower3;
         }
 
     refresh view1, view2, view3;
@@ -170,16 +175,16 @@ repeat {
     p2 : Point = wait mouse click;
     if p2[0] < 250 do {
         print "To Tower 1";  
-        to_tower : Tower = game.tower1;
+        to_tower = game.tower1;
     }
     else do 
         if p2[0] < 750 do {
             print "To Tower 2";
-            to_tower : Tower = game.tower2;
+            to_tower = game.tower2;
         }
         else do {
             print "To Tower 3";
-            to_tower : Tower = game.tower3;
+            to_tower = game.tower3;
         }
 
     if from_tower != to_tower do {
@@ -213,6 +218,10 @@ repeat {
         game.checkWin = True;        
         refresh view1, view2, view3;
 
+    } else do {
+        print "Invalid transaction";
+        from_tower.active = False;
+        refresh view1, view2, view3;
     }
 } until game.isSolved;
 

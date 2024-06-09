@@ -18,7 +18,6 @@ mouseX = None
 mouseY = None
 model = None
 action = None
-draw = False
 def get_nested_attribute(obj, attr_path, local_dict):
     if obj is None:
         return None
@@ -279,26 +278,9 @@ elements(field) ::= <<
 deepcopy(stat, var, object, origin) ::= <<
 <stats(stat)>
 
-draw = True
 
-if action is not None:
-    new_model = Pacman() ### TODO: !!!
-    action.<object>.copyAttributesTo(new_model, draw=True)
-    <var> = new_model
-    <var>.move_absolute(<origin>)
-    model.add_object(<var>) # add object to model
-else:
-    new_model = Pacman() ### TODO: !!!
-    <object>.copyAttributesTo(new_model, draw=True)
-    <var> = new_model
-    <var>.move_absolute(<origin>)
-
-#if action is not None:
-#    <var> = copy.deepcopy(action.<object>)
-#    <var>.move_absolute(<origin>)
-#    model.add_object(<var>) # add object to model
-#else:
-#    <var> = copy.deepcopy(<object>)
-#    <var>.move_absolute(<origin>)    
+<var> = copy.deepcopy(<object>)
+<var>.move_absolute(<origin>)  
+root.add_object(<var>) 
 
 >>

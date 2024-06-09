@@ -3,7 +3,6 @@
 ## <span style="color:red">[TO DO]</span>
 
 
- - All agl vars must start with `__agl__` to avoid conflicts with python vars.
  - Default values for agl vars.                         
  - Join all versions of interpreter / semantic analysis and compiler in one branch.
  - deepcopy for all objects. (ST is fixed to Pacman(). Must create a createObject for each and copyAttributesTo)
@@ -272,13 +271,13 @@ for i in 0..10..3 {
 #### __Definição de Novos Tipos/Estruturas de Dados__
 ---
 Neste nível, foram adicionados novos tipos de dados e o seu suporte como:
-- **Boolean**: Representa uma expressão que pode resultar nos valores **True** ou **False**;
+- **Boolean**: Representa uma expressão que pode resultar nos valores **True** ou **False**. Para além disso suporta operações como **and**, **or**, **not**, **==**, **!=**, **<**, **<=**, **>** e **>=**. Com as respetivas prioridades, cuja ordem é a seguinte: **not**, **and**, **or**, (**>** | **>=** | **<** | **<=**), (**==** | **!=**). Levámos em conta o mais comum em linguagens genéricas;
 
 ```
 # Exemplos de expressão Boolean
 var1 : Boolean = True;      #var1 = True
 var2 : Boolean = 5+3 == 8;  #var2 = True
-var3 : Boolean = (1 == 1) and (2 == 1+1 or 2!=2); #var3 = True
+var3 : Boolean = 1 == 1 and (2 == 1+1 or 2!=2); #var3 = True
 var4 : Boolean = not True; #var4 = False
 var5 : Boolean = 4 <= 2 or 6 > 10; #var5 = False
 ```
@@ -295,7 +294,7 @@ vetor : Vector = 50:10;
 ```
 #### __Suporte para Construção Condicional__
 ---
-- **If-Else**: Permite a execução de um bloco de código se uma condição for verdade dentro do **if** e executa o bloco de código dentro do **else** caso contrário
+- **If-Else**: Permite a execução de um bloco de código se uma condição **Boolean** for verdade dentro do **if** e executa o bloco de código dentro do **else** caso contrário
 ```
 # Exemplo de If-Else
 var : Integer = 5;
@@ -415,25 +414,39 @@ Neste nível foi adicionado a possibilidade de dar **rotate** a qualquer objeto.
 Para este efeito teve de se remodular a maneira como alguns objetos eram criados de modo a possibilitar esta rotação, nomeadamente, a **Ellipse** e os seus derivados **Arc**, **ArcChord**, **PieSlice** que, em vez de serem criados com os métodos usuais, **create_oval** e **create_arc** do tkinter, são agora criados através do cálculo dos pontos a partir das condições iniciais e aplicando esses pontos de maneira semelhante á **Polyline**.
 
 A rotação também se aplica a **Model** o que vai rodar todos os seus objetos pelas mesmas regras de rotação.
+Segue um exemplo com o auxilio do **deepcopy** para criar uma cópia exata de um objeto, que irá ser explicado mais á frente:
 ```
 Ex1 :: Model {
 
     cellSize : Number = 200;
 
-    Rectangle at (0,cellSize) with {
+    rec: Rectangle at (0,cellSize) with {
         length = (50,50);
         fill = "orange";
     }
 
-    Ellipse at (cellSize,cellSize) with {
+    ell: Ellipse at (cellSize,cellSize) with {
         length = (60,40);
         fill = "blue";
     }
 }
+
 ex1 : Ex1;
-refresh view after 0.5 s;
-rotate ex1 by 30;  # Roda o Model ex1 30 graus
+lineRec : Ellipse = deepcopy ex1.ell to ex1.rec.origin; # exact copy
+lineRec.fill = "red";
+
+refresh view;
+p : Point = wait mouse click;
+for i in 1..360 do {
+    rotate ex1 by 1;
+    move lineRec to ex1.rec.origin;
+    rotate lineRec by -5;
+    refresh view after 0.01 s;
+}
+refresh view;
 ```
+![Rotate.gif](doc/examples/demo/Rotate.gif)
+
 #### __Adicionada a Suporte para várias vistas__
 ---
 Também foi adicionada a possibilidade de se usarem várias views o que fez com que o método **wait mouse click** se aplique agora a todas as **Views**;
