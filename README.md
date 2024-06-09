@@ -551,4 +551,3 @@ Inside the `src` directory:
 ```
 ./tests/run-tests.sh
 ```
-

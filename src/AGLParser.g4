@@ -166,7 +166,7 @@ typeID returns[Type res]
     | 'PieSlice'                {$res = new ObjectType("PieSlice");}
     | 'Text'                    {$res = new ObjectType("Text");}
     | 'Dot'                     {$res = new ObjectType("Dot");}
-    | 'PolyLine'                {$res = new ObjectType("PolyLine");}
+    | 'Polyline'                {$res = new ObjectType("PolyLine");}
     | 'Spline'                  {$res = new ObjectType("Spline");}   
     | 'Polygon'                 {$res = new ObjectType("Polygon");}
     | 'Blob'                    {$res = new ObjectType("Blob");}

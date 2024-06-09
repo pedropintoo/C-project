@@ -1,34 +1,3 @@
-
-Ex1 :: Model {
-    cellSize : Number = 100;
-
-    rec: Rectangle at (0,cellSize) with {
-        length = (50,50);
-        fill = "orange";
-    }
-
-    rec2 : Rectangle = deepcopy rec to (cellSize,cellSize);
+for i in 10-1..-1..-1 do {
+    print i;
 }
-
-view : View with {
-    Ox = 200;
-    width = 1600;
-    height = 600;
-    background = "black";
-}
-
-ex1 : Ex1;
-ex1.rec2.fill = "red";
-ex2 : Ex1 = deepcopy ex1 to (200,0);
-
-refresh view;
-p : Point = wait mouse click;
-for i in 1..361 do {
-    rotate ex1 by 1;
-    rotate ex2 by -1;
-    refresh view after 0.01 s;
-}
-refresh view;
-
-p = wait mouse click;
-
