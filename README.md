@@ -52,7 +52,8 @@ Foram definidos 4 níveis para a realização deste projeto:
   - Suporte da construção *with*.
   - Uma construção gramatical repetitiva *for*, para iterar sobre uma sequência de valores.
   - Verificação semântica no uso de variáveis e de expressões e na manipulação de propriedades.
-  - Definição e implementação de uma linguagem secundária.
+  - Definição e implementação de uma linguagem secundária, aqui designada por $xAG_L$, associada a ficheiros com a extensão *xagl*.
+
 
 #### Nível desejável  [<span style="color:green">DONE</span>]
 
@@ -65,17 +66,19 @@ Foram definidos 4 níveis para a realização deste projeto:
   - Suporte para estrutura de dados iterável (array, lista, ...) e de mecanismos de instanciação, acesso e manipulação dos seus elementos. Neste nível, considerámos apenas a construção de *array* (apenas aceita elementos do mesmo tipo).
   - Possibilidade de aplicar as ações move, refresh e close diretamente a uma lista de objetos.
 
- #### Nível adicional  [<span style="color:green">DONE</span>]
+
+#### Nível adicional  [<span style="color:green">DONE</span>]
 
   - Suporte para a rotação de objetos gráficos. Neste nível, houve a necessidade de redefinir internamente a forma como os objetos gráficos são representados (para permitir rotação de TODOS os objetos). Considerámos também a rotação de modelos que contêm outros modelos através do seu ponto de referência.
   - Suporte para várias vistas.
+  - Suporte para a operação *deepcopy*, que permite a *cópia profunda* de objetos gráficos. Facilitação na duplicação de objetos gráficos complicados.
 
-#### Nível extra  [<span style="color:green">DONE</span>]
+
+#### Desafios  [<span style="color:green">DONE</span>]
 
   - Criação de uma animação interativa que permita a um utilizador resolver as torres de Hanoi.
-  - Falicitação na criação de modelos predefinidos atribuindo valores default a propriedades.
-  - Facilitação na duplicação de objetos gráficos complicados com a funcionalidade *deepcopy*, que permite a *cópia profunda* de objetos gráficos.
 
+<hr>
 
 ### Nível mínimo
 
@@ -83,7 +86,7 @@ Foram definidos 4 níveis para a realização deste projeto:
 
 <span style="color:red">[POR COMPLETAR!!!]</span>
 
-
+<hr>
 
 ### Nível desejável
 
@@ -91,6 +94,7 @@ Foram definidos 4 níveis para a realização deste projeto:
 
 <span style="color:red">[POR COMPLETAR!!!]</span>
 
+<hr>
 
 ### Nível adicional
 
@@ -98,12 +102,14 @@ Foram definidos 4 níveis para a realização deste projeto:
 
 <span style="color:red">[POR COMPLETAR!!!]</span>
 
+<hr>
 
 ### Nível extra
 
 > Neste nível, o nosso grupo focou-se na implementação dos requisitos extra, tendo em conta a criação de uma animação interativa que permita a um utilizador resolver as torres de Hanoi, a falicitação na criação de modelos predefinidos atribuindo valores default a propriedades e a facilitação na duplicação de objetos gráficos complicados com a funcionalidade *deepcopy*.
 
 <span style="color:red">[POR COMPLETAR!!!]</span>
+
 
 ## Constituição dos grupos e participação individual global
 
