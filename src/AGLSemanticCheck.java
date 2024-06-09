@@ -495,7 +495,10 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
                   attributeName = parts[parts.length - 1];
                }
 
-               // System.out.println("Attribute name: " + attributeName);
+               System.out.println("Attribute name: " + attributeName); // active
+               System.out.println("Type: " + type.name()); // Tower que é um Model
+
+
                if (type instanceof ObjectType) {
                   ObjectType objectType = new ObjectType(type.name());
                   if (!objectType.checkAttributes(attributeName, ctx.assignment().eType)) {
@@ -503,9 +506,18 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
                      return false;
                   }
                } else {
-                  // System.out.println("Type: " + type.name());
-                  ErrorHandling.printError(ctx, "Type is not an ObjectType!");
-                  return false;
+                  // TODO: Verificar se é um ModelType e se for verificar se o atributo é válido
+                  if (type instanceof ModelType) {
+                     ModelType modelType = new ModelType(type.name());
+                     // if (!type.checkAttributes(attributeName, ctx.assignment().eType)) {
+                     //    ErrorHandling.printError("Expression type does not conform to attribute type");
+                     //    return false;
+                     // }
+                  } else {
+                     ErrorHandling.printError("Error: invalid type in long assignment");
+                     return false;
+                  }
+            
                }
             }
             else if (!ctx.assignment().eType.conformsTo(type)) {
