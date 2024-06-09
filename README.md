@@ -562,3 +562,7 @@ hanoi.agl: visitAction não podemos obrigar isto:
          ErrorHandling.printError("Error: identifier \"" + id + "\" is not an enum type");
          return false;
       }
+
+    : getConcrete...
+    precisei de comentar isto:
+    

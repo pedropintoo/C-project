@@ -1400,18 +1400,10 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
       Type idType = AGLParser.symbolTable.get(id).type();
 
-      // // id type must be an EnumType 
-      // if (!idType.conformsTo(enumType)) {
-      //    ErrorHandling.printError("Error: identifier \"" + id + "\" is not an enum type");
-      //    return false;
-      // }
-
-      inAction = true;
-
-      // if (ctx.stat() instanceof AGLParser.StatInstantiationContext) {
-      //    ErrorHandling.printError("Error: can't have an instantiation inside an action");
-      //    return false;
-      // }
+      if (ctx.stat() instanceof AGLParser.StatInstantiationContext) {
+         ErrorHandling.printError("Error: can't have an instantiation inside an action");
+         return false;
+      }
 
       res = visit(ctx.stat());
 
@@ -1612,6 +1604,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       if (ctx.identifier() != null) { // ID '.' identifier
          // System.out.println("Attribute type");
          type = AGLParser.symbolTable.get(id).type();
+         
          if (!(type instanceof ObjectType)) {
             ErrorHandling.printError("Variable \"" + id + " is not of object type");
             return null;
