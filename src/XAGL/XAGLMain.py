@@ -7,14 +7,15 @@ from Semantic import Semantic
 from AGLClasses import *
 
 
-def main(argv):
+def main(argv=None):
    root = Root()
    v = View(root, 0, 0, height=500, width=500)
    m = Rectangle(root,length=(50,50), fill='white', origin=(0,0))
    vars = {"root":root, "m":m , "v":v}
    visitor0 = Semantic()
    visitor1 = Interpreter(vars)
-   input_stream = StdinStream()
+   file = "../../examples/new_examples/s0.xagl"
+   input_stream = FileStream(file)
    lexer = XAGLLexer(input_stream)
    stream = CommonTokenStream(lexer)
    parser = XAGLParser(stream)
@@ -25,4 +26,4 @@ def main(argv):
          visitor1.visit(tree)
 
 if __name__ == '__main__':
-   main(sys.argv)
+   main()

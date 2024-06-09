@@ -93,7 +93,7 @@ class Interpreter(XAGLParserVisitor):
       return np.array((x,y))
 
    def visitExprString(self, ctx:XAGLParser.ExprStringContext):
-      return ctx.STRING().getText()
+      return ctx.STRING().getText()[1:-1]
 
    def visitExprPoint(self, ctx:XAGLParser.ExprPointContext):
       x = float(self.visit(ctx.x))
@@ -160,6 +160,11 @@ class Interpreter(XAGLParserVisitor):
    def visitExprID(self, ctx:XAGLParser.ExprIDContext):
       id = self.visit(ctx.identifier())
       return self.getVar(id)
+   
+   def visitExprInput(self, ctx:XAGLParser.ExprInputContext):
+      str = ctx.STRING().getText()
+      res = input(str)
+      return res
 
    def visitCommandRefresh(self, ctx:XAGLParser.CommandRefreshContext):
       id = self.visit(ctx.identifier())
@@ -237,7 +242,10 @@ class Interpreter(XAGLParserVisitor):
       elif ctx.elseStatement():
          self.visit(ctx.elseStatement())
 
-   def visitElseStatement(self, ctx:XAGLParser.ElseStatementContext):
+   def visitElseIfStat(self, ctx:XAGLParser.ElseIfStatContext):
+      self.visit(ctx.ifStatement())
+
+   def visitElseStat(self, ctx:XAGLParser.ElseStatContext):
       self.visit(ctx.stat())
 
    def visitTypeID(self, ctx:XAGLParser.TypeIDContext):

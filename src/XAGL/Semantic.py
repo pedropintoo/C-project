@@ -68,7 +68,10 @@ class Semantic(XAGLParserVisitor):
 
    def visitExprID(self, ctx:XAGLParser.ExprIDContext):
       return self.visitChildren(ctx)
-
+   
+   def visitExprInput(self, ctx:XAGLParser.ExprInputContext):
+      return self.visitChildren(ctx)
+   
    def visitCommandRefresh(self, ctx:XAGLParser.CommandRefreshContext):
       return self.visitChildren(ctx)
 
@@ -101,8 +104,11 @@ class Semantic(XAGLParserVisitor):
 
    def visitIfStatement(self, ctx:XAGLParser.IfStatementContext):
       return self.visitChildren(ctx)
+   
+   def visitElseIfStat(self, ctx:XAGLParser.ElseIfStatContext):
+      return self.visitChildren(ctx)
 
-   def visitElseStatement(self, ctx:XAGLParser.ElseStatementContext):
+   def visitElseStat(self, ctx:XAGLParser.ElseStatContext):
       return self.visitChildren(ctx)
 
    def visitTypeID(self, ctx:XAGLParser.TypeIDContext):

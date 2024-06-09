@@ -57,6 +57,7 @@ expression
     | STRING                                                #ExprString                              
     | identifier                                            #ExprID
     | 'wait' 'mouse' 'click'                                #ExprWait
+    | 'input' STRING                                        #ExprInput
     ;
 
 command
@@ -92,7 +93,8 @@ ifStatement
     ;
 
 elseStatement
-    : 'else' 'do' stat
+    : 'else' ifStatement    #ElseIfStat
+    | 'else' 'do' stat      #ElseStat
     ;
 
 typeID

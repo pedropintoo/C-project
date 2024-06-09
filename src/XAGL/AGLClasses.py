@@ -109,24 +109,7 @@ class View:
 
     def ellipse(self, origin, length):
         return (origin[0]-length[0], origin[1]-length[1]), (origin[0]+length[0], origin[1]+length[1])
-
-    def onClick(self, event):
-        self.mouseX, self.mouseY = event.x, event.y
-
-    def getMouse(self):
-        self.canvas.pack()
-        self.canvas.update()
-        self.mouseX = None; self.mouseY = None
-        while self.mouseX == None:
-            time.sleep(.1)
-            self.canvas.update()
-
-    def waitClick(self):
-        self.canvas.bind("<Button-1>", self.onClick)
-        self.getMouse()
-        return self.mouseX-self.width/2+self.Ox, self.height/2+self.Oy-self.mouseY
     
-
     def close(self):
         self.canvas.destroy()
         self.top.destroy()
