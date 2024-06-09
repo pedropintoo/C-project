@@ -62,13 +62,6 @@ class Semantic(XAGLParserVisitor):
       self.num_errors = self.num_errors+1
       print(message)
 
-   def compatible(self, type1, type2):
-      return ( type1 == type2 or
-               type1 == Type.Number and type2 == Type.Integer or
-               type1 == Type.Point and type2 == Type.ImplicitPoint or 
-               type1 == Type.Vector and type2 == Type.ImplicitPoint
-            )
-
    def visitProgram(self, ctx:XAGLParser.ProgramContext):
       return self.visitChildren(ctx)
 
@@ -79,7 +72,7 @@ class Semantic(XAGLParserVisitor):
       var = ctx.ID().getText()
       value = self.visit(ctx.simpleStatement())
       if var not in self.vars:
-         self.setVar(var, Var(value))
+         self.setVar(var, value)
       else:
          self.SemanticError(f"Object '{var}' already instantiated")
 
@@ -87,7 +80,7 @@ class Semantic(XAGLParserVisitor):
       type = self.visit(ctx.typeID())
       if ctx.assignment():
          value = self.visit(ctx.assignment())
-         if self.compatible(type, value):
+         if type.canAssign(value):
             return type
          self.SemanticError(f"Can not assign a '{value}' object to a '{type}' object")
       else:
@@ -102,25 +95,25 @@ class Semantic(XAGLParserVisitor):
       value = self.visit(ctx.assignment())
       id = var if not ctx.varName else ctx.varName+"."+var
       type = self.getVar(id)
-      if type and self.compatible(type, value):
-         self.setVar(id, Var(value))
+      if type.canAssign(value):
+         self.setVar(id, value)
       else:
          self.SemanticError(f"Can not assign a '{value}' object to a '{type}' object")
 
    def visitAssignment(self, ctx:XAGLParser.AssignmentContext):
-      return self.visitChildren(ctx)
+      return self.visit(ctx.expression())
 
    def visitExprWait(self, ctx:XAGLParser.ExprWaitContext):
-      return Type.Point
+      return Var(Type.Point)
 
    def visitExprString(self, ctx:XAGLParser.ExprStringContext):
-      return Type.String
+      return Var(Type.String)
 
    def visitExprPoint(self, ctx:XAGLParser.ExprPointContext):
-      return Type.ImplicitPoint
+      return Var(Type.ImplicitPoint)
 
    def visitExprBoolean(self, ctx:XAGLParser.ExprBooleanContext):
-      return Type.Boolean
+      return Var(Type.Boolean)
 
    def visitExprParenthesis(self, ctx:XAGLParser.ExprParenthesisContext):
       return self.visit(ctx.e)
@@ -129,13 +122,13 @@ class Semantic(XAGLParserVisitor):
       return self.visitChildren(ctx)
 
    def visitExprArray(self, ctx:XAGLParser.ExprArrayContext):
-      return Type.Array
+      return Var(Type.Array)
 
    def visitExprAddSubMultDiv(self, ctx:XAGLParser.ExprAddSubMultDivContext):
       return self.visitChildren(ctx)
 
    def visitExprVector(self, ctx:XAGLParser.ExprVectorContext):
-      return Type.Vector
+      return Var(Type.Vector)
 
    def visitExprAnd(self, ctx:XAGLParser.ExprAndContext):
       return self.visitChildren(ctx)
@@ -147,7 +140,7 @@ class Semantic(XAGLParserVisitor):
       return self.visitChildren(ctx)
 
    def visitExprNumber(self, ctx:XAGLParser.ExprNumberContext):
-      return Type.Integer if ctx.INT() else Type.Number
+      return Var(Type.Integer) if ctx.INT() else Var(Type.Number)
 
    def visitExprID(self, ctx:XAGLParser.ExprIDContext):
       id = self.visit(ctx.identifier())
@@ -157,7 +150,7 @@ class Semantic(XAGLParserVisitor):
       self.SemanticError(f"Object '{id}' does not exist")
    
    def visitExprInput(self, ctx:XAGLParser.ExprInputContext):
-      return Type.String
+      return Var(Type.String)
    
    def visitCommandRefresh(self, ctx:XAGLParser.CommandRefreshContext):
       return self.visitChildren(ctx)
@@ -215,7 +208,7 @@ class Semantic(XAGLParserVisitor):
          type = Type.Time
       elif ctx.ARRAY():
          type = Type.Array
-      return type
+      return Var(type)
 
    def visitIdentifier(self, ctx:XAGLParser.IdentifierContext):
       id = ctx.ID().getText()

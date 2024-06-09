@@ -11,12 +11,12 @@ def main():
    root = Root()
    v = View(root, 0, 0, height=500, width=500)
    m = Rectangle(root,length=(50,50), fill='white', origin=(0,0))
-   vars0 = {"m":Var(m), "v":Var(v)}
-   visitor0 = Semantic(vars0)
-
-   vars1 = {"root":root, "m":m , "v":v}
-   visitor1 = Interpreter(vars1)
+   print(issubclass(type(m), Object))
    file = "../../examples/new_examples/s0.xagl"
+   vars0 = {"m":Var(m), "v":Var(v)}
+   vars1 = {"root":root, "m":m , "v":v}
+   visitor0 = Semantic(vars0)
+   visitor1 = Interpreter(vars1)
    input_stream = FileStream(file)
    lexer = XAGLLexer(input_stream)
    stream = CommonTokenStream(lexer)
