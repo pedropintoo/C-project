@@ -1,5 +1,4 @@
 
-
 Fire :: Model {
     flame : Rectangle at (75, 0) with {
         length = (15, 2);

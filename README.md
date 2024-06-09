@@ -551,3 +551,14 @@ Inside the `src` directory:
 ```
 ./tests/run-tests.sh
 ```
+
+
+## ERRORS
+
+ex05_extra.agl: action on flame.state
+hanoi.agl: visitAction não podemos obrigar isto:
+// id type must be an EnumType 
+      if (!idType.conformsTo(enumType)) {
+         ErrorHandling.printError("Error: identifier \"" + id + "\" is not an enum type");
+         return false;
+      }

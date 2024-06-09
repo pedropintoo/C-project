@@ -445,7 +445,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       if ( (ctx.identifier().expression() == null ) && (ctx.identifier().identifier() == null) ) { // therefore it is a simple identifier (not an attribute)
          
          if (!AGLParser.symbolTable.containsKey(id)) {
-            ErrorHandling.printError(ctx, "VariableAAA \"" + id + "\" does not exists!");
+            ErrorHandling.printError(ctx, "Variable \"" + id + "\" does not exists!");
             return false;
          } else {
             Boolean resExpr = visit(ctx.assignment());
@@ -1340,15 +1340,15 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
          if (modelStat instanceof AGLParser.ModelStatInstantiationContext) {
             String varName = ((AGLParser.ModelStatInstantiationContext) modelStat).instantiation().ID().getText();
-            System.out.println("AA" + varName);
+            System.out.println(varName);
             modelDefinitions.add(varName);
          } else if (modelStat instanceof AGLParser.ModelStatLongAssignmentContext) {
             String varName = ((AGLParser.ModelStatLongAssignmentContext) modelStat).longAssignment().identifier().ID().getText();
-            System.out.println("BB" + varName);
+            System.out.println(varName);
             modelDefinitions.add(varName);
          } else if (modelStat instanceof AGLParser.ModelStatActionContext) {
             String varName = ((AGLParser.ModelStatActionContext) modelStat).action().identifier().getText();
-            System.out.println("CC" + varName);
+            System.out.println(varName);
             modelDefinitions.add(varName);
          }
       }
@@ -1630,9 +1630,9 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    }
 
    private boolean identifierIsValid(String id, String value, Type valueType, String ID) {
-      // System.out.println("ID: " + ID);
-      // System.out.println("identifierIsValid: " + id);
-      // System.out.println("value: " + value);
+      System.out.println("ID: " + ID);
+      System.out.println("identifierIsValid: " + id);
+      System.out.println("value: " + value);
 
       List<String> colorsList = Arrays.asList(COLORS);
       List<String> statesList = Arrays.asList(STATES);
@@ -1731,7 +1731,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       "lawn green", "medium spring green", "green yellow", "lime green", "yellow green",
       "forest green", "green", "olive drab", "dark khaki", "khaki", "pale goldenrod", "light goldenrod yellow",
       "light yellow", "yellow", "gold", "light goldenrod", "goldenrod", "dark goldenrod", "rosy brown",
-      "indian red", "saddle brown", "sandy brown",
+      "indian red", "saddle brown", "sandy brown", "brown",
       "dark salmon", "salmon", "light salmon", "orange", "dark orange",
       "coral", "light coral", "tomato", "orange red", "red", "hot pink", "deep pink", "pink", "light pink",
       "pale violet red", "maroon", "medium violet red", "violet red",
