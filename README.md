@@ -565,4 +565,16 @@ hanoi.agl: visitAction não podemos obrigar isto:
 
     : getConcrete...
     precisei de comentar isto:
-    
+
+
+- tentar perceber o visitLongAssignment.
+Explica-me porque fazes isto:
+
+if (type instanceof ObjectType) {
+                  ObjectType objectType = new ObjectType(type.name());
+O Rectangle devia entrar dentro do if pois é um tipo de Objeto mas não está a entrar
+Como posso resolver isso?
+
+
+
+-- Falta fazer validação do TIME -> só pode ser > 0.

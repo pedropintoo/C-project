@@ -123,4 +123,4 @@ view3: View with {
 }
 
 game : Game;
-game.tower2.disks[d].state = "hidden";
+game.tower2.disks[0].state = "hidden";
