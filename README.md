@@ -16,6 +16,7 @@
 
 ## Estrutura do repositório
 O repositório está organizado da seguinte forma:
+
 - `doc/` contém a documentação do projeto.
 - `doc/examples/` contém exemplos de código AGL e xAGL.
 - `doc/examples/demo/` contém videos de demonstração da linguagem AGL.
@@ -44,10 +45,10 @@ Foram definidos 4 níveis para a realização deste projeto:
 
 #### Nível mínimo  [<span style="color:green">DONE</span>]
 
-  - Suporte para coment ́arios, de linha e de bloco, tal como ilustrado no exemplos.
+  - Suporte para comentários, de linha e de bloco, tal como ilustrado no exemplos.
   - Instanciação de uma vista (*View*) sobre a área de desenho (*canvas*). As vistas devem portam as ações de *move*, *refresh*, *wait* e *close*. Neste nível, considerámos que existe apenas uma vista.
   - Instanciação dos modelos gráficos base *Dot*, *Line*, *Circle*, *Rectangle*, *Ellipse*, *Text*, *Arc*, *ArcChord* e *PieSlice*. Todos estes modelos têm implicitamente um ponto de referência, cuja localização no canvas será indicada aquando da sua instanciação. Todos os objetos gráficos devem suportar a ação de *move*. Todos os objetos gráficos possuem um conjunto de propriedades, que podem ser alteradas em tempo de execução.
-  - Suporte dos tipos de dados *Integer*, *Number*, *Point*, *Vector*, *String, e *Time* e da instanciação de objetos destes tipos. Suporte de expressões envolvendo estes tipos de dados.
+  - Suporte dos tipos de dados *Integer*, *Number*, *Point*, *Vector*, *String*, e *Time* e da instanciação de objetos destes tipos. Suporte de expressões envolvendo estes tipos de dados.
   - Suporte da construção *with*.
   - Uma construção gramatical repetitiva *for*, para iterar sobre uma sequência de valores.
   - Verificação semântica no uso de variáveis e de expressões e na manipulação de propriedades.
