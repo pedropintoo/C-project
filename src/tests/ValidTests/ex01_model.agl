@@ -81,7 +81,7 @@ Ex1 :: Model {
         fill = "blue";
     }
 
-    text : Text at (0, -cellSize) with {
+    text2 : Text at (0, -cellSize) with {
         text = "Bla bla ...";
         fill = "purple";
     }
@@ -122,7 +122,7 @@ for i in 1..10 do {
     move view2 to ex1.line.origin;
     move view3 to ex1.rec.origin;
     move view4 to ex1.ell.origin;
-    move view5 to ex1.text.origin;
+    move view5 to ex1.text2.origin;
     move view6 to ex1.arc.origin;
     move view7 to ex1.arcC.origin;
     move view8 to ex1.pieS.origin;

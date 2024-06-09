@@ -131,6 +131,9 @@ public class ObjectType extends Type {
                     ErrorHandling.printError("Error: Invalid type!");
                     break;
                 }
+
+                this.addState();
+                this.addOrigin();
                 
                 // This object should have the same symbolModelTable as the modelType    
                 ModelType modelType = (ModelType) model.type;

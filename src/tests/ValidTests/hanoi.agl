@@ -141,7 +141,7 @@ from_tower : Tower;
 to_tower : Tower;
 # to_tower.state = "hidden"; # only to store the value
 
-toChange : Number;
+toChange : Integer; # alterei
 
 repeat {
     

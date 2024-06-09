@@ -23,5 +23,3 @@ cellSize : Number = 200;
 
 p : Point = wait mouse click; # instantiate a Point and waits for a mouse click
 print p;
-
-
