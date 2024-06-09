@@ -848,6 +848,13 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    }
 
    @Override
+   public Boolean visitExprBoolean(AGLParser.ExprBooleanContext ctx) {
+      // expression: 'True' | 'False' and expression returns [Type eType, String varName]
+      ctx.eType = booleanType;
+      return true;
+   }
+
+   @Override
    public Boolean visitExprID(AGLParser.ExprIDContext ctx) {
       // expression: identifier and expression returns [Type eType, String varName]
       // identifier : ID | ID '.' identifier | ID '[' expression ']' ('.' identifier)? ;
@@ -1141,10 +1148,18 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
          ErrorHandling.printError("Error: invalid expression type in for statement (must be integer!)");
       }
 
-      // second expression can not be less than the first expression
-      if (Integer.parseInt(ctx.number_range().expression(0).getText()) > Integer.parseInt(ctx.number_range().expression(1).getText())) {
-         ErrorHandling.printError("Error: second expression must be greater than the first expression in for statement");
-         return false;
+      // third expression
+      if (ctx.number_range().expression().size() == 3) {
+         res = visit(ctx.number_range().expression(2));
+         if (!res) {
+            ErrorHandling.printError("Error: invalid third expression in for statement");
+            return false;
+         }
+
+         // expression must be integer
+         if (!(ctx.number_range().expression(2).eType instanceof IntegerType)) {
+            ErrorHandling.printError("Error: invalid expression type in for statement (must be integer!)");
+         }
       }
 
       return res;
@@ -1385,7 +1400,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
       Type idType = AGLParser.symbolTable.get(id).type();
 
-      // id type must be an EnumType 
+      // // id type must be an EnumType 
       // if (!idType.conformsTo(enumType)) {
       //    ErrorHandling.printError("Error: identifier \"" + id + "\" is not an enum type");
       //    return false;
