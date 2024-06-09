@@ -1595,9 +1595,14 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
          Type elemType = AGLParser.symbolTable.get(id).type();
 
-         if (!(elemType instanceof ArrayType)) {
-            ErrorHandling.printError("Error: \"" + id + "\" is not an array!");
+         // can be an array or a point
+         if (!(elemType instanceof ArrayType) && !(elemType instanceof PointType)) {
+            ErrorHandling.printError("Error: invalid type in simple statement (must be an array or a point!)");
             return null;
+         } 
+
+         if (elemType instanceof PointType) {
+            return numberType;
          }
          
          // return casted to ArrayType
