@@ -409,44 +409,6 @@ pacman1 : Pacman;  #pacman1 é do tipo Pacman
 
 > Neste nível, o nosso grupo focou-se na implementação dos requisitos adicionais, tendo em conta a rotação de objetos gráficos e a suporte para várias vistas.
 
-#### __Adicionada a Rotação de objetos__
-Neste nível foi adicionado a possibilidade de dar **rotate** a qualquer objeto.
-Para este efeito teve de se remodular a maneira como alguns objetos eram criados de modo a possibilitar esta rotação, nomeadamente, a **Ellipse** e os seus derivados **Arc**, **ArcChord**, **PieSlice** que, em vez de serem criados com os métodos usuais, **create_oval** e **create_arc** do tkinter, são agora criados através do cálculo dos pontos a partir das condições iniciais e aplicando esses pontos de maneira semelhante á **Polyline**.
-
-A rotação também se aplica a **Model** o que vai rodar todos os seus objetos pelas mesmas regras de rotação.
-Segue um exemplo com o auxilio do **deepcopy** para criar uma cópia exata de um objeto, que irá ser explicado mais á frente:
-```
-Ex1 :: Model {
-
-    cellSize : Number = 200;
-
-    rec: Rectangle at (0,cellSize) with {
-        length = (50,50);
-        fill = "orange";
-    }
-
-    ell: Ellipse at (cellSize,cellSize) with {
-        length = (60,40);
-        fill = "blue";
-    }
-}
-
-ex1 : Ex1;
-lineRec : Ellipse = deepcopy ex1.ell to ex1.rec.origin; # exact copy
-lineRec.fill = "red";
-
-refresh view;
-p : Point = wait mouse click;
-for i in 1..360 do {
-    rotate ex1 by 1;
-    move lineRec to ex1.rec.origin;
-    rotate lineRec by -5;
-    refresh view after 0.01 s;
-}
-refresh view;
-```
-![Rotate.gif](doc/examples/demo/Rotate.gif)
-
 #### __Adicionada a Suporte para várias vistas__
 ---
 Também foi adicionada a possibilidade de se usarem várias views o que fez com que o método **wait mouse click** se aplique agora a todas as **Views**;
@@ -479,11 +441,65 @@ close view1, view2, view3;    #Fecha todas as views
 
 ```
 
+#### __Adicionada a Rotação de objetos__
+---
+Neste nível foi adicionado a possibilidade de dar **rotate** a qualquer objeto.
+Para este efeito teve de se remodular a maneira como alguns objetos eram criados de modo a possibilitar esta rotação, nomeadamente, a **Ellipse** e os seus derivados **Arc**, **ArcChord**, **PieSlice** que, em vez de serem criados com os métodos usuais, **create_oval** e **create_arc** do tkinter, são agora criados através do cálculo dos pontos a partir das condições iniciais e aplicando esses pontos de maneira semelhante á **Polyline**.
+
+A rotação também se aplica a **Model** o que vai rodar todos os seus objetos pelas mesmas regras de rotação.
+Segue um exemplo com o auxilio do **deepcopy** para criar uma cópia exata de um objeto, que irá ser explicado mais á frente:
+```
+Ex1 :: Model {
+
+    cellSize : Number = 200;
+
+    rec: Rectangle at (0,cellSize) with {
+        length = (50,50);
+        fill = "orange";
+    }
+
+    ell: Ellipse at (cellSize,cellSize) with {
+        length = (60,40);
+        fill = "blue";
+    }
+}
+
+ex1 : Ex1;
+ellExtra : Ellipse = deepcopy ex1.ell to ex1.rec.origin; # exact copy
+ellExtra.fill = "red";
+
+refresh view;
+p : Point = wait mouse click;
+for i in 1..360 do {
+    rotate ex1 by 1;
+    move ellExtra to ex1.rec.origin;
+    rotate ellExtra by -5;
+    refresh view after 0.01 s;
+}
+refresh view;
+```
+![Rotate.gif](doc/examples/demo/Rotate.gif)
+
 ### Nível extra
 
 > Neste nível, o nosso grupo focou-se na implementação dos requisitos extra, tendo em conta a criação de uma animação interativa que permita a um utilizador resolver as torres de Hanoi, a falicitação na criação de modelos predefinidos atribuindo valores default a propriedades e a facilitação na duplicação de objetos gráficos complicados com a funcionalidade *deepcopy*.
 
-<span style="color:red">[POR COMPLETAR!!!]</span>
+#### __Acrescentada a Funcionalidade DeepCopy__
+---
+Como funcionalidade extra, decidiu-se dar a possibilidade ao utilizador de fazer uma cópia exata de um objeto de modo a facilitar a contrução de elementos com as mesmas propriedades sem que resultasse na repetição de código, o que oferece ao programador a facilidade em criar estruturas complexas sem tornar o seu código extenso/complexo demais.
+
+Para facilitar ainda mais esta operação, quando se faz um **deepcopy** de algum objeto, consegue-se colocar diretamente esse objeto em qualquer lugar do canvas através da instrução **to**
+```
+object: Rectangle at (10,10) with {
+    length = (50,50);
+    fill = "orange";
+}
+
+object2 : Rectangle = deepcopy object to (20,20);
+object3 : Rectangle = deepcopy object to (30,30);
+object4 : Rectangle = deepcopy object to (40,40);
+object5 : Rectangle = deepcopy object to (50,50);
+```
 
 
 ## Constituição dos grupos e participação individual global

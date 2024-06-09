@@ -205,8 +205,8 @@ model_creation(modelName, modelStat, action) ::= <<
 ## Model
 #################################################################
 class <modelName>(Model):
-    def __init__(self, root: Root = None, view: View = None, origin=(0,0)):
-        super().__init__(root=root, view=view, origin=origin)
+    def __init__(self, root_local: Root = None, view: View = None, origin=(0,0)):
+        super().__init__(root=root_local, view=view, origin=origin)
         model = self
         <stats(modelStat)>
         
@@ -226,6 +226,8 @@ class <modelName>(Model):
         new_model = <modelName>()
 
         self.copyAttributesTo(new_model)
+        new_model.view = self.view
+        new_model.root = self.root
         return new_model       
 
 #################################################################
@@ -238,7 +240,7 @@ if model is not None:
     model = model_backup
     model.add_object(<var>) # add object to model
 else:
-    <var> = <modelName>(root = root, view = last_view)
+    <var> = <modelName>(root_local = root, view = last_view)
 <if(origin)><var>.move_absolute(<origin>)<endif>  
 >>
 
@@ -278,9 +280,13 @@ elements(field) ::= <<
 deepcopy(stat, var, object, origin) ::= <<
 <stats(stat)>
 
-
 <var> = copy.deepcopy(<object>)
 <var>.move_absolute(<origin>)  
-root.add_object(<var>) 
 
+if model is not None: 
+    model.<var> = <var>
+    model.last_<var> = copy.deepcopy(<var>)
+    model.add_object(<var>) # add object to model
+else:
+    root.add_object(<var>)
 >>

@@ -488,6 +488,7 @@ class Rectangle(Object):
         if memo is None:
             memo = {}
         new_rectangle = Rectangle(self.root, self.view, self.state, self.origin, self.length, self.fill)   
+        new_rectangle.angle = self.angle
         return new_rectangle
     
     def create_object(self, view):
@@ -544,6 +545,7 @@ class Arc(Object):
         if memo is None:
             memo = {}
         new_arc = Arc(self.root, self.view, self.state, self.origin, self.length, self.start, self.extent, self.outline)   
+        new_arc.angle = self.angle
         return new_arc
 
     def create_object(self, view):
@@ -574,6 +576,7 @@ class ArcChord(Object):
         if memo is None:
             memo = {}
         new_arcchord = ArcChord(self.root, self.view, self.state, self.origin, self.length, self.start, self.extent, self.fill)   
+        new_arcchord.angle = self.angle
         return new_arcchord
 
     def create_object(self, view):
@@ -604,6 +607,7 @@ class PieSlice(Object):
         if memo is None:
             memo = {}
         new_pieslice = PieSlice(self.root, self.view, self.state, self.origin, self.length, self.start, self.extent, self.fill)   
+        new_pieslice.angle = self.angle
         return new_pieslice
 
     def create_object(self, view):
@@ -630,7 +634,8 @@ class Text(Object):
         """Create a deep copy of the model."""
         if memo is None:
             memo = {}
-        new_text = Text(self.root, self.view, self.state, self.origin, self.text, self.fill)   
+        new_text = Text(self.root, self.view, self.state, self.origin, self.text, self.fill) 
+        new_text.angle = self.angle;  
         return new_text    
 
     def create_object(self, view):

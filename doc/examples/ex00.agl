@@ -1,34 +1,31 @@
-Ex1 :: Model {
 
-    cellSize : Number = 200;
+Ex1 :: Model {
+    cellSize : Number = 100;
 
     rec: Rectangle at (0,cellSize) with {
         length = (50,50);
         fill = "orange";
     }
 
-    ell: Ellipse at (cellSize,cellSize) with {
-        length = (60,40);
-        fill = "blue";
-    }
+    rec2 : Rectangle = deepcopy rec to (cellSize,cellSize);
 }
 
 view : View with {
-    width = 800;
+    Ox = 200;
+    width = 1600;
     height = 600;
     background = "black";
 }
 
 ex1 : Ex1;
-lineRec : Ellipse = deepcopy ex1.ell to ex1.rec.origin; # exact copy of ex1.ell
-lineRec.fill = "red";
+ex1.rec2.fill = "red";
+ex2 : Ex1 = deepcopy ex1 to (200,0);
 
 refresh view;
 p : Point = wait mouse click;
-for i in 1..360 do {
+for i in 1..361 do {
     rotate ex1 by 1;
-    move lineRec to ex1.rec.origin;
-    rotate lineRec by -5;
+    rotate ex2 by -1;
     refresh view after 0.01 s;
 }
 refresh view;
