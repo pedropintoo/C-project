@@ -10,7 +10,8 @@ Fire :: Model {
     color: Enum in {red, blue}
 
     action on flame.state {
-        print "The flame is " + flame.state;
+        print "The flame is ";
+        print flame.state;
         if flame.state == "normal" do {
             if color == blue  do {
                 flame.fill = "red";

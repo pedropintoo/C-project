@@ -60,7 +60,7 @@ Foram definidos 4 níveis para a realização deste projeto:
   - Instanciação dos modelos gráficos base *Polyline*, *Spline*, *Polygon* e *Blob*. Todos estes modelos têm implicitamente um ponto de referência, cuja localização no *canvas* será indicada aquando da sua instanciação. Todos os objetos gráficos devem suportar a ação de *move*. Todos os objetos gráficos possuem um conjunto de propriedades, que podem ser alteradas em tempo de execução.
   - O tipo de dados *Boolean* e a manipulação de expressões booleanas.
   - Uma construção gramatical condicional. Neste nível, considerámos apenas a construção *if-else* com suporte para expressões booleanas, incluindo *and*, *or*, *not*, *==*, *!=*, *<*, *<=*, *>* e *>=*. Com as respetivas prioridades.
-  - Uma construção gramatical repetitiva baseada em predicado (condição de termo ou de continuação). Neste nível, considerámos as construções *while*, *repeat-until*.
+  - Uma construção gramatical repetitiva baseada em predicado (condição de término ou de continuação). Neste nível, considerámos as construções *while*, *repeat-until*.
   - Suporte para a especificação de vetores (*Vector*) em coordenadas polares.
   - A possibilidade de definição de novos modelos (associada à palavra-chave *Model*), que permita agregar instâncias de outros modelos, base ou definidos anteriomente, numa nova entidade. Todas as propriedades destes novos modelos serão definidas aquando da sua conceção. Deve ser possı́vel fazer depender as propriedades dos modelos incorporados de propriedades do modelo principal. O novo modelo poderá ser depois instanciado.
   - Suporte para estrutura de dados iterável (array, lista, ...) e de mecanismos de instanciação, acesso e manipulação dos seus elementos. Neste nível, considerámos apenas a construção de *array* (apenas aceita elementos do mesmo tipo).
@@ -91,23 +91,39 @@ Foram definidos 4 níveis para a realização deste projeto:
 - Para fazer a atribuição de algum valor usa-se o operador **(=)**
   
 Neste nível, foram implementados 6 tipos principais de dados:
-- **Integer**: Representa um número inteiro;
+- **Integer**: Representa um número inteiro; 
 - **Number**: Representa um número inteiro ou número real;
+```
+#Instanciação e Operações
+
+a : Integer = 3
+b : Number = 2.0*a;
+c : Integer = 2*3;
+d : Number = 2.0*3.0;
+
+e : Number = a + b;
+f : Number = c - b;
+g : Number = d / 2.0;
+```  
+
 - **String**: Sequência de caractéres;
+```
+nome : String = "Nome";
+```
 - **Point**: Representa um ponto no canvas;
 - **Vector**: Representa a diferença entre dois pontos;
-
-Exemplo:
 ```
-x: Integer = 5;
-y: Number = 3.14;
-nome: String = "Nome";
-ponto: Point = (10, 20); 
-vetor: Vector = (3, 4); 
+ponto : Point = (1,5);
+vetor : Vector = (2,3);
 
-# A diferença entre Point e Vector é que não se podem somar dois pontos
-# Ou se soma vetor com um ponto e dá um ponto
-# Ou se soma vetor com vetor e dá um vetor
+ponto2 : Point = ponto + vetor;
+vetor2 : Vector = vetor + vetor;
+
+# Não é possível adicionar dois pontos
+# ponto3 : Point = ponto + ponto; 
+
+vetor3 : Vector = vetor * vetor * 4;
+ponto4 : Point = ponto * 2;
 ```
 
 #### __Definição de uma View__
@@ -130,6 +146,16 @@ view : View with {
   background = "blue";
 }
 ```
+A *View* suporta ações como **move** *(explicado mais á frente)*, **refresh**, **wait** e **close**
+
+| Instrução | Definição | 
+| :---: | :---: |
+| ```refresh view after 100 ms``` | Atualiza a **View** após 100 milissegundos, ou seja, quaisquer alterações em objetos são mostradas após o tempo definido em milissegundos |
+| ```refresh view after 10 s``` | Faz **refresh** da **View** após 10 segundos | 
+| ```p : Point = wait mouse click``` | Espera um click pelo utilizador na **View** e atribui as coordenadas a ao ponto **p** | 
+| ```close view``` | Fecha a janela da **View** | 
+
+
 #### __Definição de Objetos do Canvas__
 ---
 Neste nível, foram desenvolvidos alguns tipos de objeto principais como:
@@ -197,25 +223,248 @@ ponto : Dot at (10, 20) with {
   fill = "black";
 }
 ```
-Todos estes objetos suportam a operação **move** e **with**
+#### Todos estes objetos e Views suportam a operação **move** e **with**
+---
 
+Tendo como referência o objeto seguinte:
+```
+objeto : Rectange at (10, 20) with {
+  length = (30, 40);
+  fill = "blue";
+}
+```
+
+| Instrução | Definição |
+| :---:     | :---:     |
+| ```move objeto to (0, 0)``` | Move diretamente o **objeto** para a posição **(0,0)**|
+| ```move objeto by (5, 5)``` | Move o **objeto** segundo o vetor **(5,5)**, ou seja, iria ser deslocado para **(15,25)**|
+| ```with objeto do { length = (15, 20); fill = "red"; }```| Altera as propriedades do **objeto** em runtime|
+
+#### Construção repetitiva FOR
+---
+O **for** é capaz de repetir as instruções dentro dele através da iteração sobre uma sequência de valores:
+- **Valor inicial**;
+- **Valor final** - Exclusivo, ou seja, a variável fica com o valor de **Valor final** - 1;
+- **Passo** - Opcional com valor de *default* =  1;
+```
+# Mostra na consola de 0 a 9 de 3 em 3
+for i in 0..10..3 {
+  print i
+}
+```
+### Análise Semântica
+---
+```
+[TODO]
+```
+
+### Linguagem Secundária $xAG_L$
+---
+```
+[TODO]
+```
 
 
 ### Nível desejável
 
 > Neste nível, o nosso grupo focou-se na implementação dos requisitos desejáveis, tendo em conta a instânciação dos modelos gráficos base, a manipulação de tipos de dados, a construção *if-else*, a construção *while*, a construção *repeat-until*, a especificação de vetores (*Vector*), a definição de novos modelos, a estrutura de dados iterável e a aplicação das ações move, refresh e close diretamente a uma lista de objetos.
 
-<span style="color:red">[POR COMPLETAR!!!]</span>
+#### __Definição de Novos Tipos/Estruturas de Dados__
+---
+Neste nível, foram adicionados novos tipos de dados e o seu suporte como:
+- **Boolean**: Representa uma expressão que pode resultar nos valores **True** ou **False**;
 
-<hr>
+```
+# Exemplos de expressão Boolean
+var1 : Boolean = True;      #var1 = True
+var2 : Boolean = 5+3 == 8;  #var2 = True
+var3 : Boolean = (1 == 1) and (2 == 1+1 or 2!=2); #var3 = True
+var4 : Boolean = not True; #var4 = False
+var5 : Boolean = 4 <= 2 or 6 > 10; #var5 = False
+```
+- **Array**: Representa a estrutura de dados **lista** só de um único tipo;
+```
+# Exemplos de uso de Array
+[TODO]
+```
+  - Atualização no **Vector**: Suporte para especificação opcional em coordenadas polares.
+  
+```
+#Coordenadas polares (ângulo:tamanho) 
+vetor : Vector = 50:10; 
+```
+#### __Suporte para Construção Condicional__
+---
+- **If-Else**: Permite a execução de um bloco de código se uma condição for verdade dentro do **if** e executa o bloco de código dentro do **else** caso contrário
+```
+# Exemplo de If-Else
+var : Integer = 5;
+if var < 10 do {
+  print "O valor de var é menor que 10";
+} else do {
+  print "O valor de var é maior ou igual a 10";
+}
+# Ifs encadeados
+if var < 5 do {
+  print "O valor de var é menor que 5";
+} else do {
+  if var < 10 do {
+    print "O valor de var é menor que 10";
+  } else do {
+    print "O valor de var é maior que 10";
+  }
+}
+```
+#### __Definição de Novas Estruturas de Repetição__
+---
+- **while**: Permite a repetição de um bloco de código enquanto uma condição for verdadeira;
+```
+a : Number = 2;
+b : Number = 3;
+
+while not (a + b >= 10) do {
+    a = a + 1;
+    print a;
+}
+```
+- **repeat-until**: Repete um bloco de código até que uma condição se verifique
+```
+a :Number = 2;
+b : Number = 3;
+repeat {
+    a = a + 1;
+    print a;
+} until not (a + b >= 10);
+```
+
+#### __Definição de Novos Tipos de Objeto__
+---
+Também foi adicionado o suporte de novos tipos de figura onde todos respeitam as mesmas regras dos objetos anteriores e as mesmas ações.
+
+- **Polyline**: Representa uma linha que conecta uma lista de pontos
+```
+polyline : Polyline at (10, 20) with {
+  points = [(30, 40), (50, 60), (40, 70)];
+  fill = "black";
+}
+```
+- **Spline**: Representa uma linha que conecta uma lista de pontos, no entanto, esta conexão tem um aspeto curvo e *smooth*
+```
+spline : Spline at (10, 20) with {
+  points = [(30, 40), (50, 60), (40, 70)];
+  fill = "black";
+}
+```
+- **Polygon**: Representa um polígono definido por vários pontos. De forma mais simples, é uma **Polyline** mas que conecta-se sempre de volta no seu ponto de referência
+```
+polygon : Polygon at (10, 20) with {
+  points = [(30, 40), (50, 60), (40, 70)];
+  fill = "black";
+  outline = "blue";
+}
+```
+- **Blob**: Apresenta a mesma lógica que o **Polygon**, no entanto, com o aspeto da **Spline**
+```
+blob : Blob at (10, 20) with {
+  points = [(30, 40), (50, 60), (40, 70)];
+  fill = "black";
+  outline = "blue";
+}
+```
+- **Model**: Possibilita a definição de novos "tipos" de objeto complexos, ou seja, constituídos por um conjunto de outros objetos como propriedades. Também possibilita a ação **action** em qualquer propriedade e que executa algum conjunto de operações caso essa propriedade sofra alteração
+```
+Pacman :: Model {
+    face : PieSlice at (0,0) with {
+        length = (50,50);
+        fill = "pink";
+        start = 30;
+        extent = 300;
+    }
+
+    # the eye, without a reference
+    Ellipse at (20,35) with {
+        fill = "black";
+        length = (5,5);
+    }
+
+    open : Boolean = False;
+    action on open {
+        if open do {
+          with face do {
+            start = 30;
+            extent = 300;
+          }
+        } else do {
+          with face do {
+            start = 1;
+            extent = 359;
+          }
+        }
+    }
+}
+pacman1 : Pacman;  #pacman1 é do tipo Pacman
+```
+
 
 ### Nível adicional
 
 > Neste nível, o nosso grupo focou-se na implementação dos requisitos adicionais, tendo em conta a rotação de objetos gráficos e a suporte para várias vistas.
 
-<span style="color:red">[POR COMPLETAR!!!]</span>
+#### __Adicionada a Rotação de objetos__
+Neste nível foi adicionado a possibilidade de dar **rotate** a qualquer objeto.
+Para este efeito teve de se remodular a maneira como alguns objetos eram criados de modo a possibilitar esta rotação, nomeadamente, a **Ellipse** e os seus derivados **Arc**, **ArcChord**, **PieSlice** que, em vez de serem criados com os métodos usuais, **create_oval** e **create_arc** do tkinter, são agora criados através do cálculo dos pontos a partir das condições iniciais e aplicando esses pontos de maneira semelhante á **Polyline**.
 
-<hr>
+A rotação também se aplica a **Model** o que vai rodar todos os seus objetos pelas mesmas regras de rotação.
+```
+Ex1 :: Model {
+
+    cellSize : Number = 200;
+
+    Rectangle at (0,cellSize) with {
+        length = (50,50);
+        fill = "orange";
+    }
+
+    Ellipse at (cellSize,cellSize) with {
+        length = (60,40);
+        fill = "blue";
+    }
+}
+ex1 : Ex1;
+refresh view after 0.5 s;
+rotate ex1 by 30;  # Roda o Model ex1 30 graus
+```
+#### __Adicionada a Suporte para várias vistas__
+---
+Também foi adicionada a possibilidade de se usarem várias views o que fez com que o método **wait mouse click** se aplique agora a todas as **Views**;
+```
+view1: View with {
+    width = 500;
+    height = 500;
+    title = "View 1";
+    background = "wheat";
+}
+
+view2: View with {
+    Ox = 500;
+    width = 500;
+    height = 500;
+    title = "View 2";
+    background = "wheat";
+}
+
+view3: View with {
+    Ox = 1000;
+    width = 500;
+    height = 500;
+    title = "View 3";
+    background = "wheat";
+}
+refresh view1, view2, view3;  #Atualiza todas as views
+p : Point = wait mouse click; #Espera por um clique do utilizador em qualquer View
+close view1, view2, view3;    #Fecha todas as views
+
+```
 
 ### Nível extra
 
@@ -264,5 +513,6 @@ Para este trabalho, o nosso grupo dividiu-o nos seguintes tópicos e distribui o
     - Guilherme Santos - 113893
   - Documentação:
     - Pedro Pinto - 115304
+    - Guilherme Santos - 113893
     - ...
   

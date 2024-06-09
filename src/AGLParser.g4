@@ -165,7 +165,7 @@ typeID returns[Type res]
     | 'PieSlice'
     | 'Text'
     | 'Dot'
-    | 'PolyLine'
+    | 'Polyline'
     | 'Spline'
     | 'Polygon'
     | 'Blob'

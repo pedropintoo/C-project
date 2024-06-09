@@ -40,6 +40,10 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
 
     private String getConcreteId(AGLParser.IdentifierContext ctx, ST res){  
         String id = ctx.ID().getText();
+        if (!isReserved(id)) {
+            id = "var__agl__" + id;
+        }
+
         if (ctx.expression() != null) {
             for (AGLParser.ExpressionContext expression : ctx.expression()) {
                 res.add("stat", visit(expression).render()); // render the return value!
@@ -52,6 +56,31 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
         }
         
         return id;
+    }
+
+    public boolean isReserved(String id) {
+        boolean isReserved = true;
+        switch (id) {
+            case "fill":
+            case "length":
+            case "origin":
+            case "state":
+            case "start":
+            case "extent":
+            case "outline":
+            case "points":
+            case "text":
+            case "width":
+            case "height":
+            case "title":
+            case "Ox":
+            case "Oy":
+            case "background":
+            break;
+            default:
+                isReserved = false;
+        }
+        return isReserved;
     }
 
 
@@ -141,7 +170,7 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
     @Override public ST visitInstantiation(AGLParser.InstantiationContext ctx) {
         ST res = templates.getInstanceOf("assign");
         
-        String id = ctx.ID().getText();
+        String id = "var__agl__" + ctx.ID().getText();
 
         ST stat = null;
         String value;
@@ -181,7 +210,7 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
             enum_temp.add("var", enum_id);
 
             for (TerminalNode id : ctx.in_assignment().ID()) {
-                enum_temp.add("id", id);
+                enum_temp.add("id", "var__agl__" + id); 
             }
 
             value = newVarName();
@@ -197,6 +226,7 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
         } else { 
             value = "DEFAULT_VALUE";  // TODO: TO_BE_IMPLEMENTED
             // Also to Line ...
+            // TODO: "var__agl__"
 
             if (ctx.typeID().ID() != null) {
                 // -> Model
@@ -415,8 +445,8 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
         String id = newVarName();
         ctx.varName = id;
 
-        res.add("vard", id);
-        res.add("vaue", ctx.BOOLEAN().getText()); // assign the value to current variable
+        res.add("var", id);
+        res.add("value", ctx.BOOLEAN().getText()); // assign the value to current variable
 
         return res;
     }
@@ -490,7 +520,7 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
         while(it.hasNext()) {
             current = it.next();
             
-            res.add("view", current.getText());
+            res.add("view", "var__agl__"+current.getText());
 
             if (isFirst && ctx.expression() != null) {
                 res.add("stat", visit(ctx.expression()).render()); // render the return value!
@@ -528,7 +558,7 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
         while(it.hasNext()) {
             current = it.next();
             
-            res.add("view", current.getText());
+            res.add("view", "var__agl__" + current.getText());
 
             if (it.hasNext()) {
                 String prev_close = res.render();
@@ -600,7 +630,7 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
     @Override public ST visitForStatement(AGLParser.ForStatementContext ctx) {
         ST res = templates.getInstanceOf("for");  
         
-        res.add("var", ctx.ID().getText());
+        res.add("var", "var__agl__" + ctx.ID().getText());
 
         AGLParser.Number_rangeContext number_range = ctx.number_range();
 

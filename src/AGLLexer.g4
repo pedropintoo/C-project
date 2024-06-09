@@ -34,7 +34,7 @@ ARCHORD : 'ArcChord';
 PIESLICE : 'PieSlice';
 TEXT    : 'Text';
 DOTTYPE : 'Dot';
-POLYLINE: 'PolyLine';
+POLYLINE: 'Polyline';
 SPLINE  : 'Spline';
 POLYGON : 'Polygon';
 BLOB    : 'Blob';

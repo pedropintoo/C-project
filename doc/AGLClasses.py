@@ -198,13 +198,6 @@ class Model(Object):
         super().__init__(root, view, origin, state)
         self.objects = []
 
-
-        # TODO: copy object at origin;
-        # Pacman.root = root
-        # Pacman.view = last_view
-        # Pacman.origin = v63
-        # v62 = copy.deepcopy(Pacman)
-
     def copyAttributesTo(self, new_model, draw=False):
         new_model.objects = []
 
@@ -285,9 +278,9 @@ class Line(Object):
         if origin != None:
             self.origin = self.view.rotateByOrigin(angle, origin, self.origin)
 
-class PolyLine(Object):
+class Polyline(Object):
     """
-    PolyLine is a line that needs to pass through a list of points.
+    Polyline is a line that needs to pass through a list of points.
     It has an origin, and, if no points are given, it will have a default point of (1,1).
     """
 
@@ -300,7 +293,7 @@ class PolyLine(Object):
         """Create a deep copy of the model."""
         if memo is None:
             memo = {}
-        new_polyline = PolyLine(self.root, self.view, self.state, self.origin, self.points, self.fill)   
+        new_polyline = Polyline(self.root, self.view, self.state, self.origin, self.points, self.fill)   
         return new_polyline
     
     def create_object(self, view):
