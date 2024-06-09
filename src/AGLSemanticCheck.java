@@ -20,7 +20,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    private final BooleanType booleanType = new BooleanType();
    private final ObjectType scriptType = new ObjectType("Script");
    private final ObjectType viewType = new ObjectType("View");
-   private final ObjectType modelType = new ObjectType("Model");
+   private final ObjectType modelObjectType = new ObjectType("Model");
    private final EnumType enumType = new EnumType();
 
    private Set<String> modelDefinitions = new HashSet<>();
@@ -224,7 +224,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       if (s != null) {
          // ModelType
          type = new ModelType(typeID);
-
+         // System.out.println("ModelType: " + type.name());
       } else {
          type = ctx.typeID().res;
          if (type == null) {
@@ -1078,7 +1078,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
       Type type = AGLParser.symbolTable.get(id).type();
       // must conforms to object type or model type or view type
-      if ( !(type instanceof ObjectType) && !type.conformsTo(modelType) && !type.conformsTo(viewType)) {
+      if ( !(type instanceof ObjectType) && !type.conformsTo(modelObjectType) && !type.conformsTo(viewType)) {
          ErrorHandling.printError(ctx, "Error: invalid type in move command (must be an object, model or view type!)");
          return false;
       }
@@ -1120,7 +1120,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       Type type = AGLParser.symbolTable.get(id).type();
       // System.out.println("Type: " + type.name());
       // must conforms to object type (except views because we cannot rotate views) or model type 
-      if ( !(type instanceof ObjectType) && !type.conformsTo(modelType) || (type.conformsTo(viewType)) ) {
+      if ( !(type instanceof ObjectType) && !type.conformsTo(modelObjectType) || (type.conformsTo(viewType)) ) {
          ErrorHandling.printError(ctx, "Error: invalid type in rotate command (must be an object or model type!)");
          return false;
       }

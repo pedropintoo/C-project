@@ -1,0 +1,42 @@
+Pacman :: Model {
+    # A Pacman is composed of a pie slice plus an ellipse representing an eye.
+    # Its reference frame is at the center of the circle circumscribing the pie slice.
+
+    # The main pacman shape, with a reference for future use
+    face : PieSlice at (0,0) with {
+        length = (50,50);
+        fill = "pink";
+        start = 30;
+        extent = 300;
+    }
+
+    # the eye, without a reference
+    Ellipse at (20,35) with {
+        fill = "black";
+        length = (5,5);
+    }
+}
+
+Pacman2 :: Model {
+    # A Pacman is composed of a pie slice plus an ellipse representing an eye.
+    # Its reference frame is at the center of the circle circumscribing the pie slice.
+
+    # The main pacman shape, with a reference for future use
+    face2 : PieSlice at (0,0) with {
+        length = (50,50);
+        fill = "pink";
+        start = 30;
+        extent = 300;
+    }
+
+    # the eye, without a reference
+    Ellipse at (20,35) with {
+        fill = "black";
+        length = (5,5);
+    }
+}
+
+p : Pacman;
+
+p.face2.fill = "yellow";
+

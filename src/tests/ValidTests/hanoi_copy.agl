@@ -125,100 +125,10 @@ view3: View with {
 game : Game;
 
 for d in 0..3 do {
-    game.tower2.disks[d].state = "hidden";
-    game.tower3.disks[d].state = "hidden";
+    game.tower2.disks[d].state = "kl";
+    game.tower3.disks[d].state = "joao pedro";
 
     game.tower1.disks[d].size = 2-d;
     game.tower2.disks[d].size = 2-d;
     game.tower3.disks[d].size = 2-d;
 }
-
-refresh view1;
-refresh view2;
-refresh view3;
-
-repeat {
-    
-    p1 : Point = wait mouse click;
-
-    # Ativa algum disco de alguma torre
-    if p1[0] < 250 do {
-        print "From Tower 1";
-        game.tower1.active = True;
-        game.tower2.active = False;
-        game.tower3.active = False;
-        from_tower : Tower = game.tower1;
-    }
-    else do 
-        if p1[0] < 750 do {
-            print "From Tower 2";
-            game.tower2.active = True;
-            game.tower1.active = False;
-            game.tower3.active = False;
-            from_tower : Tower = game.tower2;
-        }
-        else do {
-            print "From Tower 3";
-            game.tower3.active = True;
-            game.tower1.active = False;
-            game.tower2.active = False;
-            from_tower : Tower = game.tower3;
-        }
-
-    refresh view1, view2, view3;
-
-    p2 : Point = wait mouse click;
-    if p2[0] < 250 do {
-        print "To Tower 1";  
-        to_tower : Tower = game.tower1;
-    }
-    else do 
-        if p2[0] < 750 do {
-            print "To Tower 2";
-            to_tower : Tower = game.tower2;
-        }
-        else do {
-            print "To Tower 3";
-            to_tower : Tower = game.tower3;
-        }
-
-    if from_tower != to_tower do {
-
-        for d in 2..-1..-1 do {
-            if from_tower.disks[d].fill == "blue" do
-                toChange : Number = d;
-        }
-
-        hasValues : Boolean = False;
-        # is transaction valid?
-        for d in 2..-1..-1 do {
-            if to_tower.disks[d].state == "normal" and hasValues == False do {
-                print from_tower.disks[toChange].length[0];
-                print to_tower.disks[d].length[0];
-                if from_tower.disks[toChange].length[0] < to_tower.disks[d].length[0] do {
-                    from_tower.disks[toChange].state = "hidden";
-                    to_tower.disks[toChange].state = "normal";
-                    from_tower.active = False;
-                }
-                hasValues = True;
-            }
-        }
-
-        if not hasValues do {
-            from_tower.disks[toChange].state = "hidden";
-            to_tower.disks[toChange].state = "normal";
-            from_tower.active = False;
-        }
-
-        game.checkWin = True;        
-        refresh view1, view2, view3;
-
-    }
-} until game.isSolved;
-
-
-p : Point = wait mouse click;
-
-close view1, view2, view3;
-
-
