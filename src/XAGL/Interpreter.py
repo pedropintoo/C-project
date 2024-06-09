@@ -144,8 +144,11 @@ class Interpreter(XAGLParserVisitor):
       return r
 
    def visitExprVector(self, ctx:XAGLParser.ExprVectorContext):
-      x = float(self.visit(ctx.x))
-      y = float(self.visit(ctx.y))
+      deg = float(self.visit(ctx.deg))
+      length = float(self.visit(ctx.length))
+      ang = math.radians(deg)
+      x = length * math.cos(ang)
+      y = length * math.sin(ang)
       return np.array((x,y))
 
    def visitExprUnary(self, ctx:XAGLParser.ExprUnaryContext):
@@ -184,7 +187,7 @@ class Interpreter(XAGLParserVisitor):
       id = self.visit(ctx.identifier())
       var = self.getVar(id)
       var.close()
-      
+      self.setVar(id,None)      
 
    def visitCommandMove(self, ctx:XAGLParser.CommandMoveContext):
       p = self.visit(ctx.expression())
@@ -205,7 +208,7 @@ class Interpreter(XAGLParserVisitor):
       rnge = self.visit(ctx.number_range())
       id = ctx.ID().getText()
       for i in rnge:
-         self.vars[id] = i
+         self.setVar(id, i)
          self.visit(ctx.stat())
 
    def visitNumber_range(self, ctx:XAGLParser.Number_rangeContext):

@@ -3,7 +3,8 @@ from XAGLParser import XAGLParser
 from XAGLParserVisitor import XAGLParserVisitor
 
 class Semantic(XAGLParserVisitor):
-   def __init__(self):
+   def __init__(self, vars):
+      self.vars = vars
       self.num_errors = 0
 
    def visitProgram(self, ctx:XAGLParser.ProgramContext):

@@ -7,12 +7,12 @@ from Semantic import Semantic
 from AGLClasses import *
 
 
-def main(argv=None):
+def main():
    root = Root()
    v = View(root, 0, 0, height=500, width=500)
    m = Rectangle(root,length=(50,50), fill='white', origin=(0,0))
    vars = {"root":root, "m":m , "v":v}
-   visitor0 = Semantic()
+   visitor0 = Semantic(vars)
    visitor1 = Interpreter(vars)
    file = "../../examples/new_examples/s0.xagl"
    input_stream = FileStream(file)
