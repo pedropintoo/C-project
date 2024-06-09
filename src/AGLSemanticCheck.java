@@ -1560,7 +1560,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       // System.out.println("Checking identifier: " + id);
 
       if (!AGLParser.symbolTable.containsKey(id)) {
-         ErrorHandling.printError(ctx, "VariableFFF \"" + id + "\" does not exists!");
+         ErrorHandling.printError(ctx, "Variable \"" + id + "\" does not exists!");
          return null;
       }   
 
