@@ -2,7 +2,7 @@
 
 ## <span style="color:red">[TO DO]</span>
 
-
+ - __agl__ nos modelos!
  - Default values for agl vars.                         
  - Join all versions of interpreter / semantic analysis and compiler in one branch.
  - deepcopy for all objects. (ST is fixed to Pacman(). Must create a createObject for each and copyAttributesTo)
