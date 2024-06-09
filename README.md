@@ -486,7 +486,8 @@ refresh view;
 
 #### __Acrescentada a Funcionalidade DeepCopy__
 ---
-Como funcionalidade extra, decidiu-se dar a possibilidade ao utilizador de fazer uma cópia exata de um objeto de modo a facilitar a contrução de elementos com as mesmas propriedades sem que resultasse na repetição de código, o que oferece ao programador a facilidade em criar estruturas complexas sem tornar o seu código extenso/complexo demais.
+Como funcionalidade extra, decidiu-se dar a possibilidade ao utilizador de fazer uma cópia exata de um objeto de modo a facilitar a contrução de elementos com as mesmas propriedades sem que resultasse na repetição de código, o que oferece ao programador a facilidade em criar estruturas complexas sem tornar o seu código extenso/complexo demais. No caso de um **Model**, o **deepcopy** vai copiar todos os objetos que o compõem e as suas propriedades.
+
 
 Para facilitar ainda mais esta operação, quando se faz um **deepcopy** de algum objeto, consegue-se colocar diretamente esse objeto em qualquer lugar do canvas através da instrução **to**
 ```
