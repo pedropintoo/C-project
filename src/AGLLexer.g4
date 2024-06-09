@@ -90,12 +90,12 @@ AND     : 'and';
 OR      : 'or';
 NOT     : 'not';
 
+// Boolean
+BOOLEAN : 'True' | 'False';
+
 // Identifier names
 ID      : LETTER (LETTER | DIGIT)*;
 NAME    : ID;
-
-// Boolean
-BOOLEAN : 'True' | 'False';
 
 // Numbers        
 INT     : DIGIT+;

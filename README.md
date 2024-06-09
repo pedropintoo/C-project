@@ -1,14 +1,32 @@
 # Tema **AGL**, grupo **agl-gg04**
-## Constituição dos grupos e participação individual global
 
-| NMec | Nome | Participação |
-|:---:|:---|:---:|
-| 115637 | GIOVANNI PEREIRA SANTOS | 0.0% |
-| 113893 | GUILHERME FERREIRA SANTOS | 0.0% |
-| 104384 | JOÃO PEDRO AZEVEDO PINTO | 0.0% |
-| 114547 | JOÃO PEDRO FERREIRA MONTEIRO | 0.0% |
-| 113278 | JORGE GUILHERME CONCEIÇÃO DOMINGUES | 0.0% |
-| 115304 | PEDRO MIGUEL AZEVEDO PINTO | 0.0% |
+
+## Documentação extra
+
+ - Análise semântica - [doc/analise_semantica.md](doc/analise_semantica.md) 
+ - Exemplos AGL e xAGL - [doc/examples](doc/examples.md)
+
+
+## Estrutura do repositório
+O repositório está organizado da seguinte forma:
+- `doc/` contém a documentação do projeto.
+- `doc/examples/` contém exemplos de código AGL e xAGL.
+- `src/` contém o código fonte do projeto.
+- `src/tests/` contém os testes do projeto (nomeadamente análise semântica).
+
+## Dependências
+
+Para correr o projeto é necessário ter instalado:
+ - `antlr4` (com gramática AGL)
+ - `python3`
+ - `tkinter`
+ - `numpy`
+
+
+Instalar as dependências do projeto:
+```bash
+pip install -r requirements.txt [POR COMPLETAR!!!]
+```
 
 ## Relatório
 
@@ -54,10 +72,13 @@ to avoid conflicts with python vars.
 ```
 
 
+## Constituição dos grupos e participação individual global
 
-# Problemas:
- - precisamos de refresh para a view funcionar! (inicialização da view está mal feita)
-
-
-# Dependencias:
- - numpy 
+| NMec | Nome | Participação |
+|:---:|:---|:---:|
+| 115637 | GIOVANNI PEREIRA SANTOS | 0.0% |
+| 113893 | GUILHERME FERREIRA SANTOS | 0.0% |
+| 104384 | JOÃO PEDRO AZEVEDO PINTO | 0.0% |
+| 114547 | JOÃO PEDRO FERREIRA MONTEIRO | 0.0% |
+| 113278 | JORGE GUILHERME CONCEIÇÃO DOMINGUES | 0.0% |
+| 115304 | PEDRO MIGUEL AZEVEDO PINTO | 0.0% |
