@@ -95,7 +95,7 @@ refresh view;
 # in the center of the view
 #
 for i in 1 .. 10 do {
-    pacman.mouth = Close;
+    pacman.mouth = Closed;
     refresh view after 20 ms;
     pacman.mouth = Open;
     refresh view after 25 ms;

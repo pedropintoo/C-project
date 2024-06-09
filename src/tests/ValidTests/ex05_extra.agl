@@ -1,4 +1,3 @@
-
 Fire :: Model {
     flame : Rectangle at (75, 0) with {
         length = (15, 2);
@@ -182,3 +181,5 @@ print "Press any mouse button to quit";
 pos = wait mouse click; # instantiate a Point and waits for a mouse click
 
 close view;
+
+

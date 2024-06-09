@@ -21,9 +21,10 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    private final ObjectType scriptType = new ObjectType("Script");
    private final ObjectType viewType = new ObjectType("View");
    private final ObjectType modelObjectType = new ObjectType("Model");
-   private final EnumType enumType = new EnumType();
+   private ObjectType prevObjectType = null;
 
-   private Set<String> modelDefinitions = new HashSet<>();
+   private ModelType currentModel = null;
+
    private boolean inAction = false;
 
    @Override
@@ -45,6 +46,10 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    @Override
    public Boolean visitStatInstantiation(AGLParser.StatInstantiationContext ctx) {
       // stat: instantiation;
+
+
+      // 
+
       if (inAction) {
          ErrorHandling.printError("Error: instantiation is not allowed inside an action");
         return false;
@@ -185,9 +190,26 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
             return true; // enum is defined in children visit!
          }
 
-         Symbol sym = new VariableSymbol(ID, ctx.simpleStatement().typeID().res);
+         Symbol sym = null;
+         if (ctx.simpleStatement().typeID().res instanceof ModelType) {
+            ObjectType objectType = new ObjectType(ctx.simpleStatement().typeID().res.name());
+            sym = new VariableSymbol(ID, objectType);
+         } else {
+            sym = new VariableSymbol(ID, ctx.simpleStatement().typeID().res);
+         }
          sym.setValueDefined();
-         AGLParser.symbolTable.put(ID, sym);
+
+         System.out.println("STRING: " + ctx.simpleStatement().typeID().res.name());
+         System.out.println("-- SimpleStatement: " + ID);
+
+         
+
+         if( currentModel != null) {
+            System.out.println("************************** Added to model: " + ID);
+            currentModel.symbolModelTable.put(ID, sym);
+         } else {
+            AGLParser.symbolTable.put(ID, sym);
+         }
 
       } else if (ctx.blockStatement() != null) {
          res = visit(ctx.blockStatement());
@@ -197,7 +219,16 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
          }
          Symbol sym = new VariableSymbol(ID, ctx.blockStatement().typeID().res);
          sym.setValueDefined();
-         AGLParser.symbolTable.put(ID, sym);
+
+         System.out.println("-- BlockStatement: " + ID);
+
+         if (currentModel != null) {
+            System.out.println("************************** Added to model: " + ID);
+            System.out.println(currentModel.hashCode());
+            currentModel.symbolModelTable.put(ID, sym);
+         } else {
+            AGLParser.symbolTable.put(ID, sym);
+         }
       }
 
       return res;
@@ -224,7 +255,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       if (s != null) {
          // ModelType
          type = new ModelType(typeID);
-         // System.out.println("ModelType: " + type.name());
+         System.out.println("-- ModelType: " + type.name());
       } else {
          type = ctx.typeID().res;
          if (type == null) {
@@ -375,46 +406,47 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
    @Override
    public Boolean visitPropertiesAssignment(AGLParser.PropertiesAssignmentContext ctx) {
-       Boolean res = true;
-   
-       for (AGLParser.LongAssignmentContext longAssign : ctx.longAssignment()) {
-           String id = longAssign.identifier().getText();
-   
-           // Visit the assignment to get its type
-           res = visit(longAssign.assignment());
-           if (!res) {
-               ErrorHandling.printError("Error: invalid long assignment in properties assignment");
-               return false;
-           }
-   
-           // Get the type of the assignment's expression
-           Type typeAttribute = longAssign.assignment().eType;
-           if (typeAttribute == null) {
-               ErrorHandling.printError("Error: type of assignment is null for identifier: " + id);
-               return false;
-           }
-           System.out.println("Type of assignment for " + id + ": " + typeAttribute.name());
-   
-           // Check if the identifier is already in the symbol table
-           if (!AGLParser.symbolTable.containsKey(id)) {
-               // If not, create a new symbol and add it to the symbol table
-               Symbol sym = new VariableSymbol(id, typeAttribute);
-               sym.setValueDefined();
-               AGLParser.symbolTable.put(id, sym);
-               // System.out.println("Added new symbol for identifier: " + id);
-           } else {
-               // If the symbol already exists, ensure the types conform
-               Symbol sym = AGLParser.symbolTable.get(id);
-               if (!typeAttribute.conformsTo(sym.type())) {
-                   ErrorHandling.printError("Error: type mismatch for identifier: " + id);
-                   return false;
-               }
-               sym.setValueDefined();
-               // System.out.println("Updated existing symbol for identifier: " + id);
-           }
-       }
-   
-       return res;
+      // propertiesAssignment : '{' longAssignment ( ';' longAssignment)* ';'? '}'
+      Boolean res = true;
+
+      for (AGLParser.LongAssignmentContext longAssign : ctx.longAssignment()) {
+         String id = longAssign.identifier().getText();
+
+         // Visit the assignment to get its type
+         res = visit(longAssign.assignment());
+         if (!res) {
+            ErrorHandling.printError("Error: invalid long assignment in properties assignment");
+            return false;
+         }
+
+         // Get the type of the assignment's expression
+         Type typeAttribute = longAssign.assignment().eType;
+         if (typeAttribute == null) {
+            ErrorHandling.printError("Error: type of assignment is null for identifier: " + id);
+            return false;
+         }
+         System.out.println("Type of assignment for " + id + ": " + typeAttribute.name());
+
+         // Check if the identifier is already in the symbol table
+         if (!AGLParser.symbolTable.containsKey(id)) {
+            // If not, create a new symbol and add it to the symbol table
+            Symbol sym = new VariableSymbol(id, typeAttribute);
+            sym.setValueDefined();
+            AGLParser.symbolTable.put(id, sym);
+            // System.out.println("Added new symbol for identifier: " + id);
+         } else {
+            // If the symbol already exists, ensure the types conform
+            Symbol sym = AGLParser.symbolTable.get(id);
+            if (!typeAttribute.conformsTo(sym.type())) {
+                  ErrorHandling.printError("Error: type mismatch for identifier: " + id);
+                  return false;
+            }
+            sym.setValueDefined();
+            // System.out.println("Updated existing symbol for identifier: " + id);
+         }
+      }
+
+      return res;
    }
 
    
@@ -432,7 +464,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       // TODO: 
       // quero saber o tipo da variavel do lado esquerdo -> usando a função getConcreteID
       // os visitores da expressao vão me dar os tipos do lado direito -> ctx.assignment().eType
-
+      System.out.println("«««««« Identifier: " + id + " »»»»»»");
       Type type = getConcreteIDType(ctx.identifier());   
 
       if (type == null) {
@@ -498,29 +530,17 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
                System.out.println("Attribute name: " + attributeName); // active
                System.out.println("Type: " + type.name()); // Tower que é um Model
 
-
                if (type instanceof ObjectType) {
                   ObjectType objectType = new ObjectType(type.name());
                   if (!objectType.checkAttributes(attributeName, ctx.assignment().eType)) {
                      ErrorHandling.printError("Expression type does not conform to attribute type");
                      return false;
                   }
-               } else {
-                  // TODO: Verificar se é um ModelType e se for verificar se o atributo é válido
-                  if (type instanceof ModelType) {
-                     ModelType modelType = new ModelType(type.name());
-                     // if (!type.checkAttributes(attributeName, ctx.assignment().eType)) {
-                     //    ErrorHandling.printError("Expression type does not conform to attribute type");
-                     //    return false;
-                     // }
-                  } else {
-                     ErrorHandling.printError("Error: invalid type in long assignment");
-                     return false;
-                  }
-            
-               }
+               } 
+               
             }
-            else if (!ctx.assignment().eType.conformsTo(type)) {
+            
+            if (!ctx.assignment().eType.conformsTo(type)) {
                // If eType is number may be integer or number      
                if (!(ctx.assignment().eType instanceof IntegerType && type instanceof NumberType)) {
                   ErrorHandling.printError("Expression type does not conform to variable type!");
@@ -533,7 +553,14 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
             // define variable symbol
             Symbol sym = new VariableSymbol(id, ctx.assignment().eType);
-            AGLParser.symbolTable.put(id, sym);
+
+            if (currentModel != null) {
+               System.out.println("************************************ Added to model: " + id);
+               currentModel.symbolModelTable.put(id, sym);
+            } else {
+               AGLParser.symbolTable.put(id, sym);
+            }
+
             sym.setValueDefined();
 
          } else {
@@ -602,24 +629,41 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
       Boolean res = true;
 
-      EnumType enumType = new EnumType();
       String ID = ctx.varName;
+      EnumType enumType = new EnumType();
+
+      System.out.println("In assignment: " + ID);
 
       // store id's in list of enums
       for (int i = 0; i < ctx.ID().size(); i++) {
          String id = ctx.ID(i).getText();
          EnumValueType enumValue = new EnumValueType(id);
 
+         System.out.println("id: " + id);
+         System.out.println("enumValue: " + enumValue);
+
          Symbol sym = new VariableSymbol(id, enumValue);
          sym.setValueDefined();
-         AGLParser.symbolTable.put(id, sym);
 
+         // Both symbol tables
+         if (currentModel != null) {
+            System.out.println("******************************** Added to model: " + id);
+            currentModel.symbolModelTable.put(id, sym);
+         } 
+         AGLParser.symbolTable.put(id, sym);
+      
          enumType.addEnum(enumValue); // add enumValue to a list of enums in EnumType
       }
 
       Symbol sym = new VariableSymbol(ID, enumType);
       sym.setValueDefined();
-      AGLParser.symbolTable.put(ID, sym);
+
+      if (currentModel != null) {
+         System.out.println("******************************** Added to model: " + ID);
+         currentModel.symbolModelTable.put(ID, sym);
+      } else {
+         AGLParser.symbolTable.put(ID, sym);
+      }
 
       List<EnumValueType> enums = enumType.getEnums();
 
@@ -800,7 +844,13 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
                return false;
             }
 
-            Symbol s1 = AGLParser.symbolTable.get(ctx.e1.getText());
+            Symbol s1 = null;
+            if (currentModel != null) {
+               s1 = currentModel.symbolModelTable.get(ctx.e1.getText());
+            } else {
+               s1 = AGLParser.symbolTable.get(ctx.e1.getText());
+            }
+
             EnumType e1 = (EnumType) s1.type();
 
             List<EnumValueType> enums = e1.getEnums();
@@ -1245,13 +1295,23 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    public Boolean visitWithStatement(AGLParser.WithStatementContext ctx) {
       Boolean res = true;
       String id = ctx.identifier().getText();
+      Symbol symbol = null;
 
-      if (!AGLParser.symbolTable.containsKey(id)) {
-         ErrorHandling.printError("Error: identifier \"" + id + "\" is not defined");
-         return false;
+      if (currentModel != null) {
+         symbol = currentModel.symbolModelTable.get(id);
+         if (!currentModel.symbolModelTable.containsKey(id)) {
+            ErrorHandling.printError("Error: identifier \"" + id + "\" is not defined inside the model");
+            return false;
+         }
+      } else {
+         if (!AGLParser.symbolTable.containsKey(id)) {
+            ErrorHandling.printError("Error: identifier \"" + id + "\" is not defined");
+            return false;
+         }
+         symbol = AGLParser.symbolTable.get(id);
       }
-
-      Symbol symbol = AGLParser.symbolTable.get(id);
+   
+      
       if (symbol == null) {
          ErrorHandling.printError("Error: Symbol for identifier " + id + " is null");
          return false;
@@ -1370,28 +1430,44 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       }
 
       ModelType modelType = new ModelType(ID);
+      currentModel = modelType; // IMPORTANT: set currentModel to modelType
       Symbol sym = new VariableSymbol(ID, modelType);
       AGLParser.symbolTable.put(ID, sym);
 
       for (AGLParser.ModelStatContext modelStat : ctx.modelStat()) {
+         // use currentModel to visit
+
          if (!visit(modelStat)) {
             return false;
          }
 
-         if (modelStat instanceof AGLParser.ModelStatInstantiationContext) {
-            String varName = ((AGLParser.ModelStatInstantiationContext) modelStat).instantiation().ID().getText();
-            // System.out.println(varName);
-            modelDefinitions.add(varName);
-         } else if (modelStat instanceof AGLParser.ModelStatLongAssignmentContext) {
-            String varName = ((AGLParser.ModelStatLongAssignmentContext) modelStat).longAssignment().identifier().ID().getText();
-            // System.out.println(varName);
-            modelDefinitions.add(varName);
-         } else if (modelStat instanceof AGLParser.ModelStatActionContext) {
-            String varName = ((AGLParser.ModelStatActionContext) modelStat).action().identifier().getText();
-            // System.out.println(varName);
-            modelDefinitions.add(varName);
-         }
+         // if (modelStat instanceof AGLParser.ModelStatInstantiationContext) {
+         //    String varName = ((AGLParser.ModelStatInstantiationContext) modelStat).instantiation().ID().getText();
+         //    // System.out.println(varName);
+         //    // modelDefinitions.add(varName);
+         //    modelType.modelDefinitions.add(varName);
+
+         // } else if (modelStat instanceof AGLParser.ModelStatLongAssignmentContext) {
+         //    String varName = ((AGLParser.ModelStatLongAssignmentContext) modelStat).longAssignment().identifier().ID().getText();
+         //    // System.out.println(varName);
+         //    modelType.modelDefinitions.add(varName);
+
+         // } else if (modelStat instanceof AGLParser.ModelStatActionContext) {
+         //    String varName = ((AGLParser.ModelStatActionContext) modelStat).action().identifier().getText();
+         //    // System.out.println(varName);
+         //    modelType.modelDefinitions.add(varName);
+         // }
       }
+
+      // print elements of symbolModelTable
+      System.out.println("Symbol Model Table");
+      for (Map.Entry<String, Symbol> entry : AGLParser.symbolTable.entrySet()) {
+         String key = entry.getKey();
+         Symbol value = entry.getValue();
+         System.out.println(key + " : " + value);
+      }
+     
+      currentModel = null; // IMPORTANT: set currentModel to null
 
       return true;
 
@@ -1404,26 +1480,32 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       Boolean res = true;
       String id = ctx.identifier().ID().getText();
 
-      // System.out.println("Action " + id);
+      System.out.println("Action " + id);
+      Type idType = null;
 
-      if (!AGLParser.symbolTable.containsKey(id)) {
-         ErrorHandling.printError("Error: identifier \"" + id + "\" is not defined");
-         return false;
+      if (currentModel != null) {
+         if (!currentModel.symbolModelTable.containsKey(id)) {
+            ErrorHandling.printError("Error: identifier \"" + id + "\" is not defined in the model");
+            return false;
+         }
+         idType = currentModel.symbolModelTable.get(id).type();
+      } else {
+         if (!AGLParser.symbolTable.containsKey(id)) {
+            ErrorHandling.printError("Error: identifier \"" + id + "\" is not defined");
+            return false;
+         }
+         idType = AGLParser.symbolTable.get(id).type();
       }
-
+      
       // Confirm if id is defined within the model
-      Symbol symbol = AGLParser.symbolTable.get(id);
-      if (symbol == null) {
-         ErrorHandling.printError("Error: Symbol for identifier " + id + " is null");
-         return false;
-      }
+      // Symbol symbol = AGLParser.symbolTable.get(id);
+      // if (symbol == null) {
+      //    ErrorHandling.printError("Error: Symbol for identifier " + id + " is null");
+      //    return false;
+      // }
 
-      if (!modelDefinitions.contains(id)) {
-         ErrorHandling.printError("Error: \"" + id + "\" is not defined");
-         return false;
-      }
+      System.out.println("ID Type: " + idType.name()); // ex: Enum
 
-      Type idType = AGLParser.symbolTable.get(id).type();
 
       // id type must be an EnumType 
       // if (!idType.conformsTo(enumType)) {
@@ -1614,16 +1696,31 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    // returns the type of the expression
    private Type getConcreteIDType(AGLParser.IdentifierContext ctx) {  
       
-      String id = ctx.ID().getText();
+      
+      String id = ctx.ID().getText(); // current ID
       Type type = null;
+      
+      System.out.println("Checking identifier: " + id);
+  
 
-      // System.out.println("Checking identifier: " + id);
+      if (currentModel != null) {
+         if (!currentModel.symbolModelTable.containsKey(id)) {
+            ErrorHandling.printError("Variable \"" + id + "\" does not exists in the model!");
+            return null;
+         }
+      } else {
+         if ( prevObjectType != null && prevObjectType.getSymbolModelTable() != null) {
+            if (!prevObjectType.getSymbolModelTable().containsKey(id)) {
+               ErrorHandling.printError("Variable \"" + id + "\" does not exists!");
+               return null;
+            }
+         } else if (!AGLParser.symbolTable.containsKey(id)) {
+            ErrorHandling.printError("*** Variable \"" + id + "\" does not exists!");
+            return null;
+         }
+      }
 
-      if (!AGLParser.symbolTable.containsKey(id)) {
-         ErrorHandling.printError(ctx, "Variable \"" + id + "\" does not exists!");
-         return null;
-      }   
-
+       
       if (ctx.expression(0) != null) { // ID '[' expression ']' ('.' identifier)?
          // System.out.println("Array type");
          Boolean res = visit(ctx.expression(0));
@@ -1663,8 +1760,26 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       
       if (ctx.identifier() != null) { // ID '.' identifier
          // System.out.println("Attribute type");
-         type = AGLParser.symbolTable.get(id).type();
+
+         System.out.println("ID: " + id);
+         if (currentModel != null) {  
+            System.out.println("Current Model is not null"); 
+            type = currentModel.symbolModelTable.get(id).type();
+         } else {
+            System.out.println("Current Model is null");
+
+            if (prevObjectType != null && prevObjectType.getSymbolModelTable() != null) {
+               System.out.println("SymbolModelTable is not null");
+               type = prevObjectType.getSymbolModelTable().get(id).type();
+            } else {
+               System.out.println("SymbolModelTable is null");
+               type = AGLParser.symbolTable.get(id).type();
+            }
+
+            System.out.println("Type: " + type);
+         }
          
+         // Probably wrong model type?
          if (!(type instanceof ObjectType) && !(type instanceof ModelType)) {
             ErrorHandling.printError("Variable \"" + id + " is not of object type or model type!");
             return null;
@@ -1673,21 +1788,60 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
          String attributeName = null;
 
          if (type instanceof ModelType) {
-            // ModelType
+            System.out.println("ModelType");
             ModelType modelType = (ModelType) type;
+            System.out.println(type.hashCode());
+            System.out.println("SymbolModelTable size: " + modelType.symbolModelTable.size());
+
+
+            // MUST BE RECURSIVE
             attributeName = ctx.identifier().ID().getText();
-            // System.out.println(attributeName);
+            System.out.println("OLA");
 
          } else {
+            System.out.println("ObjectType");
             // ObjectType
             ObjectType objectType = (ObjectType) type;
             attributeName = ctx.identifier().ID().getText();
-            List<Type> allowedTypes = objectType.getAttributes().get(attributeName);
-            if (allowedTypes == null || allowedTypes.isEmpty()) {
-               type = null;
+            System.out.println("AttributeName: " + attributeName);
+
+            // objectType.checkAttributes(attributeName, type);
+
+            // symbolModelTable of the model
+            Map<String, Symbol> symbolModelTable = objectType.getSymbolModelTable();
+
+            if (symbolModelTable == null) {
+               
+               List<Type> allowedTypes = objectType.getAttributes().get(attributeName);
+               if (allowedTypes == null || allowedTypes.isEmpty()) {
+                  type = null;
+               } else {
+                  type = allowedTypes.get(0);
+               }
+               return type;
             } else {
-               type = allowedTypes.get(0);
+
+               // elements of the symbolModelTable
+               // check if attributeName is a key of the symbolModelTable
+               
+               if (!symbolModelTable.containsKey(attributeName)) {
+                  ErrorHandling.printError("Attribute " + attributeName + " does not exist in type " + id);
+                  return null;
+               } else {
+                  System.out.println("Attribute: " + attributeName);
+                  System.out.println("Type: " + symbolModelTable.get(attributeName).type());
+                  type = symbolModelTable.get(attributeName).type();
+
+                  // return type if we are in the end of the identifier
+                  if (ctx.identifier().identifier() == null) {
+                     return type;
+                  }   
+               }
+
             }
+
+            prevObjectType = objectType;
+            
          }
 
          // System.out.println(attributeName);
@@ -1697,14 +1851,28 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
              ErrorHandling.printError("Attribute " + attributeName + " does not exist in type " + id);
              return null;
          }
+
+         
+
          if (ctx.identifier().identifier() != null) {
-            return getConcreteIDType(ctx.identifier());
+            System.out.println("RECURSIVE");
+            System.out.println("ID: " + ctx.identifier().ID().getText());
+            Type recursiveType = getConcreteIDType(ctx.identifier());
+            prevObjectType = null;
+            return recursiveType;
          }
       }
 
       // ID
-      Symbol sym = AGLParser.symbolTable.get(id);
+      Symbol sym = null;
+      if (currentModel != null) {
+         sym = currentModel.symbolModelTable.get(id);
+      } else {
+         sym = AGLParser.symbolTable.get(id);
+      }
       
+      System.out.println("sym: " + sym);
+
       if (!sym.valueDefined()) {
          ErrorHandling.printError(ctx, "Variable \"" + id + "\" not defined!"); // type will be null
          return null;

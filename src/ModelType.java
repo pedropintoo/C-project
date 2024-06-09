@@ -1,8 +1,11 @@
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 public class ModelType extends Type {
-    private Set<ObjectType> modelStructure = new HashSet<>();
+    // symbol table
+    public Map<String, Symbol> symbolModelTable = new HashMap<String, Symbol>();
     
     public ModelType(String name) {
         super(name);

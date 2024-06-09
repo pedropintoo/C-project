@@ -6,6 +6,7 @@ import java.util.Map;
 public class ObjectType extends Type {
     private Map<String, List<Type>> attributes;
     private List<ObjectType> subTypes;
+    public Map<String, Symbol> symbolModelTable;
 
     protected ObjectType(String name) {
         super(name);
@@ -122,8 +123,20 @@ public class ObjectType extends Type {
                 this.addBackground();
                 break;
             default:
-                ErrorHandling.printError("Error: Invalid type!");
+                // check if exists a modelType with the same name
+                System.out.println(name);
+                Symbol model = AGLParser.symbolTable.get(name);
+
+                if (model == null || !(model.type instanceof ModelType)) {
+                    ErrorHandling.printError("Error: Invalid type!");
+                    break;
+                }
+                
+                // This object should have the same symbolModelTable as the modelType    
+                ModelType modelType = (ModelType) model.type;
+                this.symbolModelTable = modelType.symbolModelTable;
                 break;
+               
         }
         // System.out.println("Attributes initialized for " + name + ": " + this.attributes.keySet());
     }
@@ -246,4 +259,10 @@ public class ObjectType extends Type {
         this.subTypes.add(new ObjectType("Text"));
         this.subTypes.add(new ObjectType("Dot"));
     }
+
+    public Map<String, Symbol> getSymbolModelTable() {
+        return symbolModelTable;
+    }
+
+  
 }              
