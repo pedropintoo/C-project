@@ -51,7 +51,7 @@ view : View with {
 #
 pacman : Pacman at (-450, 0);
 
-t : Time = 0.1;
+t : Time = 0.5;
 
 for i in 1 .. 10 do {
     pacman.mouth = Close;
