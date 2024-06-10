@@ -285,8 +285,6 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
         res.add("var", id);
         res.add("value", value);   // assign the value to current variable
 
-        // TODO: new grammar
-
         return res;
     }
 
@@ -559,7 +557,7 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
         
         ctx.varName = id;
 
-        return res; // TODO
+        return res; 
     }
 
 
