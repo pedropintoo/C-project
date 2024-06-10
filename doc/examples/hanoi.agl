@@ -127,10 +127,6 @@ game : Game;
 for d in 0..3 do {
     game.tower2.disks[d].state = "hidden";
     game.tower3.disks[d].state = "hidden";
-
-    game.tower1.disks[d].size = 2-d;
-    game.tower2.disks[d].size = 2-d;
-    game.tower3.disks[d].size = 2-d;
 }
 
 refresh view1;
