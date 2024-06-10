@@ -138,6 +138,8 @@ from_tower.state = "hidden"; # only to store the value
 to_tower : Tower;
 to_tower.state = "hidden"; # only to store the value
 
+toChange : Integer = 0;
+
 repeat {
     
     p1 : Point = wait mouse click;
@@ -187,7 +189,7 @@ repeat {
 
         for d in 2..-1..-1 do {
             if from_tower.disks[d].fill == "blue" do
-                toChange : Number = d;
+                toChange = d;
         }
 
         hasValues : Boolean = False;
