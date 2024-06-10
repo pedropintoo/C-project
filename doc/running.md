@@ -1,7 +1,7 @@
 ## Dependências
 
 Para correr o projeto é necessário ter instalado:
- - `antlr4` (com gramática AGL)
+ - `antlr4`
  - `python3`
  - `tkinter`
  - `numpy`
@@ -17,11 +17,11 @@ pip install -r requirements.txt
 Entre dentro do diretório root `agl-gg04/`. 
 
 Em primeiro lugar, compile o projeto **antlr4** usando o script `build` que vai dar o *build* necessário, tanto aos ficheiros para a gramática principal $AG_L$, como aos da secundária $xAG_L$:
-```
+```bash
 ./build
 ```
 Opcionalmente, pode testar a árvore sintática com qualquer exemplo:
-```
+```bash
 antlr4-test AGL program -gui ../doc/examples/ex01.agl        
 antlr4-test AGL program -gui ../doc/examples/ex02.agl        
 antlr4-test AGL program -gui ../doc/examples/ex03.agl        
@@ -32,31 +32,34 @@ antlr4-test AGL program -gui ../doc/examples/ex06.agl
 
 ## Experimentar programas em $AG_L$
 Após o **antlr4-build**, ainda dentro de `src`, pode experimentar qualquer programa em $AG_L$ usando o script `run`:
-```
+```bash
+./run /doc/examples/ex00.agl  # default values
 ./run /doc/examples/ex01.agl                                
 ./run /doc/examples/ex02.agl                                
 ./run /doc/examples/ex03.agl                                
 ./run /doc/examples/ex04.agl                                
 ./run /doc/examples/ex05.agl                                
 ./run /doc/examples/ex06.agl
+./run /doc/examples/hanoi.agl # desafio
+```
 
-### Também há ficheiros extra de exemplo como 
+Também existem ficheiros extra. Como por exemplo: 
+```bash
 ./run /doc/examples/extra/curve_figures_rotate.agl
 ./run /doc/examples/extra/ifStatement.agl  
 ./run /doc/examples/extra/model_with_deps.agl
 ./run /doc/examples/extra/rotate_models.agl
-###...
 ```
 ## Testar a Análise Semântica
-De modo a testar a **Análise Semântica** do **Compilador**, foram desenvolvidos alguns testes que avaliam, tanto se análise semântica **validou** corretamente um programa, como também se **invalidou** corretamente um programa:
+De modo a testar a **Análise Semântica** do **Compilador**, foram desenvolvidos alguns testes que avaliam, tanto se a análise semântica **validou** corretamente um programa, como também se **invalidou** corretamente um programa:
 
 Entre no diretório `src/`:
-```
+```bash
 cd src 
 ```
 Experimente os testes:
 
-```
+```bash
 ./tests/run-tests.sh
 ```
 #### Resultados
@@ -67,6 +70,8 @@ Qualquer outro *output* como, **<span style="color:red">OK</span>** ou **<span s
 
 ## Limpar os Ficheiros de Compilação
 Para limpar os ficheiros gerados quando se fez o **build**, pode usar o script `clean` caso não queira fazer mais testes:
-```
+
+Certifique-se de que está no diretório root `agl-gg04/`
+```bash
 ./clean
 ```
