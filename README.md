@@ -518,34 +518,6 @@ object5 : Rectangle = deepcopy object to (50,50);
 | 113278 | JORGE GUILHERME CONCEIÇÃO DOMINGUES | 0.0% |
 | 115304 | PEDRO MIGUEL AZEVEDO PINTO | 0.0% |
 
-<<<<<<< HEAD
-=======
-## Estrutura do repositório
-O repositório está organizado da seguinte forma:
-- `doc/` contém a documentação do projeto.
-- `doc/examples/` contém exemplos de código AGL e xAGL.
-- `src/` contém o código fonte do projeto.
-- `src/tests/` contém os testes do projeto (nomeadamente analise semântica).
-
-## Dependências
-
-Para correr o projeto é necessário ter instalado:
- - `antlr4` (com gramática AGL)
- - `python3`
- - `tkinter`
- - `numpy`
-
-
-Instalar as dependências do projeto:
-```bash
-pip install -r requirements.txt
-```
-
-## Relatório
-
-- Use esta secção para fazer um relatório sucinto mas explicativo dos objetivos concretizados.
-
->>>>>>> fe68eb8 (start readme)
 ## Contribuições
 
 Para este trabalho, o nosso grupo dividiu-o nos seguintes tópicos e distribui os mesmos pelos elementos do grupo da seguinte forma:
@@ -578,19 +550,3 @@ Para este trabalho, o nosso grupo dividiu-o nos seguintes tópicos e distribui o
     - Guilherme Santos - 113893
     - ...
   
-cat ../doc/ex00.agl | antlr4-run > ../doc/t1.py
-```
-
-## Run Semantic Check 
-Inside the `src` directory:
-```
-antlr4-main AGLParser.g4 program -v AGLSemanticCheck.java
-antlr4-build
-cat tests/ValidTests/ex05.agl | antlr4-run
-```
-
-## Test Semantic Check
-Inside the `src` directory:
-```
-./tests/run-tests.sh
-```
