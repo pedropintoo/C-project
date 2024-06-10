@@ -1,10 +1,8 @@
 import java.io.IOException;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
-import org.stringtemplate.v4.*;
 
-
-public class AGLMain {
+public class RunSemTests {
    public static void main(String[] args) {
       try {
          // create a CharStream that reads from standard input:
@@ -21,9 +19,16 @@ public class AGLMain {
          // begin parsing at program rule:
          ParseTree tree = parser.program();
          if (parser.getNumberOfSyntaxErrors() == 0) {
-            AGLCompiler compiler = new AGLCompiler();
-            ST result = compiler.visit(tree);
-            System.out.println(result.render());
+            // print LISP-style tree:
+            // System.out.println(tree.toStringTree(parser));
+            AGLSemanticCheck semCheck = new AGLSemanticCheck();
+            if (semCheck.visit(tree)) {
+               System.out.println("Semantic check passed.");
+            } else {
+               System.out.println("Semantic check failed.");
+               System.exit(1);
+            }
+            
          }
       }
       catch(IOException e) {

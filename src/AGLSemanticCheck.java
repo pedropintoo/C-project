@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import org.antlr.v4.runtime.tree.TerminalNode;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 
@@ -300,7 +301,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
                return true;
             }
             // If eType is number may be integer or number      
-            if (!(ctx.assignment().eType instanceof IntegerType && type instanceof NumberType)) {
+            if (!((ctx.assignment().eType instanceof IntegerType && type instanceof NumberType) || (ctx.assignment().eType instanceof PointType && type instanceof VectorType))) {
                ErrorHandling.printError("Expression type does not conform to variable type!");
                return false;
             }
@@ -499,7 +500,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
             if (!ctx.assignment().eType.conformsTo(type)) {
                // If eType is number may be integer or number      
-               if (!(ctx.assignment().eType instanceof IntegerType && type instanceof NumberType)) {
+               if (!((ctx.assignment().eType instanceof IntegerType && type instanceof NumberType) || (ctx.assignment().eType instanceof PointType && type instanceof VectorType))) {
                   ErrorHandling.printError("Expression type does not conform to variable type!");
                   return false;
                }
@@ -977,20 +978,22 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    public Boolean visitCommandRefresh(AGLParser.CommandRefreshContext ctx) {
       // 'refresh' ID (',' ID)* ('after' expression suffix=('ms'|'s'))? ';' and Expression returns [Type eType, String varName]
       Boolean res = true;
-      String id = ctx.ID(0).getText();
-
-      if (!AGLParser.symbolTable.containsKey(id)) {
-         ErrorHandling.printError(ctx, "VariableCCC \"" + id + "\" does not exists!");
-         res = false;
+      
+      String id;
+      Type type;
+      for (TerminalNode idCtx : ctx.ID()) {
+         id = idCtx.getText();
+         if (!AGLParser.symbolTable.containsKey(id)) {
+            ErrorHandling.printError(ctx, "VariableBBB \"" + id + "\" does not exists!");
+            res = false;
+         }
+         type = AGLParser.symbolTable.get(id).type();
+         // must conforms to view type
+         if (!type.conformsTo(viewType)) {
+            ErrorHandling.printError(ctx, "Error: invalid type in refresh command (must be a view type!)");
+            return false;
+         }
       }
-
-      Type type = AGLParser.symbolTable.get(id).type();
-      // must conforms to view type
-      if (!type.conformsTo(viewType)) {
-         ErrorHandling.printError(ctx, "Error: invalid type in refresh command (must be a view type!)");
-         return false;
-      }
-
 
       if (ctx.expression() != null) {
          res = visit(ctx.expression());
@@ -1043,18 +1046,21 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    public Boolean visitCommandClose(AGLParser.CommandCloseContext ctx) {
       // command: 'close' ID (',' ID)* ';'
       Boolean res = true;
-      String id = ctx.ID(0).getText();
+      String id;
+      Type type;
 
-      if (!AGLParser.symbolTable.containsKey(id)) {
-         ErrorHandling.printError(ctx, "VariableDDD \"" + id + "\" does not exists!");
-         res = false;
-      }
-
-      Type type = AGLParser.symbolTable.get(id).type();
-      // must conforms to view type
-      if (!type.conformsTo(viewType)) {
-         ErrorHandling.printError(ctx, "Error: invalid type in close command (must be a view type!)");
-         return false;
+      for (TerminalNode idCtx : ctx.ID()) {
+         id = idCtx.getText();
+         if (!AGLParser.symbolTable.containsKey(id)) {
+            ErrorHandling.printError(ctx, "VariableDDD \"" + id + "\" does not exists!");
+            res = false;
+         }
+         type = AGLParser.symbolTable.get(id).type();
+         // must conforms to view type
+         if (!type.conformsTo(viewType)) {
+            ErrorHandling.printError(ctx, "Error: invalid type in close command (must be a view type!)");
+            return false;
+         }
       }
 
       return res;
@@ -1064,12 +1070,15 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    public Boolean visitCommandMove(AGLParser.CommandMoveContext ctx) {
       // command: 'move' identifier (',' identifier)* type=('by'|'to') expression ';'
       Boolean res = true;
-      Type type = getConcreteIDType(ctx.identifier(0));
+      Type type;
   
-      // must conforms to object type or model type or view type
-      if ( !(type instanceof ObjectType) && !type.conformsTo(modelObjectType) && !type.conformsTo(viewType)) {
-         ErrorHandling.printError(ctx, "Error: invalid type in move command (must be an object, model or view type!)");
-         return false;
+      for (AGLParser.IdentifierContext ident : ctx.identifier()) {
+         type = getConcreteIDType(ident);
+         // must conforms to object type or model type or view type
+         if ( !(type instanceof ObjectType) && !type.conformsTo(modelObjectType) && !type.conformsTo(viewType)) {
+            ErrorHandling.printError(ctx, "Error: invalid type in move command (must be an object, model or view type!)");
+            return false;
+         }
       }
 
       res = visit(ctx.expression());
@@ -1097,20 +1106,17 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    public Boolean visitCommandRotate(AGLParser.CommandRotateContext ctx) {
       // command : 'rotate' identifier (',' identifier)* 'by' expression ';'
       Boolean res = true;
-      String id = ctx.identifier(0).getText();
 
-      if (!AGLParser.symbolTable.containsKey(id)) {
-         ErrorHandling.printError(ctx, "Variable \"" + id + "\" does not exists!");
-         res = false;
+      Type type;
+      for (AGLParser.IdentifierContext ident : ctx.identifier()) {
+         type = getConcreteIDType(ident);
+         // must conforms to object type (except views because we cannot rotate views) or model type 
+         if ( !(type instanceof ObjectType) && !type.conformsTo(modelObjectType) || (type.conformsTo(viewType)) ) {
+            ErrorHandling.printError(ctx, "Error: invalid type in rotate command (must be an object or model type!)");
+            return false;
+         }
       }
-
-      Type type = AGLParser.symbolTable.get(id).type();
-      // must conforms to object type (except views because we cannot rotate views) or model type 
-      if ( !(type instanceof ObjectType) && !type.conformsTo(modelObjectType) || (type.conformsTo(viewType)) ) {
-         ErrorHandling.printError(ctx, "Error: invalid type in rotate command (must be an object or model type!)");
-         return false;
-      }
-
+   
       res = visit(ctx.expression());
       if (!res) {
          ErrorHandling.printError("Error: invalid expression in rotate command");

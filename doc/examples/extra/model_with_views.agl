@@ -144,7 +144,7 @@ for i in 1 .. 20 do {
 }
 
 print "Press any mouse button to quit";
-pos : Point = wait mouse click; # instantiate a Point and waits for a mouse click
+pos = wait mouse click; # instantiate a Point and waits for a mouse click
 
 close view2;
 

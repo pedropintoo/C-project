@@ -1,1 +1,0 @@
-t2 : Point = (1,3)+3; # erro! não podemos somar um ponto com um inteiro

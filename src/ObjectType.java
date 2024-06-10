@@ -81,6 +81,7 @@ public class ObjectType extends Type {
                 this.addStart();
                 this.addExtent();
                 this.addFill();
+                this.addOutline();
                 break;
             case "PieSlice":
                 // System.out.println("Arrived in PieSlice");

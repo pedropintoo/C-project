@@ -123,3 +123,5 @@ refresh view;
 
 p = wait mouse click;
 
+
+close view;
