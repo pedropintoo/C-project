@@ -93,23 +93,23 @@ refresh view;
 # Animation may be given by a script written in the secondary language
 #
 s1 : Script = load "s0.xagl";
-play s1 with {
-    m = pacman;
-    v = view;
-}
+#play s1 with {
+#    m = pacman;
+#    v = view;
+#}
 
 # 
 # Which may also be read from standard input
 #
 s2 : Script = input "Insert a XAgl script to make pacman move 100 units to the right";
-play s2 with {
-    m = pacman;
-    v = view;
-}
+#play s2 with {
+#    m = pacman;
+#    v = view;
+#}
 
-print "Press any mouse button to quit";
-pos : Point = wait mouse click; # instantiate a Point and waits for a mouse click
+#print "Press any mouse button to quit";
+#pos : Point = wait mouse click; # instantiate a Point and waits for a mouse click
 
-close view;
+#close view;
 
 

@@ -7,11 +7,11 @@ import org.stringtemplate.v4.*;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import java.util.Iterator;
+import java.util.Scanner;
 
 @SuppressWarnings("CheckReturnValue")
 public class AGLCompiler extends AGLParserBaseVisitor<ST> {
-   
-
+    
     private STGroup templates = new STGroupFile("AGL_python.stg");
 
     private int varCounter = 0;
@@ -359,7 +359,7 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
 //* assignment   
     @Override public ST visitAssignment(AGLParser.AssignmentContext ctx) {
         ST res = templates.getInstanceOf("assign");
-        
+
         res.add("stat", visit(ctx.expression()).render()); // render the return value!
         
         String id = newVarName();
@@ -539,7 +539,27 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
 
 
     @Override public ST visitExprScript(AGLParser.ExprScriptContext ctx) {
-        return null; // TODO
+        ST res;
+        
+        String id = newVarName();
+        String str = ctx.STRING().getText();
+        if (ctx.op.getText().equals("input")) {
+            res = templates.getInstanceOf("input");
+                    
+            String message = str.substring(1, str.length()-1);
+
+            res.add("message", message);
+            res.add("var", id);
+        } else {
+            res = templates.getInstanceOf("assign");
+
+            res.add("var", id);
+            res.add("value", str); // the str is the file name (load operation)
+        }
+        
+        ctx.varName = id;
+
+        return res; // TODO
     }
 
 

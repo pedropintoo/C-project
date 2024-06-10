@@ -109,8 +109,8 @@ g : Number = d / 2.0;
 ```
 nome : String = "Nome";
 ```
-- **Point**: Representa um ponto no canvas | **Default = ()**;
-- **Vector**: Representa a diferença entre dois pontos;
+- **Point**: Representa um ponto no canvas | **Default = (0, 0)**;
+- **Vector**: Representa a diferença entre dois pontos | **Default = (0.0, 0.0)**;
 ```
 ponto : Point = (1,5);
 vetor : Vector = (2,3);
@@ -124,7 +124,7 @@ vetor2 : Vector = vetor + vetor;
 vetor3 : Vector = vetor * vetor * 4;
 ponto4 : Point = ponto * 2;
 ```
-- **Time**: Representa um valor positivo que pode ser usado em operações que envolvam tempos
+- **Time**: Representa um valor positivo que pode ser usado em operações que envolvam tempos | **Default = 0**
 ```
 t1 : Time = 0.8;
 
@@ -285,7 +285,7 @@ for i in 0..10..3 {
 #### __Definição de Novos Tipos/Estruturas de Dados__
 ---
 Neste nível, foram adicionados novos tipos de dados e o seu suporte como:
-- **Boolean**: Representa uma expressão que pode resultar nos valores **True** ou **False**. Para além disso suporta operações como **and**, **or**, **not**, **==**, **!=**, **<**, **<=**, **>** e **>=**. Com as respetivas prioridades, cuja ordem é a seguinte: **not**, **and**, **or**, (**>** | **>=** | **<** | **<=**), (**==** | **!=**). Levámos em conta o mais comum em linguagens genéricas;
+- **Boolean**: Representa uma expressão que pode resultar nos valores **True** ou **False**. Para além disso suporta operações como **and**, **or**, **not**, **==**, **!=**, **<**, **<=**, **>** e **>=**. Com as respetivas prioridades, cuja ordem é a seguinte: **not**, **and**, **or**, (**>** | **>=** | **<** | **<=**), (**==** | **!=**). Levámos em conta o mais comum em linguagens genéricas | **Default = False**;
 
 ```
 # Exemplos de expressão Boolean
@@ -295,7 +295,7 @@ var3 : Boolean = 1 == 1 and (2 == 1+1 or 2!=2); #var3 = True
 var4 : Boolean = not True; #var4 = False
 var5 : Boolean = 4 <= 2 or 6 > 10; #var5 = False
 ```
-- **Array**: Representa a estrutura de dados **lista** só de um único tipo. A sua instanciação e definição do tipo dá-se pela operação **Array<**Type**>** e pode-se aceder aos valores da **Array** a partir dos seus índices.
+- **Array**: Representa a estrutura de dados **lista** só de um único tipo. A sua instanciação e definição do tipo dá-se pela operação **Array<**Type**>** e pode-se aceder aos valores da **Array** a partir dos seus índices | **Default = []**, caso hajam **arrays** encadeados, o *default value* toma o valor de array equivalente ao número de encadeamentos, por exemplo -> **Array<**Array**<**Type**>>** tem como **Default = [[]]**.
 ```
 # Exemplos de uso de Array
 a : Array<Integer> = [0,2,3,4,5]; 
@@ -390,7 +390,7 @@ blob : Blob at (10, 20) with {
   outline = "blue";
 }
 ```
-- **Model**: Possibilita a definição de novos "tipos" de objeto complexos, ou seja, constituídos por um conjunto de outros objetos como propriedades. Também possibilita a ação **action** em qualquer propriedade e que executa algum conjunto de operações caso essa propriedade sofra alteração
+- **Model**: Possibilita a definição de novos "tipos" de objeto complexos, ou seja, constituídos por um conjunto de outros objetos como propriedades. Também possibilita a ação **action** em qualquer propriedade, que executa algum conjunto de operações caso essa propriedade sofra alguma alteração:
 ```
 Pacman :: Model {
     face : PieSlice at (0,0) with {
@@ -427,8 +427,17 @@ pacman1 : Pacman;  #pacman1 é do tipo Pacman
 
 ### Nível adicional
 
-> Neste nível, o nosso grupo focou-se na implementação dos requisitos adicionais, tendo em conta a rotação de objetos gráficos e a suporte para várias vistas.
+> Neste nível, o nosso grupo focou-se na implementação dos requisitos adicionais, tendo em conta a rotação de objetos gráficos e a suporte para várias vistas como também a implementação do tipo de dados Enum.
 
+#### __Adicionado Novo Tipo de Dados__
+Neste nível, foi implementado o tipo de dados **Enum**, onde a variável associada fica com o primeiro valor do **Enum**:
+```
+porta : Enum in { Aberta, Fechada } # porta = Aberta
+
+if porta == Aberta do {
+  print "Porta está aberta!";
+}
+```
 #### __Adicionada a Suporte para várias vistas__
 ---
 Também foi adicionada a possibilidade de se usarem várias views o que fez com que o método **wait mouse click** se aplique agora a todas as **Views**;
