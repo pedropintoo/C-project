@@ -272,6 +272,9 @@ Para usar a linguagem $xAG_L$ foi criado o tipo **Script** e existem duas opçõ
 
 Para usar variáveis do tipo **Script** é necessário recorrer á operação **play**:
 
+A linguagem $xAG_L$ permite a maioria das instruções da $AG_L$ com a exceção de criação de objetos **Script**, **Model**, **Views** e **Enum**, mas permite as ações que eles suportam.
+Para usar o **play** qualquer nome de variável é possível mesmo que ele não esteja no script $xAG_L$, mas o analisador semântico verifica caso uma variável no $xAG_L$ foi instanciado ou se foi atribuído pelo **play**.
+
 ```
 ### s0.xagl
 move m by (100,0);
