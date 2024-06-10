@@ -175,7 +175,9 @@ else:
 <if(varIfModel)>
 if model is not None: 
     model.<varIfModel> = <var>
-    model.last_<varIfModel> = copy.deepcopy(<var>)<endif>
+    model.last_<varIfModel> = copy.deepcopy(<var>)
+    model.addAttributes("<var>".replace("var__agl__", ""), <var>)
+    model.addAttributes("last_<varIfModel>".replace("var__agl__", ""), model.last_<varIfModel>)<endif>
 >>
 
 init(value) ::= "<if(value)> = <value><endif>"
@@ -302,6 +304,8 @@ if model is not None:
     model.<var> = <var>
     model.last_<var> = copy.deepcopy(<var>)
     model.add_object(<var>) # add object to model
+    model.addAttributes("<var>".replace("var__agl__", ""), <var>)
+    model.addAttributes("last_<var>".replace("var__agl__", ""), model.last_<var>)
 else:
     root.add_object(<var>)
 >>
@@ -309,23 +313,23 @@ else:
 play(stat, file, field) ::= <<
 <stats(stat)>
 
-# Play with XAGL file
+# Play with XAGL file or input stream
 file = <file>
 vars1 = {"root":root, <elements(field)>}
 vars0 = transform_dict(vars1)
 
-#visitor0 = Semantic(vars0)
+visitor0 = Semantic(vars0)
 visitor1 = Interpreter(vars1)
-input_stream = FileStream(file)
+input_stream = FileStream(file) if file.endswith('.xagl') else InputStream(file)
 lexer = XAGLLexer(input_stream)
 stream = CommonTokenStream(lexer)
 parser = XAGLParser(stream)
 
 tree = parser.program()
 if parser.getNumberOfSyntaxErrors() == 0:
-    #visitor0.visit(tree)
-    #if not visitor0.error:
-    visitor1.visit(tree)
+    visitor0.visit(tree)
+    if not visitor0.error:
+        visitor1.visit(tree)
 
 >>
 
