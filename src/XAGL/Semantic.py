@@ -35,20 +35,21 @@ class Semantic(XAGLParserVisitor):
             var = self.array_GetValue(id, self.vars if not var else var.Dict())
          else:
             var = self.vars.get(id) if not var else var.Dict().get(id)
-
-         if var is None:
-            if id_arr.index(id) > 1:
-               self.SemanticError(f"'{id_arr[id_arr.index(id)-1]}' object has no attribute '{id}'")
-            else:
-               self.SemanticError(f"Object '{id}' does not exist")
+         if not self.error:
+            if var is None:
+               if id_arr.index(id) > 1:
+                  self.SemanticError(f"'{id_arr[id_arr.index(id)-1]}' object has no attribute '{id}'")
+               else:
+                  self.SemanticError(f"Object '{id}' does not exist")
       return var
    
    def array_GetValue(self, array, dict):
-      array = re.split(r'\[|\]', array)
-      array_name = array[0]
-      index = int(array[1])
+      index = array.index('[')
+      array_name = array[:index]
       var = dict.get(array_name)
-      return var[index] if var else None
+      if var and var.element:
+         return var.element
+      self.SemanticError("Object array not assigned")
 
    def setVar(self, long_id, value):
       id_arr = long_id.split(".")
@@ -93,21 +94,24 @@ class Semantic(XAGLParserVisitor):
       if not self.error:
          var = ctx.ID().getText()
          value = self.visit(ctx.simpleStatement())
-         if var not in self.vars:
-            self.setVar(var, value)
-         else:
-            self.SemanticError(f"Object '{var}' already instantiated")
+         if not self.error:
+            if var not in self.vars:
+               self.setVar(var, value)
+            else:
+               self.SemanticError(f"Object '{var}' already instantiated")
 
    def visitSimpleStatement(self, ctx:XAGLParser.SimpleStatementContext):
       if not self.error:
          type = self.visit(ctx.typeID())
-         if ctx.assignment():
-            value = self.visit(ctx.assignment())
-            if type.canAssign(value):
+         if not self.error:
+            if ctx.assignment():
+               value = self.visit(ctx.assignment())
+               if not self.error:
+                  if type.canAssign(value):
+                     return type if value.type != Type.Array else value
+                  self.SemanticError(f"Can not assign a '{value}' object to a '{type}' object")
+            else:
                return type
-            self.SemanticError(f"Can not assign a '{value}' object to a '{type}' object")
-         else:
-            return type
 
    def visitPropertiesAssignment(self, ctx:XAGLParser.PropertiesAssignmentContext):
       if not self.error:
@@ -157,11 +161,41 @@ class Semantic(XAGLParserVisitor):
 
    def visitExprArray(self, ctx:XAGLParser.ExprArrayContext):
       if not self.error:
-         return Var(Type.Array)
+         element_type = self.visit(ctx.expression(0))
+         for expr in ctx.expression():
+            type = self.visit(expr)
+            if not element_type.canAssign(type):
+               self.SemanticError(f"Can not assign a '{element_type.type}' object to a '{type.type}' object")
+         var = Var(Type.Array)
+         var.element = element_type
+         return var
 
    def visitExprAddSubMultDiv(self, ctx:XAGLParser.ExprAddSubMultDivContext):
       if not self.error:
-         return self.visitChildren(ctx)
+         e1 = self.visit(ctx.e1)
+         e2 = self.visit(ctx.e2)
+         if not self.error:
+            
+            if ctx.PLUS() or ctx.MINUS():
+               r = e1.sum_sub(e2)
+               if r:
+                  return Var(r) 
+               self.SemanticError(f"Error: Operand does not exist beetween {e1.type} and {e2.type}")
+
+            elif ctx.MUL():
+               r = e1.mult(e2)
+               if r:
+                  return Var(r)
+               self.SemanticError(f"Error: Operand does not exist beetween {e1.type} and {e2.type}")
+               
+            elif ctx.DIV():
+               if ctx.e2.getText() != '0':
+                  r = e1.div(e2)
+                  if r:
+                     return Var(r)
+                  self.SemanticError(f"Error: Operand does not exist beetween {e1.type} and {e2.type}")
+               else:
+                  self.SemanticError("Error: Can not divide by")
 
    def visitExprVector(self, ctx:XAGLParser.ExprVectorContext):
       if not self.error:
@@ -177,7 +211,19 @@ class Semantic(XAGLParserVisitor):
 
    def visitExprUnary(self, ctx:XAGLParser.ExprUnaryContext):
       if not self.error:
-         return self.visitChildren(ctx)
+         e = self.visit(ctx.expression())
+         if not self.error:
+            if ctx.MINUS() or ctx.PLUS():
+               if e.isNumeric():
+                  return e
+               else:
+                  self.SemanticError(f"Invalid Operand for {e.type}")
+               
+            elif ctx.NOT():
+               if e.type == Type.Boolean:
+                  return e
+               else:
+                  self.SemanticError(f"Invalid Operand for {e.type}")
 
    def visitExprNumber(self, ctx:XAGLParser.ExprNumberContext):
       if not self.error:
@@ -189,7 +235,7 @@ class Semantic(XAGLParserVisitor):
          var = self.getVar(id)
          if not self.error:
             if var:
-               return var
+               return Var(var) if var.__class__ != Var else var
             self.SemanticError(f"Object '{id}' does not exist")
    
    def visitExprInput(self, ctx:XAGLParser.ExprInputContext):
@@ -274,7 +320,10 @@ class Semantic(XAGLParserVisitor):
          if ctx.expression():
             for expr in ctx.expression():
                e = self.visit(expr)
-               id += f'[{e}]'
+               if e.type == Type.Integer:
+                  id += f'[]'
+               else:
+                  self.SemanticError("Index must be Integer")
             
          if ctx.identifier():
                id += "."+self.visit(ctx.identifier())

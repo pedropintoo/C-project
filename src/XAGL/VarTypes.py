@@ -19,7 +19,8 @@ class Type(Enum):
 class Var():
     def __init__(self, var):
         self.type = self.getType(var)
-        self.var = var # Para models e enum
+        self.var = var # Para models, enum e array
+        self.element = None
 
     def getType(self, var):
         if type(var) == Type:
@@ -121,12 +122,92 @@ class Var():
       var2 = var.var
       type1 = self.type
       type2 = var.type
-      print(type1, var1, type2, var2)
       return ( type1 == Type.Enum and type2 == Type.Enum and type(var1) == type(var2) or # verificar se os enums são do mesmo tipo
                type1 == type2 and type1 != Type.Enum or
-               type1 == Type.Number and type2 == Type.Integer or    # Number pode recber Number ou Integer
+               type1 == Type.Number and type2 == Type.Integer or    # Number pode receber Number ou Integer
                type1 == Type.Point and type2 == Type.ImplicitPoint or # ImplicitPoint pode ser atribuido em Point e Vector
                type1 == Type.Vector and type2 == Type.ImplicitPoint
             )
+    
+    def isNumeric(self):
+        return (self.type == Type.Integer or
+                self.type == Type.Number
+                )
+    
+    def isPoint(self):
+        return (self.type == Type.Point or
+                self.type == Type.ImplicitPoint)
+    
+    def isVector(self):
+        return (self.type == Type.Vector or
+                self.type == Type.ImplicitPoint)
+    
+    def sum_sub(self, var):
+        type1 = self.type
+        type2 = var.type
+        if (type1 == Type.Integer and type2 == Type.Integer):
+            return Type.Integer
+        
+        if  (type1 == Type.Integer and type2 == Type.Number or 
+             type1 == Type.Number and type2 == Type.Integer or
+             type1 == Type.Number and type2 == Type.Number):
+            return Type.Number
+        
+        if (self.isVector() and var.isVector()):
+            return Type.Vector
+        
+        if (self.isVector() and var.isPoint() or
+            self.isPoint() and var.isVector()):
+            return Type.Point
+        
+    def mult(self, var):
+        type1 = self.type
+        type2 = var.type
+        if (type1 == Type.Integer and type2 == Type.Integer):
+            return Type.Integer
+        
+        if  (type1 == Type.Integer and type2 == Type.Number or 
+             type1 == Type.Number and type2 == Type.Integer or
+             type1 == Type.Number and type2 == Type.Number):
+            return Type.Number
+        
+        if (type1 == Type.ImplicitPoint and type2 == Type.ImplicitPoint or
+            type1 == Type.ImplicitPoint and var.isNumeric() or
+            self.isNumeric() and type2 == Type.ImplicitPoint):
+            return Type.ImplicitPoint
+        
+        if (type1 == Type.Vector and type2 == Type.Vector or
+            type1 == Type.Vector and var.isNumeric() or
+            self.isNumeric() and type2 == Type.Vector):
+            return Type.Vector
+        
+        if (type1 == Type.Point and var.isNumeric() or
+            self.isNumeric() and type2 == Type.Point or
+            self.isVector() and var.isPoint() or
+            self.isPoint() and var.isVector()):
+            return Type.Point
+        
+    def div(self, var):
+        type1 = self.type
+        type2 = var.type
+        if (type1 == Type.Integer and type2 == Type.Integer):
+            return Type.Integer
+        
+        if  (type1 == Type.Integer and type2 == Type.Number or 
+             type1 == Type.Number and type2 == Type.Integer or
+             type1 == Type.Number and type2 == Type.Number):
+            return Type.Number
+        
+        if (type1 == Type.ImplicitPoint and type2 == Type.ImplicitPoint or
+            type1 == Type.ImplicitPoint and var.isNumeric()):
+            return Type.ImplicitPoint
+        
+        if (type1 == Type.Vector and var.isNumeric()):
+            return Type.Vector
+        
+        if (type1 == Type.Point and var.isNumeric() or
+            self.isVector() and var.isPoint() or
+            self.isPoint() and var.isVector()):
+            return Type.Point
     
         

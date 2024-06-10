@@ -25,7 +25,6 @@ class Pacman(Model):
       # print([mouth(id.value) for id in mouth])
       x = mouth(1)
       y = color(1)
-      print(type(x) == type(y))
       self.attributes = {"mouth":x, "color":y}
 
 def main():
