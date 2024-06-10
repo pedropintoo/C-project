@@ -57,7 +57,7 @@ for i in 1 .. 10 do {
     pacman.mouth = Close;
     refresh view after 20 ms;
     pacman.mouth = Open;
-    refresh view after 25 ms; # the refresh works with integers and floats
+    refresh view after 25.3 ms; # the refresh works with integers and floats
     refresh view after t ms; # the refresh works with variables of type Time
     move pacman by (10,0);    # the 'by' makes the movement relative; the argument is a vector
     move view by (10,0);    # the 'by' makes the movement relative; the argument is a vector

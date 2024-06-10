@@ -1108,6 +1108,22 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
          if (!ctx.expression().eType.conformsTo(numberType) && !ctx.expression().eType.conformsTo(integerType) && !ctx.expression().eType.conformsTo(timeType) ) {
             ErrorHandling.printError(ctx, "Error: invalid expression type in refresh command (must be a number, integer or time type!)");
             return false;
+         } else {
+            // todo: value must be positive
+            System.out.println("»»»»»»»»»»»»»»»» Expression value: " + ctx.expression().getText() +" »»»»»»»»»»»»»»");
+            // if expression().getText() is a number (integer ot float) check if it is positive
+            if (ctx.expression().getText().matches("[0-9]+") || ctx.expression().getText().matches("[0-9]+.[0-9]+")) {
+               Double value = Double.parseDouble(ctx.expression().getText());
+               if (value < 0) {
+                  ErrorHandling.printError(ctx, "Error: invalid expression value in refresh command (must be positive!)");
+                  return false;
+               }
+               return true;
+            } else {
+               // todo: value must be positive go to symbolTable and get the value of the variable
+               Symbol sym = AGLParser.symbolTable.get(ctx.expression().getText());
+
+            }
          }
       }
 
@@ -1698,8 +1714,13 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
          } else {
             res = t1;
          }
+      } else if ("Time".equals(t1.name()) && "Time".equals(t2.name())) {
+         res = t1;
+      } else if ("Time".equals(t1.name()) && t2.isNumeric()) {
+         res = numberType;
       }
-
+      
+      // System.out.println("****************** Type: " + res.name());
       return res;
    }
 
