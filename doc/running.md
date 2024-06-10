@@ -33,14 +33,14 @@ antlr4-test AGL program -gui ../doc/examples/ex06.agl
 ## Experimentar programas em $AG_L$
 Após o **antlr4-build**, ainda dentro de `src`, pode experimentar qualquer programa em $AG_L$ usando o script `run.sh`:
 ```
-./run ../doc/examples/ex01.agl                                
-./run ../doc/examples/ex02.agl                                
-./run ../doc/examples/ex03.agl                                
-./run ../doc/examples/ex04.agl                                
-./run ../doc/examples/ex05.agl                                
-./run ../doc/examples/ex06.agl
+./run /doc/examples/ex01.agl                                
+./run /doc/examples/ex02.agl                                
+./run /doc/examples/ex03.agl                                
+./run /doc/examples/ex04.agl                                
+./run /doc/examples/ex05.agl                                
+./run /doc/examples/ex06.agl
 
-
+### Também há ficheiros extra de exemplo como 
 ./run ../doc/examples/extra/ifStatement.agl                                
 ```
 
