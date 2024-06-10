@@ -133,11 +133,11 @@ refresh view2;
 refresh view3;
 
 from_tower : Tower;
-# from_tower.state = "hidden"; # only to store the value
+from_tower.state = "hidden"; # only to store the value
 to_tower : Tower;
-# to_tower.state = "hidden"; # only to store the value
+to_tower.state = "hidden"; # only to store the value
 
-toChange : Integer; # alterei
+toChange : Integer = 0;
 
 repeat {
     
