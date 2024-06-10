@@ -372,7 +372,7 @@ class Semantic(XAGLParserVisitor):
       if not self.error:
          condition =  self.visit(ctx.expression())
          if condition.isBoolean():
-            self.visit(ctx.stat)
+            self.visit(ctx.stat())
          else:
             self.SemanticError("Error: The expression in the while statement has to be a boolean")
          if not self.error:
