@@ -1414,27 +1414,39 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       }
 
     // Check if the action is on a valid property
-      AGLParser.IdentifierContext currentIdentifierContext = ctx.identifier();
-      while (currentIdentifierContext.identifier() != null) {
-         String propertyId = currentIdentifierContext.identifier().ID().getText();
+      System.out.println("Old Type: " + getConcreteIDType(ctx.identifier()));
+      System.out.println("New Type: " + getConcreteIDType2(ctx.identifier(), null));
+      System.out.println(ctx.identifier().getText());
 
-         ObjectType objectType = (ObjectType) idType;
-         List<Type> allowedTypes = objectType.getAttributes().get(propertyId);
+      Type type = getConcreteIDType(ctx.identifier());
+      if (type == null) {
+         ErrorHandling.printError("Error: invalid type in identifier");
+         return false;
+      } 
 
-         if (allowedTypes == null || allowedTypes.isEmpty()) {
-               ErrorHandling.printError("Error: \"" + propertyId + "\" is not a valid property of \"" + id + "\"");
-               return false;
-         }
+      // AGLParser.IdentifierContext currentIdentifierContext = ctx.identifier();
+      // while (currentIdentifierContext.identifier() != null) {
+      //    String propertyId = currentIdentifierContext.identifier().ID().getText();
 
-         // Mudar para o próximo nível do identificador
-         idType = allowedTypes.get(0);
-         currentIdentifierContext = currentIdentifierContext.identifier();
-      }
+      //    // System.out.println("Property: " + propertyId);
+
+      //    ObjectType objectType = (ObjectType) idType;
+      //    List<Type> allowedTypes = objectType.getAttributes().get(propertyId);
+
+      //    if (allowedTypes == null || allowedTypes.isEmpty()) {
+      //          ErrorHandling.printError("Error: \"" + propertyId + "\" is not a valid property of \"" + id + "\"");
+      //          return false;
+      //    }
+
+      //    // Mudar para o próximo nível do identificador
+      //    idType = allowedTypes.get(0);
+      //    currentIdentifierContext = currentIdentifierContext.identifier();
+      // }
 
       inAction = true;
 
       res = visit(ctx.stat());
-
+      System.out.println("***************** End Action");
       inAction = false;
 
       if (!res) {
@@ -1483,7 +1495,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    private Boolean checkNumericType(Type t) {
       Boolean res = true;
 
-      if (!t.isNumeric()) {
+      if (!t.isNumeric() && !t.name().equals("Point") && !t.name().equals("Vector")){
          ErrorHandling.printError("Numeric operator applied to a non-numeric operand!");
          res = false;
       }
@@ -1582,13 +1594,130 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       return true;
    }
 
+   private Type getConcreteIDType2(AGLParser.IdentifierContext ctx, Type prevType) {
+
+      String id = ctx.ID().getText();
+      Type type = null;
+
+      System.out.println("Checking identifier: " + id);
+
+      if (prevType == null) {
+         if (currentModel == null) {
+            if (!AGLParser.symbolTable.containsKey(id)) {
+               ErrorHandling.printError(ctx, "Variable \"" + id + "\" does not exists!");
+               return null;
+            }
+            type = AGLParser.symbolTable.get(id).type();
+         } else {
+            if (!currentModel.symbolModelTable.containsKey(id)) {
+               ErrorHandling.printError(ctx, "Variable \"" + id + "\" does not exists in model " + currentModel.name);
+               return null;
+            }
+            type = currentModel.symbolModelTable.get(id).type();
+         }
+      } else {
+         type = prevType;
+      }
+      
+
+      for (AGLParser.ExpressionContext expr : ctx.expression()) {
+         Boolean res = visit(expr);
+         if (!res) {
+            ErrorHandling.printError("Error: invalid expression in simple statement");
+            return null;
+         }
+
+         // expression must be a IntegerType
+         if (!expr.eType.conformsTo(integerType)) {
+            ErrorHandling.printError("Error: invalid expression type in simple statement (must be integer!)");
+            return null;
+         }
+
+         // can be an array or a point
+         if (!(type instanceof ArrayType) && !(type instanceof PointType)) {
+            ErrorHandling.printError("Error: invalid type in simple statement (must be an array or a point!)");
+            return null;
+         }
+
+         if (type instanceof PointType) {
+            type = numberType;
+            continue;
+         }
+
+         // if type name don't have <Array> then it is a simple type
+         if (((ArrayType)type).getElementType().name().indexOf("Array") == -1) {
+            type = new ObjectType(((ArrayType)type).getElementType().name());
+            continue;
+         }
+
+         // return casted to ArrayType
+         type = new ArrayType(((ArrayType)type).getElementType().name());
+      }
+
+      if (!(type instanceof ObjectType)) {
+         if (ctx.identifier() != null) {
+            if (type instanceof ArrayType) {
+               type = getConcreteIDType2(ctx.identifier(), (ObjectType) ((ArrayType)type).getElementType());
+            } else {
+               ErrorHandling.printError("Error: invalid attribute in simple statement");
+               return null;
+            }
+         }
+         return type;
+      } else {
+         type = (ObjectType) type;
+      }
+
+      String attributeName;
+      
+      if (ctx.identifier() != null) {
+         System.out.println("Attribute type " + ctx.identifier().getText() + " in " + type.name());
+         String nextId = ctx.identifier().ID().getText(); // next ID in the chain   
+         
+         if (type instanceof ObjectType) {
+            System.out.println("ObjectType");
+            ObjectType objectType = (ObjectType) type;
+            if (objectType.symbolModelTable != null) {
+               System.out.println("In symbolModelTable of " + objectType.name() +" we have " + nextId);
+               if (!objectType.symbolModelTable.containsKey(nextId)) {
+                  List<Type> allowedTypes = objectType.getAttributes().get(nextId);
+                  if (allowedTypes == null || allowedTypes.isEmpty()) {
+                     ErrorHandling.printError("Error: invalid attribute in simple statement");
+                     return null;
+                  }
+                  type = allowedTypes.get(0);
+               } else {
+                  type = objectType.symbolModelTable.get(nextId).type();
+               }
+               System.out.println("Type: " + type.name());
+               
+            } else {
+               List<Type> allowedTypes = objectType.getAttributes().get(nextId);
+               if (allowedTypes == null || allowedTypes.isEmpty()) {
+                  ErrorHandling.printError("Error: invalid attribute in simple statement");
+                  return null;
+               }
+               type = allowedTypes.get(0);
+            
+            } 
+         }
+           
+         type = getConcreteIDType2(ctx.identifier(), type);
+
+      }
+
+      return type;
+
+
+   }
 
 
    // identifier : ID | ID '.' identifier | ID ('[' expression ']')+ ('.' identifier)? ;
    // returns the type of the expression
    private Type getConcreteIDType(AGLParser.IdentifierContext ctx) {  
-      
-      
+      if (true){
+         return getConcreteIDType2(ctx, null);
+      }
       String id = ctx.ID().getText(); // current ID
       Type type = null;
       
