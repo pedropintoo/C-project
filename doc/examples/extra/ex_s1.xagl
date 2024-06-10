@@ -1,0 +1,7 @@
+for i in 0..n do {
+    object.color = Red;
+    refresh v after t ms;
+    object.color = Blue;
+    refresh v after t ms;
+    print object.color;
+}
