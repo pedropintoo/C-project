@@ -33,7 +33,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    public Boolean visitProgram(AGLParser.ProgramContext ctx) {
       // program: stat* EOF;
       Boolean res = true;
-
+      
       for (AGLParser.StatContext stat : ctx.stat()) {
          res = visit(stat);
          if (!res || res == null) {
@@ -632,7 +632,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
             ctx.eType = booleanType;
          }
       } else {
-         if (res && ctx.e.eType != null && checkNumericType(ctx.e.eType)) {
+         if (res && ctx.e.eType != null && checkUnaryType(ctx.e.eType)) {
             ctx.eType = ctx.e.eType;
          } else {
             ErrorHandling.printError("Error: invalid unary expression or undefined type!");
@@ -802,6 +802,8 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
             return true;
          }
+         System.out.println("«««««« Type: " + ctx.e1.eType.name() + " »»»»»»");
+         System.out.println("«««««« Type: " + ctx.e2.eType.name() + " »»»»»»");
 
          if (!ctx.e1.eType.conformsTo(ctx.e2.eType)) {
             // If eType is number may be integer or number
@@ -810,17 +812,19 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
                ErrorHandling.printError(ctx, "Error: must be the same type in relational expression!");
                return false;
             }
+            
+            if (ctx.e1.eType instanceof BooleanType) {
+               ErrorHandling.printError(ctx, "Error: invalid relational expression (boolean type)");
+               return false;
+            }
+
+            if (ctx.e1.eType instanceof PointType || ctx.e1.eType instanceof VectorType) {
+               ErrorHandling.printError(ctx, "Error: invalid relational expression (point or vector type)");
+               return false;
+            }
          }
 
-         if (ctx.e1.eType instanceof BooleanType) {
-            ErrorHandling.printError(ctx, "Error: invalid relational expression (boolean type)");
-            return false;
-         }
-
-         if (ctx.e1.eType instanceof PointType || ctx.e1.eType instanceof VectorType) {
-            ErrorHandling.printError(ctx, "Error: invalid relational expression (point or vector type)");
-            return false;
-         }
+         
 
          ctx.eType = booleanType;
       } else {
@@ -1495,8 +1499,18 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    private Boolean checkNumericType(Type t) {
       Boolean res = true;
 
-      if (!t.isNumeric() && !t.name().equals("Point") && !t.name().equals("Vector")){
+      if (!t.isNumeric()){
          ErrorHandling.printError("Numeric operator applied to a non-numeric operand!");
+         res = false;
+      }
+      return res;
+   }
+
+   private Boolean checkUnaryType(Type t) {
+      Boolean res = true;
+
+      if (!t.isNumeric() && !t.name().equals("Point") && !t.name().equals("Vector") && !(t instanceof BooleanType)){
+         ErrorHandling.printError("Not an unary type!");
          res = false;
       }
       return res;
