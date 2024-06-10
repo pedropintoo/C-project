@@ -79,6 +79,6 @@ for i in 1 .. 10 do {
     pacman.mouth = Open;
     refresh view after 25 ms;
     move pacman by (10,0);    # the 'by' makes the movement relative; the argument is a vector
-    move view by "Joao";    # Devia dar este erro: Error: invalid expression type in move command (must be a point or a vector!)
+    move view by "Joao";    # Error: invalid expression type in move command (must be a point or a vector!)
     refresh view;
 }

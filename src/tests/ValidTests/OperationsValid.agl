@@ -1,9 +1,9 @@
-t1 : Point = (1,3)+(3:4); # Funciona, podemos somar um ponto com um vetor
+t1 : Point = (1,3)+(3:4); # Works, we can add a point with a vector
 
-t5: Point = 2*(1,3); # Funciona, podemos multiplicar um ponto por um inteiro
+t5: Point = 2*(1,3); # Works, we can multiply a point by an integer
 
-t6: Point = (1,3)*2; # Funciona, podemos multiplicar um ponto por um inteiro
+t6: Point = (1,3)*2; # Works, we can multiply a point by an integer
 
-t9: Number = (1:3)*(3:4) + 2; # Funciona, podemos multiplicar 2 vetores
+t9: Number = (1:3)*(3:4) + 2; # Works, we can multiply two vectors
 
-t10: Boolean = 2.0 == 2; # Funciona, podemos comparar um float com um inteiro
+t10: Boolean = 2.0 == 2; # Works, we can compare a float with an integer

@@ -1,5 +1,5 @@
 # Deve funcionar
 
 repeat {
-    a: String = "joao";
-} until a == "boi";
+    a: String = "programming";
+} until a == "agl";
