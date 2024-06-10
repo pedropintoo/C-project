@@ -89,9 +89,9 @@ Foram definidos 4 níveis para a realização deste projeto:
 - Para instanciar um tipo de dados/objetos usa-se o operador **(:)**
 - Para fazer a atribuição de algum valor usa-se o operador **(=)**
   
-Neste nível, foram implementados 6 tipos principais de dados:
-- **Integer**: Representa um número inteiro; 
-- **Number**: Representa um número inteiro ou número real;
+Neste nível, foram implementados 6 tipos principais de dados cada um com o seu **default value**:
+- **Integer**: Representa um número inteiro | **Default = 0**; 
+- **Number**: Representa um número inteiro ou número real | **Default = 0.0**;
 ```
 #Instanciação e Operações
 
@@ -105,11 +105,11 @@ f : Number = c - b;
 g : Number = d / 2.0;
 ```  
 
-- **String**: Sequência de caractéres;
+- **String**: Sequência de caractéres | **Default = ""**;
 ```
 nome : String = "Nome";
 ```
-- **Point**: Representa um ponto no canvas;
+- **Point**: Representa um ponto no canvas | **Default = ()**;
 - **Vector**: Representa a diferença entre dois pontos;
 ```
 ponto : Point = (1,5);
