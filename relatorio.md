@@ -31,6 +31,9 @@ Por exemplo, o ficheiro `ValidTests/OperationsValid.agl` contém exemplos de ope
 
 Por outro lado, o ficheiro `InvalidTests/OperationsInvalid.agl` contém exemplos de operações inválidas, como a tentativa de somar um ponto com um inteiro, a soma de dois pontos, ou a divisão de dois vetores. Nestes casos, o analisador semântico deteta e sinaliza os erros, garantindo que apenas operações válidas sejam permitidas no código AGL.
 
+O analisador também verifica as operações entre variáveis do tipo Time, assegurando que estas sejam válidas. Por exemplo, no ficheiro `ValidTests/OperationsTime.agl`, operações entre variáveis do time Time resultam numa variável do tipo Time. No entanto, operações entre variáveis do tipo Integer ou Number com variáveis do tipo Time resultam numa variável do tipo Number. No ficheiro `ÌnvalidTests/OperationsTimeInvalid.agl`, foram realizadas tentativas de operações inválidas entre variáveis do tipo Time e variáveis de outros tipos, como String, e o analisador semântico detetou corretamente os erros.
+
+
 3. **Propriedades dos Arrays**:
     - Consistência de Tipos de Arrays: verificação para garantir que o tipo de array a atribuir coincide com o tipo declarado
 

@@ -9,4 +9,3 @@ t2 : String = "joao";
 # t6 : Time = t1 * t2; # Error: invalid type in arithmetic operation!
 
 t7 : Time = t1 / t2; # Error: invalid type in arithmetic operation!
-
