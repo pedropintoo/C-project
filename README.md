@@ -1,13 +1,9 @@
 # Tema **AGL**, grupo **agl-gg04**
 
-## <span style="color:red">[TO DO]</span>
-
- - __agl__ nos modelos!
-
 ## Documentação extra
 
  - Análise semântica - [doc/semantic_check.md](doc/semantic_check.md)
- - Exemplos AGL e xAGL - [doc/examples](doc/examples/) <span style="color:red">[POR COMPLETAR!!!]</span>
+ - Exemplos AGL e xAGL - [doc/examples](doc/examples/)
  - Tutorial de execução - [doc/running.md](doc/running.md)
 
 ## Estrutura do repositório
@@ -555,6 +551,10 @@ object: Rectangle at (10,10) with {
     length = (50,50);
     fill = "orange";
 }
+
+# simular mudanças de propriedades
+object.length = (100,100);
+object.fill = "blue";
 
 object2 : Rectangle = deepcopy object to (20,20);
 object3 : Rectangle = deepcopy object to (30,30);
