@@ -142,6 +142,16 @@ class Var():
         return (self.type == Type.Vector or
                 self.type == Type.ImplicitPoint)
     
+    def isBoolean(self):
+        return self.type == Type.Boolean
+    
+    def isView(self):
+        return self.type == View
+    
+    def isModel(self):
+        return (self.type in (View, Line, Rectangle, Ellipse, Arc, ArcChord, PieSlice, Polygon, Spline, Polygon, Blob, Text, Dot, Type.Model)
+                )
+    
     def sum_sub(self, var):
         type1 = self.type
         type2 = var.type
@@ -209,5 +219,13 @@ class Var():
             self.isVector() and var.isPoint() or
             self.isPoint() and var.isVector()):
             return Type.Point
+        
+    def canCompare(self, var):
+        var1 = self.var
+        var2 = var.var
+        type1 = self.type
+        type2 = var.type
+        return (type1 == Type.Enum and type2 == Type.Enum and type(var1) == type(var2) or
+                self.isNumeric() and var.isNumeric())
     
         

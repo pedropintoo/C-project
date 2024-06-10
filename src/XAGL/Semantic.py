@@ -98,7 +98,7 @@ class Semantic(XAGLParserVisitor):
             if var not in self.vars:
                self.setVar(var, value)
             else:
-               self.SemanticError(f"Object '{var}' already instantiated")
+               self.SemanticError(f"Object {var} already declared!")
 
    def visitSimpleStatement(self, ctx:XAGLParser.SimpleStatementContext):
       if not self.error:
@@ -145,7 +145,11 @@ class Semantic(XAGLParserVisitor):
 
    def visitExprPoint(self, ctx:XAGLParser.ExprPointContext):
       if not self.error:
-         return Var(Type.ImplicitPoint)
+         x = self.visit(ctx.x)
+         y = self.visit(ctx.y)
+         if not self.error:
+            if x.isNumeric() and y.isNumeric():
+               return Var(Type.ImplicitPoint)
 
    def visitExprBoolean(self, ctx:XAGLParser.ExprBooleanContext):
       if not self.error:
@@ -157,7 +161,13 @@ class Semantic(XAGLParserVisitor):
 
    def visitExprRelational(self, ctx:XAGLParser.ExprRelationalContext):
       if not self.error:
-         return self.visitChildren(ctx)
+         e1 = self.visit(ctx.e1)
+         e2 = self.visit(ctx.e2)
+         if not self.error:
+            if e1.canCompare(e2):
+               return Var(Type.Boolean)
+            else:
+               self.SemanticError(f"Can not compare {e1.type} and {e2.type}")
 
    def visitExprArray(self, ctx:XAGLParser.ExprArrayContext):
       if not self.error:
@@ -199,15 +209,27 @@ class Semantic(XAGLParserVisitor):
 
    def visitExprVector(self, ctx:XAGLParser.ExprVectorContext):
       if not self.error:
-         return Var(Type.Vector)
+         deg = self.visit(ctx.deg)
+         length = self.visit(ctx.length)
+         if not self.error:
+            if deg.isNumeric() and length.isNumeric():
+               return Var(Type.Vector)
 
    def visitExprAnd(self, ctx:XAGLParser.ExprAndContext):
       if not self.error:
-         return self.visitChildren(ctx)
+         e1 = self.visit(ctx.e1)
+         e2 = self.visit(ctx.e2)
+         if not self.error:
+            if e1.isBoolean() and e2.isBoolean():
+               return Var(Type.Boolean)
 
    def visitExprOr(self, ctx:XAGLParser.ExprOrContext):
       if not self.error:
-         return self.visitChildren(ctx)
+         e1 = self.visit(ctx.e1)
+         e2 = self.visit(ctx.e2)
+         if not self.error:
+            if e1.isBoolean() and e2.isBoolean():
+               return Var(Type.Boolean)
 
    def visitExprUnary(self, ctx:XAGLParser.ExprUnaryContext):
       if not self.error:
@@ -243,55 +265,127 @@ class Semantic(XAGLParserVisitor):
          return Var(Type.String)
    
    def visitCommandRefresh(self, ctx:XAGLParser.CommandRefreshContext):
-      return self.visitChildren(ctx)
+      if not self.error:
+         id = self.visit(ctx.identifier())
+         if not self.error:
+            var = self.getVar(id)
+            if not self.error:
+               if var.isView():
+                  if ctx.AFTER():
+                     delay = self.visit(ctx.expression())
+                     if not self.error:
+                        if not delay.isNumeric():
+                           self.SemanticError("Error: invalid expression type in refresh command (must be a number, integer or time type!)")
+               else:
+                  self.SemanticError("Error: invalid type in refresh command (must be a view type!)")
 
    def visitCommandPrint(self, ctx:XAGLParser.CommandPrintContext):
       if not self.error:
-         return self.visitChildren(ctx)
+         self.visit(ctx.expression())
 
    def visitCommandClose(self, ctx:XAGLParser.CommandCloseContext):
       if not self.error:
-         return self.visitChildren(ctx)
+         id = self.visit(ctx.identifier())
+         if not self.error:
+            var = self.getVar(id)
+            if not self.error:
+               if not var.isView():
+                  self.SemanticError("Error: invalid type in close command (must be a view type!)")
 
    def visitCommandMove(self, ctx:XAGLParser.CommandMoveContext):
       if not self.error:
-         return self.visitChildren(ctx)
+         for id in ctx.identifier():
+            var = self.visit(id)
+            if not self.error:
+               type = self.getVar(var)
+               if not self.error:
+                  if not type.isModel():
+                     self.SemanticError("Error: invalid type in move command (must be a model or view type!)")
+         if not self.error:
+            e = self.visit(ctx.expression())
+            if not self.error:
+               if ctx.BY():
+                  if not e.isVector():
+                     self.SemanticError("Error: invalid expression type in move command (must be a vector!)")
+               elif ctx.TO():
+                  if not e.isPoint():
+                     self.SemanticError("Error: invalid expression type in move command (must be a point!)")
+
 
    def visitCommandRotate(self, ctx:XAGLParser.CommandRotateContext):
       if not self.error:
-         return self.visitChildren(ctx)
+         for id in ctx.identifier():
+            var = self.visit(id)
+            if not self.error:
+               type = self.getVar(var)
+               if not self.error:
+                  if not type.isModel():
+                     self.SemanticError("Error: invalid type in move command (must be a model or view type!)")
+         if not self.error:
+            e = self.visit(ctx.expression())
+            if not self.error:
+               if not e.isNumeric():
+                  self.SemanticError("Error: invalid expression type in rotate command (must be a number!)")
 
    def visitForStatement(self, ctx:XAGLParser.ForStatementContext):
       if not self.error:
-         return self.visitChildren(ctx)
+         id = ctx.ID().getText()
+         if id in self.vars:
+            self.SemanticError(f"Object {id} already declared!")
+         else:
+            self.visit(ctx.number_range())
+            if not self.error:
+               self.visit(ctx.stat())
 
    def visitNumber_range(self, ctx:XAGLParser.Number_rangeContext):
       if not self.error:
-         return self.visitChildren(ctx)
+         for expr in ctx.expression():
+            e = self.visit(expr)
+            if e.type != Type.Integer:
+               self.SemanticError("Number_range must have Integer Object")
+               break
 
    def visitWhileStatement(self, ctx:XAGLParser.WhileStatementContext):
       if not self.error:
-         return self.visitChildren(ctx)
+         condition =  self.visit(ctx.expression())
+         if condition.isBoolean():
+            self.visit(ctx.stat)
+         else:
+            self.SemanticError("Error: The expression in the while statement has to be a boolean")
 
    def visitRepeatStatement(self, ctx:XAGLParser.RepeatStatementContext):
       if not self.error:
-         return self.visitChildren(ctx)
+         condition =  self.visit(ctx.expression())
+         self.visit(ctx.stat)
+         if not self.error:
+            if not condition.isBoolean():
+               self.SemanticError("Error: The expression in the repeat statement has to be a boolean")
 
    def visitWithStatement(self, ctx:XAGLParser.WithStatementContext):
       if not self.error:
-         return self.visitChildren(ctx)
+         id = self.visit(ctx.identifier())
+         if not self.error:
+            if self.getVar(id):
+               self.visit(ctx.propertiesAssignment())
 
    def visitIfStatement(self, ctx:XAGLParser.IfStatementContext):
       if not self.error:
-         return self.visitChildren(ctx)
+         condition =  self.visit(ctx.expression())
+         if condition.isBoolean():
+            self.visit(ctx.stat)
+         else:
+            self.SemanticError("Error: The expression in the while statement has to be a boolean")
+         if not self.error:
+            if ctx.elseStatement():
+               self.visit(ctx.elseStatement())
    
    def visitElseIfStat(self, ctx:XAGLParser.ElseIfStatContext):
       if not self.error:
-         return self.visitChildren(ctx)
+         self.visit(ctx.ifStatement())
 
    def visitElseStat(self, ctx:XAGLParser.ElseStatContext):
       if not self.error:
-         return self.visitChildren(ctx)
+         self.visit(ctx.stat())
 
    def visitTypeID(self, ctx:XAGLParser.TypeIDContext):
       if not self.error:
