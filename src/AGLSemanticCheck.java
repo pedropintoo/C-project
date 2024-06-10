@@ -1,5 +1,6 @@
 import java.util.List;
 import java.lang.reflect.Array;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -18,6 +19,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    private final PointType pointType = new PointType();
    private final VectorType vectorType = new VectorType();
    private final BooleanType booleanType = new BooleanType();
+   private final TimeType timeType = new TimeType();
    private final ObjectType scriptType = new ObjectType("Script");
    private final ObjectType viewType = new ObjectType("View");
    private final ObjectType modelObjectType = new ObjectType("Model");
@@ -320,12 +322,21 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
             type=ctx.typeID().res;
          }
 
+         System.out.println("«««««« Type: " + type.name() + " »»»»»»");
+         System.out.println("«««««« Assignment Type: " + ctx.assignment().eType.name() + " »»»»»»");
          if (!ctx.assignment().eType.conformsTo(type)) {
+
+            if (type instanceof TimeType && (ctx.assignment().eType instanceof NumberType || ctx.assignment().eType instanceof IntegerType)){
+               return true;
+            }
+
             // If eType is number may be integer or number      
             if (!(ctx.assignment().eType instanceof IntegerType && type instanceof NumberType)) {
                ErrorHandling.printError("Expression type does not conform to variable type!");
                return false;
             }
+
+
          }
 
       } else if (ctx.in_assignment() != null) {
@@ -1053,6 +1064,9 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
    @Override
    public Boolean visitExprWait(AGLParser.ExprWaitContext ctx) {
+      // 'wait' eventTrigger #ExprWait
+      // eventTrigger: 'mouse' mouseTrigger
+      // mouseTrigger: 'click'
       ctx.eType = pointType;
       return true;
    }
@@ -1090,8 +1104,9 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
             return false;
          }
 
-         if (!ctx.expression().eType.conformsTo(numberType) && !ctx.expression().eType.conformsTo(integerType)) {
-            ErrorHandling.printError(ctx, "Error: invalid expression type in refresh command (must be integer!)");
+         // expression must be a number, integer or variable of type Time
+         if (!ctx.expression().eType.conformsTo(numberType) && !ctx.expression().eType.conformsTo(integerType) && !ctx.expression().eType.conformsTo(timeType) ) {
+            ErrorHandling.printError(ctx, "Error: invalid expression type in refresh command (must be a number, integer or time type!)");
             return false;
          }
       }
