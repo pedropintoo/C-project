@@ -20,7 +20,7 @@ public class ObjectType extends Type {
                 this.addLength();
                 this.addFill();
                 break;
-            case "PolyLine":
+            case "Polyline":
                 // System.out.println("Arrived in PolyLine");
                 this.addState();
                 this.addOrigin();
@@ -250,7 +250,7 @@ public class ObjectType extends Type {
     
     private void addSubTypes() {
         this.subTypes.add(new ObjectType("Line"));
-        this.subTypes.add(new ObjectType("PolyLine"));
+        this.subTypes.add(new ObjectType("Polyline"));
         this.subTypes.add(new ObjectType("Spline"));
         this.subTypes.add(new ObjectType("Polygon"));
         this.subTypes.add(new ObjectType("Blob"));
