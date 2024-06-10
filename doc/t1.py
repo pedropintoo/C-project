@@ -59,108 +59,97 @@ if __name__ == "__main__":
     #################################################################
     ## Model
     #################################################################
-    class Base(Model):
+    class model1(Model):
         def __init__(self, root_local: Root = None, view: View = None, origin=(0,0)):
             super().__init__(root=root_local, view=view, origin=origin)
             model = self
 
-            if model is not None:
-                v0 = Rectangle()
-                model.add_object(v0) # add object to model
-            else:
-                v0 = Rectangle(root = root)
-
-            temp = get_nested_attribute(action, '200', locals())
+            temp = get_nested_attribute(action, '50', locals())
             if temp is None:
-                temp = 200
+                temp = 50
+            if action is not None and hasattr(action, "v0".split('[')[0].split('.')[0]):
+                action.v0 = temp
+            else:
+                v0 = temp 
+
+
+            temp = get_nested_attribute(action, 'v0', locals())
+            if temp is None:
+                temp = v0
+            if action is not None and hasattr(action, "v1".split('[')[0].split('.')[0]):
+                action.v1 = temp
+            else:
+                v1 = temp 
+
+
+            temp = get_nested_attribute(action, 'v1', locals())
+            if temp is None:
+                temp = v1
             if action is not None and hasattr(action, "v2".split('[')[0].split('.')[0]):
                 action.v2 = temp
             else:
                 v2 = temp 
 
 
-            temp = get_nested_attribute(action, '20', locals())
+            temp = get_nested_attribute(action, 'v2', locals())
             if temp is None:
-                temp = 20
-            if action is not None and hasattr(action, "v3".split('[')[0].split('.')[0]):
-                action.v3 = temp
+                temp = v2
+            if action is not None and hasattr(action, "var__agl__cellSize".split('[')[0].split('.')[0]):
+                action.var__agl__cellSize = temp
             else:
-                v3 = temp 
+                var__agl__cellSize = temp 
+            if model is not None: 
+                model.var__agl__cellSize = var__agl__cellSize
+                model.last_var__agl__cellSize = copy.deepcopy(var__agl__cellSize)
 
-            v1 = (v2 , v3); v1 = tuple(v1) if isinstance(v1, np.ndarray) else v1
-
-            temp = get_nested_attribute(action, 'v1', locals())
+            temp = get_nested_attribute(action, '0', locals())
             if temp is None:
-                temp = v1
+                temp = 0
             if action is not None and hasattr(action, "v4".split('[')[0].split('.')[0]):
                 action.v4 = temp
             else:
                 v4 = temp 
 
 
-            temp = get_nested_attribute(action, 'v4', locals())
+            temp = get_nested_attribute(action, 'var__agl__cellSize', locals())
             if temp is None:
-                temp = v4
+                temp = var__agl__cellSize
             if action is not None and hasattr(action, "v5".split('[')[0].split('.')[0]):
                 action.v5 = temp
             else:
                 v5 = temp 
 
+            v3 = (v4 , v5); v3 = tuple(v3) if isinstance(v3, np.ndarray) else v3
 
-            temp = get_nested_attribute(action, '"brown"', locals())
-            if temp is None:
-                temp = "brown"
-            if action is not None and hasattr(action, "v6".split('[')[0].split('.')[0]):
-                action.v6 = temp
+            if model is not None:
+                v6 = Rectangle()
+                model.add_object(v6) # add object to model
             else:
-                v6 = temp 
+                v6 = Rectangle(root = root)
+            v6.origin = v3
 
-
-            temp = get_nested_attribute(action, 'v6', locals())
+            temp = get_nested_attribute(action, '50', locals())
             if temp is None:
-                temp = v6
-            if action is not None and hasattr(action, "v7".split('[')[0].split('.')[0]):
-                action.v7 = temp
-            else:
-                v7 = temp 
-
-
-            temp = get_nested_attribute(action, 'v7', locals())
-            if temp is None:
-                temp = v7
+                temp = 50
             if action is not None and hasattr(action, "v8".split('[')[0].split('.')[0]):
                 action.v8 = temp
             else:
                 v8 = temp 
 
 
-            if action is not None:
-                action.v0.length = v5
-                action.v0.fill = v8
-            else:
-                v0.length = v5
-                v0.fill = v8
-
-            temp = get_nested_attribute(action, 'v0', locals())
+            temp = get_nested_attribute(action, '50', locals())
             if temp is None:
-                temp = v0
-            if action is not None and hasattr(action, "var__agl__rec".split('[')[0].split('.')[0]):
-                action.var__agl__rec = temp
+                temp = 50
+            if action is not None and hasattr(action, "v9".split('[')[0].split('.')[0]):
+                action.v9 = temp
             else:
-                var__agl__rec = temp 
-            if model is not None: 
-                model.var__agl__rec = var__agl__rec
-                model.last_var__agl__rec = copy.deepcopy(var__agl__rec)
+                v9 = temp 
 
-            if model is not None:
-                v9 = Text()
-                model.add_object(v9) # add object to model
-            else:
-                v9 = Text(root = root)
+            v7 = (v8 , v9); v7 = tuple(v7) if isinstance(v7, np.ndarray) else v7
 
-            temp = get_nested_attribute(action, '"Base"', locals())
+            temp = get_nested_attribute(action, 'v7', locals())
             if temp is None:
-                temp = "Base"
+                temp = v7
             if action is not None and hasattr(action, "v10".split('[')[0].split('.')[0]):
                 action.v10 = temp
             else:
@@ -176,86 +165,99 @@ if __name__ == "__main__":
                 v11 = temp 
 
 
-            temp = get_nested_attribute(action, 'v11', locals())
+            temp = get_nested_attribute(action, '"orange"', locals())
             if temp is None:
-                temp = v11
+                temp = "orange"
             if action is not None and hasattr(action, "v12".split('[')[0].split('.')[0]):
                 action.v12 = temp
             else:
                 v12 = temp 
 
 
-            if action is not None:
-                action.v9.text = v12
-            else:
-                v9.text = v12
-
-            temp = get_nested_attribute(action, '0', locals())
+            temp = get_nested_attribute(action, 'v12', locals())
             if temp is None:
-                temp = 0
+                temp = v12
+            if action is not None and hasattr(action, "v13".split('[')[0].split('.')[0]):
+                action.v13 = temp
+            else:
+                v13 = temp 
+
+
+            temp = get_nested_attribute(action, 'v13', locals())
+            if temp is None:
+                temp = v13
             if action is not None and hasattr(action, "v14".split('[')[0].split('.')[0]):
                 action.v14 = temp
             else:
                 v14 = temp 
 
 
-            temp = get_nested_attribute(action, '50', locals())
-            if temp is None:
-                temp = 50
-            if action is not None and hasattr(action, "v15".split('[')[0].split('.')[0]):
-                action.v15 = temp
+            if action is not None:
+                action.v6.length = v11
+                action.v6.fill = v14
             else:
-                v15 = temp 
+                v6.length = v11
+                v6.fill = v14
 
-            v16 = - np.array(v15)
-            v13 = (v14 , v16); v13 = tuple(v13) if isinstance(v13, np.ndarray) else v13
+            temp = get_nested_attribute(action, 'v6', locals())
+            if temp is None:
+                temp = v6
+            if action is not None and hasattr(action, "var__agl__rec".split('[')[0].split('.')[0]):
+                action.var__agl__rec = temp
+            else:
+                var__agl__rec = temp 
+            if model is not None: 
+                model.var__agl__rec = var__agl__rec
+                model.last_var__agl__rec = copy.deepcopy(var__agl__rec)
+
+            temp = get_nested_attribute(action, 'var__agl__cellSize', locals())
+            if temp is None:
+                temp = var__agl__cellSize
+            if action is not None and hasattr(action, "v16".split('[')[0].split('.')[0]):
+                action.v16 = temp
+            else:
+                v16 = temp 
+
+
+            temp = get_nested_attribute(action, 'var__agl__cellSize', locals())
+            if temp is None:
+                temp = var__agl__cellSize
+            if action is not None and hasattr(action, "v17".split('[')[0].split('.')[0]):
+                action.v17 = temp
+            else:
+                v17 = temp 
+
+            v15 = (v16 , v17); v15 = tuple(v15) if isinstance(v15, np.ndarray) else v15
 
             if model is not None:
-                v17 = Text()
-                model.add_object(v17) # add object to model
+                v18 = Ellipse()
+                model.add_object(v18) # add object to model
             else:
-                v17 = Text(root = root)
-            v17.origin = v13
+                v18 = Ellipse(root = root)
+            v18.origin = v15
 
-            temp = get_nested_attribute(action, '"Solved!!!"', locals())
+            temp = get_nested_attribute(action, '60', locals())
             if temp is None:
-                temp = "Solved!!!"
-            if action is not None and hasattr(action, "v18".split('[')[0].split('.')[0]):
-                action.v18 = temp
-            else:
-                v18 = temp 
-
-
-            temp = get_nested_attribute(action, 'v18', locals())
-            if temp is None:
-                temp = v18
-            if action is not None and hasattr(action, "v19".split('[')[0].split('.')[0]):
-                action.v19 = temp
-            else:
-                v19 = temp 
-
-
-            temp = get_nested_attribute(action, 'v19', locals())
-            if temp is None:
-                temp = v19
+                temp = 60
             if action is not None and hasattr(action, "v20".split('[')[0].split('.')[0]):
                 action.v20 = temp
             else:
                 v20 = temp 
 
 
-            temp = get_nested_attribute(action, '"hidden"', locals())
+            temp = get_nested_attribute(action, '40', locals())
             if temp is None:
-                temp = "hidden"
+                temp = 40
             if action is not None and hasattr(action, "v21".split('[')[0].split('.')[0]):
                 action.v21 = temp
             else:
                 v21 = temp 
 
+            v19 = (v20 , v21); v19 = tuple(v19) if isinstance(v19, np.ndarray) else v19
 
-            temp = get_nested_attribute(action, 'v21', locals())
+            temp = get_nested_attribute(action, 'v19', locals())
             if temp is None:
-                temp = v21
+                temp = v19
             if action is not None and hasattr(action, "v22".split('[')[0].split('.')[0]):
                 action.v22 = temp
             else:
@@ -271,90 +273,82 @@ if __name__ == "__main__":
                 v23 = temp 
 
 
-            if action is not None:
-                action.v17.text = v20
-                action.v17.state = v23
-            else:
-                v17.text = v20
-                v17.state = v23
-
-            temp = get_nested_attribute(action, 'v17', locals())
+            temp = get_nested_attribute(action, '"blue"', locals())
             if temp is None:
-                temp = v17
-            if action is not None and hasattr(action, "var__agl__solved".split('[')[0].split('.')[0]):
-                action.var__agl__solved = temp
+                temp = "blue"
+            if action is not None and hasattr(action, "v24".split('[')[0].split('.')[0]):
+                action.v24 = temp
             else:
-                var__agl__solved = temp 
-            if model is not None: 
-                model.var__agl__solved = var__agl__solved
-                model.last_var__agl__solved = copy.deepcopy(var__agl__solved)
+                v24 = temp 
 
-            temp = get_nested_attribute(action, '0', locals())
+
+            temp = get_nested_attribute(action, 'v24', locals())
             if temp is None:
-                temp = 0
+                temp = v24
             if action is not None and hasattr(action, "v25".split('[')[0].split('.')[0]):
                 action.v25 = temp
             else:
                 v25 = temp 
 
 
-            temp = get_nested_attribute(action, '120', locals())
+            temp = get_nested_attribute(action, 'v25', locals())
             if temp is None:
-                temp = 120
+                temp = v25
             if action is not None and hasattr(action, "v26".split('[')[0].split('.')[0]):
                 action.v26 = temp
             else:
                 v26 = temp 
 
-            v24 = (v25 , v26); v24 = tuple(v24) if isinstance(v24, np.ndarray) else v24
 
-            if model is not None:
-                v27 = Rectangle()
-                model.add_object(v27) # add object to model
+            if action is not None:
+                action.v18.length = v23
+                action.v18.fill = v26
             else:
-                v27 = Rectangle(root = root)
-            v27.origin = v24
+                v18.length = v23
+                v18.fill = v26
 
-            temp = get_nested_attribute(action, '10', locals())
+            temp = get_nested_attribute(action, 'v18', locals())
             if temp is None:
-                temp = 10
-            if action is not None and hasattr(action, "v29".split('[')[0].split('.')[0]):
-                action.v29 = temp
+                temp = v18
+            if action is not None and hasattr(action, "var__agl__ell".split('[')[0].split('.')[0]):
+                action.var__agl__ell = temp
             else:
-                v29 = temp 
+                var__agl__ell = temp 
+            if model is not None: 
+                model.var__agl__ell = var__agl__ell
+                model.last_var__agl__ell = copy.deepcopy(var__agl__ell)
 
-
-            temp = get_nested_attribute(action, '100', locals())
+            temp = get_nested_attribute(action, 'var__agl__cellSize', locals())
             if temp is None:
-                temp = 100
+                temp = var__agl__cellSize
+            if action is not None and hasattr(action, "v28".split('[')[0].split('.')[0]):
+                action.v28 = temp
+            else:
+                v28 = temp 
+
+            v29 = - np.array(v28)
+
+            temp = get_nested_attribute(action, 'var__agl__cellSize', locals())
+            if temp is None:
+                temp = var__agl__cellSize
             if action is not None and hasattr(action, "v30".split('[')[0].split('.')[0]):
                 action.v30 = temp
             else:
                 v30 = temp 
 
-            v28 = (v29 , v30); v28 = tuple(v28) if isinstance(v28, np.ndarray) else v28
+            v31 = - np.array(v30)
+            v27 = (v29 , v31); v27 = tuple(v27) if isinstance(v27, np.ndarray) else v27
 
-            temp = get_nested_attribute(action, 'v28', locals())
-            if temp is None:
-                temp = v28
-            if action is not None and hasattr(action, "v31".split('[')[0].split('.')[0]):
-                action.v31 = temp
+            if model is not None:
+                v32 = Arc()
+                model.add_object(v32) # add object to model
             else:
-                v31 = temp 
+                v32 = Arc(root = root)
+            v32.origin = v27
 
-
-            temp = get_nested_attribute(action, 'v31', locals())
+            temp = get_nested_attribute(action, '30', locals())
             if temp is None:
-                temp = v31
-            if action is not None and hasattr(action, "v32".split('[')[0].split('.')[0]):
-                action.v32 = temp
-            else:
-                v32 = temp 
-
-
-            temp = get_nested_attribute(action, '"brown"', locals())
-            if temp is None:
-                temp = "brown"
+                temp = 30
             if action is not None and hasattr(action, "v33".split('[')[0].split('.')[0]):
                 action.v33 = temp
             else:
@@ -379,61 +373,14 @@ if __name__ == "__main__":
                 v35 = temp 
 
 
-            if action is not None:
-                action.v27.length = v32
-                action.v27.fill = v35
-            else:
-                v27.length = v32
-                v27.fill = v35
-
-            temp = get_nested_attribute(action, 'v27', locals())
+            temp = get_nested_attribute(action, '90', locals())
             if temp is None:
-                temp = v27
-            if action is not None and hasattr(action, "var__agl__stick".split('[')[0].split('.')[0]):
-                action.var__agl__stick = temp
+                temp = 90
+            if action is not None and hasattr(action, "v36".split('[')[0].split('.')[0]):
+                action.v36 = temp
             else:
-                var__agl__stick = temp 
-            if model is not None: 
-                model.var__agl__stick = var__agl__stick
-                model.last_var__agl__stick = copy.deepcopy(var__agl__stick)
+                v36 = temp 
 
-            self.fixCoords()
-
-        def create_object(self, view):
-            action = self
-        
-            action = None
-            super().create_object(view)
-            model = None
-
-        def __deepcopy__(self, memo=None):
-            """Create a deep copy of the model."""
-            if memo is None:
-                memo = {} # this is required by the deepcopy protocol
-            new_model = Base()
-
-            self.copyAttributesTo(new_model)
-            new_model.view = self.view
-            new_model.root = self.root
-            return new_model       
-
-    #################################################################
-    #################################################################
-    ## Model
-    #################################################################
-    class Tower(Model):
-        def __init__(self, root_local: Root = None, view: View = None, origin=(0,0)):
-            super().__init__(root=root_local, view=view, origin=origin)
-            model = self
-
-            if model is not None:
-                model_backup = model
-                v36 = Base() # this makes model = None in the end!
-                model = model_backup
-                model.add_object(v36) # add object to model
-            else:
-                v36 = Base(root_local = root, view = last_view)
-              
 
             temp = get_nested_attribute(action, 'v36', locals())
             if temp is None:
@@ -447,32 +394,24 @@ if __name__ == "__main__":
             temp = get_nested_attribute(action, 'v37', locals())
             if temp is None:
                 temp = v37
-            if action is not None and hasattr(action, "var__agl__base".split('[')[0].split('.')[0]):
-                action.var__agl__base = temp
+            if action is not None and hasattr(action, "v38".split('[')[0].split('.')[0]):
+                action.v38 = temp
             else:
-                var__agl__base = temp 
-            if model is not None: 
-                model.var__agl__base = var__agl__base
-                model.last_var__agl__base = copy.deepcopy(var__agl__base)
+                v38 = temp 
 
-            if model is not None:
-                v38 = Rectangle()
-                model.add_object(v38) # add object to model
-            else:
-                v38 = Rectangle(root = root)
 
-            temp = get_nested_attribute(action, '75', locals())
+            temp = get_nested_attribute(action, '60', locals())
             if temp is None:
-                temp = 75
+                temp = 60
             if action is not None and hasattr(action, "v40".split('[')[0].split('.')[0]):
                 action.v40 = temp
             else:
                 v40 = temp 
 
 
-            temp = get_nested_attribute(action, '15', locals())
+            temp = get_nested_attribute(action, '40', locals())
             if temp is None:
-                temp = 15
+                temp = 40
             if action is not None and hasattr(action, "v41".split('[')[0].split('.')[0]):
                 action.v41 = temp
             else:
@@ -498,9 +437,9 @@ if __name__ == "__main__":
                 v43 = temp 
 
 
-            temp = get_nested_attribute(action, '"brown"', locals())
+            temp = get_nested_attribute(action, '"green"', locals())
             if temp is None:
-                temp = "brown"
+                temp = "green"
             if action is not None and hasattr(action, "v44".split('[')[0].split('.')[0]):
                 action.v44 = temp
             else:
@@ -526,69 +465,66 @@ if __name__ == "__main__":
 
 
             if action is not None:
-                action.v38.length = v43
-                action.v38.fill = v46
+                action.v32.start = v35
+                action.v32.extent = v38
+                action.v32.length = v43
+                action.v32.outline = v46
             else:
-                v38.length = v43
-                v38.fill = v46
+                v32.start = v35
+                v32.extent = v38
+                v32.length = v43
+                v32.outline = v46
 
-            temp = get_nested_attribute(action, 'v38', locals())
+            temp = get_nested_attribute(action, 'v32', locals())
             if temp is None:
-                temp = v38
-            if action is not None and hasattr(action, "var__agl__diskS".split('[')[0].split('.')[0]):
-                action.var__agl__diskS = temp
+                temp = v32
+            if action is not None and hasattr(action, "var__agl__arc".split('[')[0].split('.')[0]):
+                action.var__agl__arc = temp
             else:
-                var__agl__diskS = temp 
+                var__agl__arc = temp 
             if model is not None: 
-                model.var__agl__diskS = var__agl__diskS
-                model.last_var__agl__diskS = copy.deepcopy(var__agl__diskS)
+                model.var__agl__arc = var__agl__arc
+                model.last_var__agl__arc = copy.deepcopy(var__agl__arc)
 
-            if model is not None:
-                v47 = Rectangle()
-                model.add_object(v47) # add object to model
-            else:
-                v47 = Rectangle(root = root)
-
-            temp = get_nested_attribute(action, '100', locals())
+            temp = get_nested_attribute(action, 'var__agl__cellSize', locals())
             if temp is None:
-                temp = 100
+                temp = var__agl__cellSize
+            if action is not None and hasattr(action, "v48".split('[')[0].split('.')[0]):
+                action.v48 = temp
+            else:
+                v48 = temp 
+
+
+            temp = get_nested_attribute(action, 'var__agl__cellSize', locals())
+            if temp is None:
+                temp = var__agl__cellSize
             if action is not None and hasattr(action, "v49".split('[')[0].split('.')[0]):
                 action.v49 = temp
             else:
                 v49 = temp 
 
+            v50 = - np.array(v49)
+            v47 = (v48 , v50); v47 = tuple(v47) if isinstance(v47, np.ndarray) else v47
 
-            temp = get_nested_attribute(action, '15', locals())
-            if temp is None:
-                temp = 15
-            if action is not None and hasattr(action, "v50".split('[')[0].split('.')[0]):
-                action.v50 = temp
+            if model is not None:
+                v51 = ArcChord()
+                model.add_object(v51) # add object to model
             else:
-                v50 = temp 
+                v51 = ArcChord(root = root)
+            v51.origin = v47
 
-            v48 = (v49 , v50); v48 = tuple(v48) if isinstance(v48, np.ndarray) else v48
-
-            temp = get_nested_attribute(action, 'v48', locals())
+            temp = get_nested_attribute(action, '30', locals())
             if temp is None:
-                temp = v48
-            if action is not None and hasattr(action, "v51".split('[')[0].split('.')[0]):
-                action.v51 = temp
-            else:
-                v51 = temp 
-
-
-            temp = get_nested_attribute(action, 'v51', locals())
-            if temp is None:
-                temp = v51
+                temp = 30
             if action is not None and hasattr(action, "v52".split('[')[0].split('.')[0]):
                 action.v52 = temp
             else:
                 v52 = temp 
 
 
-            temp = get_nested_attribute(action, '"brown"', locals())
+            temp = get_nested_attribute(action, 'v52', locals())
             if temp is None:
-                temp = "brown"
+                temp = v52
             if action is not None and hasattr(action, "v53".split('[')[0].split('.')[0]):
                 action.v53 = temp
             else:
@@ -604,88 +540,73 @@ if __name__ == "__main__":
                 v54 = temp 
 
 
-            temp = get_nested_attribute(action, 'v54', locals())
+            temp = get_nested_attribute(action, '200', locals())
             if temp is None:
-                temp = v54
+                temp = 200
             if action is not None and hasattr(action, "v55".split('[')[0].split('.')[0]):
                 action.v55 = temp
             else:
                 v55 = temp 
 
 
-            if action is not None:
-                action.v47.length = v52
-                action.v47.fill = v55
-            else:
-                v47.length = v52
-                v47.fill = v55
-
-            temp = get_nested_attribute(action, 'v47', locals())
+            temp = get_nested_attribute(action, 'v55', locals())
             if temp is None:
-                temp = v47
-            if action is not None and hasattr(action, "var__agl__diskM".split('[')[0].split('.')[0]):
-                action.var__agl__diskM = temp
+                temp = v55
+            if action is not None and hasattr(action, "v56".split('[')[0].split('.')[0]):
+                action.v56 = temp
             else:
-                var__agl__diskM = temp 
-            if model is not None: 
-                model.var__agl__diskM = var__agl__diskM
-                model.last_var__agl__diskM = copy.deepcopy(var__agl__diskM)
+                v56 = temp 
 
-            if model is not None:
-                v56 = Rectangle()
-                model.add_object(v56) # add object to model
-            else:
-                v56 = Rectangle(root = root)
 
-            temp = get_nested_attribute(action, '125', locals())
+            temp = get_nested_attribute(action, 'v56', locals())
             if temp is None:
-                temp = 125
-            if action is not None and hasattr(action, "v58".split('[')[0].split('.')[0]):
-                action.v58 = temp
+                temp = v56
+            if action is not None and hasattr(action, "v57".split('[')[0].split('.')[0]):
+                action.v57 = temp
             else:
-                v58 = temp 
+                v57 = temp 
 
 
-            temp = get_nested_attribute(action, '15', locals())
+            temp = get_nested_attribute(action, '60', locals())
             if temp is None:
-                temp = 15
+                temp = 60
             if action is not None and hasattr(action, "v59".split('[')[0].split('.')[0]):
                 action.v59 = temp
             else:
                 v59 = temp 
 
-            v57 = (v58 , v59); v57 = tuple(v57) if isinstance(v57, np.ndarray) else v57
 
-            temp = get_nested_attribute(action, 'v57', locals())
+            temp = get_nested_attribute(action, '40', locals())
             if temp is None:
-                temp = v57
+                temp = 40
             if action is not None and hasattr(action, "v60".split('[')[0].split('.')[0]):
                 action.v60 = temp
             else:
                 v60 = temp 
 
+            v58 = (v59 , v60); v58 = tuple(v58) if isinstance(v58, np.ndarray) else v58
 
-            temp = get_nested_attribute(action, 'v60', locals())
+            temp = get_nested_attribute(action, 'v58', locals())
             if temp is None:
-                temp = v60
+                temp = v58
             if action is not None and hasattr(action, "v61".split('[')[0].split('.')[0]):
                 action.v61 = temp
             else:
                 v61 = temp 
 
 
-            temp = get_nested_attribute(action, '"brown"', locals())
+            temp = get_nested_attribute(action, 'v61', locals())
             if temp is None:
-                temp = "brown"
+                temp = v61
             if action is not None and hasattr(action, "v62".split('[')[0].split('.')[0]):
                 action.v62 = temp
             else:
                 v62 = temp 
 
 
-            temp = get_nested_attribute(action, 'v62', locals())
+            temp = get_nested_attribute(action, '"red"', locals())
             if temp is None:
-                temp = v62
+                temp = "red"
             if action is not None and hasattr(action, "v63".split('[')[0].split('.')[0]):
                 action.v63 = temp
             else:
@@ -701,36 +622,18 @@ if __name__ == "__main__":
                 v64 = temp 
 
 
-            if action is not None:
-                action.v56.length = v61
-                action.v56.fill = v64
-            else:
-                v56.length = v61
-                v56.fill = v64
-
-            temp = get_nested_attribute(action, 'v56', locals())
+            temp = get_nested_attribute(action, 'v64', locals())
             if temp is None:
-                temp = v56
-            if action is not None and hasattr(action, "var__agl__diskL".split('[')[0].split('.')[0]):
-                action.var__agl__diskL = temp
-            else:
-                var__agl__diskL = temp 
-            if model is not None: 
-                model.var__agl__diskL = var__agl__diskL
-                model.last_var__agl__diskL = copy.deepcopy(var__agl__diskL)
-
-            temp = get_nested_attribute(action, '0', locals())
-            if temp is None:
-                temp = 0
+                temp = v64
             if action is not None and hasattr(action, "v65".split('[')[0].split('.')[0]):
                 action.v65 = temp
             else:
                 v65 = temp 
 
 
-            temp = get_nested_attribute(action, 'v65', locals())
+            temp = get_nested_attribute(action, '"blue"', locals())
             if temp is None:
-                temp = v65
+                temp = "blue"
             if action is not None and hasattr(action, "v66".split('[')[0].split('.')[0]):
                 action.v66 = temp
             else:
@@ -749,560 +652,40 @@ if __name__ == "__main__":
             temp = get_nested_attribute(action, 'v67', locals())
             if temp is None:
                 temp = v67
-            if action is not None and hasattr(action, "var__agl__inc".split('[')[0].split('.')[0]):
-                action.var__agl__inc = temp
+            if action is not None and hasattr(action, "v68".split('[')[0].split('.')[0]):
+                action.v68 = temp
             else:
-                var__agl__inc = temp 
+                v68 = temp 
+
+
+            if action is not None:
+                action.v51.start = v54
+                action.v51.extent = v57
+                action.v51.length = v62
+                action.v51.fill = v65
+                action.v51.outline = v68
+            else:
+                v51.start = v54
+                v51.extent = v57
+                v51.length = v62
+                v51.fill = v65
+                v51.outline = v68
+
+            temp = get_nested_attribute(action, 'v51', locals())
+            if temp is None:
+                temp = v51
+            if action is not None and hasattr(action, "var__agl__arcchord".split('[')[0].split('.')[0]):
+                action.var__agl__arcchord = temp
+            else:
+                var__agl__arcchord = temp 
             if model is not None: 
-                model.var__agl__inc = var__agl__inc
-                model.last_var__agl__inc = copy.deepcopy(var__agl__inc)
-
-            temp = get_nested_attribute(action, 'var__agl__diskL', locals())
-            if temp is None:
-                temp = var__agl__diskL
-            if action is not None and hasattr(action, "v69".split('[')[0].split('.')[0]):
-                action.v69 = temp
-            else:
-                v69 = temp 
-
-
-            temp = get_nested_attribute(action, 'var__agl__diskM', locals())
-            if temp is None:
-                temp = var__agl__diskM
-            if action is not None and hasattr(action, "v70".split('[')[0].split('.')[0]):
-                action.v70 = temp
-            else:
-                v70 = temp 
-
-
-            temp = get_nested_attribute(action, 'var__agl__diskS', locals())
-            if temp is None:
-                temp = var__agl__diskS
-            if action is not None and hasattr(action, "v71".split('[')[0].split('.')[0]):
-                action.v71 = temp
-            else:
-                v71 = temp 
-
-            v68 = [v69,v70,v71]
-
-            temp = get_nested_attribute(action, 'v68', locals())
-            if temp is None:
-                temp = v68
-            if action is not None and hasattr(action, "v72".split('[')[0].split('.')[0]):
-                action.v72 = temp
-            else:
-                v72 = temp 
-
-
-            temp = get_nested_attribute(action, 'v72', locals())
-            if temp is None:
-                temp = v72
-            if action is not None and hasattr(action, "v73".split('[')[0].split('.')[0]):
-                action.v73 = temp
-            else:
-                v73 = temp 
-
-
-            temp = get_nested_attribute(action, 'v73', locals())
-            if temp is None:
-                temp = v73
-            if action is not None and hasattr(action, "var__agl__disks".split('[')[0].split('.')[0]):
-                action.var__agl__disks = temp
-            else:
-                var__agl__disks = temp 
-            if model is not None: 
-                model.var__agl__disks = var__agl__disks
-                model.last_var__agl__disks = copy.deepcopy(var__agl__disks)
-
-            temp = get_nested_attribute(action, 'False', locals())
-            if temp is None:
-                temp = False
-            if action is not None and hasattr(action, "v97".split('[')[0].split('.')[0]):
-                action.v97 = temp
-            else:
-                v97 = temp 
-
-
-            temp = get_nested_attribute(action, 'v97', locals())
-            if temp is None:
-                temp = v97
-            if action is not None and hasattr(action, "v98".split('[')[0].split('.')[0]):
-                action.v98 = temp
-            else:
-                v98 = temp 
-
-
-            temp = get_nested_attribute(action, 'v98', locals())
-            if temp is None:
-                temp = v98
-            if action is not None and hasattr(action, "v99".split('[')[0].split('.')[0]):
-                action.v99 = temp
-            else:
-                v99 = temp 
-
-
-            temp = get_nested_attribute(action, 'v99', locals())
-            if temp is None:
-                temp = v99
-            if action is not None and hasattr(action, "var__agl__active".split('[')[0].split('.')[0]):
-                action.var__agl__active = temp
-            else:
-                var__agl__active = temp 
-            if model is not None: 
-                model.var__agl__active = var__agl__active
-                model.last_var__agl__active = copy.deepcopy(var__agl__active)
+                model.var__agl__arcchord = var__agl__arcchord
+                model.last_var__agl__arcchord = copy.deepcopy(var__agl__arcchord)
 
             self.fixCoords()
 
         def create_object(self, view):
             action = self
-
-            if self.var__agl__disks != self.last_var__agl__disks:
-
-                temp = get_nested_attribute(action, '0', locals())
-                if temp is None:
-                    temp = 0
-                if action is not None and hasattr(action, "v74".split('[')[0].split('.')[0]):
-                    action.v74 = temp
-                else:
-                    v74 = temp 
-
-
-                temp = get_nested_attribute(action, 'v74', locals())
-                if temp is None:
-                    temp = v74
-                if action is not None and hasattr(action, "v75".split('[')[0].split('.')[0]):
-                    action.v75 = temp
-                else:
-                    v75 = temp 
-
-
-                temp = get_nested_attribute(action, 'v75', locals())
-                if temp is None:
-                    temp = v75
-                if action is not None and hasattr(action, "var__agl__inc".split('[')[0].split('.')[0]):
-                    action.var__agl__inc = temp
-                else:
-                    var__agl__inc = temp 
-
-
-                temp = get_nested_attribute(action, '0', locals())
-                if temp is None:
-                    temp = 0
-                if action is not None and hasattr(action, "v76".split('[')[0].split('.')[0]):
-                    action.v76 = temp
-                else:
-                    v76 = temp 
-
-
-                temp = get_nested_attribute(action, '3', locals())
-                if temp is None:
-                    temp = 3
-                if action is not None and hasattr(action, "v77".split('[')[0].split('.')[0]):
-                    action.v77 = temp
-                else:
-                    v77 = temp 
-
-                for var__agl__d in range(v76, v77, 1):
-
-                    temp = get_nested_attribute(action, 'var__agl__d', locals())
-                    if temp is None:
-                        temp = var__agl__d
-                    if action is not None and hasattr(action, "v80".split('[')[0].split('.')[0]):
-                        action.v80 = temp
-                    else:
-                        v80 = temp 
-
-
-                    temp = get_nested_attribute(action, 'var__agl__disks[v80].state', locals())
-                    if temp is None:
-                        temp = var__agl__disks[v80].state
-                    if action is not None and hasattr(action, "v79".split('[')[0].split('.')[0]):
-                        action.v79 = temp
-                    else:
-                        v79 = temp 
-
-
-                    temp = get_nested_attribute(action, '"normal"', locals())
-                    if temp is None:
-                        temp = "normal"
-                    if action is not None and hasattr(action, "v81".split('[')[0].split('.')[0]):
-                        action.v81 = temp
-                    else:
-                        v81 = temp 
-
-                    v78 = np.array(v79) == np.array(v81); v78 = tuple(v78) if isinstance(v78, np.ndarray) else v78
-                    if v78:
-
-                        temp = get_nested_attribute(action, 'var__agl__inc', locals())
-                        if temp is None:
-                            temp = var__agl__inc
-                        if action is not None and hasattr(action, "v83".split('[')[0].split('.')[0]):
-                            action.v83 = temp
-                        else:
-                            v83 = temp 
-
-
-                        temp = get_nested_attribute(action, '1', locals())
-                        if temp is None:
-                            temp = 1
-                        if action is not None and hasattr(action, "v84".split('[')[0].split('.')[0]):
-                            action.v84 = temp
-                        else:
-                            v84 = temp 
-
-                        v82 = np.array(v83) + np.array(v84); v82 = tuple(v82) if isinstance(v82, np.ndarray) else v82
-
-                        temp = get_nested_attribute(action, 'v82', locals())
-                        if temp is None:
-                            temp = v82
-                        if action is not None and hasattr(action, "v85".split('[')[0].split('.')[0]):
-                            action.v85 = temp
-                        else:
-                            v85 = temp 
-
-
-                        temp = get_nested_attribute(action, 'v85', locals())
-                        if temp is None:
-                            temp = v85
-                        if action is not None and hasattr(action, "var__agl__inc".split('[')[0].split('.')[0]):
-                            action.var__agl__inc = temp
-                        else:
-                            var__agl__inc = temp 
-
-
-                        temp = get_nested_attribute(action, 'var__agl__d', locals())
-                        if temp is None:
-                            temp = var__agl__d
-                        if action is not None and hasattr(action, "v86".split('[')[0].split('.')[0]):
-                            action.v86 = temp
-                        else:
-                            v86 = temp 
-
-
-                        temp = get_nested_attribute(action, '0', locals())
-                        if temp is None:
-                            temp = 0
-                        if action is not None and hasattr(action, "v89".split('[')[0].split('.')[0]):
-                            action.v89 = temp
-                        else:
-                            v89 = temp 
-
-
-                        temp = get_nested_attribute(action, 'var__agl__base.origin[v89]', locals())
-                        if temp is None:
-                            temp = var__agl__base.origin[v89]
-                        if action is not None and hasattr(action, "v88".split('[')[0].split('.')[0]):
-                            action.v88 = temp
-                        else:
-                            v88 = temp 
-
-
-                        temp = get_nested_attribute(action, 'var__agl__inc', locals())
-                        if temp is None:
-                            temp = var__agl__inc
-                        if action is not None and hasattr(action, "v93".split('[')[0].split('.')[0]):
-                            action.v93 = temp
-                        else:
-                            v93 = temp 
-
-
-                        temp = get_nested_attribute(action, '1', locals())
-                        if temp is None:
-                            temp = 1
-                        if action is not None and hasattr(action, "v94".split('[')[0].split('.')[0]):
-                            action.v94 = temp
-                        else:
-                            v94 = temp 
-
-                        v92 = np.array(v93) + np.array(v94); v92 = tuple(v92) if isinstance(v92, np.ndarray) else v92
-
-                        temp = get_nested_attribute(action, '30', locals())
-                        if temp is None:
-                            temp = 30
-                        if action is not None and hasattr(action, "v95".split('[')[0].split('.')[0]):
-                            action.v95 = temp
-                        else:
-                            v95 = temp 
-
-                        v91 = np.dot(np.array(v92) , np.array(v95)); v91 = tuple(v91) if isinstance(v91, np.ndarray) else v91
-
-                        temp = get_nested_attribute(action, '75', locals())
-                        if temp is None:
-                            temp = 75
-                        if action is not None and hasattr(action, "v96".split('[')[0].split('.')[0]):
-                            action.v96 = temp
-                        else:
-                            v96 = temp 
-
-                        v90 = np.array(v91) - np.array(v96); v90 = tuple(v90) if isinstance(v90, np.ndarray) else v90
-                        v87 = (v88 , v90); v87 = tuple(v87) if isinstance(v87, np.ndarray) else v87
-                        if action is not None:
-                            action.var__agl__disks[v86].move_absolute(v87)
-                        else:
-                            var__agl__disks[v86].move_absolute(v87)    
-                self.last_var__agl__disks = copy.deepcopy(self.var__agl__disks)
-
-
-            if self.var__agl__active != self.last_var__agl__active:
-
-                temp = get_nested_attribute(action, '0', locals())
-                if temp is None:
-                    temp = 0
-                if action is not None and hasattr(action, "v100".split('[')[0].split('.')[0]):
-                    action.v100 = temp
-                else:
-                    v100 = temp 
-
-
-                temp = get_nested_attribute(action, 'v100', locals())
-                if temp is None:
-                    temp = v100
-                if action is not None and hasattr(action, "v101".split('[')[0].split('.')[0]):
-                    action.v101 = temp
-                else:
-                    v101 = temp 
-
-
-                temp = get_nested_attribute(action, 'v101', locals())
-                if temp is None:
-                    temp = v101
-                if action is not None and hasattr(action, "var__agl__inc".split('[')[0].split('.')[0]):
-                    action.var__agl__inc = temp
-                else:
-                    var__agl__inc = temp 
-
-
-                temp = get_nested_attribute(action, 'var__agl__active', locals())
-                if temp is None:
-                    temp = var__agl__active
-                if action is not None and hasattr(action, "v102".split('[')[0].split('.')[0]):
-                    action.v102 = temp
-                else:
-                    v102 = temp 
-
-                if v102:
-
-                    temp = get_nested_attribute(action, '2', locals())
-                    if temp is None:
-                        temp = 2
-                    if action is not None and hasattr(action, "v103".split('[')[0].split('.')[0]):
-                        action.v103 = temp
-                    else:
-                        v103 = temp 
-
-
-                    temp = get_nested_attribute(action, '1', locals())
-                    if temp is None:
-                        temp = 1
-                    if action is not None and hasattr(action, "v104".split('[')[0].split('.')[0]):
-                        action.v104 = temp
-                    else:
-                        v104 = temp 
-
-                    v105 = - np.array(v104)
-
-                    temp = get_nested_attribute(action, '1', locals())
-                    if temp is None:
-                        temp = 1
-                    if action is not None and hasattr(action, "v106".split('[')[0].split('.')[0]):
-                        action.v106 = temp
-                    else:
-                        v106 = temp 
-
-                    v107 = - np.array(v106)
-                    for var__agl__d in range(v103, v105, v107):
-
-                        temp = get_nested_attribute(action, 'var__agl__inc', locals())
-                        if temp is None:
-                            temp = var__agl__inc
-                        if action is not None and hasattr(action, "v110".split('[')[0].split('.')[0]):
-                            action.v110 = temp
-                        else:
-                            v110 = temp 
-
-
-                        temp = get_nested_attribute(action, '0', locals())
-                        if temp is None:
-                            temp = 0
-                        if action is not None and hasattr(action, "v111".split('[')[0].split('.')[0]):
-                            action.v111 = temp
-                        else:
-                            v111 = temp 
-
-                        v109 = np.array(v110) == np.array(v111); v109 = tuple(v109) if isinstance(v109, np.ndarray) else v109
-
-                        temp = get_nested_attribute(action, 'var__agl__d', locals())
-                        if temp is None:
-                            temp = var__agl__d
-                        if action is not None and hasattr(action, "v114".split('[')[0].split('.')[0]):
-                            action.v114 = temp
-                        else:
-                            v114 = temp 
-
-
-                        temp = get_nested_attribute(action, 'var__agl__disks[v114].state', locals())
-                        if temp is None:
-                            temp = var__agl__disks[v114].state
-                        if action is not None and hasattr(action, "v113".split('[')[0].split('.')[0]):
-                            action.v113 = temp
-                        else:
-                            v113 = temp 
-
-
-                        temp = get_nested_attribute(action, '"normal"', locals())
-                        if temp is None:
-                            temp = "normal"
-                        if action is not None and hasattr(action, "v115".split('[')[0].split('.')[0]):
-                            action.v115 = temp
-                        else:
-                            v115 = temp 
-
-                        v112 = np.array(v113) == np.array(v115); v112 = tuple(v112) if isinstance(v112, np.ndarray) else v112
-                        v108 = v109 and v112; v108 = tuple(v108) if isinstance(v108, np.ndarray) else v108
-                        if v108:
-
-                            temp = get_nested_attribute(action, '"blue"', locals())
-                            if temp is None:
-                                temp = "blue"
-                            if action is not None and hasattr(action, "v116".split('[')[0].split('.')[0]):
-                                action.v116 = temp
-                            else:
-                                v116 = temp 
-
-
-                            temp = get_nested_attribute(action, 'v116', locals())
-                            if temp is None:
-                                temp = v116
-                            if action is not None and hasattr(action, "v117".split('[')[0].split('.')[0]):
-                                action.v117 = temp
-                            else:
-                                v117 = temp 
-
-
-                            temp = get_nested_attribute(action, 'var__agl__d', locals())
-                            if temp is None:
-                                temp = var__agl__d
-                            if action is not None and hasattr(action, "v118".split('[')[0].split('.')[0]):
-                                action.v118 = temp
-                            else:
-                                v118 = temp 
-
-
-                            temp = get_nested_attribute(action, 'v117', locals())
-                            if temp is None:
-                                temp = v117
-                            if action is not None and hasattr(action, "var__agl__disks[v118].fill".split('[')[0].split('.')[0]):
-                                action.var__agl__disks[v118].fill = temp
-                            else:
-                                var__agl__disks[v118].fill = temp 
-
-
-                            temp = get_nested_attribute(action, 'var__agl__inc', locals())
-                            if temp is None:
-                                temp = var__agl__inc
-                            if action is not None and hasattr(action, "v120".split('[')[0].split('.')[0]):
-                                action.v120 = temp
-                            else:
-                                v120 = temp 
-
-
-                            temp = get_nested_attribute(action, '1', locals())
-                            if temp is None:
-                                temp = 1
-                            if action is not None and hasattr(action, "v121".split('[')[0].split('.')[0]):
-                                action.v121 = temp
-                            else:
-                                v121 = temp 
-
-                            v119 = np.array(v120) + np.array(v121); v119 = tuple(v119) if isinstance(v119, np.ndarray) else v119
-
-                            temp = get_nested_attribute(action, 'v119', locals())
-                            if temp is None:
-                                temp = v119
-                            if action is not None and hasattr(action, "v122".split('[')[0].split('.')[0]):
-                                action.v122 = temp
-                            else:
-                                v122 = temp 
-
-
-                            temp = get_nested_attribute(action, 'v122', locals())
-                            if temp is None:
-                                temp = v122
-                            if action is not None and hasattr(action, "var__agl__inc".split('[')[0].split('.')[0]):
-                                action.var__agl__inc = temp
-                            else:
-                                var__agl__inc = temp 
-                                
-                else:
-
-                    temp = get_nested_attribute(action, '2', locals())
-                    if temp is None:
-                        temp = 2
-                    if action is not None and hasattr(action, "v123".split('[')[0].split('.')[0]):
-                        action.v123 = temp
-                    else:
-                        v123 = temp 
-
-
-                    temp = get_nested_attribute(action, '1', locals())
-                    if temp is None:
-                        temp = 1
-                    if action is not None and hasattr(action, "v124".split('[')[0].split('.')[0]):
-                        action.v124 = temp
-                    else:
-                        v124 = temp 
-
-                    v125 = - np.array(v124)
-
-                    temp = get_nested_attribute(action, '1', locals())
-                    if temp is None:
-                        temp = 1
-                    if action is not None and hasattr(action, "v126".split('[')[0].split('.')[0]):
-                        action.v126 = temp
-                    else:
-                        v126 = temp 
-
-                    v127 = - np.array(v126)
-                    for var__agl__d in range(v123, v125, v127):
-
-                        temp = get_nested_attribute(action, '"brown"', locals())
-                        if temp is None:
-                            temp = "brown"
-                        if action is not None and hasattr(action, "v128".split('[')[0].split('.')[0]):
-                            action.v128 = temp
-                        else:
-                            v128 = temp 
-
-
-                        temp = get_nested_attribute(action, 'v128', locals())
-                        if temp is None:
-                            temp = v128
-                        if action is not None and hasattr(action, "v129".split('[')[0].split('.')[0]):
-                            action.v129 = temp
-                        else:
-                            v129 = temp 
-
-
-                        temp = get_nested_attribute(action, 'var__agl__d', locals())
-                        if temp is None:
-                            temp = var__agl__d
-                        if action is not None and hasattr(action, "v130".split('[')[0].split('.')[0]):
-                            action.v130 = temp
-                        else:
-                            v130 = temp 
-
-
-                        temp = get_nested_attribute(action, 'v129', locals())
-                        if temp is None:
-                            temp = v129
-                        if action is not None and hasattr(action, "var__agl__disks[v130].fill".split('[')[0].split('.')[0]):
-                            action.var__agl__disks[v130].fill = temp
-                        else:
-                            var__agl__disks[v130].fill = temp 
-
-                    
-                self.last_var__agl__active = copy.deepcopy(self.var__agl__active)
         
             action = None
             super().create_object(view)
@@ -1312,7 +695,7 @@ if __name__ == "__main__":
             """Create a deep copy of the model."""
             if memo is None:
                 memo = {} # this is required by the deepcopy protocol
-            new_model = Tower()
+            new_model = model1()
 
             self.copyAttributesTo(new_model)
             new_model.view = self.view
@@ -1323,43 +706,590 @@ if __name__ == "__main__":
     #################################################################
     ## Model
     #################################################################
-    class Game(Model):
+    class model2(Model):
         def __init__(self, root_local: Root = None, view: View = None, origin=(0,0)):
             super().__init__(root=root_local, view=view, origin=origin)
             model = self
 
+            temp = get_nested_attribute(action, '100', locals())
+            if temp is None:
+                temp = 100
+            if action is not None and hasattr(action, "v69".split('[')[0].split('.')[0]):
+                action.v69 = temp
+            else:
+                v69 = temp 
+
+
+            temp = get_nested_attribute(action, 'v69', locals())
+            if temp is None:
+                temp = v69
+            if action is not None and hasattr(action, "v70".split('[')[0].split('.')[0]):
+                action.v70 = temp
+            else:
+                v70 = temp 
+
+
+            temp = get_nested_attribute(action, 'v70', locals())
+            if temp is None:
+                temp = v70
+            if action is not None and hasattr(action, "v71".split('[')[0].split('.')[0]):
+                action.v71 = temp
+            else:
+                v71 = temp 
+
+
+            temp = get_nested_attribute(action, 'v71', locals())
+            if temp is None:
+                temp = v71
+            if action is not None and hasattr(action, "var__agl__cellSize".split('[')[0].split('.')[0]):
+                action.var__agl__cellSize = temp
+            else:
+                var__agl__cellSize = temp 
+            if model is not None: 
+                model.var__agl__cellSize = var__agl__cellSize
+                model.last_var__agl__cellSize = copy.deepcopy(var__agl__cellSize)
+
             temp = get_nested_attribute(action, '0', locals())
             if temp is None:
                 temp = 0
+            if action is not None and hasattr(action, "v73".split('[')[0].split('.')[0]):
+                action.v73 = temp
+            else:
+                v73 = temp 
+
+
+            temp = get_nested_attribute(action, 'var__agl__cellSize', locals())
+            if temp is None:
+                temp = var__agl__cellSize
+            if action is not None and hasattr(action, "v74".split('[')[0].split('.')[0]):
+                action.v74 = temp
+            else:
+                v74 = temp 
+
+            v72 = (v73 , v74); v72 = tuple(v72) if isinstance(v72, np.ndarray) else v72
+
+            if model is not None:
+                v75 = Rectangle()
+                model.add_object(v75) # add object to model
+            else:
+                v75 = Rectangle(root = root)
+            v75.origin = v72
+
+            temp = get_nested_attribute(action, '50', locals())
+            if temp is None:
+                temp = 50
+            if action is not None and hasattr(action, "v77".split('[')[0].split('.')[0]):
+                action.v77 = temp
+            else:
+                v77 = temp 
+
+
+            temp = get_nested_attribute(action, '50', locals())
+            if temp is None:
+                temp = 50
+            if action is not None and hasattr(action, "v78".split('[')[0].split('.')[0]):
+                action.v78 = temp
+            else:
+                v78 = temp 
+
+            v76 = (v77 , v78); v76 = tuple(v76) if isinstance(v76, np.ndarray) else v76
+
+            temp = get_nested_attribute(action, 'v76', locals())
+            if temp is None:
+                temp = v76
+            if action is not None and hasattr(action, "v79".split('[')[0].split('.')[0]):
+                action.v79 = temp
+            else:
+                v79 = temp 
+
+
+            temp = get_nested_attribute(action, 'v79', locals())
+            if temp is None:
+                temp = v79
+            if action is not None and hasattr(action, "v80".split('[')[0].split('.')[0]):
+                action.v80 = temp
+            else:
+                v80 = temp 
+
+
+            temp = get_nested_attribute(action, '"orange"', locals())
+            if temp is None:
+                temp = "orange"
+            if action is not None and hasattr(action, "v81".split('[')[0].split('.')[0]):
+                action.v81 = temp
+            else:
+                v81 = temp 
+
+
+            temp = get_nested_attribute(action, 'v81', locals())
+            if temp is None:
+                temp = v81
+            if action is not None and hasattr(action, "v82".split('[')[0].split('.')[0]):
+                action.v82 = temp
+            else:
+                v82 = temp 
+
+
+            temp = get_nested_attribute(action, 'v82', locals())
+            if temp is None:
+                temp = v82
+            if action is not None and hasattr(action, "v83".split('[')[0].split('.')[0]):
+                action.v83 = temp
+            else:
+                v83 = temp 
+
+
+            if action is not None:
+                action.v75.length = v80
+                action.v75.fill = v83
+            else:
+                v75.length = v80
+                v75.fill = v83
+
+            temp = get_nested_attribute(action, 'v75', locals())
+            if temp is None:
+                temp = v75
+            if action is not None and hasattr(action, "var__agl__rec".split('[')[0].split('.')[0]):
+                action.var__agl__rec = temp
+            else:
+                var__agl__rec = temp 
+            if model is not None: 
+                model.var__agl__rec = var__agl__rec
+                model.last_var__agl__rec = copy.deepcopy(var__agl__rec)
+
+            temp = get_nested_attribute(action, 'var__agl__cellSize', locals())
+            if temp is None:
+                temp = var__agl__cellSize
+            if action is not None and hasattr(action, "v85".split('[')[0].split('.')[0]):
+                action.v85 = temp
+            else:
+                v85 = temp 
+
+
+            temp = get_nested_attribute(action, 'var__agl__cellSize', locals())
+            if temp is None:
+                temp = var__agl__cellSize
+            if action is not None and hasattr(action, "v86".split('[')[0].split('.')[0]):
+                action.v86 = temp
+            else:
+                v86 = temp 
+
+            v84 = (v85 , v86); v84 = tuple(v84) if isinstance(v84, np.ndarray) else v84
+
+            if model is not None:
+                v87 = Ellipse()
+                model.add_object(v87) # add object to model
+            else:
+                v87 = Ellipse(root = root)
+            v87.origin = v84
+
+            temp = get_nested_attribute(action, '60', locals())
+            if temp is None:
+                temp = 60
+            if action is not None and hasattr(action, "v89".split('[')[0].split('.')[0]):
+                action.v89 = temp
+            else:
+                v89 = temp 
+
+
+            temp = get_nested_attribute(action, '40', locals())
+            if temp is None:
+                temp = 40
+            if action is not None and hasattr(action, "v90".split('[')[0].split('.')[0]):
+                action.v90 = temp
+            else:
+                v90 = temp 
+
+            v88 = (v89 , v90); v88 = tuple(v88) if isinstance(v88, np.ndarray) else v88
+
+            temp = get_nested_attribute(action, 'v88', locals())
+            if temp is None:
+                temp = v88
+            if action is not None and hasattr(action, "v91".split('[')[0].split('.')[0]):
+                action.v91 = temp
+            else:
+                v91 = temp 
+
+
+            temp = get_nested_attribute(action, 'v91', locals())
+            if temp is None:
+                temp = v91
+            if action is not None and hasattr(action, "v92".split('[')[0].split('.')[0]):
+                action.v92 = temp
+            else:
+                v92 = temp 
+
+
+            temp = get_nested_attribute(action, '"blue"', locals())
+            if temp is None:
+                temp = "blue"
+            if action is not None and hasattr(action, "v93".split('[')[0].split('.')[0]):
+                action.v93 = temp
+            else:
+                v93 = temp 
+
+
+            temp = get_nested_attribute(action, 'v93', locals())
+            if temp is None:
+                temp = v93
+            if action is not None and hasattr(action, "v94".split('[')[0].split('.')[0]):
+                action.v94 = temp
+            else:
+                v94 = temp 
+
+
+            temp = get_nested_attribute(action, 'v94', locals())
+            if temp is None:
+                temp = v94
+            if action is not None and hasattr(action, "v95".split('[')[0].split('.')[0]):
+                action.v95 = temp
+            else:
+                v95 = temp 
+
+
+            if action is not None:
+                action.v87.length = v92
+                action.v87.fill = v95
+            else:
+                v87.length = v92
+                v87.fill = v95
+
+            temp = get_nested_attribute(action, 'v87', locals())
+            if temp is None:
+                temp = v87
+            if action is not None and hasattr(action, "var__agl__ell".split('[')[0].split('.')[0]):
+                action.var__agl__ell = temp
+            else:
+                var__agl__ell = temp 
+            if model is not None: 
+                model.var__agl__ell = var__agl__ell
+                model.last_var__agl__ell = copy.deepcopy(var__agl__ell)
+
+            temp = get_nested_attribute(action, 'var__agl__cellSize', locals())
+            if temp is None:
+                temp = var__agl__cellSize
+            if action is not None and hasattr(action, "v97".split('[')[0].split('.')[0]):
+                action.v97 = temp
+            else:
+                v97 = temp 
+
+            v98 = - np.array(v97)
+
+            temp = get_nested_attribute(action, 'var__agl__cellSize', locals())
+            if temp is None:
+                temp = var__agl__cellSize
+            if action is not None and hasattr(action, "v99".split('[')[0].split('.')[0]):
+                action.v99 = temp
+            else:
+                v99 = temp 
+
+            v100 = - np.array(v99)
+            v96 = (v98 , v100); v96 = tuple(v96) if isinstance(v96, np.ndarray) else v96
+
+            if model is not None:
+                v101 = Arc()
+                model.add_object(v101) # add object to model
+            else:
+                v101 = Arc(root = root)
+            v101.origin = v96
+
+            temp = get_nested_attribute(action, '30', locals())
+            if temp is None:
+                temp = 30
+            if action is not None and hasattr(action, "v102".split('[')[0].split('.')[0]):
+                action.v102 = temp
+            else:
+                v102 = temp 
+
+
+            temp = get_nested_attribute(action, 'v102', locals())
+            if temp is None:
+                temp = v102
+            if action is not None and hasattr(action, "v103".split('[')[0].split('.')[0]):
+                action.v103 = temp
+            else:
+                v103 = temp 
+
+
+            temp = get_nested_attribute(action, 'v103', locals())
+            if temp is None:
+                temp = v103
+            if action is not None and hasattr(action, "v104".split('[')[0].split('.')[0]):
+                action.v104 = temp
+            else:
+                v104 = temp 
+
+
+            temp = get_nested_attribute(action, '90', locals())
+            if temp is None:
+                temp = 90
+            if action is not None and hasattr(action, "v105".split('[')[0].split('.')[0]):
+                action.v105 = temp
+            else:
+                v105 = temp 
+
+
+            temp = get_nested_attribute(action, 'v105', locals())
+            if temp is None:
+                temp = v105
+            if action is not None and hasattr(action, "v106".split('[')[0].split('.')[0]):
+                action.v106 = temp
+            else:
+                v106 = temp 
+
+
+            temp = get_nested_attribute(action, 'v106', locals())
+            if temp is None:
+                temp = v106
+            if action is not None and hasattr(action, "v107".split('[')[0].split('.')[0]):
+                action.v107 = temp
+            else:
+                v107 = temp 
+
+
+            temp = get_nested_attribute(action, '60', locals())
+            if temp is None:
+                temp = 60
+            if action is not None and hasattr(action, "v109".split('[')[0].split('.')[0]):
+                action.v109 = temp
+            else:
+                v109 = temp 
+
+
+            temp = get_nested_attribute(action, '40', locals())
+            if temp is None:
+                temp = 40
+            if action is not None and hasattr(action, "v110".split('[')[0].split('.')[0]):
+                action.v110 = temp
+            else:
+                v110 = temp 
+
+            v108 = (v109 , v110); v108 = tuple(v108) if isinstance(v108, np.ndarray) else v108
+
+            temp = get_nested_attribute(action, 'v108', locals())
+            if temp is None:
+                temp = v108
+            if action is not None and hasattr(action, "v111".split('[')[0].split('.')[0]):
+                action.v111 = temp
+            else:
+                v111 = temp 
+
+
+            temp = get_nested_attribute(action, 'v111', locals())
+            if temp is None:
+                temp = v111
+            if action is not None and hasattr(action, "v112".split('[')[0].split('.')[0]):
+                action.v112 = temp
+            else:
+                v112 = temp 
+
+
+            temp = get_nested_attribute(action, '"green"', locals())
+            if temp is None:
+                temp = "green"
+            if action is not None and hasattr(action, "v113".split('[')[0].split('.')[0]):
+                action.v113 = temp
+            else:
+                v113 = temp 
+
+
+            temp = get_nested_attribute(action, 'v113', locals())
+            if temp is None:
+                temp = v113
+            if action is not None and hasattr(action, "v114".split('[')[0].split('.')[0]):
+                action.v114 = temp
+            else:
+                v114 = temp 
+
+
+            temp = get_nested_attribute(action, 'v114', locals())
+            if temp is None:
+                temp = v114
+            if action is not None and hasattr(action, "v115".split('[')[0].split('.')[0]):
+                action.v115 = temp
+            else:
+                v115 = temp 
+
+
+            if action is not None:
+                action.v101.start = v104
+                action.v101.extent = v107
+                action.v101.length = v112
+                action.v101.outline = v115
+            else:
+                v101.start = v104
+                v101.extent = v107
+                v101.length = v112
+                v101.outline = v115
+
+            temp = get_nested_attribute(action, 'v101', locals())
+            if temp is None:
+                temp = v101
+            if action is not None and hasattr(action, "var__agl__arc".split('[')[0].split('.')[0]):
+                action.var__agl__arc = temp
+            else:
+                var__agl__arc = temp 
+            if model is not None: 
+                model.var__agl__arc = var__agl__arc
+                model.last_var__agl__arc = copy.deepcopy(var__agl__arc)
+
+            temp = get_nested_attribute(action, 'var__agl__cellSize', locals())
+            if temp is None:
+                temp = var__agl__cellSize
+            if action is not None and hasattr(action, "v117".split('[')[0].split('.')[0]):
+                action.v117 = temp
+            else:
+                v117 = temp 
+
+
+            temp = get_nested_attribute(action, 'var__agl__cellSize', locals())
+            if temp is None:
+                temp = var__agl__cellSize
+            if action is not None and hasattr(action, "v118".split('[')[0].split('.')[0]):
+                action.v118 = temp
+            else:
+                v118 = temp 
+
+            v119 = - np.array(v118)
+            v116 = (v117 , v119); v116 = tuple(v116) if isinstance(v116, np.ndarray) else v116
+
+            if model is not None:
+                v120 = ArcChord()
+                model.add_object(v120) # add object to model
+            else:
+                v120 = ArcChord(root = root)
+            v120.origin = v116
+
+            temp = get_nested_attribute(action, '30', locals())
+            if temp is None:
+                temp = 30
+            if action is not None and hasattr(action, "v121".split('[')[0].split('.')[0]):
+                action.v121 = temp
+            else:
+                v121 = temp 
+
+
+            temp = get_nested_attribute(action, 'v121', locals())
+            if temp is None:
+                temp = v121
+            if action is not None and hasattr(action, "v122".split('[')[0].split('.')[0]):
+                action.v122 = temp
+            else:
+                v122 = temp 
+
+
+            temp = get_nested_attribute(action, 'v122', locals())
+            if temp is None:
+                temp = v122
+            if action is not None and hasattr(action, "v123".split('[')[0].split('.')[0]):
+                action.v123 = temp
+            else:
+                v123 = temp 
+
+
+            temp = get_nested_attribute(action, '200', locals())
+            if temp is None:
+                temp = 200
+            if action is not None and hasattr(action, "v124".split('[')[0].split('.')[0]):
+                action.v124 = temp
+            else:
+                v124 = temp 
+
+
+            temp = get_nested_attribute(action, 'v124', locals())
+            if temp is None:
+                temp = v124
+            if action is not None and hasattr(action, "v125".split('[')[0].split('.')[0]):
+                action.v125 = temp
+            else:
+                v125 = temp 
+
+
+            temp = get_nested_attribute(action, 'v125', locals())
+            if temp is None:
+                temp = v125
+            if action is not None and hasattr(action, "v126".split('[')[0].split('.')[0]):
+                action.v126 = temp
+            else:
+                v126 = temp 
+
+
+            temp = get_nested_attribute(action, '60', locals())
+            if temp is None:
+                temp = 60
+            if action is not None and hasattr(action, "v128".split('[')[0].split('.')[0]):
+                action.v128 = temp
+            else:
+                v128 = temp 
+
+
+            temp = get_nested_attribute(action, '40', locals())
+            if temp is None:
+                temp = 40
+            if action is not None and hasattr(action, "v129".split('[')[0].split('.')[0]):
+                action.v129 = temp
+            else:
+                v129 = temp 
+
+            v127 = (v128 , v129); v127 = tuple(v127) if isinstance(v127, np.ndarray) else v127
+
+            temp = get_nested_attribute(action, 'v127', locals())
+            if temp is None:
+                temp = v127
+            if action is not None and hasattr(action, "v130".split('[')[0].split('.')[0]):
+                action.v130 = temp
+            else:
+                v130 = temp 
+
+
+            temp = get_nested_attribute(action, 'v130', locals())
+            if temp is None:
+                temp = v130
+            if action is not None and hasattr(action, "v131".split('[')[0].split('.')[0]):
+                action.v131 = temp
+            else:
+                v131 = temp 
+
+
+            temp = get_nested_attribute(action, '"red"', locals())
+            if temp is None:
+                temp = "red"
+            if action is not None and hasattr(action, "v132".split('[')[0].split('.')[0]):
+                action.v132 = temp
+            else:
+                v132 = temp 
+
+
+            temp = get_nested_attribute(action, 'v132', locals())
+            if temp is None:
+                temp = v132
             if action is not None and hasattr(action, "v133".split('[')[0].split('.')[0]):
                 action.v133 = temp
             else:
                 v133 = temp 
 
 
-            temp = get_nested_attribute(action, '50', locals())
+            temp = get_nested_attribute(action, 'v133', locals())
             if temp is None:
-                temp = 50
+                temp = v133
             if action is not None and hasattr(action, "v134".split('[')[0].split('.')[0]):
                 action.v134 = temp
             else:
                 v134 = temp 
 
-            v135 = - np.array(v134)
-            v132 = (v133 , v135); v132 = tuple(v132) if isinstance(v132, np.ndarray) else v132
 
-            if model is not None:
-                model_backup = model
-                v131 = Tower() # this makes model = None in the end!
-                model = model_backup
-                model.add_object(v131) # add object to model
-            else:
-                v131 = Tower(root_local = root, view = last_view)
-            v131.move_absolute(v132)  
-
-            temp = get_nested_attribute(action, 'v131', locals())
+            temp = get_nested_attribute(action, '"blue"', locals())
             if temp is None:
-                temp = v131
+                temp = "blue"
+            if action is not None and hasattr(action, "v135".split('[')[0].split('.')[0]):
+                action.v135 = temp
+            else:
+                v135 = temp 
+
+
+            temp = get_nested_attribute(action, 'v135', locals())
+            if temp is None:
+                temp = v135
             if action is not None and hasattr(action, "v136".split('[')[0].split('.')[0]):
                 action.v136 = temp
             else:
@@ -1369,505 +1299,40 @@ if __name__ == "__main__":
             temp = get_nested_attribute(action, 'v136', locals())
             if temp is None:
                 temp = v136
-            if action is not None and hasattr(action, "var__agl__tower1".split('[')[0].split('.')[0]):
-                action.var__agl__tower1 = temp
+            if action is not None and hasattr(action, "v137".split('[')[0].split('.')[0]):
+                action.v137 = temp
             else:
-                var__agl__tower1 = temp 
+                v137 = temp 
+
+
+            if action is not None:
+                action.v120.start = v123
+                action.v120.extent = v126
+                action.v120.length = v131
+                action.v120.fill = v134
+                action.v120.outline = v137
+            else:
+                v120.start = v123
+                v120.extent = v126
+                v120.length = v131
+                v120.fill = v134
+                v120.outline = v137
+
+            temp = get_nested_attribute(action, 'v120', locals())
+            if temp is None:
+                temp = v120
+            if action is not None and hasattr(action, "var__agl__arcchord".split('[')[0].split('.')[0]):
+                action.var__agl__arcchord = temp
+            else:
+                var__agl__arcchord = temp 
             if model is not None: 
-                model.var__agl__tower1 = var__agl__tower1
-                model.last_var__agl__tower1 = copy.deepcopy(var__agl__tower1)
-
-            temp = get_nested_attribute(action, '500', locals())
-            if temp is None:
-                temp = 500
-            if action is not None and hasattr(action, "v139".split('[')[0].split('.')[0]):
-                action.v139 = temp
-            else:
-                v139 = temp 
-
-
-            temp = get_nested_attribute(action, '50', locals())
-            if temp is None:
-                temp = 50
-            if action is not None and hasattr(action, "v140".split('[')[0].split('.')[0]):
-                action.v140 = temp
-            else:
-                v140 = temp 
-
-            v141 = - np.array(v140)
-            v138 = (v139 , v141); v138 = tuple(v138) if isinstance(v138, np.ndarray) else v138
-
-            if model is not None:
-                model_backup = model
-                v137 = Tower() # this makes model = None in the end!
-                model = model_backup
-                model.add_object(v137) # add object to model
-            else:
-                v137 = Tower(root_local = root, view = last_view)
-            v137.move_absolute(v138)  
-
-            temp = get_nested_attribute(action, 'v137', locals())
-            if temp is None:
-                temp = v137
-            if action is not None and hasattr(action, "v142".split('[')[0].split('.')[0]):
-                action.v142 = temp
-            else:
-                v142 = temp 
-
-
-            temp = get_nested_attribute(action, 'v142', locals())
-            if temp is None:
-                temp = v142
-            if action is not None and hasattr(action, "var__agl__tower2".split('[')[0].split('.')[0]):
-                action.var__agl__tower2 = temp
-            else:
-                var__agl__tower2 = temp 
-            if model is not None: 
-                model.var__agl__tower2 = var__agl__tower2
-                model.last_var__agl__tower2 = copy.deepcopy(var__agl__tower2)
-
-            temp = get_nested_attribute(action, '1000', locals())
-            if temp is None:
-                temp = 1000
-            if action is not None and hasattr(action, "v145".split('[')[0].split('.')[0]):
-                action.v145 = temp
-            else:
-                v145 = temp 
-
-
-            temp = get_nested_attribute(action, '50', locals())
-            if temp is None:
-                temp = 50
-            if action is not None and hasattr(action, "v146".split('[')[0].split('.')[0]):
-                action.v146 = temp
-            else:
-                v146 = temp 
-
-            v147 = - np.array(v146)
-            v144 = (v145 , v147); v144 = tuple(v144) if isinstance(v144, np.ndarray) else v144
-
-            if model is not None:
-                model_backup = model
-                v143 = Tower() # this makes model = None in the end!
-                model = model_backup
-                model.add_object(v143) # add object to model
-            else:
-                v143 = Tower(root_local = root, view = last_view)
-            v143.move_absolute(v144)  
-
-            temp = get_nested_attribute(action, 'v143', locals())
-            if temp is None:
-                temp = v143
-            if action is not None and hasattr(action, "v148".split('[')[0].split('.')[0]):
-                action.v148 = temp
-            else:
-                v148 = temp 
-
-
-            temp = get_nested_attribute(action, 'v148', locals())
-            if temp is None:
-                temp = v148
-            if action is not None and hasattr(action, "var__agl__tower3".split('[')[0].split('.')[0]):
-                action.var__agl__tower3 = temp
-            else:
-                var__agl__tower3 = temp 
-            if model is not None: 
-                model.var__agl__tower3 = var__agl__tower3
-                model.last_var__agl__tower3 = copy.deepcopy(var__agl__tower3)
-
-            temp = get_nested_attribute(action, 'var__agl__tower2', locals())
-            if temp is None:
-                temp = var__agl__tower2
-            if action is not None and hasattr(action, "v150".split('[')[0].split('.')[0]):
-                action.v150 = temp
-            else:
-                v150 = temp 
-
-
-            temp = get_nested_attribute(action, 'var__agl__tower3', locals())
-            if temp is None:
-                temp = var__agl__tower3
-            if action is not None and hasattr(action, "v151".split('[')[0].split('.')[0]):
-                action.v151 = temp
-            else:
-                v151 = temp 
-
-            v149 = [v150,v151]
-
-            temp = get_nested_attribute(action, 'v149', locals())
-            if temp is None:
-                temp = v149
-            if action is not None and hasattr(action, "v152".split('[')[0].split('.')[0]):
-                action.v152 = temp
-            else:
-                v152 = temp 
-
-
-            temp = get_nested_attribute(action, 'v152', locals())
-            if temp is None:
-                temp = v152
-            if action is not None and hasattr(action, "v153".split('[')[0].split('.')[0]):
-                action.v153 = temp
-            else:
-                v153 = temp 
-
-
-            temp = get_nested_attribute(action, 'v153', locals())
-            if temp is None:
-                temp = v153
-            if action is not None and hasattr(action, "var__agl__towersToCheck".split('[')[0].split('.')[0]):
-                action.var__agl__towersToCheck = temp
-            else:
-                var__agl__towersToCheck = temp 
-            if model is not None: 
-                model.var__agl__towersToCheck = var__agl__towersToCheck
-                model.last_var__agl__towersToCheck = copy.deepcopy(var__agl__towersToCheck)
-
-            temp = get_nested_attribute(action, 'False', locals())
-            if temp is None:
-                temp = False
-            if action is not None and hasattr(action, "v154".split('[')[0].split('.')[0]):
-                action.v154 = temp
-            else:
-                v154 = temp 
-
-
-            temp = get_nested_attribute(action, 'v154', locals())
-            if temp is None:
-                temp = v154
-            if action is not None and hasattr(action, "v155".split('[')[0].split('.')[0]):
-                action.v155 = temp
-            else:
-                v155 = temp 
-
-
-            temp = get_nested_attribute(action, 'v155', locals())
-            if temp is None:
-                temp = v155
-            if action is not None and hasattr(action, "v156".split('[')[0].split('.')[0]):
-                action.v156 = temp
-            else:
-                v156 = temp 
-
-
-            temp = get_nested_attribute(action, 'v156', locals())
-            if temp is None:
-                temp = v156
-            if action is not None and hasattr(action, "var__agl__isSolved".split('[')[0].split('.')[0]):
-                action.var__agl__isSolved = temp
-            else:
-                var__agl__isSolved = temp 
-            if model is not None: 
-                model.var__agl__isSolved = var__agl__isSolved
-                model.last_var__agl__isSolved = copy.deepcopy(var__agl__isSolved)
-
-            temp = get_nested_attribute(action, 'False', locals())
-            if temp is None:
-                temp = False
-            if action is not None and hasattr(action, "v157".split('[')[0].split('.')[0]):
-                action.v157 = temp
-            else:
-                v157 = temp 
-
-
-            temp = get_nested_attribute(action, 'v157', locals())
-            if temp is None:
-                temp = v157
-            if action is not None and hasattr(action, "v158".split('[')[0].split('.')[0]):
-                action.v158 = temp
-            else:
-                v158 = temp 
-
-
-            temp = get_nested_attribute(action, 'v158', locals())
-            if temp is None:
-                temp = v158
-            if action is not None and hasattr(action, "v159".split('[')[0].split('.')[0]):
-                action.v159 = temp
-            else:
-                v159 = temp 
-
-
-            temp = get_nested_attribute(action, 'v159', locals())
-            if temp is None:
-                temp = v159
-            if action is not None and hasattr(action, "var__agl__checkWin".split('[')[0].split('.')[0]):
-                action.var__agl__checkWin = temp
-            else:
-                var__agl__checkWin = temp 
-            if model is not None: 
-                model.var__agl__checkWin = var__agl__checkWin
-                model.last_var__agl__checkWin = copy.deepcopy(var__agl__checkWin)
+                model.var__agl__arcchord = var__agl__arcchord
+                model.last_var__agl__arcchord = copy.deepcopy(var__agl__arcchord)
 
             self.fixCoords()
 
         def create_object(self, view):
             action = self
-
-            if self.var__agl__checkWin != self.last_var__agl__checkWin:
-
-                temp = get_nested_attribute(action, '0', locals())
-                if temp is None:
-                    temp = 0
-                if action is not None and hasattr(action, "v160".split('[')[0].split('.')[0]):
-                    action.v160 = temp
-                else:
-                    v160 = temp 
-
-
-                temp = get_nested_attribute(action, '2', locals())
-                if temp is None:
-                    temp = 2
-                if action is not None and hasattr(action, "v161".split('[')[0].split('.')[0]):
-                    action.v161 = temp
-                else:
-                    v161 = temp 
-
-                for var__agl__t in range(v160, v161, 1):
-
-                    temp = get_nested_attribute(action, 'var__agl__checkWin', locals())
-                    if temp is None:
-                        temp = var__agl__checkWin
-                    if action is not None and hasattr(action, "v162".split('[')[0].split('.')[0]):
-                        action.v162 = temp
-                    else:
-                        v162 = temp 
-
-                    v163 = not v162
-                    if v163:
-
-                        temp = get_nested_attribute(action, 'True', locals())
-                        if temp is None:
-                            temp = True
-                        if action is not None and hasattr(action, "v164".split('[')[0].split('.')[0]):
-                            action.v164 = temp
-                        else:
-                            v164 = temp 
-
-
-                        temp = get_nested_attribute(action, 'v164', locals())
-                        if temp is None:
-                            temp = v164
-                        if action is not None and hasattr(action, "v165".split('[')[0].split('.')[0]):
-                            action.v165 = temp
-                        else:
-                            v165 = temp 
-
-
-                        temp = get_nested_attribute(action, 'v165', locals())
-                        if temp is None:
-                            temp = v165
-                        if action is not None and hasattr(action, "var__agl__checkWin".split('[')[0].split('.')[0]):
-                            action.var__agl__checkWin = temp
-                        else:
-                            var__agl__checkWin = temp 
-                        
-
-                    temp = get_nested_attribute(action, '2', locals())
-                    if temp is None:
-                        temp = 2
-                    if action is not None and hasattr(action, "v166".split('[')[0].split('.')[0]):
-                        action.v166 = temp
-                    else:
-                        v166 = temp 
-
-
-                    temp = get_nested_attribute(action, '1', locals())
-                    if temp is None:
-                        temp = 1
-                    if action is not None and hasattr(action, "v167".split('[')[0].split('.')[0]):
-                        action.v167 = temp
-                    else:
-                        v167 = temp 
-
-                    v168 = - np.array(v167)
-
-                    temp = get_nested_attribute(action, '1', locals())
-                    if temp is None:
-                        temp = 1
-                    if action is not None and hasattr(action, "v169".split('[')[0].split('.')[0]):
-                        action.v169 = temp
-                    else:
-                        v169 = temp 
-
-                    v170 = - np.array(v169)
-                    for var__agl__d in range(v166, v168, v170):
-
-                        temp = get_nested_attribute(action, 'var__agl__t', locals())
-                        if temp is None:
-                            temp = var__agl__t
-                        if action is not None and hasattr(action, "v173".split('[')[0].split('.')[0]):
-                            action.v173 = temp
-                        else:
-                            v173 = temp 
-
-
-                        temp = get_nested_attribute(action, 'var__agl__d', locals())
-                        if temp is None:
-                            temp = var__agl__d
-                        if action is not None and hasattr(action, "v174".split('[')[0].split('.')[0]):
-                            action.v174 = temp
-                        else:
-                            v174 = temp 
-
-
-                        temp = get_nested_attribute(action, 'var__agl__towersToCheck[v173].var__agl__disks[v174].state', locals())
-                        if temp is None:
-                            temp = var__agl__towersToCheck[v173].var__agl__disks[v174].state
-                        if action is not None and hasattr(action, "v172".split('[')[0].split('.')[0]):
-                            action.v172 = temp
-                        else:
-                            v172 = temp 
-
-
-                        temp = get_nested_attribute(action, '"normal"', locals())
-                        if temp is None:
-                            temp = "normal"
-                        if action is not None and hasattr(action, "v175".split('[')[0].split('.')[0]):
-                            action.v175 = temp
-                        else:
-                            v175 = temp 
-
-                        v171 = np.array(v172) != np.array(v175); v171 = tuple(v171) if isinstance(v171, np.ndarray) else v171
-                        if v171:
-
-                            temp = get_nested_attribute(action, 'False', locals())
-                            if temp is None:
-                                temp = False
-                            if action is not None and hasattr(action, "v176".split('[')[0].split('.')[0]):
-                                action.v176 = temp
-                            else:
-                                v176 = temp 
-
-
-                            temp = get_nested_attribute(action, 'v176', locals())
-                            if temp is None:
-                                temp = v176
-                            if action is not None and hasattr(action, "v177".split('[')[0].split('.')[0]):
-                                action.v177 = temp
-                            else:
-                                v177 = temp 
-
-
-                            temp = get_nested_attribute(action, 'v177', locals())
-                            if temp is None:
-                                temp = v177
-                            if action is not None and hasattr(action, "var__agl__checkWin".split('[')[0].split('.')[0]):
-                                action.var__agl__checkWin = temp
-                            else:
-                                var__agl__checkWin = temp 
-                            
-
-                    temp = get_nested_attribute(action, 'var__agl__checkWin', locals())
-                    if temp is None:
-                        temp = var__agl__checkWin
-                    if action is not None and hasattr(action, "v178".split('[')[0].split('.')[0]):
-                        action.v178 = temp
-                    else:
-                        v178 = temp 
-
-                    if v178:
-
-                        temp = get_nested_attribute(action, '"Solved!!!"', locals())
-                        if temp is None:
-                            temp = "Solved!!!"
-                        if action is not None and hasattr(action, "v179".split('[')[0].split('.')[0]):
-                            action.v179 = temp
-                        else:
-                            v179 = temp 
-
-                        print(v179)
-
-                        temp = get_nested_attribute(action, '"normal"', locals())
-                        if temp is None:
-                            temp = "normal"
-                        if action is not None and hasattr(action, "v180".split('[')[0].split('.')[0]):
-                            action.v180 = temp
-                        else:
-                            v180 = temp 
-
-
-                        temp = get_nested_attribute(action, 'v180', locals())
-                        if temp is None:
-                            temp = v180
-                        if action is not None and hasattr(action, "v181".split('[')[0].split('.')[0]):
-                            action.v181 = temp
-                        else:
-                            v181 = temp 
-
-
-                        temp = get_nested_attribute(action, 'var__agl__t', locals())
-                        if temp is None:
-                            temp = var__agl__t
-                        if action is not None and hasattr(action, "v182".split('[')[0].split('.')[0]):
-                            action.v182 = temp
-                        else:
-                            v182 = temp 
-
-
-                        temp = get_nested_attribute(action, 'v181', locals())
-                        if temp is None:
-                            temp = v181
-                        if action is not None and hasattr(action, "var__agl__towersToCheck[v182].var__agl__base.var__agl__solved.state".split('[')[0].split('.')[0]):
-                            action.var__agl__towersToCheck[v182].var__agl__base.var__agl__solved.state = temp
-                        else:
-                            var__agl__towersToCheck[v182].var__agl__base.var__agl__solved.state = temp 
-
-
-                        temp = get_nested_attribute(action, 'True', locals())
-                        if temp is None:
-                            temp = True
-                        if action is not None and hasattr(action, "v183".split('[')[0].split('.')[0]):
-                            action.v183 = temp
-                        else:
-                            v183 = temp 
-
-
-                        temp = get_nested_attribute(action, 'v183', locals())
-                        if temp is None:
-                            temp = v183
-                        if action is not None and hasattr(action, "v184".split('[')[0].split('.')[0]):
-                            action.v184 = temp
-                        else:
-                            v184 = temp 
-
-
-                        temp = get_nested_attribute(action, 'v184', locals())
-                        if temp is None:
-                            temp = v184
-                        if action is not None and hasattr(action, "var__agl__isSolved".split('[')[0].split('.')[0]):
-                            action.var__agl__isSolved = temp
-                        else:
-                            var__agl__isSolved = temp 
-                        
-
-                temp = get_nested_attribute(action, 'False', locals())
-                if temp is None:
-                    temp = False
-                if action is not None and hasattr(action, "v185".split('[')[0].split('.')[0]):
-                    action.v185 = temp
-                else:
-                    v185 = temp 
-
-
-                temp = get_nested_attribute(action, 'v185', locals())
-                if temp is None:
-                    temp = v185
-                if action is not None and hasattr(action, "v186".split('[')[0].split('.')[0]):
-                    action.v186 = temp
-                else:
-                    v186 = temp 
-
-
-                temp = get_nested_attribute(action, 'v186', locals())
-                if temp is None:
-                    temp = v186
-                if action is not None and hasattr(action, "var__agl__checkWin".split('[')[0].split('.')[0]):
-                    action.var__agl__checkWin = temp
-                else:
-                    var__agl__checkWin = temp 
-
-                self.last_var__agl__checkWin = copy.deepcopy(self.var__agl__checkWin)
         
             action = None
             super().create_object(view)
@@ -1877,7 +1342,770 @@ if __name__ == "__main__":
             """Create a deep copy of the model."""
             if memo is None:
                 memo = {} # this is required by the deepcopy protocol
-            new_model = Game()
+            new_model = model2()
+
+            self.copyAttributesTo(new_model)
+            new_model.view = self.view
+            new_model.root = self.root
+            return new_model       
+
+    #################################################################
+    #################################################################
+    ## Model
+    #################################################################
+    class model3(Model):
+        def __init__(self, root_local: Root = None, view: View = None, origin=(0,0)):
+            super().__init__(root=root_local, view=view, origin=origin)
+            model = self
+
+            temp = get_nested_attribute(action, '200', locals())
+            if temp is None:
+                temp = 200
+            if action is not None and hasattr(action, "v138".split('[')[0].split('.')[0]):
+                action.v138 = temp
+            else:
+                v138 = temp 
+
+
+            temp = get_nested_attribute(action, 'v138', locals())
+            if temp is None:
+                temp = v138
+            if action is not None and hasattr(action, "v139".split('[')[0].split('.')[0]):
+                action.v139 = temp
+            else:
+                v139 = temp 
+
+
+            temp = get_nested_attribute(action, 'v139', locals())
+            if temp is None:
+                temp = v139
+            if action is not None and hasattr(action, "v140".split('[')[0].split('.')[0]):
+                action.v140 = temp
+            else:
+                v140 = temp 
+
+
+            temp = get_nested_attribute(action, 'v140', locals())
+            if temp is None:
+                temp = v140
+            if action is not None and hasattr(action, "var__agl__cellSize".split('[')[0].split('.')[0]):
+                action.var__agl__cellSize = temp
+            else:
+                var__agl__cellSize = temp 
+            if model is not None: 
+                model.var__agl__cellSize = var__agl__cellSize
+                model.last_var__agl__cellSize = copy.deepcopy(var__agl__cellSize)
+
+            temp = get_nested_attribute(action, '0', locals())
+            if temp is None:
+                temp = 0
+            if action is not None and hasattr(action, "v142".split('[')[0].split('.')[0]):
+                action.v142 = temp
+            else:
+                v142 = temp 
+
+
+            temp = get_nested_attribute(action, 'var__agl__cellSize', locals())
+            if temp is None:
+                temp = var__agl__cellSize
+            if action is not None and hasattr(action, "v143".split('[')[0].split('.')[0]):
+                action.v143 = temp
+            else:
+                v143 = temp 
+
+            v141 = (v142 , v143); v141 = tuple(v141) if isinstance(v141, np.ndarray) else v141
+
+            if model is not None:
+                v144 = Rectangle()
+                model.add_object(v144) # add object to model
+            else:
+                v144 = Rectangle(root = root)
+            v144.origin = v141
+
+            temp = get_nested_attribute(action, '50', locals())
+            if temp is None:
+                temp = 50
+            if action is not None and hasattr(action, "v146".split('[')[0].split('.')[0]):
+                action.v146 = temp
+            else:
+                v146 = temp 
+
+
+            temp = get_nested_attribute(action, '50', locals())
+            if temp is None:
+                temp = 50
+            if action is not None and hasattr(action, "v147".split('[')[0].split('.')[0]):
+                action.v147 = temp
+            else:
+                v147 = temp 
+
+            v145 = (v146 , v147); v145 = tuple(v145) if isinstance(v145, np.ndarray) else v145
+
+            temp = get_nested_attribute(action, 'v145', locals())
+            if temp is None:
+                temp = v145
+            if action is not None and hasattr(action, "v148".split('[')[0].split('.')[0]):
+                action.v148 = temp
+            else:
+                v148 = temp 
+
+
+            temp = get_nested_attribute(action, 'v148', locals())
+            if temp is None:
+                temp = v148
+            if action is not None and hasattr(action, "v149".split('[')[0].split('.')[0]):
+                action.v149 = temp
+            else:
+                v149 = temp 
+
+
+            temp = get_nested_attribute(action, '"orange"', locals())
+            if temp is None:
+                temp = "orange"
+            if action is not None and hasattr(action, "v150".split('[')[0].split('.')[0]):
+                action.v150 = temp
+            else:
+                v150 = temp 
+
+
+            temp = get_nested_attribute(action, 'v150', locals())
+            if temp is None:
+                temp = v150
+            if action is not None and hasattr(action, "v151".split('[')[0].split('.')[0]):
+                action.v151 = temp
+            else:
+                v151 = temp 
+
+
+            temp = get_nested_attribute(action, 'v151', locals())
+            if temp is None:
+                temp = v151
+            if action is not None and hasattr(action, "v152".split('[')[0].split('.')[0]):
+                action.v152 = temp
+            else:
+                v152 = temp 
+
+
+            if action is not None:
+                action.v144.length = v149
+                action.v144.fill = v152
+            else:
+                v144.length = v149
+                v144.fill = v152
+
+            temp = get_nested_attribute(action, 'v144', locals())
+            if temp is None:
+                temp = v144
+            if action is not None and hasattr(action, "var__agl__rec".split('[')[0].split('.')[0]):
+                action.var__agl__rec = temp
+            else:
+                var__agl__rec = temp 
+            if model is not None: 
+                model.var__agl__rec = var__agl__rec
+                model.last_var__agl__rec = copy.deepcopy(var__agl__rec)
+
+            temp = get_nested_attribute(action, 'var__agl__cellSize', locals())
+            if temp is None:
+                temp = var__agl__cellSize
+            if action is not None and hasattr(action, "v154".split('[')[0].split('.')[0]):
+                action.v154 = temp
+            else:
+                v154 = temp 
+
+
+            temp = get_nested_attribute(action, 'var__agl__cellSize', locals())
+            if temp is None:
+                temp = var__agl__cellSize
+            if action is not None and hasattr(action, "v155".split('[')[0].split('.')[0]):
+                action.v155 = temp
+            else:
+                v155 = temp 
+
+            v153 = (v154 , v155); v153 = tuple(v153) if isinstance(v153, np.ndarray) else v153
+
+            if model is not None:
+                v156 = Ellipse()
+                model.add_object(v156) # add object to model
+            else:
+                v156 = Ellipse(root = root)
+            v156.origin = v153
+
+            temp = get_nested_attribute(action, '60', locals())
+            if temp is None:
+                temp = 60
+            if action is not None and hasattr(action, "v158".split('[')[0].split('.')[0]):
+                action.v158 = temp
+            else:
+                v158 = temp 
+
+
+            temp = get_nested_attribute(action, '40', locals())
+            if temp is None:
+                temp = 40
+            if action is not None and hasattr(action, "v159".split('[')[0].split('.')[0]):
+                action.v159 = temp
+            else:
+                v159 = temp 
+
+            v157 = (v158 , v159); v157 = tuple(v157) if isinstance(v157, np.ndarray) else v157
+
+            temp = get_nested_attribute(action, 'v157', locals())
+            if temp is None:
+                temp = v157
+            if action is not None and hasattr(action, "v160".split('[')[0].split('.')[0]):
+                action.v160 = temp
+            else:
+                v160 = temp 
+
+
+            temp = get_nested_attribute(action, 'v160', locals())
+            if temp is None:
+                temp = v160
+            if action is not None and hasattr(action, "v161".split('[')[0].split('.')[0]):
+                action.v161 = temp
+            else:
+                v161 = temp 
+
+
+            temp = get_nested_attribute(action, '"blue"', locals())
+            if temp is None:
+                temp = "blue"
+            if action is not None and hasattr(action, "v162".split('[')[0].split('.')[0]):
+                action.v162 = temp
+            else:
+                v162 = temp 
+
+
+            temp = get_nested_attribute(action, 'v162', locals())
+            if temp is None:
+                temp = v162
+            if action is not None and hasattr(action, "v163".split('[')[0].split('.')[0]):
+                action.v163 = temp
+            else:
+                v163 = temp 
+
+
+            temp = get_nested_attribute(action, 'v163', locals())
+            if temp is None:
+                temp = v163
+            if action is not None and hasattr(action, "v164".split('[')[0].split('.')[0]):
+                action.v164 = temp
+            else:
+                v164 = temp 
+
+
+            if action is not None:
+                action.v156.length = v161
+                action.v156.fill = v164
+            else:
+                v156.length = v161
+                v156.fill = v164
+
+            temp = get_nested_attribute(action, 'v156', locals())
+            if temp is None:
+                temp = v156
+            if action is not None and hasattr(action, "var__agl__ell".split('[')[0].split('.')[0]):
+                action.var__agl__ell = temp
+            else:
+                var__agl__ell = temp 
+            if model is not None: 
+                model.var__agl__ell = var__agl__ell
+                model.last_var__agl__ell = copy.deepcopy(var__agl__ell)
+
+            temp = get_nested_attribute(action, 'var__agl__cellSize', locals())
+            if temp is None:
+                temp = var__agl__cellSize
+            if action is not None and hasattr(action, "v166".split('[')[0].split('.')[0]):
+                action.v166 = temp
+            else:
+                v166 = temp 
+
+            v167 = - np.array(v166)
+
+            temp = get_nested_attribute(action, 'var__agl__cellSize', locals())
+            if temp is None:
+                temp = var__agl__cellSize
+            if action is not None and hasattr(action, "v168".split('[')[0].split('.')[0]):
+                action.v168 = temp
+            else:
+                v168 = temp 
+
+            v169 = - np.array(v168)
+            v165 = (v167 , v169); v165 = tuple(v165) if isinstance(v165, np.ndarray) else v165
+
+            if model is not None:
+                v170 = Arc()
+                model.add_object(v170) # add object to model
+            else:
+                v170 = Arc(root = root)
+            v170.origin = v165
+
+            temp = get_nested_attribute(action, '30', locals())
+            if temp is None:
+                temp = 30
+            if action is not None and hasattr(action, "v171".split('[')[0].split('.')[0]):
+                action.v171 = temp
+            else:
+                v171 = temp 
+
+
+            temp = get_nested_attribute(action, 'v171', locals())
+            if temp is None:
+                temp = v171
+            if action is not None and hasattr(action, "v172".split('[')[0].split('.')[0]):
+                action.v172 = temp
+            else:
+                v172 = temp 
+
+
+            temp = get_nested_attribute(action, 'v172', locals())
+            if temp is None:
+                temp = v172
+            if action is not None and hasattr(action, "v173".split('[')[0].split('.')[0]):
+                action.v173 = temp
+            else:
+                v173 = temp 
+
+
+            temp = get_nested_attribute(action, '90', locals())
+            if temp is None:
+                temp = 90
+            if action is not None and hasattr(action, "v174".split('[')[0].split('.')[0]):
+                action.v174 = temp
+            else:
+                v174 = temp 
+
+
+            temp = get_nested_attribute(action, 'v174', locals())
+            if temp is None:
+                temp = v174
+            if action is not None and hasattr(action, "v175".split('[')[0].split('.')[0]):
+                action.v175 = temp
+            else:
+                v175 = temp 
+
+
+            temp = get_nested_attribute(action, 'v175', locals())
+            if temp is None:
+                temp = v175
+            if action is not None and hasattr(action, "v176".split('[')[0].split('.')[0]):
+                action.v176 = temp
+            else:
+                v176 = temp 
+
+
+            temp = get_nested_attribute(action, '60', locals())
+            if temp is None:
+                temp = 60
+            if action is not None and hasattr(action, "v178".split('[')[0].split('.')[0]):
+                action.v178 = temp
+            else:
+                v178 = temp 
+
+
+            temp = get_nested_attribute(action, '40', locals())
+            if temp is None:
+                temp = 40
+            if action is not None and hasattr(action, "v179".split('[')[0].split('.')[0]):
+                action.v179 = temp
+            else:
+                v179 = temp 
+
+            v177 = (v178 , v179); v177 = tuple(v177) if isinstance(v177, np.ndarray) else v177
+
+            temp = get_nested_attribute(action, 'v177', locals())
+            if temp is None:
+                temp = v177
+            if action is not None and hasattr(action, "v180".split('[')[0].split('.')[0]):
+                action.v180 = temp
+            else:
+                v180 = temp 
+
+
+            temp = get_nested_attribute(action, 'v180', locals())
+            if temp is None:
+                temp = v180
+            if action is not None and hasattr(action, "v181".split('[')[0].split('.')[0]):
+                action.v181 = temp
+            else:
+                v181 = temp 
+
+
+            temp = get_nested_attribute(action, '"green"', locals())
+            if temp is None:
+                temp = "green"
+            if action is not None and hasattr(action, "v182".split('[')[0].split('.')[0]):
+                action.v182 = temp
+            else:
+                v182 = temp 
+
+
+            temp = get_nested_attribute(action, 'v182', locals())
+            if temp is None:
+                temp = v182
+            if action is not None and hasattr(action, "v183".split('[')[0].split('.')[0]):
+                action.v183 = temp
+            else:
+                v183 = temp 
+
+
+            temp = get_nested_attribute(action, 'v183', locals())
+            if temp is None:
+                temp = v183
+            if action is not None and hasattr(action, "v184".split('[')[0].split('.')[0]):
+                action.v184 = temp
+            else:
+                v184 = temp 
+
+
+            if action is not None:
+                action.v170.start = v173
+                action.v170.extent = v176
+                action.v170.length = v181
+                action.v170.outline = v184
+            else:
+                v170.start = v173
+                v170.extent = v176
+                v170.length = v181
+                v170.outline = v184
+
+            temp = get_nested_attribute(action, 'v170', locals())
+            if temp is None:
+                temp = v170
+            if action is not None and hasattr(action, "var__agl__arc".split('[')[0].split('.')[0]):
+                action.var__agl__arc = temp
+            else:
+                var__agl__arc = temp 
+            if model is not None: 
+                model.var__agl__arc = var__agl__arc
+                model.last_var__agl__arc = copy.deepcopy(var__agl__arc)
+
+            temp = get_nested_attribute(action, 'var__agl__cellSize', locals())
+            if temp is None:
+                temp = var__agl__cellSize
+            if action is not None and hasattr(action, "v186".split('[')[0].split('.')[0]):
+                action.v186 = temp
+            else:
+                v186 = temp 
+
+
+            temp = get_nested_attribute(action, 'var__agl__cellSize', locals())
+            if temp is None:
+                temp = var__agl__cellSize
+            if action is not None and hasattr(action, "v187".split('[')[0].split('.')[0]):
+                action.v187 = temp
+            else:
+                v187 = temp 
+
+            v188 = - np.array(v187)
+            v185 = (v186 , v188); v185 = tuple(v185) if isinstance(v185, np.ndarray) else v185
+
+            if model is not None:
+                v189 = ArcChord()
+                model.add_object(v189) # add object to model
+            else:
+                v189 = ArcChord(root = root)
+            v189.origin = v185
+
+            temp = get_nested_attribute(action, '30', locals())
+            if temp is None:
+                temp = 30
+            if action is not None and hasattr(action, "v190".split('[')[0].split('.')[0]):
+                action.v190 = temp
+            else:
+                v190 = temp 
+
+
+            temp = get_nested_attribute(action, 'v190', locals())
+            if temp is None:
+                temp = v190
+            if action is not None and hasattr(action, "v191".split('[')[0].split('.')[0]):
+                action.v191 = temp
+            else:
+                v191 = temp 
+
+
+            temp = get_nested_attribute(action, 'v191', locals())
+            if temp is None:
+                temp = v191
+            if action is not None and hasattr(action, "v192".split('[')[0].split('.')[0]):
+                action.v192 = temp
+            else:
+                v192 = temp 
+
+
+            temp = get_nested_attribute(action, '200', locals())
+            if temp is None:
+                temp = 200
+            if action is not None and hasattr(action, "v193".split('[')[0].split('.')[0]):
+                action.v193 = temp
+            else:
+                v193 = temp 
+
+
+            temp = get_nested_attribute(action, 'v193', locals())
+            if temp is None:
+                temp = v193
+            if action is not None and hasattr(action, "v194".split('[')[0].split('.')[0]):
+                action.v194 = temp
+            else:
+                v194 = temp 
+
+
+            temp = get_nested_attribute(action, 'v194', locals())
+            if temp is None:
+                temp = v194
+            if action is not None and hasattr(action, "v195".split('[')[0].split('.')[0]):
+                action.v195 = temp
+            else:
+                v195 = temp 
+
+
+            temp = get_nested_attribute(action, '60', locals())
+            if temp is None:
+                temp = 60
+            if action is not None and hasattr(action, "v197".split('[')[0].split('.')[0]):
+                action.v197 = temp
+            else:
+                v197 = temp 
+
+
+            temp = get_nested_attribute(action, '40', locals())
+            if temp is None:
+                temp = 40
+            if action is not None and hasattr(action, "v198".split('[')[0].split('.')[0]):
+                action.v198 = temp
+            else:
+                v198 = temp 
+
+            v196 = (v197 , v198); v196 = tuple(v196) if isinstance(v196, np.ndarray) else v196
+
+            temp = get_nested_attribute(action, 'v196', locals())
+            if temp is None:
+                temp = v196
+            if action is not None and hasattr(action, "v199".split('[')[0].split('.')[0]):
+                action.v199 = temp
+            else:
+                v199 = temp 
+
+
+            temp = get_nested_attribute(action, 'v199', locals())
+            if temp is None:
+                temp = v199
+            if action is not None and hasattr(action, "v200".split('[')[0].split('.')[0]):
+                action.v200 = temp
+            else:
+                v200 = temp 
+
+
+            temp = get_nested_attribute(action, '"red"', locals())
+            if temp is None:
+                temp = "red"
+            if action is not None and hasattr(action, "v201".split('[')[0].split('.')[0]):
+                action.v201 = temp
+            else:
+                v201 = temp 
+
+
+            temp = get_nested_attribute(action, 'v201', locals())
+            if temp is None:
+                temp = v201
+            if action is not None and hasattr(action, "v202".split('[')[0].split('.')[0]):
+                action.v202 = temp
+            else:
+                v202 = temp 
+
+
+            temp = get_nested_attribute(action, 'v202', locals())
+            if temp is None:
+                temp = v202
+            if action is not None and hasattr(action, "v203".split('[')[0].split('.')[0]):
+                action.v203 = temp
+            else:
+                v203 = temp 
+
+
+            temp = get_nested_attribute(action, '"blue"', locals())
+            if temp is None:
+                temp = "blue"
+            if action is not None and hasattr(action, "v204".split('[')[0].split('.')[0]):
+                action.v204 = temp
+            else:
+                v204 = temp 
+
+
+            temp = get_nested_attribute(action, 'v204', locals())
+            if temp is None:
+                temp = v204
+            if action is not None and hasattr(action, "v205".split('[')[0].split('.')[0]):
+                action.v205 = temp
+            else:
+                v205 = temp 
+
+
+            temp = get_nested_attribute(action, 'v205', locals())
+            if temp is None:
+                temp = v205
+            if action is not None and hasattr(action, "v206".split('[')[0].split('.')[0]):
+                action.v206 = temp
+            else:
+                v206 = temp 
+
+
+            if action is not None:
+                action.v189.start = v192
+                action.v189.extent = v195
+                action.v189.length = v200
+                action.v189.fill = v203
+                action.v189.outline = v206
+            else:
+                v189.start = v192
+                v189.extent = v195
+                v189.length = v200
+                v189.fill = v203
+                v189.outline = v206
+
+            temp = get_nested_attribute(action, 'v189', locals())
+            if temp is None:
+                temp = v189
+            if action is not None and hasattr(action, "var__agl__arcchord".split('[')[0].split('.')[0]):
+                action.var__agl__arcchord = temp
+            else:
+                var__agl__arcchord = temp 
+            if model is not None: 
+                model.var__agl__arcchord = var__agl__arcchord
+                model.last_var__agl__arcchord = copy.deepcopy(var__agl__arcchord)
+
+            self.fixCoords()
+
+        def create_object(self, view):
+            action = self
+        
+            action = None
+            super().create_object(view)
+            model = None
+
+        def __deepcopy__(self, memo=None):
+            """Create a deep copy of the model."""
+            if memo is None:
+                memo = {} # this is required by the deepcopy protocol
+            new_model = model3()
+
+            self.copyAttributesTo(new_model)
+            new_model.view = self.view
+            new_model.root = self.root
+            return new_model       
+
+    #################################################################
+    #################################################################
+    ## Model
+    #################################################################
+    class model_compose(Model):
+        def __init__(self, root_local: Root = None, view: View = None, origin=(0,0)):
+            super().__init__(root=root_local, view=view, origin=origin)
+            model = self
+
+            if model is not None:
+                model_backup = model
+                v207 = model1() # this makes model = None in the end!
+                model = model_backup
+                model.add_object(v207) # add object to model
+            else:
+                v207 = model1(root_local = root, view = last_view)
+              
+
+            temp = get_nested_attribute(action, 'v207', locals())
+            if temp is None:
+                temp = v207
+            if action is not None and hasattr(action, "v208".split('[')[0].split('.')[0]):
+                action.v208 = temp
+            else:
+                v208 = temp 
+
+
+            temp = get_nested_attribute(action, 'v208', locals())
+            if temp is None:
+                temp = v208
+            if action is not None and hasattr(action, "var__agl__Model1".split('[')[0].split('.')[0]):
+                action.var__agl__Model1 = temp
+            else:
+                var__agl__Model1 = temp 
+            if model is not None: 
+                model.var__agl__Model1 = var__agl__Model1
+                model.last_var__agl__Model1 = copy.deepcopy(var__agl__Model1)
+
+            if model is not None:
+                model_backup = model
+                v209 = model2() # this makes model = None in the end!
+                model = model_backup
+                model.add_object(v209) # add object to model
+            else:
+                v209 = model2(root_local = root, view = last_view)
+              
+
+            temp = get_nested_attribute(action, 'v209', locals())
+            if temp is None:
+                temp = v209
+            if action is not None and hasattr(action, "v210".split('[')[0].split('.')[0]):
+                action.v210 = temp
+            else:
+                v210 = temp 
+
+
+            temp = get_nested_attribute(action, 'v210', locals())
+            if temp is None:
+                temp = v210
+            if action is not None and hasattr(action, "var__agl__Model2".split('[')[0].split('.')[0]):
+                action.var__agl__Model2 = temp
+            else:
+                var__agl__Model2 = temp 
+            if model is not None: 
+                model.var__agl__Model2 = var__agl__Model2
+                model.last_var__agl__Model2 = copy.deepcopy(var__agl__Model2)
+
+            if model is not None:
+                model_backup = model
+                v211 = model3() # this makes model = None in the end!
+                model = model_backup
+                model.add_object(v211) # add object to model
+            else:
+                v211 = model3(root_local = root, view = last_view)
+              
+
+            temp = get_nested_attribute(action, 'v211', locals())
+            if temp is None:
+                temp = v211
+            if action is not None and hasattr(action, "v212".split('[')[0].split('.')[0]):
+                action.v212 = temp
+            else:
+                v212 = temp 
+
+
+            temp = get_nested_attribute(action, 'v212', locals())
+            if temp is None:
+                temp = v212
+            if action is not None and hasattr(action, "var__agl__Model3".split('[')[0].split('.')[0]):
+                action.var__agl__Model3 = temp
+            else:
+                var__agl__Model3 = temp 
+            if model is not None: 
+                model.var__agl__Model3 = var__agl__Model3
+                model.last_var__agl__Model3 = copy.deepcopy(var__agl__Model3)
+
+            self.fixCoords()
+
+        def create_object(self, view):
+            action = self
+        
+            action = None
+            super().create_object(view)
+            model = None
+
+        def __deepcopy__(self, memo=None):
+            """Create a deep copy of the model."""
+            if memo is None:
+                memo = {} # this is required by the deepcopy protocol
+            new_model = model_compose()
 
             self.copyAttributesTo(new_model)
             new_model.view = self.view
@@ -1887,275 +2115,18 @@ if __name__ == "__main__":
     #################################################################
 
     if model is not None:
-        v187 = View()
-        model.add_object(v187) # add object to model
+        v213 = View()
+        model.add_object(v213) # add object to model
     else:
-        v187 = View(root = root)
+        v213 = View(root = root)
     if last_view is not None:
         views.append(last_view)    
-    last_view = v187
+    last_view = v213
     root.last_view = last_view
 
-    temp = get_nested_attribute(action, '500', locals())
+    temp = get_nested_attribute(action, '800', locals())
     if temp is None:
-        temp = 500
-    if action is not None and hasattr(action, "v188".split('[')[0].split('.')[0]):
-        action.v188 = temp
-    else:
-        v188 = temp 
-
-
-    temp = get_nested_attribute(action, 'v188', locals())
-    if temp is None:
-        temp = v188
-    if action is not None and hasattr(action, "v189".split('[')[0].split('.')[0]):
-        action.v189 = temp
-    else:
-        v189 = temp 
-
-
-    temp = get_nested_attribute(action, 'v189', locals())
-    if temp is None:
-        temp = v189
-    if action is not None and hasattr(action, "v190".split('[')[0].split('.')[0]):
-        action.v190 = temp
-    else:
-        v190 = temp 
-
-
-    temp = get_nested_attribute(action, '500', locals())
-    if temp is None:
-        temp = 500
-    if action is not None and hasattr(action, "v191".split('[')[0].split('.')[0]):
-        action.v191 = temp
-    else:
-        v191 = temp 
-
-
-    temp = get_nested_attribute(action, 'v191', locals())
-    if temp is None:
-        temp = v191
-    if action is not None and hasattr(action, "v192".split('[')[0].split('.')[0]):
-        action.v192 = temp
-    else:
-        v192 = temp 
-
-
-    temp = get_nested_attribute(action, 'v192', locals())
-    if temp is None:
-        temp = v192
-    if action is not None and hasattr(action, "v193".split('[')[0].split('.')[0]):
-        action.v193 = temp
-    else:
-        v193 = temp 
-
-
-    temp = get_nested_attribute(action, '"Tower 1"', locals())
-    if temp is None:
-        temp = "Tower 1"
-    if action is not None and hasattr(action, "v194".split('[')[0].split('.')[0]):
-        action.v194 = temp
-    else:
-        v194 = temp 
-
-
-    temp = get_nested_attribute(action, 'v194', locals())
-    if temp is None:
-        temp = v194
-    if action is not None and hasattr(action, "v195".split('[')[0].split('.')[0]):
-        action.v195 = temp
-    else:
-        v195 = temp 
-
-
-    temp = get_nested_attribute(action, 'v195', locals())
-    if temp is None:
-        temp = v195
-    if action is not None and hasattr(action, "v196".split('[')[0].split('.')[0]):
-        action.v196 = temp
-    else:
-        v196 = temp 
-
-
-    temp = get_nested_attribute(action, '"wheat"', locals())
-    if temp is None:
-        temp = "wheat"
-    if action is not None and hasattr(action, "v197".split('[')[0].split('.')[0]):
-        action.v197 = temp
-    else:
-        v197 = temp 
-
-
-    temp = get_nested_attribute(action, 'v197', locals())
-    if temp is None:
-        temp = v197
-    if action is not None and hasattr(action, "v198".split('[')[0].split('.')[0]):
-        action.v198 = temp
-    else:
-        v198 = temp 
-
-
-    temp = get_nested_attribute(action, 'v198', locals())
-    if temp is None:
-        temp = v198
-    if action is not None and hasattr(action, "v199".split('[')[0].split('.')[0]):
-        action.v199 = temp
-    else:
-        v199 = temp 
-
-
-    if action is not None:
-        action.v187.width = v190
-        action.v187.height = v193
-        action.v187.title = v196
-        action.v187.background = v199
-    else:
-        v187.width = v190
-        v187.height = v193
-        v187.title = v196
-        v187.background = v199
-
-    temp = get_nested_attribute(action, 'v187', locals())
-    if temp is None:
-        temp = v187
-    if action is not None and hasattr(action, "var__agl__view1".split('[')[0].split('.')[0]):
-        action.var__agl__view1 = temp
-    else:
-        var__agl__view1 = temp 
-    if model is not None: 
-        model.var__agl__view1 = var__agl__view1
-        model.last_var__agl__view1 = copy.deepcopy(var__agl__view1)
-
-    if model is not None:
-        v200 = View()
-        model.add_object(v200) # add object to model
-    else:
-        v200 = View(root = root)
-    if last_view is not None:
-        views.append(last_view)    
-    last_view = v200
-    root.last_view = last_view
-
-    temp = get_nested_attribute(action, '500', locals())
-    if temp is None:
-        temp = 500
-    if action is not None and hasattr(action, "v201".split('[')[0].split('.')[0]):
-        action.v201 = temp
-    else:
-        v201 = temp 
-
-
-    temp = get_nested_attribute(action, 'v201', locals())
-    if temp is None:
-        temp = v201
-    if action is not None and hasattr(action, "v202".split('[')[0].split('.')[0]):
-        action.v202 = temp
-    else:
-        v202 = temp 
-
-
-    temp = get_nested_attribute(action, 'v202', locals())
-    if temp is None:
-        temp = v202
-    if action is not None and hasattr(action, "v203".split('[')[0].split('.')[0]):
-        action.v203 = temp
-    else:
-        v203 = temp 
-
-
-    temp = get_nested_attribute(action, '500', locals())
-    if temp is None:
-        temp = 500
-    if action is not None and hasattr(action, "v204".split('[')[0].split('.')[0]):
-        action.v204 = temp
-    else:
-        v204 = temp 
-
-
-    temp = get_nested_attribute(action, 'v204', locals())
-    if temp is None:
-        temp = v204
-    if action is not None and hasattr(action, "v205".split('[')[0].split('.')[0]):
-        action.v205 = temp
-    else:
-        v205 = temp 
-
-
-    temp = get_nested_attribute(action, 'v205', locals())
-    if temp is None:
-        temp = v205
-    if action is not None and hasattr(action, "v206".split('[')[0].split('.')[0]):
-        action.v206 = temp
-    else:
-        v206 = temp 
-
-
-    temp = get_nested_attribute(action, '500', locals())
-    if temp is None:
-        temp = 500
-    if action is not None and hasattr(action, "v207".split('[')[0].split('.')[0]):
-        action.v207 = temp
-    else:
-        v207 = temp 
-
-
-    temp = get_nested_attribute(action, 'v207', locals())
-    if temp is None:
-        temp = v207
-    if action is not None and hasattr(action, "v208".split('[')[0].split('.')[0]):
-        action.v208 = temp
-    else:
-        v208 = temp 
-
-
-    temp = get_nested_attribute(action, 'v208', locals())
-    if temp is None:
-        temp = v208
-    if action is not None and hasattr(action, "v209".split('[')[0].split('.')[0]):
-        action.v209 = temp
-    else:
-        v209 = temp 
-
-
-    temp = get_nested_attribute(action, '"Tower 2"', locals())
-    if temp is None:
-        temp = "Tower 2"
-    if action is not None and hasattr(action, "v210".split('[')[0].split('.')[0]):
-        action.v210 = temp
-    else:
-        v210 = temp 
-
-
-    temp = get_nested_attribute(action, 'v210', locals())
-    if temp is None:
-        temp = v210
-    if action is not None and hasattr(action, "v211".split('[')[0].split('.')[0]):
-        action.v211 = temp
-    else:
-        v211 = temp 
-
-
-    temp = get_nested_attribute(action, 'v211', locals())
-    if temp is None:
-        temp = v211
-    if action is not None and hasattr(action, "v212".split('[')[0].split('.')[0]):
-        action.v212 = temp
-    else:
-        v212 = temp 
-
-
-    temp = get_nested_attribute(action, '"wheat"', locals())
-    if temp is None:
-        temp = "wheat"
-    if action is not None and hasattr(action, "v213".split('[')[0].split('.')[0]):
-        action.v213 = temp
-    else:
-        v213 = temp 
-
-
-    temp = get_nested_attribute(action, 'v213', locals())
-    if temp is None:
-        temp = v213
+        temp = 800
     if action is not None and hasattr(action, "v214".split('[')[0].split('.')[0]):
         action.v214 = temp
     else:
@@ -2171,43 +2142,18 @@ if __name__ == "__main__":
         v215 = temp 
 
 
-    if action is not None:
-        action.v200.Ox = v203
-        action.v200.width = v206
-        action.v200.height = v209
-        action.v200.title = v212
-        action.v200.background = v215
-    else:
-        v200.Ox = v203
-        v200.width = v206
-        v200.height = v209
-        v200.title = v212
-        v200.background = v215
-
-    temp = get_nested_attribute(action, 'v200', locals())
+    temp = get_nested_attribute(action, 'v215', locals())
     if temp is None:
-        temp = v200
-    if action is not None and hasattr(action, "var__agl__view2".split('[')[0].split('.')[0]):
-        action.var__agl__view2 = temp
+        temp = v215
+    if action is not None and hasattr(action, "v216".split('[')[0].split('.')[0]):
+        action.v216 = temp
     else:
-        var__agl__view2 = temp 
-    if model is not None: 
-        model.var__agl__view2 = var__agl__view2
-        model.last_var__agl__view2 = copy.deepcopy(var__agl__view2)
+        v216 = temp 
 
-    if model is not None:
-        v216 = View()
-        model.add_object(v216) # add object to model
-    else:
-        v216 = View(root = root)
-    if last_view is not None:
-        views.append(last_view)    
-    last_view = v216
-    root.last_view = last_view
 
-    temp = get_nested_attribute(action, '1000', locals())
+    temp = get_nested_attribute(action, '600', locals())
     if temp is None:
-        temp = 1000
+        temp = 600
     if action is not None and hasattr(action, "v217".split('[')[0].split('.')[0]):
         action.v217 = temp
     else:
@@ -2232,9 +2178,9 @@ if __name__ == "__main__":
         v219 = temp 
 
 
-    temp = get_nested_attribute(action, '500', locals())
+    temp = get_nested_attribute(action, '"black"', locals())
     if temp is None:
-        temp = 500
+        temp = "black"
     if action is not None and hasattr(action, "v220".split('[')[0].split('.')[0]):
         action.v220 = temp
     else:
@@ -2259,14 +2205,34 @@ if __name__ == "__main__":
         v222 = temp 
 
 
-    temp = get_nested_attribute(action, '500', locals())
-    if temp is None:
-        temp = 500
-    if action is not None and hasattr(action, "v223".split('[')[0].split('.')[0]):
-        action.v223 = temp
+    if action is not None:
+        action.v213.width = v216
+        action.v213.height = v219
+        action.v213.background = v222
     else:
-        v223 = temp 
+        v213.width = v216
+        v213.height = v219
+        v213.background = v222
 
+    temp = get_nested_attribute(action, 'v213', locals())
+    if temp is None:
+        temp = v213
+    if action is not None and hasattr(action, "var__agl__view".split('[')[0].split('.')[0]):
+        action.var__agl__view = temp
+    else:
+        var__agl__view = temp 
+    if model is not None: 
+        model.var__agl__view = var__agl__view
+        model.last_var__agl__view = copy.deepcopy(var__agl__view)
+
+    if model is not None:
+        model_backup = model
+        v223 = model_compose() # this makes model = None in the end!
+        model = model_backup
+        model.add_object(v223) # add object to model
+    else:
+        v223 = model_compose(root_local = root, view = last_view)
+      
 
     temp = get_nested_attribute(action, 'v223', locals())
     if temp is None:
@@ -2280,15 +2246,22 @@ if __name__ == "__main__":
     temp = get_nested_attribute(action, 'v224', locals())
     if temp is None:
         temp = v224
-    if action is not None and hasattr(action, "v225".split('[')[0].split('.')[0]):
-        action.v225 = temp
+    if action is not None and hasattr(action, "var__agl__model_test".split('[')[0].split('.')[0]):
+        action.var__agl__model_test = temp
     else:
-        v225 = temp 
+        var__agl__model_test = temp 
+    if model is not None: 
+        model.var__agl__model_test = var__agl__model_test
+        model.last_var__agl__model_test = copy.deepcopy(var__agl__model_test)
 
+    last_refresh = time.time()
+    var__agl__view.update()
 
-    temp = get_nested_attribute(action, '"Tower 3"', locals())
+    v225 = root.waitClick()
+
+    temp = get_nested_attribute(action, 'v225', locals())
     if temp is None:
-        temp = "Tower 3"
+        temp = v225
     if action is not None and hasattr(action, "v226".split('[')[0].split('.')[0]):
         action.v226 = temp
     else:
@@ -2307,201 +2280,148 @@ if __name__ == "__main__":
     temp = get_nested_attribute(action, 'v227', locals())
     if temp is None:
         temp = v227
+    if action is not None and hasattr(action, "var__agl__p".split('[')[0].split('.')[0]):
+        action.var__agl__p = temp
+    else:
+        var__agl__p = temp 
+    if model is not None: 
+        model.var__agl__p = var__agl__p
+        model.last_var__agl__p = copy.deepcopy(var__agl__p)
+
+    temp = get_nested_attribute(action, '1', locals())
+    if temp is None:
+        temp = 1
     if action is not None and hasattr(action, "v228".split('[')[0].split('.')[0]):
         action.v228 = temp
     else:
         v228 = temp 
 
 
-    temp = get_nested_attribute(action, '"wheat"', locals())
+    temp = get_nested_attribute(action, '720', locals())
     if temp is None:
-        temp = "wheat"
+        temp = 720
     if action is not None and hasattr(action, "v229".split('[')[0].split('.')[0]):
         action.v229 = temp
     else:
         v229 = temp 
 
+    for var__agl__i in range(v228, v229, 1):
 
-    temp = get_nested_attribute(action, 'v229', locals())
-    if temp is None:
-        temp = v229
-    if action is not None and hasattr(action, "v230".split('[')[0].split('.')[0]):
-        action.v230 = temp
-    else:
-        v230 = temp 
-
-
-    temp = get_nested_attribute(action, 'v230', locals())
-    if temp is None:
-        temp = v230
-    if action is not None and hasattr(action, "v231".split('[')[0].split('.')[0]):
-        action.v231 = temp
-    else:
-        v231 = temp 
-
-
-    if action is not None:
-        action.v216.Ox = v219
-        action.v216.width = v222
-        action.v216.height = v225
-        action.v216.title = v228
-        action.v216.background = v231
-    else:
-        v216.Ox = v219
-        v216.width = v222
-        v216.height = v225
-        v216.title = v228
-        v216.background = v231
-
-    temp = get_nested_attribute(action, 'v216', locals())
-    if temp is None:
-        temp = v216
-    if action is not None and hasattr(action, "var__agl__view3".split('[')[0].split('.')[0]):
-        action.var__agl__view3 = temp
-    else:
-        var__agl__view3 = temp 
-    if model is not None: 
-        model.var__agl__view3 = var__agl__view3
-        model.last_var__agl__view3 = copy.deepcopy(var__agl__view3)
-
-    if model is not None:
-        model_backup = model
-        v232 = Game() # this makes model = None in the end!
-        model = model_backup
-        model.add_object(v232) # add object to model
-    else:
-        v232 = Game(root_local = root, view = last_view)
-      
-
-    temp = get_nested_attribute(action, 'v232', locals())
-    if temp is None:
-        temp = v232
-    if action is not None and hasattr(action, "v233".split('[')[0].split('.')[0]):
-        action.v233 = temp
-    else:
-        v233 = temp 
-
-
-    temp = get_nested_attribute(action, 'v233', locals())
-    if temp is None:
-        temp = v233
-    if action is not None and hasattr(action, "var__agl__game".split('[')[0].split('.')[0]):
-        action.var__agl__game = temp
-    else:
-        var__agl__game = temp 
-    if model is not None: 
-        model.var__agl__game = var__agl__game
-        model.last_var__agl__game = copy.deepcopy(var__agl__game)
-
-    temp = get_nested_attribute(action, '0', locals())
-    if temp is None:
-        temp = 0
-    if action is not None and hasattr(action, "v234".split('[')[0].split('.')[0]):
-        action.v234 = temp
-    else:
-        v234 = temp 
-
-
-    temp = get_nested_attribute(action, '3', locals())
-    if temp is None:
-        temp = 3
-    if action is not None and hasattr(action, "v235".split('[')[0].split('.')[0]):
-        action.v235 = temp
-    else:
-        v235 = temp 
-
-    for var__agl__d in range(v234, v235, 1):
-
-        temp = get_nested_attribute(action, '"hidden"', locals())
+        temp = get_nested_attribute(action, '1', locals())
         if temp is None:
-            temp = "hidden"
-        if action is not None and hasattr(action, "v236".split('[')[0].split('.')[0]):
-            action.v236 = temp
+            temp = 1
+        if action is not None and hasattr(action, "v230".split('[')[0].split('.')[0]):
+            action.v230 = temp
         else:
-            v236 = temp 
+            v230 = temp 
 
+        if action is not None:
+            action.var__agl__model_test.rotate(v230)
+        else:
+            var__agl__model_test.rotate(v230)
 
-        temp = get_nested_attribute(action, 'v236', locals())
+        temp = get_nested_attribute(action, '3', locals())
         if temp is None:
-            temp = v236
+            temp = 3
+        if action is not None and hasattr(action, "v231".split('[')[0].split('.')[0]):
+            action.v231 = temp
+        else:
+            v231 = temp 
+
+        v232 = - np.array(v231)
+        if action is not None:
+            action.var__agl__model_test.var__agl__Model2.rotate(v232)
+        else:
+            var__agl__model_test.var__agl__Model2.rotate(v232)
+
+        temp = get_nested_attribute(action, '1', locals())
+        if temp is None:
+            temp = 1
+        if action is not None and hasattr(action, "v233".split('[')[0].split('.')[0]):
+            action.v233 = temp
+        else:
+            v233 = temp 
+
+        if action is not None:
+            action.var__agl__model_test.var__agl__Model3.rotate(v233)
+        else:
+            var__agl__model_test.var__agl__Model3.rotate(v233)
+
+        temp = get_nested_attribute(action, '4', locals())
+        if temp is None:
+            temp = 4
+        if action is not None and hasattr(action, "v234".split('[')[0].split('.')[0]):
+            action.v234 = temp
+        else:
+            v234 = temp 
+
+        if action is not None:
+            action.var__agl__model_test.var__agl__Model2.var__agl__rec.rotate(v234)
+        else:
+            var__agl__model_test.var__agl__Model2.var__agl__rec.rotate(v234)
+
+        temp = get_nested_attribute(action, '3', locals())
+        if temp is None:
+            temp = 3
+        if action is not None and hasattr(action, "v235".split('[')[0].split('.')[0]):
+            action.v235 = temp
+        else:
+            v235 = temp 
+
+        v236 = - np.array(v235)
+        if action is not None:
+            action.var__agl__model_test.var__agl__Model2.var__agl__arc.rotate(v236)
+        else:
+            var__agl__model_test.var__agl__Model2.var__agl__arc.rotate(v236)
+
+        temp = get_nested_attribute(action, '5', locals())
+        if temp is None:
+            temp = 5
         if action is not None and hasattr(action, "v237".split('[')[0].split('.')[0]):
             action.v237 = temp
         else:
             v237 = temp 
 
-
-        temp = get_nested_attribute(action, 'var__agl__d', locals())
-        if temp is None:
-            temp = var__agl__d
-        if action is not None and hasattr(action, "v238".split('[')[0].split('.')[0]):
-            action.v238 = temp
+        v238 = - np.array(v237)
+        if action is not None:
+            action.var__agl__model_test.var__agl__Model3.var__agl__arcchord.rotate(v238)
         else:
-            v238 = temp 
+            var__agl__model_test.var__agl__Model3.var__agl__arcchord.rotate(v238)
 
-
-        temp = get_nested_attribute(action, 'v237', locals())
+        temp = get_nested_attribute(action, '5', locals())
         if temp is None:
-            temp = v237
-        if action is not None and hasattr(action, "var__agl__game.var__agl__tower2.var__agl__disks[v238].state".split('[')[0].split('.')[0]):
-            action.var__agl__game.var__agl__tower2.var__agl__disks[v238].state = temp
-        else:
-            var__agl__game.var__agl__tower2.var__agl__disks[v238].state = temp 
-
-
-        temp = get_nested_attribute(action, '"hidden"', locals())
-        if temp is None:
-            temp = "hidden"
+            temp = 5
         if action is not None and hasattr(action, "v239".split('[')[0].split('.')[0]):
             action.v239 = temp
         else:
             v239 = temp 
 
-
-        temp = get_nested_attribute(action, 'v239', locals())
-        if temp is None:
-            temp = v239
-        if action is not None and hasattr(action, "v240".split('[')[0].split('.')[0]):
-            action.v240 = temp
+        v240 = - np.array(v239)
+        if action is not None:
+            action.var__agl__model_test.var__agl__Model1.var__agl__rec.rotate(v240)
         else:
-            v240 = temp 
+            var__agl__model_test.var__agl__Model1.var__agl__rec.rotate(v240)
 
-
-        temp = get_nested_attribute(action, 'var__agl__d', locals())
+        temp = get_nested_attribute(action, '0.01', locals())
         if temp is None:
-            temp = var__agl__d
+            temp = 0.01
         if action is not None and hasattr(action, "v241".split('[')[0].split('.')[0]):
             action.v241 = temp
         else:
             v241 = temp 
 
+         
+        while (time.time() - last_refresh <= v241):
+            time.sleep(REFRESH_RATE)   
 
-        temp = get_nested_attribute(action, 'v240', locals())
-        if temp is None:
-            temp = v240
-        if action is not None and hasattr(action, "var__agl__game.var__agl__tower3.var__agl__disks[v241].state".split('[')[0].split('.')[0]):
-            action.var__agl__game.var__agl__tower3.var__agl__disks[v241].state = temp
-        else:
-            var__agl__game.var__agl__tower3.var__agl__disks[v241].state = temp 
+        last_refresh = time.time()
+        var__agl__view.update()
 
 
     last_refresh = time.time()
-    var__agl__view1.update()
+    var__agl__view.update()
 
-    last_refresh = time.time()
-    var__agl__view2.update()
-
-    last_refresh = time.time()
-    var__agl__view3.update()
-
-
-    if model is not None:
-        model_backup = model
-        v242 = Tower() # this makes model = None in the end!
-        model = model_backup
-        model.add_object(v242) # add object to model
-    else:
-        v242 = Tower(root_local = root, view = last_view)
-      
+    v242 = root.waitClick()
 
     temp = get_nested_attribute(action, 'v242', locals())
     if temp is None:
@@ -2515,1506 +2435,11 @@ if __name__ == "__main__":
     temp = get_nested_attribute(action, 'v243', locals())
     if temp is None:
         temp = v243
-    if action is not None and hasattr(action, "var__agl__from_tower".split('[')[0].split('.')[0]):
-        action.var__agl__from_tower = temp
-    else:
-        var__agl__from_tower = temp 
-    if model is not None: 
-        model.var__agl__from_tower = var__agl__from_tower
-        model.last_var__agl__from_tower = copy.deepcopy(var__agl__from_tower)
-
-    temp = get_nested_attribute(action, '"hidden"', locals())
-    if temp is None:
-        temp = "hidden"
-    if action is not None and hasattr(action, "v244".split('[')[0].split('.')[0]):
-        action.v244 = temp
-    else:
-        v244 = temp 
-
-
-    temp = get_nested_attribute(action, 'v244', locals())
-    if temp is None:
-        temp = v244
-    if action is not None and hasattr(action, "v245".split('[')[0].split('.')[0]):
-        action.v245 = temp
-    else:
-        v245 = temp 
-
-
-    temp = get_nested_attribute(action, 'v245', locals())
-    if temp is None:
-        temp = v245
-    if action is not None and hasattr(action, "var__agl__from_tower.state".split('[')[0].split('.')[0]):
-        action.var__agl__from_tower.state = temp
-    else:
-        var__agl__from_tower.state = temp 
-
-
-    if model is not None:
-        model_backup = model
-        v246 = Tower() # this makes model = None in the end!
-        model = model_backup
-        model.add_object(v246) # add object to model
-    else:
-        v246 = Tower(root_local = root, view = last_view)
-      
-
-    temp = get_nested_attribute(action, 'v246', locals())
-    if temp is None:
-        temp = v246
-    if action is not None and hasattr(action, "v247".split('[')[0].split('.')[0]):
-        action.v247 = temp
-    else:
-        v247 = temp 
-
-
-    temp = get_nested_attribute(action, 'v247', locals())
-    if temp is None:
-        temp = v247
-    if action is not None and hasattr(action, "var__agl__to_tower".split('[')[0].split('.')[0]):
-        action.var__agl__to_tower = temp
-    else:
-        var__agl__to_tower = temp 
-    if model is not None: 
-        model.var__agl__to_tower = var__agl__to_tower
-        model.last_var__agl__to_tower = copy.deepcopy(var__agl__to_tower)
-
-    temp = get_nested_attribute(action, '"hidden"', locals())
-    if temp is None:
-        temp = "hidden"
-    if action is not None and hasattr(action, "v248".split('[')[0].split('.')[0]):
-        action.v248 = temp
-    else:
-        v248 = temp 
-
-
-    temp = get_nested_attribute(action, 'v248', locals())
-    if temp is None:
-        temp = v248
-    if action is not None and hasattr(action, "v249".split('[')[0].split('.')[0]):
-        action.v249 = temp
-    else:
-        v249 = temp 
-
-
-    temp = get_nested_attribute(action, 'v249', locals())
-    if temp is None:
-        temp = v249
-    if action is not None and hasattr(action, "var__agl__to_tower.state".split('[')[0].split('.')[0]):
-        action.var__agl__to_tower.state = temp
-    else:
-        var__agl__to_tower.state = temp 
-
-
-    temp = get_nested_attribute(action, '0', locals())
-    if temp is None:
-        temp = 0
-    if action is not None and hasattr(action, "v250".split('[')[0].split('.')[0]):
-        action.v250 = temp
-    else:
-        v250 = temp 
-
-
-    temp = get_nested_attribute(action, 'v250', locals())
-    if temp is None:
-        temp = v250
-    if action is not None and hasattr(action, "v251".split('[')[0].split('.')[0]):
-        action.v251 = temp
-    else:
-        v251 = temp 
-
-
-    temp = get_nested_attribute(action, 'v251', locals())
-    if temp is None:
-        temp = v251
-    if action is not None and hasattr(action, "v252".split('[')[0].split('.')[0]):
-        action.v252 = temp
-    else:
-        v252 = temp 
-
-
-    temp = get_nested_attribute(action, 'v252', locals())
-    if temp is None:
-        temp = v252
-    if action is not None and hasattr(action, "var__agl__toChange".split('[')[0].split('.')[0]):
-        action.var__agl__toChange = temp
-    else:
-        var__agl__toChange = temp 
-    if model is not None: 
-        model.var__agl__toChange = var__agl__toChange
-        model.last_var__agl__toChange = copy.deepcopy(var__agl__toChange)
-
-    temp = get_nested_attribute(action, 'var__agl__game.var__agl__isSolved', locals())
-    if temp is None:
-        temp = var__agl__game.var__agl__isSolved
-    if action is not None and hasattr(action, "v253".split('[')[0].split('.')[0]):
-        action.v253 = temp
-    else:
-        v253 = temp 
-
-    while True:
-        v254 = root.waitClick()
-
-        temp = get_nested_attribute(action, 'v254', locals())
-        if temp is None:
-            temp = v254
-        if action is not None and hasattr(action, "v255".split('[')[0].split('.')[0]):
-            action.v255 = temp
-        else:
-            v255 = temp 
-
-
-        temp = get_nested_attribute(action, 'v255', locals())
-        if temp is None:
-            temp = v255
-        if action is not None and hasattr(action, "v256".split('[')[0].split('.')[0]):
-            action.v256 = temp
-        else:
-            v256 = temp 
-
-
-        temp = get_nested_attribute(action, 'v256', locals())
-        if temp is None:
-            temp = v256
-        if action is not None and hasattr(action, "var__agl__p1".split('[')[0].split('.')[0]):
-            action.var__agl__p1 = temp
-        else:
-            var__agl__p1 = temp 
-        if model is not None: 
-            model.var__agl__p1 = var__agl__p1
-            model.last_var__agl__p1 = copy.deepcopy(var__agl__p1)
-
-        temp = get_nested_attribute(action, '0', locals())
-        if temp is None:
-            temp = 0
-        if action is not None and hasattr(action, "v259".split('[')[0].split('.')[0]):
-            action.v259 = temp
-        else:
-            v259 = temp 
-
-
-        temp = get_nested_attribute(action, 'var__agl__p1[v259]', locals())
-        if temp is None:
-            temp = var__agl__p1[v259]
-        if action is not None and hasattr(action, "v258".split('[')[0].split('.')[0]):
-            action.v258 = temp
-        else:
-            v258 = temp 
-
-
-        temp = get_nested_attribute(action, '250', locals())
-        if temp is None:
-            temp = 250
-        if action is not None and hasattr(action, "v260".split('[')[0].split('.')[0]):
-            action.v260 = temp
-        else:
-            v260 = temp 
-
-        v257 = np.array(v258) < np.array(v260); v257 = tuple(v257) if isinstance(v257, np.ndarray) else v257
-        if v257:
-
-            temp = get_nested_attribute(action, '"From Tower 1"', locals())
-            if temp is None:
-                temp = "From Tower 1"
-            if action is not None and hasattr(action, "v261".split('[')[0].split('.')[0]):
-                action.v261 = temp
-            else:
-                v261 = temp 
-
-            print(v261)
-
-            temp = get_nested_attribute(action, 'True', locals())
-            if temp is None:
-                temp = True
-            if action is not None and hasattr(action, "v262".split('[')[0].split('.')[0]):
-                action.v262 = temp
-            else:
-                v262 = temp 
-
-
-            temp = get_nested_attribute(action, 'v262', locals())
-            if temp is None:
-                temp = v262
-            if action is not None and hasattr(action, "v263".split('[')[0].split('.')[0]):
-                action.v263 = temp
-            else:
-                v263 = temp 
-
-
-            temp = get_nested_attribute(action, 'v263', locals())
-            if temp is None:
-                temp = v263
-            if action is not None and hasattr(action, "var__agl__game.var__agl__tower1.var__agl__active".split('[')[0].split('.')[0]):
-                action.var__agl__game.var__agl__tower1.var__agl__active = temp
-            else:
-                var__agl__game.var__agl__tower1.var__agl__active = temp 
-
-
-            temp = get_nested_attribute(action, 'False', locals())
-            if temp is None:
-                temp = False
-            if action is not None and hasattr(action, "v264".split('[')[0].split('.')[0]):
-                action.v264 = temp
-            else:
-                v264 = temp 
-
-
-            temp = get_nested_attribute(action, 'v264', locals())
-            if temp is None:
-                temp = v264
-            if action is not None and hasattr(action, "v265".split('[')[0].split('.')[0]):
-                action.v265 = temp
-            else:
-                v265 = temp 
-
-
-            temp = get_nested_attribute(action, 'v265', locals())
-            if temp is None:
-                temp = v265
-            if action is not None and hasattr(action, "var__agl__game.var__agl__tower2.var__agl__active".split('[')[0].split('.')[0]):
-                action.var__agl__game.var__agl__tower2.var__agl__active = temp
-            else:
-                var__agl__game.var__agl__tower2.var__agl__active = temp 
-
-
-            temp = get_nested_attribute(action, 'False', locals())
-            if temp is None:
-                temp = False
-            if action is not None and hasattr(action, "v266".split('[')[0].split('.')[0]):
-                action.v266 = temp
-            else:
-                v266 = temp 
-
-
-            temp = get_nested_attribute(action, 'v266', locals())
-            if temp is None:
-                temp = v266
-            if action is not None and hasattr(action, "v267".split('[')[0].split('.')[0]):
-                action.v267 = temp
-            else:
-                v267 = temp 
-
-
-            temp = get_nested_attribute(action, 'v267', locals())
-            if temp is None:
-                temp = v267
-            if action is not None and hasattr(action, "var__agl__game.var__agl__tower3.var__agl__active".split('[')[0].split('.')[0]):
-                action.var__agl__game.var__agl__tower3.var__agl__active = temp
-            else:
-                var__agl__game.var__agl__tower3.var__agl__active = temp 
-
-
-            temp = get_nested_attribute(action, 'var__agl__game.var__agl__tower1', locals())
-            if temp is None:
-                temp = var__agl__game.var__agl__tower1
-            if action is not None and hasattr(action, "v268".split('[')[0].split('.')[0]):
-                action.v268 = temp
-            else:
-                v268 = temp 
-
-
-            temp = get_nested_attribute(action, 'v268', locals())
-            if temp is None:
-                temp = v268
-            if action is not None and hasattr(action, "v269".split('[')[0].split('.')[0]):
-                action.v269 = temp
-            else:
-                v269 = temp 
-
-
-            temp = get_nested_attribute(action, 'v269', locals())
-            if temp is None:
-                temp = v269
-            if action is not None and hasattr(action, "var__agl__from_tower".split('[')[0].split('.')[0]):
-                action.var__agl__from_tower = temp
-            else:
-                var__agl__from_tower = temp 
-            
-        else:
-
-            temp = get_nested_attribute(action, '0', locals())
-            if temp is None:
-                temp = 0
-            if action is not None and hasattr(action, "v272".split('[')[0].split('.')[0]):
-                action.v272 = temp
-            else:
-                v272 = temp 
-
-
-            temp = get_nested_attribute(action, 'var__agl__p1[v272]', locals())
-            if temp is None:
-                temp = var__agl__p1[v272]
-            if action is not None and hasattr(action, "v271".split('[')[0].split('.')[0]):
-                action.v271 = temp
-            else:
-                v271 = temp 
-
-
-            temp = get_nested_attribute(action, '750', locals())
-            if temp is None:
-                temp = 750
-            if action is not None and hasattr(action, "v273".split('[')[0].split('.')[0]):
-                action.v273 = temp
-            else:
-                v273 = temp 
-
-            v270 = np.array(v271) < np.array(v273); v270 = tuple(v270) if isinstance(v270, np.ndarray) else v270
-            if v270:
-
-                temp = get_nested_attribute(action, '"From Tower 2"', locals())
-                if temp is None:
-                    temp = "From Tower 2"
-                if action is not None and hasattr(action, "v274".split('[')[0].split('.')[0]):
-                    action.v274 = temp
-                else:
-                    v274 = temp 
-
-                print(v274)
-
-                temp = get_nested_attribute(action, 'True', locals())
-                if temp is None:
-                    temp = True
-                if action is not None and hasattr(action, "v275".split('[')[0].split('.')[0]):
-                    action.v275 = temp
-                else:
-                    v275 = temp 
-
-
-                temp = get_nested_attribute(action, 'v275', locals())
-                if temp is None:
-                    temp = v275
-                if action is not None and hasattr(action, "v276".split('[')[0].split('.')[0]):
-                    action.v276 = temp
-                else:
-                    v276 = temp 
-
-
-                temp = get_nested_attribute(action, 'v276', locals())
-                if temp is None:
-                    temp = v276
-                if action is not None and hasattr(action, "var__agl__game.var__agl__tower2.var__agl__active".split('[')[0].split('.')[0]):
-                    action.var__agl__game.var__agl__tower2.var__agl__active = temp
-                else:
-                    var__agl__game.var__agl__tower2.var__agl__active = temp 
-
-
-                temp = get_nested_attribute(action, 'False', locals())
-                if temp is None:
-                    temp = False
-                if action is not None and hasattr(action, "v277".split('[')[0].split('.')[0]):
-                    action.v277 = temp
-                else:
-                    v277 = temp 
-
-
-                temp = get_nested_attribute(action, 'v277', locals())
-                if temp is None:
-                    temp = v277
-                if action is not None and hasattr(action, "v278".split('[')[0].split('.')[0]):
-                    action.v278 = temp
-                else:
-                    v278 = temp 
-
-
-                temp = get_nested_attribute(action, 'v278', locals())
-                if temp is None:
-                    temp = v278
-                if action is not None and hasattr(action, "var__agl__game.var__agl__tower1.var__agl__active".split('[')[0].split('.')[0]):
-                    action.var__agl__game.var__agl__tower1.var__agl__active = temp
-                else:
-                    var__agl__game.var__agl__tower1.var__agl__active = temp 
-
-
-                temp = get_nested_attribute(action, 'False', locals())
-                if temp is None:
-                    temp = False
-                if action is not None and hasattr(action, "v279".split('[')[0].split('.')[0]):
-                    action.v279 = temp
-                else:
-                    v279 = temp 
-
-
-                temp = get_nested_attribute(action, 'v279', locals())
-                if temp is None:
-                    temp = v279
-                if action is not None and hasattr(action, "v280".split('[')[0].split('.')[0]):
-                    action.v280 = temp
-                else:
-                    v280 = temp 
-
-
-                temp = get_nested_attribute(action, 'v280', locals())
-                if temp is None:
-                    temp = v280
-                if action is not None and hasattr(action, "var__agl__game.var__agl__tower3.var__agl__active".split('[')[0].split('.')[0]):
-                    action.var__agl__game.var__agl__tower3.var__agl__active = temp
-                else:
-                    var__agl__game.var__agl__tower3.var__agl__active = temp 
-
-
-                temp = get_nested_attribute(action, 'var__agl__game.var__agl__tower2', locals())
-                if temp is None:
-                    temp = var__agl__game.var__agl__tower2
-                if action is not None and hasattr(action, "v281".split('[')[0].split('.')[0]):
-                    action.v281 = temp
-                else:
-                    v281 = temp 
-
-
-                temp = get_nested_attribute(action, 'v281', locals())
-                if temp is None:
-                    temp = v281
-                if action is not None and hasattr(action, "v282".split('[')[0].split('.')[0]):
-                    action.v282 = temp
-                else:
-                    v282 = temp 
-
-
-                temp = get_nested_attribute(action, 'v282', locals())
-                if temp is None:
-                    temp = v282
-                if action is not None and hasattr(action, "var__agl__from_tower".split('[')[0].split('.')[0]):
-                    action.var__agl__from_tower = temp
-                else:
-                    var__agl__from_tower = temp 
-                
-            else:
-
-                temp = get_nested_attribute(action, '"From Tower 3"', locals())
-                if temp is None:
-                    temp = "From Tower 3"
-                if action is not None and hasattr(action, "v283".split('[')[0].split('.')[0]):
-                    action.v283 = temp
-                else:
-                    v283 = temp 
-
-                print(v283)
-
-                temp = get_nested_attribute(action, 'True', locals())
-                if temp is None:
-                    temp = True
-                if action is not None and hasattr(action, "v284".split('[')[0].split('.')[0]):
-                    action.v284 = temp
-                else:
-                    v284 = temp 
-
-
-                temp = get_nested_attribute(action, 'v284', locals())
-                if temp is None:
-                    temp = v284
-                if action is not None and hasattr(action, "v285".split('[')[0].split('.')[0]):
-                    action.v285 = temp
-                else:
-                    v285 = temp 
-
-
-                temp = get_nested_attribute(action, 'v285', locals())
-                if temp is None:
-                    temp = v285
-                if action is not None and hasattr(action, "var__agl__game.var__agl__tower3.var__agl__active".split('[')[0].split('.')[0]):
-                    action.var__agl__game.var__agl__tower3.var__agl__active = temp
-                else:
-                    var__agl__game.var__agl__tower3.var__agl__active = temp 
-
-
-                temp = get_nested_attribute(action, 'False', locals())
-                if temp is None:
-                    temp = False
-                if action is not None and hasattr(action, "v286".split('[')[0].split('.')[0]):
-                    action.v286 = temp
-                else:
-                    v286 = temp 
-
-
-                temp = get_nested_attribute(action, 'v286', locals())
-                if temp is None:
-                    temp = v286
-                if action is not None and hasattr(action, "v287".split('[')[0].split('.')[0]):
-                    action.v287 = temp
-                else:
-                    v287 = temp 
-
-
-                temp = get_nested_attribute(action, 'v287', locals())
-                if temp is None:
-                    temp = v287
-                if action is not None and hasattr(action, "var__agl__game.var__agl__tower1.var__agl__active".split('[')[0].split('.')[0]):
-                    action.var__agl__game.var__agl__tower1.var__agl__active = temp
-                else:
-                    var__agl__game.var__agl__tower1.var__agl__active = temp 
-
-
-                temp = get_nested_attribute(action, 'False', locals())
-                if temp is None:
-                    temp = False
-                if action is not None and hasattr(action, "v288".split('[')[0].split('.')[0]):
-                    action.v288 = temp
-                else:
-                    v288 = temp 
-
-
-                temp = get_nested_attribute(action, 'v288', locals())
-                if temp is None:
-                    temp = v288
-                if action is not None and hasattr(action, "v289".split('[')[0].split('.')[0]):
-                    action.v289 = temp
-                else:
-                    v289 = temp 
-
-
-                temp = get_nested_attribute(action, 'v289', locals())
-                if temp is None:
-                    temp = v289
-                if action is not None and hasattr(action, "var__agl__game.var__agl__tower2.var__agl__active".split('[')[0].split('.')[0]):
-                    action.var__agl__game.var__agl__tower2.var__agl__active = temp
-                else:
-                    var__agl__game.var__agl__tower2.var__agl__active = temp 
-
-
-                temp = get_nested_attribute(action, 'var__agl__game.var__agl__tower3', locals())
-                if temp is None:
-                    temp = var__agl__game.var__agl__tower3
-                if action is not None and hasattr(action, "v290".split('[')[0].split('.')[0]):
-                    action.v290 = temp
-                else:
-                    v290 = temp 
-
-
-                temp = get_nested_attribute(action, 'v290', locals())
-                if temp is None:
-                    temp = v290
-                if action is not None and hasattr(action, "v291".split('[')[0].split('.')[0]):
-                    action.v291 = temp
-                else:
-                    v291 = temp 
-
-
-                temp = get_nested_attribute(action, 'v291', locals())
-                if temp is None:
-                    temp = v291
-                if action is not None and hasattr(action, "var__agl__from_tower".split('[')[0].split('.')[0]):
-                    action.var__agl__from_tower = temp
-                else:
-                    var__agl__from_tower = temp 
-
-                
-            
-        last_refresh = time.time()
-        var__agl__view1.update()
-
-        last_refresh = time.time()
-        var__agl__view2.update()
-
-        last_refresh = time.time()
-        var__agl__view3.update()
-
-        v292 = root.waitClick()
-
-        temp = get_nested_attribute(action, 'v292', locals())
-        if temp is None:
-            temp = v292
-        if action is not None and hasattr(action, "v293".split('[')[0].split('.')[0]):
-            action.v293 = temp
-        else:
-            v293 = temp 
-
-
-        temp = get_nested_attribute(action, 'v293', locals())
-        if temp is None:
-            temp = v293
-        if action is not None and hasattr(action, "v294".split('[')[0].split('.')[0]):
-            action.v294 = temp
-        else:
-            v294 = temp 
-
-
-        temp = get_nested_attribute(action, 'v294', locals())
-        if temp is None:
-            temp = v294
-        if action is not None and hasattr(action, "var__agl__p2".split('[')[0].split('.')[0]):
-            action.var__agl__p2 = temp
-        else:
-            var__agl__p2 = temp 
-        if model is not None: 
-            model.var__agl__p2 = var__agl__p2
-            model.last_var__agl__p2 = copy.deepcopy(var__agl__p2)
-
-        temp = get_nested_attribute(action, '0', locals())
-        if temp is None:
-            temp = 0
-        if action is not None and hasattr(action, "v297".split('[')[0].split('.')[0]):
-            action.v297 = temp
-        else:
-            v297 = temp 
-
-
-        temp = get_nested_attribute(action, 'var__agl__p2[v297]', locals())
-        if temp is None:
-            temp = var__agl__p2[v297]
-        if action is not None and hasattr(action, "v296".split('[')[0].split('.')[0]):
-            action.v296 = temp
-        else:
-            v296 = temp 
-
-
-        temp = get_nested_attribute(action, '250', locals())
-        if temp is None:
-            temp = 250
-        if action is not None and hasattr(action, "v298".split('[')[0].split('.')[0]):
-            action.v298 = temp
-        else:
-            v298 = temp 
-
-        v295 = np.array(v296) < np.array(v298); v295 = tuple(v295) if isinstance(v295, np.ndarray) else v295
-        if v295:
-
-            temp = get_nested_attribute(action, '"To Tower 1"', locals())
-            if temp is None:
-                temp = "To Tower 1"
-            if action is not None and hasattr(action, "v299".split('[')[0].split('.')[0]):
-                action.v299 = temp
-            else:
-                v299 = temp 
-
-            print(v299)
-
-            temp = get_nested_attribute(action, 'var__agl__game.var__agl__tower1', locals())
-            if temp is None:
-                temp = var__agl__game.var__agl__tower1
-            if action is not None and hasattr(action, "v300".split('[')[0].split('.')[0]):
-                action.v300 = temp
-            else:
-                v300 = temp 
-
-
-            temp = get_nested_attribute(action, 'v300', locals())
-            if temp is None:
-                temp = v300
-            if action is not None and hasattr(action, "v301".split('[')[0].split('.')[0]):
-                action.v301 = temp
-            else:
-                v301 = temp 
-
-
-            temp = get_nested_attribute(action, 'v301', locals())
-            if temp is None:
-                temp = v301
-            if action is not None and hasattr(action, "var__agl__to_tower".split('[')[0].split('.')[0]):
-                action.var__agl__to_tower = temp
-            else:
-                var__agl__to_tower = temp 
-            
-        else:
-
-            temp = get_nested_attribute(action, '0', locals())
-            if temp is None:
-                temp = 0
-            if action is not None and hasattr(action, "v304".split('[')[0].split('.')[0]):
-                action.v304 = temp
-            else:
-                v304 = temp 
-
-
-            temp = get_nested_attribute(action, 'var__agl__p2[v304]', locals())
-            if temp is None:
-                temp = var__agl__p2[v304]
-            if action is not None and hasattr(action, "v303".split('[')[0].split('.')[0]):
-                action.v303 = temp
-            else:
-                v303 = temp 
-
-
-            temp = get_nested_attribute(action, '750', locals())
-            if temp is None:
-                temp = 750
-            if action is not None and hasattr(action, "v305".split('[')[0].split('.')[0]):
-                action.v305 = temp
-            else:
-                v305 = temp 
-
-            v302 = np.array(v303) < np.array(v305); v302 = tuple(v302) if isinstance(v302, np.ndarray) else v302
-            if v302:
-
-                temp = get_nested_attribute(action, '"To Tower 2"', locals())
-                if temp is None:
-                    temp = "To Tower 2"
-                if action is not None and hasattr(action, "v306".split('[')[0].split('.')[0]):
-                    action.v306 = temp
-                else:
-                    v306 = temp 
-
-                print(v306)
-
-                temp = get_nested_attribute(action, 'var__agl__game.var__agl__tower2', locals())
-                if temp is None:
-                    temp = var__agl__game.var__agl__tower2
-                if action is not None and hasattr(action, "v307".split('[')[0].split('.')[0]):
-                    action.v307 = temp
-                else:
-                    v307 = temp 
-
-
-                temp = get_nested_attribute(action, 'v307', locals())
-                if temp is None:
-                    temp = v307
-                if action is not None and hasattr(action, "v308".split('[')[0].split('.')[0]):
-                    action.v308 = temp
-                else:
-                    v308 = temp 
-
-
-                temp = get_nested_attribute(action, 'v308', locals())
-                if temp is None:
-                    temp = v308
-                if action is not None and hasattr(action, "var__agl__to_tower".split('[')[0].split('.')[0]):
-                    action.var__agl__to_tower = temp
-                else:
-                    var__agl__to_tower = temp 
-                
-            else:
-
-                temp = get_nested_attribute(action, '"To Tower 3"', locals())
-                if temp is None:
-                    temp = "To Tower 3"
-                if action is not None and hasattr(action, "v309".split('[')[0].split('.')[0]):
-                    action.v309 = temp
-                else:
-                    v309 = temp 
-
-                print(v309)
-
-                temp = get_nested_attribute(action, 'var__agl__game.var__agl__tower3', locals())
-                if temp is None:
-                    temp = var__agl__game.var__agl__tower3
-                if action is not None and hasattr(action, "v310".split('[')[0].split('.')[0]):
-                    action.v310 = temp
-                else:
-                    v310 = temp 
-
-
-                temp = get_nested_attribute(action, 'v310', locals())
-                if temp is None:
-                    temp = v310
-                if action is not None and hasattr(action, "v311".split('[')[0].split('.')[0]):
-                    action.v311 = temp
-                else:
-                    v311 = temp 
-
-
-                temp = get_nested_attribute(action, 'v311', locals())
-                if temp is None:
-                    temp = v311
-                if action is not None and hasattr(action, "var__agl__to_tower".split('[')[0].split('.')[0]):
-                    action.var__agl__to_tower = temp
-                else:
-                    var__agl__to_tower = temp 
-
-                
-            
-
-        temp = get_nested_attribute(action, 'var__agl__from_tower', locals())
-        if temp is None:
-            temp = var__agl__from_tower
-        if action is not None and hasattr(action, "v313".split('[')[0].split('.')[0]):
-            action.v313 = temp
-        else:
-            v313 = temp 
-
-
-        temp = get_nested_attribute(action, 'var__agl__to_tower', locals())
-        if temp is None:
-            temp = var__agl__to_tower
-        if action is not None and hasattr(action, "v314".split('[')[0].split('.')[0]):
-            action.v314 = temp
-        else:
-            v314 = temp 
-
-        v312 = np.array(v313) != np.array(v314); v312 = tuple(v312) if isinstance(v312, np.ndarray) else v312
-        if v312:
-
-            temp = get_nested_attribute(action, '2', locals())
-            if temp is None:
-                temp = 2
-            if action is not None and hasattr(action, "v315".split('[')[0].split('.')[0]):
-                action.v315 = temp
-            else:
-                v315 = temp 
-
-
-            temp = get_nested_attribute(action, '1', locals())
-            if temp is None:
-                temp = 1
-            if action is not None and hasattr(action, "v316".split('[')[0].split('.')[0]):
-                action.v316 = temp
-            else:
-                v316 = temp 
-
-            v317 = - np.array(v316)
-
-            temp = get_nested_attribute(action, '1', locals())
-            if temp is None:
-                temp = 1
-            if action is not None and hasattr(action, "v318".split('[')[0].split('.')[0]):
-                action.v318 = temp
-            else:
-                v318 = temp 
-
-            v319 = - np.array(v318)
-            for var__agl__d in range(v315, v317, v319):
-
-                temp = get_nested_attribute(action, 'var__agl__d', locals())
-                if temp is None:
-                    temp = var__agl__d
-                if action is not None and hasattr(action, "v322".split('[')[0].split('.')[0]):
-                    action.v322 = temp
-                else:
-                    v322 = temp 
-
-
-                temp = get_nested_attribute(action, 'var__agl__from_tower.var__agl__disks[v322].fill', locals())
-                if temp is None:
-                    temp = var__agl__from_tower.var__agl__disks[v322].fill
-                if action is not None and hasattr(action, "v321".split('[')[0].split('.')[0]):
-                    action.v321 = temp
-                else:
-                    v321 = temp 
-
-
-                temp = get_nested_attribute(action, '"blue"', locals())
-                if temp is None:
-                    temp = "blue"
-                if action is not None and hasattr(action, "v323".split('[')[0].split('.')[0]):
-                    action.v323 = temp
-                else:
-                    v323 = temp 
-
-                v320 = np.array(v321) == np.array(v323); v320 = tuple(v320) if isinstance(v320, np.ndarray) else v320
-                if v320:
-
-                    temp = get_nested_attribute(action, 'var__agl__d', locals())
-                    if temp is None:
-                        temp = var__agl__d
-                    if action is not None and hasattr(action, "v324".split('[')[0].split('.')[0]):
-                        action.v324 = temp
-                    else:
-                        v324 = temp 
-
-
-                    temp = get_nested_attribute(action, 'v324', locals())
-                    if temp is None:
-                        temp = v324
-                    if action is not None and hasattr(action, "v325".split('[')[0].split('.')[0]):
-                        action.v325 = temp
-                    else:
-                        v325 = temp 
-
-
-                    temp = get_nested_attribute(action, 'v325', locals())
-                    if temp is None:
-                        temp = v325
-                    if action is not None and hasattr(action, "var__agl__toChange".split('[')[0].split('.')[0]):
-                        action.var__agl__toChange = temp
-                    else:
-                        var__agl__toChange = temp 
-                    
-
-            temp = get_nested_attribute(action, 'False', locals())
-            if temp is None:
-                temp = False
-            if action is not None and hasattr(action, "v326".split('[')[0].split('.')[0]):
-                action.v326 = temp
-            else:
-                v326 = temp 
-
-
-            temp = get_nested_attribute(action, 'v326', locals())
-            if temp is None:
-                temp = v326
-            if action is not None and hasattr(action, "v327".split('[')[0].split('.')[0]):
-                action.v327 = temp
-            else:
-                v327 = temp 
-
-
-            temp = get_nested_attribute(action, 'v327', locals())
-            if temp is None:
-                temp = v327
-            if action is not None and hasattr(action, "v328".split('[')[0].split('.')[0]):
-                action.v328 = temp
-            else:
-                v328 = temp 
-
-
-            temp = get_nested_attribute(action, 'v328', locals())
-            if temp is None:
-                temp = v328
-            if action is not None and hasattr(action, "var__agl__hasValues".split('[')[0].split('.')[0]):
-                action.var__agl__hasValues = temp
-            else:
-                var__agl__hasValues = temp 
-            if model is not None: 
-                model.var__agl__hasValues = var__agl__hasValues
-                model.last_var__agl__hasValues = copy.deepcopy(var__agl__hasValues)
-
-            temp = get_nested_attribute(action, '2', locals())
-            if temp is None:
-                temp = 2
-            if action is not None and hasattr(action, "v329".split('[')[0].split('.')[0]):
-                action.v329 = temp
-            else:
-                v329 = temp 
-
-
-            temp = get_nested_attribute(action, '1', locals())
-            if temp is None:
-                temp = 1
-            if action is not None and hasattr(action, "v330".split('[')[0].split('.')[0]):
-                action.v330 = temp
-            else:
-                v330 = temp 
-
-            v331 = - np.array(v330)
-
-            temp = get_nested_attribute(action, '1', locals())
-            if temp is None:
-                temp = 1
-            if action is not None and hasattr(action, "v332".split('[')[0].split('.')[0]):
-                action.v332 = temp
-            else:
-                v332 = temp 
-
-            v333 = - np.array(v332)
-            for var__agl__d in range(v329, v331, v333):
-
-                temp = get_nested_attribute(action, 'var__agl__d', locals())
-                if temp is None:
-                    temp = var__agl__d
-                if action is not None and hasattr(action, "v337".split('[')[0].split('.')[0]):
-                    action.v337 = temp
-                else:
-                    v337 = temp 
-
-
-                temp = get_nested_attribute(action, 'var__agl__to_tower.var__agl__disks[v337].state', locals())
-                if temp is None:
-                    temp = var__agl__to_tower.var__agl__disks[v337].state
-                if action is not None and hasattr(action, "v336".split('[')[0].split('.')[0]):
-                    action.v336 = temp
-                else:
-                    v336 = temp 
-
-
-                temp = get_nested_attribute(action, '"normal"', locals())
-                if temp is None:
-                    temp = "normal"
-                if action is not None and hasattr(action, "v338".split('[')[0].split('.')[0]):
-                    action.v338 = temp
-                else:
-                    v338 = temp 
-
-                v335 = np.array(v336) == np.array(v338); v335 = tuple(v335) if isinstance(v335, np.ndarray) else v335
-
-                temp = get_nested_attribute(action, 'var__agl__hasValues', locals())
-                if temp is None:
-                    temp = var__agl__hasValues
-                if action is not None and hasattr(action, "v340".split('[')[0].split('.')[0]):
-                    action.v340 = temp
-                else:
-                    v340 = temp 
-
-
-                temp = get_nested_attribute(action, 'False', locals())
-                if temp is None:
-                    temp = False
-                if action is not None and hasattr(action, "v341".split('[')[0].split('.')[0]):
-                    action.v341 = temp
-                else:
-                    v341 = temp 
-
-                v339 = np.array(v340) == np.array(v341); v339 = tuple(v339) if isinstance(v339, np.ndarray) else v339
-                v334 = v335 and v339; v334 = tuple(v334) if isinstance(v334, np.ndarray) else v334
-                if v334:
-
-                    temp = get_nested_attribute(action, 'var__agl__toChange', locals())
-                    if temp is None:
-                        temp = var__agl__toChange
-                    if action is not None and hasattr(action, "v343".split('[')[0].split('.')[0]):
-                        action.v343 = temp
-                    else:
-                        v343 = temp 
-
-
-                    temp = get_nested_attribute(action, '0', locals())
-                    if temp is None:
-                        temp = 0
-                    if action is not None and hasattr(action, "v344".split('[')[0].split('.')[0]):
-                        action.v344 = temp
-                    else:
-                        v344 = temp 
-
-
-                    temp = get_nested_attribute(action, 'var__agl__from_tower.var__agl__disks[v343].length[v344]', locals())
-                    if temp is None:
-                        temp = var__agl__from_tower.var__agl__disks[v343].length[v344]
-                    if action is not None and hasattr(action, "v342".split('[')[0].split('.')[0]):
-                        action.v342 = temp
-                    else:
-                        v342 = temp 
-
-                    print(v342)
-
-                    temp = get_nested_attribute(action, 'var__agl__d', locals())
-                    if temp is None:
-                        temp = var__agl__d
-                    if action is not None and hasattr(action, "v346".split('[')[0].split('.')[0]):
-                        action.v346 = temp
-                    else:
-                        v346 = temp 
-
-
-                    temp = get_nested_attribute(action, '0', locals())
-                    if temp is None:
-                        temp = 0
-                    if action is not None and hasattr(action, "v347".split('[')[0].split('.')[0]):
-                        action.v347 = temp
-                    else:
-                        v347 = temp 
-
-
-                    temp = get_nested_attribute(action, 'var__agl__to_tower.var__agl__disks[v346].length[v347]', locals())
-                    if temp is None:
-                        temp = var__agl__to_tower.var__agl__disks[v346].length[v347]
-                    if action is not None and hasattr(action, "v345".split('[')[0].split('.')[0]):
-                        action.v345 = temp
-                    else:
-                        v345 = temp 
-
-                    print(v345)
-
-                    temp = get_nested_attribute(action, 'var__agl__toChange', locals())
-                    if temp is None:
-                        temp = var__agl__toChange
-                    if action is not None and hasattr(action, "v350".split('[')[0].split('.')[0]):
-                        action.v350 = temp
-                    else:
-                        v350 = temp 
-
-
-                    temp = get_nested_attribute(action, '0', locals())
-                    if temp is None:
-                        temp = 0
-                    if action is not None and hasattr(action, "v351".split('[')[0].split('.')[0]):
-                        action.v351 = temp
-                    else:
-                        v351 = temp 
-
-
-                    temp = get_nested_attribute(action, 'var__agl__from_tower.var__agl__disks[v350].length[v351]', locals())
-                    if temp is None:
-                        temp = var__agl__from_tower.var__agl__disks[v350].length[v351]
-                    if action is not None and hasattr(action, "v349".split('[')[0].split('.')[0]):
-                        action.v349 = temp
-                    else:
-                        v349 = temp 
-
-
-                    temp = get_nested_attribute(action, 'var__agl__d', locals())
-                    if temp is None:
-                        temp = var__agl__d
-                    if action is not None and hasattr(action, "v353".split('[')[0].split('.')[0]):
-                        action.v353 = temp
-                    else:
-                        v353 = temp 
-
-
-                    temp = get_nested_attribute(action, '0', locals())
-                    if temp is None:
-                        temp = 0
-                    if action is not None and hasattr(action, "v354".split('[')[0].split('.')[0]):
-                        action.v354 = temp
-                    else:
-                        v354 = temp 
-
-
-                    temp = get_nested_attribute(action, 'var__agl__to_tower.var__agl__disks[v353].length[v354]', locals())
-                    if temp is None:
-                        temp = var__agl__to_tower.var__agl__disks[v353].length[v354]
-                    if action is not None and hasattr(action, "v352".split('[')[0].split('.')[0]):
-                        action.v352 = temp
-                    else:
-                        v352 = temp 
-
-                    v348 = np.array(v349) < np.array(v352); v348 = tuple(v348) if isinstance(v348, np.ndarray) else v348
-                    if v348:
-
-                        temp = get_nested_attribute(action, '"hidden"', locals())
-                        if temp is None:
-                            temp = "hidden"
-                        if action is not None and hasattr(action, "v355".split('[')[0].split('.')[0]):
-                            action.v355 = temp
-                        else:
-                            v355 = temp 
-
-
-                        temp = get_nested_attribute(action, 'v355', locals())
-                        if temp is None:
-                            temp = v355
-                        if action is not None and hasattr(action, "v356".split('[')[0].split('.')[0]):
-                            action.v356 = temp
-                        else:
-                            v356 = temp 
-
-
-                        temp = get_nested_attribute(action, 'var__agl__toChange', locals())
-                        if temp is None:
-                            temp = var__agl__toChange
-                        if action is not None and hasattr(action, "v357".split('[')[0].split('.')[0]):
-                            action.v357 = temp
-                        else:
-                            v357 = temp 
-
-
-                        temp = get_nested_attribute(action, 'v356', locals())
-                        if temp is None:
-                            temp = v356
-                        if action is not None and hasattr(action, "var__agl__from_tower.var__agl__disks[v357].state".split('[')[0].split('.')[0]):
-                            action.var__agl__from_tower.var__agl__disks[v357].state = temp
-                        else:
-                            var__agl__from_tower.var__agl__disks[v357].state = temp 
-
-
-                        temp = get_nested_attribute(action, '"normal"', locals())
-                        if temp is None:
-                            temp = "normal"
-                        if action is not None and hasattr(action, "v358".split('[')[0].split('.')[0]):
-                            action.v358 = temp
-                        else:
-                            v358 = temp 
-
-
-                        temp = get_nested_attribute(action, 'v358', locals())
-                        if temp is None:
-                            temp = v358
-                        if action is not None and hasattr(action, "v359".split('[')[0].split('.')[0]):
-                            action.v359 = temp
-                        else:
-                            v359 = temp 
-
-
-                        temp = get_nested_attribute(action, 'var__agl__toChange', locals())
-                        if temp is None:
-                            temp = var__agl__toChange
-                        if action is not None and hasattr(action, "v360".split('[')[0].split('.')[0]):
-                            action.v360 = temp
-                        else:
-                            v360 = temp 
-
-
-                        temp = get_nested_attribute(action, 'v359', locals())
-                        if temp is None:
-                            temp = v359
-                        if action is not None and hasattr(action, "var__agl__to_tower.var__agl__disks[v360].state".split('[')[0].split('.')[0]):
-                            action.var__agl__to_tower.var__agl__disks[v360].state = temp
-                        else:
-                            var__agl__to_tower.var__agl__disks[v360].state = temp 
-
-
-                        temp = get_nested_attribute(action, 'False', locals())
-                        if temp is None:
-                            temp = False
-                        if action is not None and hasattr(action, "v361".split('[')[0].split('.')[0]):
-                            action.v361 = temp
-                        else:
-                            v361 = temp 
-
-
-                        temp = get_nested_attribute(action, 'v361', locals())
-                        if temp is None:
-                            temp = v361
-                        if action is not None and hasattr(action, "v362".split('[')[0].split('.')[0]):
-                            action.v362 = temp
-                        else:
-                            v362 = temp 
-
-
-                        temp = get_nested_attribute(action, 'v362', locals())
-                        if temp is None:
-                            temp = v362
-                        if action is not None and hasattr(action, "var__agl__from_tower.var__agl__active".split('[')[0].split('.')[0]):
-                            action.var__agl__from_tower.var__agl__active = temp
-                        else:
-                            var__agl__from_tower.var__agl__active = temp 
-                        
-
-                    temp = get_nested_attribute(action, 'True', locals())
-                    if temp is None:
-                        temp = True
-                    if action is not None and hasattr(action, "v363".split('[')[0].split('.')[0]):
-                        action.v363 = temp
-                    else:
-                        v363 = temp 
-
-
-                    temp = get_nested_attribute(action, 'v363', locals())
-                    if temp is None:
-                        temp = v363
-                    if action is not None and hasattr(action, "v364".split('[')[0].split('.')[0]):
-                        action.v364 = temp
-                    else:
-                        v364 = temp 
-
-
-                    temp = get_nested_attribute(action, 'v364', locals())
-                    if temp is None:
-                        temp = v364
-                    if action is not None and hasattr(action, "var__agl__hasValues".split('[')[0].split('.')[0]):
-                        action.var__agl__hasValues = temp
-                    else:
-                        var__agl__hasValues = temp 
-                    
-
-            temp = get_nested_attribute(action, 'var__agl__hasValues', locals())
-            if temp is None:
-                temp = var__agl__hasValues
-            if action is not None and hasattr(action, "v365".split('[')[0].split('.')[0]):
-                action.v365 = temp
-            else:
-                v365 = temp 
-
-            v366 = not v365
-            if v366:
-
-                temp = get_nested_attribute(action, '"hidden"', locals())
-                if temp is None:
-                    temp = "hidden"
-                if action is not None and hasattr(action, "v367".split('[')[0].split('.')[0]):
-                    action.v367 = temp
-                else:
-                    v367 = temp 
-
-
-                temp = get_nested_attribute(action, 'v367', locals())
-                if temp is None:
-                    temp = v367
-                if action is not None and hasattr(action, "v368".split('[')[0].split('.')[0]):
-                    action.v368 = temp
-                else:
-                    v368 = temp 
-
-
-                temp = get_nested_attribute(action, 'var__agl__toChange', locals())
-                if temp is None:
-                    temp = var__agl__toChange
-                if action is not None and hasattr(action, "v369".split('[')[0].split('.')[0]):
-                    action.v369 = temp
-                else:
-                    v369 = temp 
-
-
-                temp = get_nested_attribute(action, 'v368', locals())
-                if temp is None:
-                    temp = v368
-                if action is not None and hasattr(action, "var__agl__from_tower.var__agl__disks[v369].state".split('[')[0].split('.')[0]):
-                    action.var__agl__from_tower.var__agl__disks[v369].state = temp
-                else:
-                    var__agl__from_tower.var__agl__disks[v369].state = temp 
-
-
-                temp = get_nested_attribute(action, '"normal"', locals())
-                if temp is None:
-                    temp = "normal"
-                if action is not None and hasattr(action, "v370".split('[')[0].split('.')[0]):
-                    action.v370 = temp
-                else:
-                    v370 = temp 
-
-
-                temp = get_nested_attribute(action, 'v370', locals())
-                if temp is None:
-                    temp = v370
-                if action is not None and hasattr(action, "v371".split('[')[0].split('.')[0]):
-                    action.v371 = temp
-                else:
-                    v371 = temp 
-
-
-                temp = get_nested_attribute(action, 'var__agl__toChange', locals())
-                if temp is None:
-                    temp = var__agl__toChange
-                if action is not None and hasattr(action, "v372".split('[')[0].split('.')[0]):
-                    action.v372 = temp
-                else:
-                    v372 = temp 
-
-
-                temp = get_nested_attribute(action, 'v371', locals())
-                if temp is None:
-                    temp = v371
-                if action is not None and hasattr(action, "var__agl__to_tower.var__agl__disks[v372].state".split('[')[0].split('.')[0]):
-                    action.var__agl__to_tower.var__agl__disks[v372].state = temp
-                else:
-                    var__agl__to_tower.var__agl__disks[v372].state = temp 
-
-
-                temp = get_nested_attribute(action, 'False', locals())
-                if temp is None:
-                    temp = False
-                if action is not None and hasattr(action, "v373".split('[')[0].split('.')[0]):
-                    action.v373 = temp
-                else:
-                    v373 = temp 
-
-
-                temp = get_nested_attribute(action, 'v373', locals())
-                if temp is None:
-                    temp = v373
-                if action is not None and hasattr(action, "v374".split('[')[0].split('.')[0]):
-                    action.v374 = temp
-                else:
-                    v374 = temp 
-
-
-                temp = get_nested_attribute(action, 'v374', locals())
-                if temp is None:
-                    temp = v374
-                if action is not None and hasattr(action, "var__agl__from_tower.var__agl__active".split('[')[0].split('.')[0]):
-                    action.var__agl__from_tower.var__agl__active = temp
-                else:
-                    var__agl__from_tower.var__agl__active = temp 
-                
-
-            temp = get_nested_attribute(action, 'True', locals())
-            if temp is None:
-                temp = True
-            if action is not None and hasattr(action, "v375".split('[')[0].split('.')[0]):
-                action.v375 = temp
-            else:
-                v375 = temp 
-
-
-            temp = get_nested_attribute(action, 'v375', locals())
-            if temp is None:
-                temp = v375
-            if action is not None and hasattr(action, "v376".split('[')[0].split('.')[0]):
-                action.v376 = temp
-            else:
-                v376 = temp 
-
-
-            temp = get_nested_attribute(action, 'v376', locals())
-            if temp is None:
-                temp = v376
-            if action is not None and hasattr(action, "var__agl__game.var__agl__checkWin".split('[')[0].split('.')[0]):
-                action.var__agl__game.var__agl__checkWin = temp
-            else:
-                var__agl__game.var__agl__checkWin = temp 
-
-            last_refresh = time.time()
-            var__agl__view1.update()
-
-            last_refresh = time.time()
-            var__agl__view2.update()
-
-            last_refresh = time.time()
-            var__agl__view3.update()
-            
-        else:
-
-            temp = get_nested_attribute(action, '"Invalid transaction"', locals())
-            if temp is None:
-                temp = "Invalid transaction"
-            if action is not None and hasattr(action, "v377".split('[')[0].split('.')[0]):
-                action.v377 = temp
-            else:
-                v377 = temp 
-
-            print(v377)
-
-            temp = get_nested_attribute(action, 'False', locals())
-            if temp is None:
-                temp = False
-            if action is not None and hasattr(action, "v378".split('[')[0].split('.')[0]):
-                action.v378 = temp
-            else:
-                v378 = temp 
-
-
-            temp = get_nested_attribute(action, 'v378', locals())
-            if temp is None:
-                temp = v378
-            if action is not None and hasattr(action, "v379".split('[')[0].split('.')[0]):
-                action.v379 = temp
-            else:
-                v379 = temp 
-
-
-            temp = get_nested_attribute(action, 'v379', locals())
-            if temp is None:
-                temp = v379
-            if action is not None and hasattr(action, "var__agl__from_tower.var__agl__active".split('[')[0].split('.')[0]):
-                action.var__agl__from_tower.var__agl__active = temp
-            else:
-                var__agl__from_tower.var__agl__active = temp 
-
-            last_refresh = time.time()
-            var__agl__view1.update()
-
-            last_refresh = time.time()
-            var__agl__view2.update()
-
-            last_refresh = time.time()
-            var__agl__view3.update()
-
-            
-        # refresh the condition
-
-        temp = get_nested_attribute(action, 'var__agl__game.var__agl__isSolved', locals())
-        if temp is None:
-            temp = var__agl__game.var__agl__isSolved
-        if action is not None and hasattr(action, "v253".split('[')[0].split('.')[0]):
-            action.v253 = temp
-        else:
-            v253 = temp 
-
-        ##
-        if v253:
-            break   # Repeat until condition is false
-    v380 = root.waitClick()
-
-    temp = get_nested_attribute(action, 'v380', locals())
-    if temp is None:
-        temp = v380
-    if action is not None and hasattr(action, "v381".split('[')[0].split('.')[0]):
-        action.v381 = temp
-    else:
-        v381 = temp 
-
-
-    temp = get_nested_attribute(action, 'v381', locals())
-    if temp is None:
-        temp = v381
-    if action is not None and hasattr(action, "v382".split('[')[0].split('.')[0]):
-        action.v382 = temp
-    else:
-        v382 = temp 
-
-
-    temp = get_nested_attribute(action, 'v382', locals())
-    if temp is None:
-        temp = v382
     if action is not None and hasattr(action, "var__agl__p".split('[')[0].split('.')[0]):
         action.var__agl__p = temp
     else:
         var__agl__p = temp 
-    if model is not None: 
-        model.var__agl__p = var__agl__p
-        model.last_var__agl__p = copy.deepcopy(var__agl__p)
-    var__agl__view1.close(); views.remove(var__agl__view1) if last_view != var__agl__view1 else None
-    last_view = (views.pop(-1) if len(views) > 0 else None) if last_view == var__agl__view1 else last_view
-    root.last_view = last_view
-    var__agl__view2.close(); views.remove(var__agl__view2) if last_view != var__agl__view2 else None
-    last_view = (views.pop(-1) if len(views) > 0 else None) if last_view == var__agl__view2 else last_view
-    root.last_view = last_view
-    var__agl__view3.close(); views.remove(var__agl__view3) if last_view != var__agl__view3 else None
-    last_view = (views.pop(-1) if len(views) > 0 else None) if last_view == var__agl__view3 else last_view
+
+    var__agl__view.close(); views.remove(var__agl__view) if last_view != var__agl__view else None
+    last_view = (views.pop(-1) if len(views) > 0 else None) if last_view == var__agl__view else last_view
     root.last_view = last_view

@@ -6,12 +6,12 @@ public abstract class Type {
         this.name = name;
     }
 
-    public String getName() {
+    public String name() {
         return name;
     }
 
-    public boolean comformsTo(Type other) {
-        return name.equals(other.getName());
+    public boolean conformsTo(Type other) {
+        return name().equals(other.name());
     }
 
     public boolean isNumeric() {
@@ -22,4 +22,22 @@ public abstract class Type {
     public String toString() {
         return name;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Type other = (Type) obj;
+        if (name == null) {
+            if (other.name != null)
+                return false;
+        } else if (!name.equals(other.name))
+            return false;
+        return true;
+    }
+
 }

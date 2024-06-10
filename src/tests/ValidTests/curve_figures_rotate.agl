@@ -1,0 +1,107 @@
+elipse : Ellipse at (-750, 0) with {
+    length = (100, 35);
+    fill = "black";
+}
+
+arc : Arc at (-550, 0) with {
+    length = (100, 35);
+    start = 0;
+    extent = 180;
+    outline = "blue";
+}
+
+arcchord : ArcChord at (-350, 0) with {
+    length = (100, 35);
+    start = 0;
+    extent = 180;
+    fill = "red";
+}
+
+pieslice : PieSlice at (-150, 0) with {
+    length = (100, 35);
+    start = 0;
+    extent = 180;
+    fill = "green";
+}
+
+view : View with {
+    Ox = 30;
+    Oy = 0;
+    width = 1800;
+    height = 401;
+    title = "1";
+    background = "alice blue";
+}
+
+
+refresh view;
+
+for i in 0..5 do {
+    rotate elipse by 35;
+    rotate arc by 35;
+    rotate arcchord by 35;
+    rotate pieslice by 35;
+    refresh view after 1s;
+}
+
+arc.start = -35;
+arc.extent = 70;
+
+arcchord.start = -35;
+arcchord.extent = 70;
+
+pieslice.start = -35;
+pieslice.extent = 70;
+
+for i in 0..5 do {
+    rotate elipse by 35;
+    rotate arc by 35;
+    rotate arcchord by 35;
+    rotate pieslice by 35;
+    refresh view after 1s;
+}
+
+elipse.length = (45, 35);
+arc.length = (45, 35);
+arcchord.length = (45, 35);
+pieslice.length = (45, 35);
+
+arc.start = 0;
+arc.extent = 180;
+arcchord.start = 0;
+arcchord.extent = 180;
+pieslice.start = 0;
+pieslice.extent = 180;
+
+for i in 0..5 do {
+    rotate elipse by 35;
+    rotate arc by 35;
+    rotate arcchord by 35;
+    rotate pieslice by 35;
+    refresh view after 1s;
+}
+
+arc.start = -35;
+arc.extent = 70;
+
+arcchord.start = -35;
+arcchord.extent = 70;
+
+pieslice.start = -35;
+pieslice.extent = 70;
+
+for i in 0..5 do {
+    rotate elipse by 35;
+    rotate arc by 35;
+    rotate arcchord by 35;
+    rotate pieslice by 35;
+    refresh view after 1s;
+}
+
+
+print "Press any mouse button to quit";
+
+p : Point = wait mouse click; # instantiate a Point and waits for a mouse click
+print p;
+
+close view;

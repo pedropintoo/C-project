@@ -1,6 +1,6 @@
-/*
-   File: AGL Generator to Python
-   */
+// /*
+//    File: AGL Generator to Python
+//    */
 
 import org.stringtemplate.v4.*;
 
@@ -84,9 +84,9 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
     }
 
 
-/*
-   Compiler visitor methods
-   */
+// /*
+//    Compiler visitor methods
+//    */
 
 //% program
     @Override public ST visitProgram(AGLParser.ProgramContext ctx) {

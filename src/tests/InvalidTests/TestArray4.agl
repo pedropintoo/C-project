@@ -1,0 +1,25 @@
+c : Array<Array<Point>> = [[(1,2), (3,4)], [(1,2), (3,4)]]; # correto. Type: Array<Array<Point>> ; Assignment Type: Array<Array<Point>>
+
+# NOTA: Deixar o código abaixo comentado. Ir descomentando linha a linha deixando a linha anterior descomentada para testar o código
+
+# c = ["a","b","c","d","e"]; # dá erro. Type:  Array<Array<Point>> ; Assignment Type: Array<String>
+
+c[0] = "a"; # dá erro. Type: Array<Point> ; Assignment Type: String
+
+# c = [(1,2), (3,4), (5,6), (7,8), (9,10)]; # dá erro. Type:  Array<Array<Point>> ; Assignment Type: Array<Point>
+
+# c = [ [(1,2), (3,4), (5,6), (7,8), (9,10)] , [(1,2), (3,4), (5,6), (7,8), (9,10)] ]; # funciona.  Type: Array<Array<Point>> ; Assignment Type: Array<Array<Point>>
+
+e : Array<Array<Array<Point>>> = [c, c, c, c]; # funciona. Type: Array<Array<Array<Point>>> ; Assignment Type: Array<Array<Array<Point>>>
+
+# f : Array<Array<Array<Point>>> = [c, c[0], c, c]; # sintaticamente correto mas semânticamente errado. Dá erro: c[0] é do tipo Array<Point>, devia ser do tipo Array<Array<Point>>.
+
+# i : Array<Array<Point>> = [c[0], c[1]]; # funciona. Type: Array<Array<Point>> ; Assignment Type: Array<Array<Point>>
+
+# j : Array<Array<Point>> = e[0];  # funciona. Type: Array<Array<Point>> ; Assignment Type: Array<Array<Point>>
+
+k : Array<Point> = e[0][0]; # funciona Type: Array<Point> ; Assignment Type: Array<Point>
+
+# l : Point = e[0][0][0]; # funciona. Type: Point ; Assignment Type: Point
+
+# m : Array<Array<Point>> = e; # Comentar "e". Deve dar erro.

@@ -39,7 +39,7 @@ Tower :: Model {
     }
 
     inc : Number = 0;
-    disks : Array = [diskL, diskM, diskS]; # Array<Rectangle>
+    disks : Array<Rectangle> = [diskL, diskM, diskS]; # Array<Rectangle>
     
     action on disks {
         inc = 0;
@@ -73,7 +73,7 @@ Game :: Model {
     tower2 : Tower at (500, -50);
     tower3 : Tower at (1000, -50);
 
-    towersToCheck : Array = [tower2, tower3];
+    towersToCheck : Array<Tower> = [tower2, tower3];
 
     isSolved : Boolean = False;
     checkWin : Boolean = False;
@@ -196,8 +196,6 @@ repeat {
         # is transaction valid?
         for d in 2..-1..-1 do {
             if to_tower.disks[d].state == "normal" and hasValues == False do {
-                print from_tower.disks[toChange].length[0];
-                print to_tower.disks[d].length[0];
                 if from_tower.disks[toChange].length[0] < to_tower.disks[d].length[0] do {
                     from_tower.disks[toChange].state = "hidden";
                     to_tower.disks[toChange].state = "normal";

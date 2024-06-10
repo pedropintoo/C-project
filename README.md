@@ -109,20 +109,9 @@ g : Number = d / 2.0;
 ```
 nome : String = "Nome";
 ```
-- **Point**: Representa um ponto no canvas;
-- **Vector**: Representa a diferença entre dois pontos;
-```
-ponto : Point = (1,5);
-vetor : Vector = (2,3);
-
-ponto2 : Point = ponto + vetor;
-vetor2 : Vector = vetor + vetor;
-
-# Não é possível adicionar dois pontos
-# ponto3 : Point = ponto + ponto; 
-
-vetor3 : Vector = vetor * vetor * 4;
-ponto4 : Point = ponto * 2;
+antlr4-test AGL program -gui ../doc/ex01.agl        [DONE]
+antlr4-test AGL program -gui ../doc/ex02.agl        [DONE]
+antlr4-test AGL program -gui ../doc/ex03.agl        [DONE]
 ```
 
 #### __Definição de uma View__
@@ -546,3 +535,19 @@ Para este trabalho, o nosso grupo dividiu-o nos seguintes tópicos e distribui o
     - Guilherme Santos - 113893
     - ...
   
+cat ../doc/ex00.agl | antlr4-run > ../doc/t1.py
+```
+
+## Run Semantic Check 
+Inside the `src` directory:
+```
+antlr4-main AGLParser.g4 program -v AGLSemanticCheck.java
+antlr4-build
+cat tests/ValidTests/ex05.agl | antlr4-run
+```
+
+## Test Semantic Check
+Inside the `src` directory:
+```
+./tests/run-tests.sh
+```
