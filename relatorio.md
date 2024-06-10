@@ -79,8 +79,12 @@ Para além disso, foi criado um exemplo `InvalidTest/TestWhileFail.agl`, que con
 
 
 8. **Verificação das estruturas de ação**
-   - Verificação de elementos: É assegurado que dentro de uma action apenas podem ser englobadas ações com atributos previamente definidos dentro do Model (ver este texto).
+   - Verificação de elementos: É assegurado que dentro de uma action apenas podem ser englobadas ações com atributos previamente definidos dentro do Model.
+      - Por exemplo nos ficheiros `src/tests/InvalidTests/TestAction1.agl`, `src/tests/InvalidTests/TestAction2.agl`, `src/tests/InvalidTests/TestAction3.agl` é possível confirmar que é impossível fazer uma action em atributos que não existem (TestAction1 e 3) ou ainda em variáveis definidas fora do Model (TestAction3).
    - Verificação de Instantiation: É também assegurado que não pode ser feita uma instanciação dentro de uma action.
+      - No ficheiro `src/tests/InvalidTests/TestAction5.agl` confirmamos a impossibilidade de fazer uma instanciação dentro da Action.
+   - Verificação de atributos: É assegurado também que é impossível fazer uma atribuição com um tipo de valores incorreto, ou a uma variável que não exista.
+      - No ficheiro `src/tests/InvalidTests/TestAction4.agl` outline não é um atributo do PieSlice face, logo é uma atribuição inválida. Também no ficheiro `src/tests/InvalidTests/TestAction6.agl` podemos confirmar que é inválido fazer uma atribuição à variável 'length' com um valor incorreto (deveria ser um Point).
 
 
 9. **Verificação dos atributos dos ObjectType**:
