@@ -1,0 +1,65 @@
+Pacman :: Model {
+    # A Pacman is composed of a pie slice plus an ellipse representing an eye.
+    # Its reference frame is at the center of the circle circumscribing the pie slice.
+    #
+    # Models can have their own properties, in which case a way to represent how they
+    # reshape the graphical object is mandatory
+
+    # The main pacman shape, with a reference for future use
+    face : PieSlice at (0,0) with {
+        length = (50,50);
+        fill = "pink";
+        start = 30;
+        extent = 300;
+    }
+
+    # the eye, without a reference
+    Ellipse at (20,35) with {
+        fill = "black";
+        length = (5,5);
+    }
+
+    # properties and how they reshape children's properties
+    mouth : Enum in { Open, Close } # the first value is the default
+    action on mouth {
+        if mouth == Open do
+            with face do {
+                start = 30;
+                extent = 300;
+            }
+        else do # has to be Close, since there are only two possible values
+            with face do {
+                start = 1;
+                extent = 359;
+            }
+    }
+}
+
+# create an instance of a View, at the beginning of the strip
+#
+view : View with {
+    Ox = -450;
+    Oy = 0;
+    width = 401;
+    height = 401;
+    title = "Illustrating a moving pacman";
+    background = "alice blue";
+}
+
+#
+# Instantiate a Pacman, with the default property values
+#
+pacman : Pacman at (-450, 0);
+
+t : Time = 0.5;
+
+for i in 1 .. 10 do {
+    pacman.mouth = Close;
+    refresh view after 20 ms;
+    pacman.mouth = Open;
+    refresh view after -25.3 ms; # the refresh works with integers and floats
+    refresh view after t ms; # the refresh works with variables of type Time
+    move pacman by (10,0);    # the 'by' makes the movement relative; the argument is a vector
+    move view by (10,0);    # the 'by' makes the movement relative; the argument is a vector
+    refresh view;
+}

@@ -55,7 +55,7 @@ Já no ficheiro InvalidTests/TestAttributes3.agl, tentou-se definir a propriedad
 
 Por exemplo, os ficheiros `InvalidTests/TestRefresh1.agl` e `InvalidTests/TestClose1.agl` contêm exemplos que ilustram estas verificações. No ficheiro `InvalidTests/TestRefresh1.agl`, a operação refresh é aplicada corretamente a uma variável do tipo View, mas falha ao ser aplicada a uma variável do tipo Integer, sendo este erro corretamente detetado pelo analisador semântico. De maneira similar, no ficheiro `InvalidTests/TestClose1.agl`, a operação close é corretamente aplicada a uma View, mas um erro é detetado quando se tenta aplicar close a uma variável do tipo Integer.
 Relativamente à expressão de tempo em Refresh, o ficheiro `ValidTests/TestRefreshTimeExpression.agl` contém um exemplo que ilustra esta verificação. Neste ficheiro, temos duas operações refresh, uma com uma expressão de tempo do tipo Integer e outra com uma expressão de tempo do tipo Time, ambas corretamente verificadas pelo analisador semântico.
-Por outro lado, no ficheiro `InvalidTests/TestRefreshTimeExpressionInvalid.agl`, a expressão de tempo após after é do tipo String, o que é inválido, e o erro é corretamente detetado pelo analisador semântico.
+Por outro lado, no ficheiro `InvalidTests/TestRefreshTimeExpressionInvalid.agl`, a expressão de tempo após after é do tipo String, o que é inválido, e o erro é corretamente detetado pelo analisador semântico. O analisador também não permite que seja feita a operação refresh com um valor negativo, como é possível verificar no ficheiro `InvalidTests/TestRefreshTimeExpressionInvalid2.agl`.
 
 
 6. **Operação de move**:
