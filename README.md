@@ -341,7 +341,23 @@ for i in 1 .. 7 do {
 
 ![Script.gif](doc/examples/demo/xagl1.gif)
 
-Outro exemplo mais complexo, assumindo outros argumentos no play, seria: [doc/examples/extra/ex07_extra.agl](doc/examples/extra/ex07_extra.agl).
+Outro exemplo mais complexo, assumindo mais argumentos no play, seria: [doc/examples/extra/ex07_extra.agl](doc/examples/extra/ex07_extra.agl).
+
+Utilizando o script $xAG_L$:
+```
+s1 : Script = load "doc/examples/extra/s4.xagl" ;
+
+delay : Time = 500;
+
+loops : Integer = 10;
+
+play s1 with {
+    v = view;
+    object = square;
+    t = delay;
+    n = loops;
+}
+```
 
 
 ### Nível desejável

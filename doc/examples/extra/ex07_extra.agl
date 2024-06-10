@@ -24,7 +24,7 @@ square : Square at (0,0);
 
 refresh view;
 
-s1 : Script = load "doc/examples/extra/ex_s1.xagl" ;
+s1 : Script = load "doc/examples/extra/s4.xagl" ;
 
 delay : Time = 500;
 
