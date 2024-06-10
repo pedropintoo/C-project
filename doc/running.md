@@ -41,7 +41,10 @@ Após o **antlr4-build**, ainda dentro de `src`, pode experimentar qualquer prog
 ./run /doc/examples/ex06.agl
 
 ### Também há ficheiros extra de exemplo como 
-./run ../doc/examples/extra/ifStatement.agl                                
+./run /doc/examples/extra/curve_figures_rotate.agl
+./run /doc/examples/extra/ifStatement.agl  
+./run /doc/examples/extra/model_with_deps.agl
+###...
 ```
 
 ## Limpar o Ambiente
