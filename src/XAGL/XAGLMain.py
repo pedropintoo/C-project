@@ -29,12 +29,12 @@ class Pacman(Model):
 
 def main():
    root = Root()
-   v = View(root, 0, 0, height=500, width=500)
+   v = View(root, 0, 0, height=500, width=500,)
    m = Rectangle(root,length=(50,50), fill='white', origin=(0,0))
    m1 = Pacman()
    m1.add_object(m)
    
-   file = "../../examples/new_examples/s0.xagl"
+   file = "../../examples/new_examples/s1.xagl"
    vars0 = {"m":Var(m1), "v":Var(v)}
    vars1 = {"root":root, "m":m1 , "v":v}
    visitor0 = Semantic(vars0)

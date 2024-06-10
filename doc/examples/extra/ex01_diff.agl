@@ -67,7 +67,7 @@ Rectangle at (0,cellSize) with {
 }
 
 #
-# A 'Ellipse' is specified by its reference point (its center) and 
+# A 'Ellipse' is specified by its reference point (its ceneter) and 
 # a vector pointing to the top right corner of the bounding rectangle
 # Its must be defined using the 'create_oval' tkinter Canvas method.
 # The vector is specified by an additional property named 'length'.

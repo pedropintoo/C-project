@@ -1,7 +1,8 @@
 #!/bin/bash
 
 usage() {   echo "Usage: $0 <file.agl> [-s]"
-            echo -e "\nOptions:"
+            echo -e "\nRun inside the agl-gg04 (root) directory!"
+            echo -e "Options:"
             echo -e "\t-s\tSkip semantic check and run the parser and compiler only."
         1>&2; exit 1; }
 
@@ -44,20 +45,27 @@ if [[ $file != *.agl ]]; then
     exit 1
 fi
 
+file="../$file" # Prepend the path to the file
+cd src
 # Processing logic based on the presence of -s flag
 if [ $semCheck = "false" ]; then
-    cat $file | antlr4-run > ../doc/t1.py
-    python3 ../doc/t1.py
+    cat $file | antlr4-run > ../__agl__run.py
+    cd ..
+    python3 __agl__run.py
+    rm __agl__run.py
     exit 0
 fi    
 
 if cat $file | java RunSemTests 2>&1 | grep -q "Semantic check passed."; then
     echo -e "\e[32m $(basename "$file"): Semantic Test OK\e[0m"
-    cat $file | antlr4-run > ../doc/t1.py
-    python3 ../doc/t1.py
+    cat $file | antlr4-run > ../__agl__run.py
+    cd ..
+    python3 __agl__run.py
+    rm __agl__run.py
 else
     echo -e "\e[31m $(basename "$file"): Semantic Test FAIL\e[0m" 
     cat $file | java RunSemTests
+    cd ..
 fi
 
 exit 0

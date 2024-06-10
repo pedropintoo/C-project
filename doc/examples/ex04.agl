@@ -27,7 +27,7 @@ Pacman :: Model {
     # Its reference frame is at the center of the circle circumscribing the pie slice.
 
     # The main pacman shape, with a reference for future use
-    face : PieSlice at (0, 0) with {
+    face : PieSlice at (0,0) with {
         length = (50,50);
         fill = "pink";
         start = 30;
@@ -36,7 +36,7 @@ Pacman :: Model {
 
     # the eye, without a reference
     Ellipse at (20,35) with {
-        fill = "red";
+        fill = "black";
         length = (5,5);
     }
 }

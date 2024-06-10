@@ -124,9 +124,19 @@ vetor2 : Vector = vetor + vetor;
 vetor3 : Vector = vetor * vetor * 4;
 ponto4 : Point = ponto * 2;
 ```
-- **Time**: [TODO]
+- **Time**: Representa um valor positivo que pode ser usado em operações que envolvam tempos
 ```
-[TODO]
+t1 : Time = 0.8;
+
+t2 : Time = 0.5;
+
+t3 : Time = t1 + t2; 
+
+t4 : Time = t1 - t2;
+
+t5 : Time = t1 * t2; 
+
+t6 : Time = t1 / t2; 
 ```
 
 #### __Definição de uma View__
@@ -285,10 +295,16 @@ var3 : Boolean = 1 == 1 and (2 == 1+1 or 2!=2); #var3 = True
 var4 : Boolean = not True; #var4 = False
 var5 : Boolean = 4 <= 2 or 6 > 10; #var5 = False
 ```
-- **Array**: Representa a estrutura de dados **lista** só de um único tipo;
+- **Array**: Representa a estrutura de dados **lista** só de um único tipo. A sua instanciação e definição do tipo dá-se pela operação **Array<**Type**>** e pode-se aceder aos valores da **Array** a partir dos seus índices.
 ```
 # Exemplos de uso de Array
-[TODO]
+a : Array<Integer> = [0,2,3,4,5]; 
+b : Array<String> = ["a","b","c","d","e"]; 
+c : Array<Array<Point>> = [[(1,2), (3,4)], [(5,6), (7,8)]];
+
+d : Integer = a[1];  # d = 2
+e: Array<Point> = c[0]; # e = [(1,2), (3,4)]
+f: Point = c[0][1] # f = (3,4)
 ```
   - Atualização no **Vector**: Suporte para especificação opcional em coordenadas polares.
   

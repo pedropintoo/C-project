@@ -6,8 +6,16 @@ import math
 
 class Root:
 
-    def __init__(self):
+    def __init__(self, views, last_view):
         self.tk = Tk()
+        self.objects = []
+
+        self.mouseX = None
+        self.mouseY = None
+
+        self.views = views
+        self.last_view = last_view
+
         self.tk.withdraw()
 
         self.objects = []
@@ -26,6 +34,8 @@ class Root:
         for v in self.views:
             v.canvas.pack()
             v.canvas.update()
+        self.last_view.canvas.pack()
+        self.last_view.canvas.update()
 
         self.mouseX = None; self.mouseY = None
         while self.mouseX == None:
@@ -33,12 +43,15 @@ class Root:
 
             for v in self.views:
                 v.canvas.update()
+            self.last_view.canvas.update()
 
     def waitClick(self):
         for v in self.views:
-            v.canvas.bind("<Button-1>", lambda event, view=v : self.onClick(event,view))   
+            v.canvas.bind("<Button-1>", lambda event, view=v : self.onClick(event,view))
+        self.last_view.canvas.bind("<Button-1>", lambda event, view=self.last_view : self.onClick(event,view))    
         self.getMouse()    
         return self.mouseX, self.mouseY
+
 
 class View:
 
@@ -109,7 +122,35 @@ class View:
 
     def ellipse(self, origin, length):
         return (origin[0]-length[0], origin[1]-length[1]), (origin[0]+length[0], origin[1]+length[1])
-    
+
+    def poly_oval(self, x0, y0, x1, y1, start = 0, extent = 360, steps=250, rotation=0):
+        a = (x1 - x0) / 2.0
+        b = (y1 - y0) / 2.0
+
+        xc = x0 + a
+        yc = y0 + b
+
+        point_list = []
+
+        start_rad = math.radians(start)
+        extent_rad = math.radians(extent)
+        rotation_rad = math.radians(rotation)
+
+        for i in range(steps):
+
+            theta = start_rad + (extent_rad * i / steps)
+
+            x1 = a * math.cos(theta)
+            y1 = b * math.sin(theta)
+
+            x = (x1 * math.cos(rotation_rad)) + (y1 * math.sin(rotation_rad))
+            y = (y1 * math.cos(rotation_rad)) - (x1 * math.sin(rotation_rad))
+
+            point_list.append(round(x + xc))
+            point_list.append(round(y + yc))
+
+        return point_list
+
     def close(self):
         self.canvas.destroy()
         self.top.destroy()
@@ -177,21 +218,15 @@ class Model(Object):
         self.objects = []
         self.attributes = {}
 
-        # TODO: copy object at origin;
-        # Pacman.root = root
-        # Pacman.view = last_view
-        # Pacman.origin = v63
-        # v62 = copy.deepcopy(Pacman)
-
     def addAttributes(self, attr, value):
         self.attributes[attr] = value
 
     def Dict(self):
         dic = vars(self)
         dic.update(self.attributes)
-        return dic
+        return dic   
 
-    def copyAttributesTo(self, new_model, draw=False):
+    def copyAttributesTo(self, new_model):
         new_model.objects = []
 
         for k,v in self.__dict__.items():
@@ -205,9 +240,6 @@ class Model(Object):
                 # print(self.__class__.__name__ + "." + k)
                 new_model.objects.append(new_model.__dict__[k])
             
-        if draw and self.root is not None:
-            self.root.add_object(new_model) # add the copy to the root
-
 
     def fixCoords(self):
         for o in self.objects:
@@ -266,9 +298,6 @@ class Line(Object):
         self.view.objectsDrawn.append(self.object)
     
     def rotate(self, angle, origin=None):
-        if origin == None:
-            origin = self.origin
-        
         self.length = self.view.rotateLength(self.length, angle)
         
         if origin != None:
@@ -276,7 +305,7 @@ class Line(Object):
 
 class Polyline(Object):
     """
-    PolyLine is a line that needs to pass through a list of points.
+    Polyline is a line that needs to pass through a list of points.
     It has an origin, and, if no points are given, it will have a default point of (1,1).
     """
 
@@ -481,12 +510,14 @@ class Rectangle(Object):
         self.length = length
         self.fill = fill
         self.angle = 0
+        self.array = []
     
     def __deepcopy__(self, memo=None):
         """Create a deep copy of the model."""
         if memo is None:
             memo = {}
         new_rectangle = Rectangle(self.root, self.view, self.state, self.origin, self.length, self.fill)   
+        new_rectangle.angle = self.angle
         return new_rectangle
     
     def create_object(self, view):
@@ -502,25 +533,29 @@ class Rectangle(Object):
 
 class Ellipse(Object):
 
-    def __init__(self, root: Root = None, view: View = None, state="normal", origin=(0,0), length=(1,1), fill="black"):
+    def __init__(self, root: Root = None, view: View = None, state="normal", origin=(0,0), length=(1,1), fill="black", outline="black"):
         super().__init__(root, view, origin, state)
         self.length = length
         self.fill = fill
+        self.outline = outline
+        self.angle = 0
 
     def __deepcopy__(self, memo=None):
         """Create a deep copy of the model."""
         if memo is None:
             memo = {}
-        new_ellipse = Ellipse(self.root, self.view, self.state, self.origin, self.length, self.fill)   
+        new_ellipse = Ellipse(self.root, self.view, self.state, self.origin, self.length, self.fill, self.outline)   
+        new_ellipse.angle = self.angle
         return new_ellipse
 
     def create_object(self, view):
         self.view = view
-        self.object = self.view.canvas.create_oval(self.view.ellipse(self.view.coord(self.origin), self.length), fill=self.fill, state=self.state)
+        top_left, bottom_right = self.view.ellipse(self.view.coord(self.origin), self.length)
+        self.object = self.view.canvas.create_polygon(tuple(self.view.poly_oval(top_left[0], top_left[1], bottom_right[0], bottom_right[1], steps=250, rotation=self.angle)), fill=self.fill, state=self.state, smooth=True, outline=self.outline)
         self.view.objectsDrawn.append(self.object)
     
     def rotate(self, angle, origin=None):
-        # TODO: implement rotation to Ellipse
+        self.angle += angle
         if origin != None:
             self.origin = self.view.rotateByOrigin(angle, origin, self.origin)
 
@@ -532,81 +567,86 @@ class Arc(Object):
         self.start = start
         self.extent = extent   
         self.outline = outline
+        self.angle = 0
 
     def __deepcopy__(self, memo=None):
         """Create a deep copy of the model."""
         if memo is None:
             memo = {}
         new_arc = Arc(self.root, self.view, self.state, self.origin, self.length, self.start, self.extent, self.outline)   
+        new_arc.angle = self.angle
         return new_arc
 
     def create_object(self, view):
         self.view = view
-        self.object = self.view.canvas.create_arc(self.view.ellipse(self.view.coord(self.origin), self.length), style=ARC, start=self.start, extent=self.extent, outline=self.outline, state=self.state)
+        top_left, bottom_right = self.view.ellipse(self.view.coord(self.origin), self.length)
+        self.object = self.view.canvas.create_line(tuple(self.view.poly_oval(top_left[0], top_left[1], bottom_right[0], bottom_right[1], start=self.start, extent=self.extent, steps=250, rotation=self.angle)), fill = self.outline, state=self.state, smooth=True)
         self.view.objectsDrawn.append(self.object)
     
     def rotate(self, angle, origin=None):
-        self.start += angle
-
-        self.length = self.view.rotateLength(self.length, angle)
+        self.angle += angle
 
         if origin != None:
             self.origin = self.view.rotateByOrigin(angle, origin, self.origin)
 
 class ArcChord(Object):
 
-    def __init__(self, root: Root = None, view: View = None, state="normal", origin=(0,0), length=(1,1), start=0, extent=100, fill="black"):
+    def __init__(self, root: Root = None, view: View = None, state="normal", origin=(0,0), length=(1,1), start=0, extent=100, fill="black", outline="black"):
         super().__init__(root, view, origin, state)
         self.length = length
         self.start = start
         self.extent = extent   
         self.fill = fill
+        self.angle = 0
+        self.outline = outline
 
     def __deepcopy__(self, memo=None):
         """Create a deep copy of the model."""
         if memo is None:
             memo = {}
         new_arcchord = ArcChord(self.root, self.view, self.state, self.origin, self.length, self.start, self.extent, self.fill)   
+        new_arcchord.angle = self.angle
         return new_arcchord
 
     def create_object(self, view):
         self.view = view
-        self.object = self.view.canvas.create_arc(self.view.ellipse(self.view.coord(self.origin), self.length), style=CHORD, start=self.start, extent=self.extent, fill=self.fill, state=self.state)
+        top_left, bottom_right = self.view.ellipse(self.view.coord(self.origin), self.length)
+        self.object = self.view.canvas.create_polygon(tuple(self.view.poly_oval(top_left[0], top_left[1], bottom_right[0], bottom_right[1], start=self.start, extent=self.extent, steps=250, rotation=self.angle)), fill=self.fill, state=self.state, outline=self.outline)
         self.view.objectsDrawn.append(self.object)
 
     def rotate(self, angle, origin=None):
-        self.start += angle
-
-        self.length = self.view.rotateLength(self.length, angle)
-
+        self.angle += angle
+        
         if origin != None:
             self.origin = self.view.rotateByOrigin(angle, origin, self.origin)
 
 class PieSlice(Object):
 
-    def __init__(self, root: Root = None, view: View = None, state="normal", origin=(0,0), length=(1,1), start=0, extent=100, fill="black"):
+    def __init__(self, root: Root = None, view: View = None, state="normal", origin=(0,0), length=(1,1), start=0, extent=100, fill="black", outline="black"):
         super().__init__(root, view, origin, state)
         self.length = length
         self.start = start
         self.extent = extent   
         self.fill = fill  
+        self.outline = outline
+        self.angle = 0
 
     def __deepcopy__(self, memo=None):
         """Create a deep copy of the model."""
         if memo is None:
             memo = {}
         new_pieslice = PieSlice(self.root, self.view, self.state, self.origin, self.length, self.start, self.extent, self.fill)   
+        new_pieslice.angle = self.angle
         return new_pieslice
 
     def create_object(self, view):
         self.view = view
-        self.object = self.view.canvas.create_arc(self.view.ellipse(self.view.coord(self.origin), self.length), style=PIESLICE, start=self.start, extent=self.extent, fill=self.fill, state=self.state)
+        top_left, bottom_right = self.view.ellipse(self.view.coord(self.origin), self.length)   
+        self.object = self.view.canvas.create_polygon(self.view.coord(self.origin), tuple(self.view.poly_oval(top_left[0], top_left[1], bottom_right[0], bottom_right[1], start=self.start, extent=self.extent, steps=250, rotation=self.angle)), fill=self.fill, state=self.state, outline=self.outline)
         self.view.objectsDrawn.append(self.object)
 
     def rotate(self, angle, origin=None):
-        self.start += angle
-
-        self.length = self.view.rotateLength(self.length, angle)
+        self.angle += angle
 
         if origin != None:
             self.origin = self.view.rotateByOrigin(angle, origin, self.origin)
@@ -623,7 +663,8 @@ class Text(Object):
         """Create a deep copy of the model."""
         if memo is None:
             memo = {}
-        new_text = Text(self.root, self.view, self.state, self.origin, self.text, self.fill)   
+        new_text = Text(self.root, self.view, self.state, self.origin, self.text, self.fill) 
+        new_text.angle = self.angle;  
         return new_text    
 
     def create_object(self, view):

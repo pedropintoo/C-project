@@ -1,6 +1,6 @@
 module(stat) ::= <<
 from tkinter import *
-from AGLClasses import *
+from src.XAGL.AGLClasses import *
 import math
 import time, os, sys
 import copy

@@ -5,19 +5,22 @@ Para correr o projeto é necessário ter instalado:
  - `python3`
  - `tkinter`
  - `numpy`
+ - `antlr4-python3-runtime`
 
 Instalar as dependências do projeto:
-<span style="color:red">[POR COMPLETAR!!!]</span>
+
 ```bash
 pip install -r requirements.txt  
 ```
 
-## Simple test in Grammar
-In the directory `src`. Firstly, compile the antlr4 project:
+## Teste Simples da Gramática
+Entre dentro do diretório root `agl-gg04/`. 
+
+Em primeiro lugar, compile o projeto **antlr4** usando o script `build.sh` que vai dar o *build* necessário, tanto aos ficheiros para a gramática principal $AG_L$, como aos da secundária $xAG_L$:
 ```
-antlr4-build
+./build
 ```
-Secondly, generate the syntax tree: 
+Opcionalmente, pode testar a árvore sintática com qualquer exemplo:
 ```
 antlr4-test AGL program -gui ../doc/examples/ex01.agl        
 antlr4-test AGL program -gui ../doc/examples/ex02.agl        
@@ -27,13 +30,18 @@ antlr4-test AGL program -gui ../doc/examples/ex05.agl
 antlr4-test AGL program -gui ../doc/examples/ex06.agl        
 ```
 
-## Compile and Run the project
-Inside the `src` directory:
+## Experimentar programas em $AG_L$
+Após o **antlr4-build**, ainda dentro de `src`, pode experimentar qualquer programa em $AG_L$ usando o script `run.sh`:
 ```
 ./run ../doc/examples/ex01.agl                                
 ./run ../doc/examples/ex02.agl                                
 ./run ../doc/examples/ex03.agl                                
 ./run ../doc/examples/ex04.agl                                
 ./run ../doc/examples/ex05.agl                                
-./run ../doc/examples/ex06.agl                                
+./run ../doc/examples/ex06.agl
+
+
+./run ../doc/examples/extra/ifStatement.agl                                
 ```
+
+## Limpar o Ambiente

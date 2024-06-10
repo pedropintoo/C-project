@@ -139,6 +139,7 @@ to_tower : Tower;
 to_tower.state = "hidden"; # only to store the value
 
 toChange : Integer = 0;
+hasValues : Boolean = False;
 
 repeat {
     
@@ -168,57 +169,69 @@ repeat {
             from_tower = game.tower3;
         }
 
-    refresh view1, view2, view3;
-
-    p2 : Point = wait mouse click;
-    if p2[0] < 250 do {
-        print "To Tower 1";  
-        to_tower = game.tower1;
+    hasValues = False;
+    for d in 2..-1..-1 do {
+        if from_tower.disks[d].state == "normal" and hasValues == False do {
+            hasValues = True;
+        }
     }
-    else do 
-        if p2[0] < 750 do {
-            print "To Tower 2";
-            to_tower = game.tower2;
-        }
-        else do {
-            print "To Tower 3";
-            to_tower = game.tower3;
-        }
 
-    if from_tower != to_tower do {
+    # only if has values!!
+    if hasValues do {
 
-        for d in 2..-1..-1 do {
-            if from_tower.disks[d].fill == "blue" do
-                toChange = d;
+        refresh view1, view2, view3;
+
+        p2 : Point = wait mouse click;
+        if p2[0] < 250 do {
+            print "To Tower 1";  
+            to_tower = game.tower1;
         }
-
-        hasValues : Boolean = False;
-        # is transaction valid?
-        for d in 2..-1..-1 do {
-            if to_tower.disks[d].state == "normal" and hasValues == False do {
-                if from_tower.disks[toChange].length[0] < to_tower.disks[d].length[0] do {
-                    from_tower.disks[toChange].state = "hidden";
-                    to_tower.disks[toChange].state = "normal";
-                    from_tower.active = False;
-                }
-                hasValues = True;
+        else do 
+            if p2[0] < 750 do {
+                print "To Tower 2";
+                to_tower = game.tower2;
             }
-        }
+            else do {
+                print "To Tower 3";
+                to_tower = game.tower3;
+            }
 
-        if not hasValues do {
-            from_tower.disks[toChange].state = "hidden";
-            to_tower.disks[toChange].state = "normal";
+        if from_tower != to_tower do {
+
+            for d in 2..-1..-1 do {
+                if from_tower.disks[d].fill == "blue" do
+                    toChange = d;
+            }
+
+            hasValues = False;
+            # is transaction valid?
+            for d in 2..-1..-1 do {
+                if to_tower.disks[d].state == "normal" and hasValues == False do {
+                    if from_tower.disks[toChange].length[0] < to_tower.disks[d].length[0] do {
+                        from_tower.disks[toChange].state = "hidden";
+                        to_tower.disks[toChange].state = "normal";
+                        from_tower.active = False;
+                    }
+                    hasValues = True;
+                }
+            }
+
+            if not hasValues do {
+                from_tower.disks[toChange].state = "hidden";
+                to_tower.disks[toChange].state = "normal";
+                from_tower.active = False;
+            }
+
+            game.checkWin = True;        
+            refresh view1, view2, view3;
+
+        } else do {
+            print "Invalid transaction";
             from_tower.active = False;
+            refresh view1, view2, view3;
         }
-
-        game.checkWin = True;        
-        refresh view1, view2, view3;
-
-    } else do {
-        print "Invalid transaction";
-        from_tower.active = False;
-        refresh view1, view2, view3;
     }
+
 } until game.isSolved;
 
 
