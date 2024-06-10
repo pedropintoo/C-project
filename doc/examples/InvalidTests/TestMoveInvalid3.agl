@@ -1,24 +1,3 @@
-#(
-    A 'model' defines the appearance and properties of a graphical item.
-    It has an intrinsic reference frame, relative to which all of its graphical 
-    children are positioned.
-    When instantiated, a pose (position) is required, 
-    which represents where it is in its container.
-
-    There is a set of basic models: Dot, Rectangle, Line, ...
-
-    Every model holds a set of attributes (aka properties).
-    The set of properties may change from model to model.
-    Every property has an intrinsic type and a default value.
-
-    The set of properties of basic models is defined by default.
-    The set of properties of used-defined models is stablished when the model is defined.
-#)
-
-#
-# This example defines a pacman with eye.
-# 
-
 #
 # The doble-colon operator (::) is used to defined a new model
 #
@@ -44,7 +23,7 @@ Pacman :: Model {
     }
 
     # properties and how they reshape children's properties
-    mouth : Enum in { Open, Close } # the first value is the default
+    mouth : Enum in { Open, Closed } # the first value is the default
     action on mouth {
         if mouth == Open do
             with face do {
@@ -89,27 +68,5 @@ pacman : Pacman at (-450, 0);
 #
 refresh view;
 
-#
-# Animation may be given by a script written in the secondary language
-#
-s1 : Script = load "doc/examples/s2.xagl";
-play s1 with {
-    m = pacman;
-    v = view;
-}
 
-# 
-# Which may also be read from standard input
-#
-s2 : Script = input "Insert a XAgl script to make pacman move 100 units to the right";
-play s2 with {
-    m = pacman;
-    v = view;
-}
-
-print "Press any mouse button to quit";
-pos : Point = wait mouse click; # instantiate a Point and waits for a mouse click
-
-close view;
-
-
+move view by "Joao";    # Devia dar este erro: Error: invalid expression type in move command (must be a point or a vector!)

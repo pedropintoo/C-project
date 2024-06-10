@@ -1,0 +1,20 @@
+# Deve funcionar
+# Testar os if's statements
+
+s1 : Script = load "s0.xagl";
+
+play s1 with {
+    a = 1;
+}
+
+if (1 == 1) do 
+    play s1 with {
+        a = 2;
+    }
+else do 
+    play s1 with {
+        start = 1;
+        extent = 359;
+    }
+
+

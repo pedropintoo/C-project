@@ -1,0 +1,6 @@
+cellSize : Number = 200;
+
+Rectangle at (0,cellSize) with {
+    length = (50,50);
+    fill2 = "orange"; # don't exist attribute fill2
+}

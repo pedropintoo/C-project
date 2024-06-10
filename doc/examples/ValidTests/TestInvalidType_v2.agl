@@ -1,0 +1,46 @@
+# Este ficheiro é correto, deve ser passado no analisador semântico
+
+Pacman :: Model {
+    # The main pacman shape, with a reference for future use
+    face : PieSlice at (0,0) with {
+        length = (50,50);
+        fill = "pink";
+        start = 30;
+        extent = 300;
+    }
+
+    # the eye, without a reference
+    Ellipse at (20,35) with {
+        fill = "black";
+        length = (5,5);
+    }
+
+    # properties and how they reshape children's properties
+    mouth : Enum in { Open, Close } # the first value is the default
+    mouth2 : Enum in { Opened, Closed } # the first value is the default
+    action on mouth {
+        if mouth == Open do 
+            print "Pacman is eating";
+    }
+}
+
+Fire :: Model {
+    flame : Line at (0,0) with {
+        length = (10,10);
+        fill = "yellow";
+    }
+}
+
+
+
+# Pacman não está instancionado, ou seja, não hà operações. Pacman é um ModelType("Pacman")
+# Create a pacman - a is a ObjectType("Pacman") - tenho que verificar se existe um Pacman do tipo ModelType("Pacman")
+a : Pacman at (100,100);
+
+c : Line at (200,300);
+
+fire : Fire at (100,100);
+
+b : Pacman = a; # Model = Pacman;
+
+k : Pacman = deepcopy b to (0,2);   # não devia dar erro mas está a dar

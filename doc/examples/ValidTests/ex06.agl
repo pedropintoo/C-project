@@ -92,7 +92,7 @@ refresh view;
 #
 # Animation may be given by a script written in the secondary language
 #
-s1 : Script = load "doc/examples/s2.xagl";
+s1 : Script = load "s0.xagl";
 play s1 with {
     m = pacman;
     v = view;

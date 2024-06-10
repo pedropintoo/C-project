@@ -1,0 +1,3 @@
+x : Boolean = True;
+y : Integer = 5;
+z : Boolean = x and y; # Error: Both operands of 'and' must be boolean!

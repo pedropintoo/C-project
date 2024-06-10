@@ -20,36 +20,43 @@ Em primeiro lugar, compile o projeto **antlr4** usando o script `build` que vai 
 ```bash
 ./build
 ```
-Opcionalmente, pode testar a árvore sintática com qualquer exemplo:
+
+## Experimentar programas em $AG_L$
+Após o **antlr4-build**, ainda dentro de `agl-gg04/`, pode experimentar qualquer programa em $AG_L$ usando o script `run`:
+```bash
+./run doc/examples/ex00.agl  # default values
+./run doc/examples/ex01.agl                                
+./run doc/examples/ex02.agl                                
+./run doc/examples/ex03.agl                                
+./run doc/examples/ex04.agl                                
+./run doc/examples/ex05.agl                                
+./run doc/examples/ex06.agl
+./run doc/examples/hanoi.agl # desafio
+```
+
+Para além de exemplos base, no diretório `doc/examples/extra` existem extensões de exemplos base, outros exemplos diferenciados, entre outras coisas. Como por exemplo: 
+```bash
+./run doc/examples/extra/ex02_diff.agl
+./run doc/examples/extra/ex04_extra.agl
+./run doc/examples/extra/rotate_models.agl
+./run doc/examples/extra/model_with_rotation.agl
+./run doc/examples/extra/curve_figures_rotate.agl
+./run doc/examples/extra/rotate_deepcopy.agl
+
+```
+
+## Testar a gramática
+Opcionalmente, dentro do diretório `src` pode testar a árvore sintática com qualquer exemplo:
 ```bash
 antlr4-test AGL program -gui ../doc/examples/ex01.agl        
 antlr4-test AGL program -gui ../doc/examples/ex02.agl        
 antlr4-test AGL program -gui ../doc/examples/ex03.agl        
 antlr4-test AGL program -gui ../doc/examples/ex04.agl        
 antlr4-test AGL program -gui ../doc/examples/ex05.agl        
-antlr4-test AGL program -gui ../doc/examples/ex06.agl        
+antlr4-test AGL program -gui ../doc/examples/ex06.agl
+antlr4-test AGL program -gui ../doc/examples/hanoi.agl        
 ```
 
-## Experimentar programas em $AG_L$
-Após o **antlr4-build**, ainda dentro de `src`, pode experimentar qualquer programa em $AG_L$ usando o script `run`:
-```bash
-./run /doc/examples/ex00.agl  # default values
-./run /doc/examples/ex01.agl                                
-./run /doc/examples/ex02.agl                                
-./run /doc/examples/ex03.agl                                
-./run /doc/examples/ex04.agl                                
-./run /doc/examples/ex05.agl                                
-./run /doc/examples/ex06.agl
-./run /doc/examples/hanoi.agl # desafio
-```
-
-Também existem ficheiros extra. Como por exemplo: 
-```bash
-./run /doc/examples/extra/curve_figures_rotate.agl
-./run /doc/examples/extra/ifStatement.agl  
-./run /doc/examples/extra/model_with_deps.agl
-./run /doc/examples/extra/rotate_models.agl
-```
 ## Testar a Análise Semântica
 De modo a testar a **Análise Semântica** do **Compilador**, foram desenvolvidos alguns testes que avaliam, tanto se a análise semântica **validou** corretamente um programa, como também se **invalidou** corretamente um programa:
 

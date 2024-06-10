@@ -45,7 +45,8 @@ Pacman :: Model {
 
     # properties and how they reshape children's properties
     mouth : Enum in { Open, Close } # the first value is the default
-    action on mouth {
+    action on mouth { 
+        face.length = "aa"; 
         if mouth == Open do
             with face do {
                 start = 30;
@@ -58,58 +59,5 @@ Pacman :: Model {
             }
     }
 }
-
-#
-# A strip where the pacman is moving
-# 
-Rectangle at (0,0) with {
-    length = (1000,70);
-    fill = "blue";
-}
-
-#
-# create an instance of a View, at the beginning of the strip
-#
-view : View with {
-    Ox = -450;
-    Oy = 0;
-    width = 401;
-    height = 401;
-    title = "Illustrating a moving pacman";
-    background = "alice blue";
-}
-
-#
-# Instantiate a Pacman, with the default property values
-#
-pacman : Pacman at (-450, 0);
-
-#
-# The refresh view command makes the graphics appear
-#
-refresh view;
-
-#
-# Animation may be given by a script written in the secondary language
-#
-s1 : Script = load "doc/examples/s2.xagl";
-play s1 with {
-    m = pacman;
-    v = view;
-}
-
-# 
-# Which may also be read from standard input
-#
-s2 : Script = input "Insert a XAgl script to make pacman move 100 units to the right";
-play s2 with {
-    m = pacman;
-    v = view;
-}
-
-print "Press any mouse button to quit";
-pos : Point = wait mouse click; # instantiate a Point and waits for a mouse click
-
-close view;
 
 

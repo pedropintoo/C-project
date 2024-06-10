@@ -1,0 +1,3 @@
+x : Integer = 5;
+y : Boolean = True;
+z : Boolean = x > y; # Error: must be the same type in relational expression!

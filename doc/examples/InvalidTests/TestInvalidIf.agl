@@ -1,0 +1,8 @@
+if "ABC" do 
+{
+    print "Hello";
+}          
+else do
+    print "nao imprime :(";
+    print "imprime :)";  
+    

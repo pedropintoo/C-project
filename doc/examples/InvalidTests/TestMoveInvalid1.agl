@@ -1,0 +1,4 @@
+print "Press any mouse button to quit";
+pos : Point = wait mouse click; # instantiate a Point and waits for a mouse click
+
+move pos to (0,0); # Error. Cannot move a Point to a position
