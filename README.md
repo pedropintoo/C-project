@@ -160,7 +160,7 @@ A *View* suporta ações como **move** *(explicado mais á frente)*, **refresh**
 | :---: | :---: |
 | ```refresh view after 100 ms``` | Atualiza a **View** após 100 milissegundos, ou seja, quaisquer alterações em objetos são mostradas após o tempo definido em milissegundos |
 | ```refresh view after 10 s``` | Faz **refresh** da **View** após 10 segundos | 
-| ```p : Point = wait mouse click``` | Espera um click pelo utilizador na **View** e atribui as coordenadas a ao ponto **p** | 
+| ```p : Point = wait mouse click``` | Espera um click pelo utilizador na **View** e atribui as coordenadas ao ponto **p** | 
 | ```close view``` | Fecha a janela da **View** | 
 
 
@@ -591,7 +591,12 @@ object5 : Rectangle = deepcopy object to (50,50);
 
 O problema das Torres de Hanoi é um problema matemático e de lógica que consiste em uma torre com discos de diferentes tamanhos encaixados em um pino, de forma que um disco maior nunca fique em cima de um disco menor. O objetivo é mover todos os discos para outro pino, mantendo a mesma ordem. Para isso, é possível mover um disco de cada vez para outro pino, desde que ele não fique em cima de um disco menor.
 
-Para a resolução deste problema, foi criado um **Model** que representa um torre e um **Model** que representa o jogo. O **Model** da torre contém uma **Array** de discos. O **Model** do jogo é responsável por criar as torres e mover os discos entre elas.
+Para a resolução deste problema, foi criado:
+  - **Model** da base que representa a estrutura da torre
+  - **Model** da torre que contém uma **Array** de discos
+  - **Model** do jogo que é responsável por criar as torres e verificar se o jogo foi resolvido
+  - **3 Views** que representam as 3 torres em locais diferentes do canvas
+  - Para além disso, foi feita a lógica (utilizando **actions**) para ativar discos **(cor azul)** e mover os mesmos entre as torres (com as respetivas regras do jogo)
 
 > Código completo em [doc/examples/hanoi.agl](doc/examples/hanoi.agl)
 

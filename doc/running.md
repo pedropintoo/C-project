@@ -70,7 +70,7 @@ Experimente os testes:
 ./tests/run-tests.sh
 ```
 #### Resultados
-Os resultados dos testes devem ser apresentados no terminal. A confirmação de que os testes correram da maneira desejada é dada pela sua cor devido ás verificações de **validação** ou **invalidação** referidos anteriormente. Assim, os testes de **validação** estão corretos se aparecer [**<span style="color:green">OK</span>**], e os testes de **invalidação** estão corretos se aparecer [**<span style="color:green">FAIL</span>**].
+Os resultados dos testes devem ser apresentados no terminal. A confirmação de que os testes correram da maneira desejada é dada pela sua cor devido ás verificações de **validação** ou **invalidação** referidos anteriormente. Assim, os testes de **validação** estão corretos se aparecer [**<span style="color:green">OK</span>**] **(a verde)**, e os testes de **invalidação** estão corretos se aparecer [**<span style="color:green">FAIL</span>**] **(a verde)**.
 
 Qualquer outro *output* como, **<span style="color:red">OK</span>** ou **<span style="color:red">FAIL</span>** a **vermelho**, significa que a análise semântica falhou pois, ou validou algo que não devia ser validado ou falhou um teste que devia ter sido validado, respetivamente.
 
