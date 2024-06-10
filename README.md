@@ -581,8 +581,6 @@ object5 : Rectangle = deepcopy object to (50,50);
 
 Para este trabalho, o nosso grupo dividiu-o nos seguintes tópicos e distribui os mesmos pelos elementos do grupo da seguinte forma:
 
-<span style="color:red">[POR COMPLETAR!!!]</span>
-
   - Construção da gramática AGL:
     - Pedro Pinto - 115304
     - João Pinto - 104384
@@ -592,13 +590,14 @@ Para este trabalho, o nosso grupo dividiu-o nos seguintes tópicos e distribui o
     - Guilherme Santos - 113893
     - Giovanni Santos - 115637
   - Análise semântica (AGL):
+    - Pedro Pinto - 115304
     - João Pinto - 104384
     - João Monteiro - 114547
     - Jorge Domingues - 113278
   - Interpretador (xAGL):
     - Giovanni Santos - 115637  
   - Análise semântica (xAGL):
-    - ...
+    - Giovanni Santos - 115637
   - Testes:
     - Pedro Pinto - 115304
     - João Pinto - 104384
@@ -607,5 +606,7 @@ Para este trabalho, o nosso grupo dividiu-o nos seguintes tópicos e distribui o
   - Documentação:
     - Pedro Pinto - 115304
     - Guilherme Santos - 113893
-    - ...
+    - João Pinto - 104384
+    - João Monteiro - 114547
+    - Jorge Domingues - 113278
   
