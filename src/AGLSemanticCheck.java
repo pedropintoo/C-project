@@ -433,7 +433,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
       // to konw the type of the variable on the left side we use the function getConcreteID
       // the visitors of the expression will give me the types on the right side -> ctx.assignment().eType
-      Type type = getConcreteIDType(ctx.identifier());   
+      Type type = getConcreteIDType(ctx.identifier(), null);   
       
 
       if (type == null) {
@@ -864,7 +864,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       Boolean res = true;
       String id = ctx.identifier().getText();
 
-      Type type = getConcreteIDType(ctx.identifier());
+      Type type = getConcreteIDType(ctx.identifier(), null);
 
       if (type == null) {
          ErrorHandling.printError(ctx, "Error: invalid type in identifier");
@@ -904,7 +904,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
             }
          }
       } else {
-         Type type = getConcreteIDType(ctx.identifier());
+         Type type = getConcreteIDType(ctx.identifier(), null);
          if (type == null) {
             ErrorHandling.printError("Error: invalid type in identifier");
             return false;
@@ -1064,7 +1064,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       Type type;
   
       for (AGLParser.IdentifierContext ident : ctx.identifier()) {
-         type = getConcreteIDType(ident);
+         type = getConcreteIDType(ident, null);
          // must conforms to object type or model type or view type
          if ( !(type instanceof ObjectType) && !type.conformsTo(modelObjectType) && !type.conformsTo(viewType)) {
             ErrorHandling.printError(ctx, "Error: invalid type in move command (must be an object, model or view type!)");
@@ -1100,7 +1100,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
       Type type;
       for (AGLParser.IdentifierContext ident : ctx.identifier()) {
-         type = getConcreteIDType(ident);
+         type = getConcreteIDType(ident, null);
          // must conforms to object type (except views because we cannot rotate views) or model type 
          if ( !(type instanceof ObjectType) && !type.conformsTo(modelObjectType) || (type.conformsTo(viewType)) ) {
             ErrorHandling.printError(ctx, "Error: invalid type in rotate command (must be an object or model type!)");
@@ -1262,7 +1262,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
             return false;
          }
       } else {
-         type = getConcreteIDType(ctx.identifier());
+         type = getConcreteIDType(ctx.identifier(), null);
       }
 
       if (!(type instanceof ObjectType)) {
@@ -1418,7 +1418,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
       // Check if the action is on a valid property
 
-      Type type = getConcreteIDType(ctx.identifier());
+      Type type = getConcreteIDType(ctx.identifier(), null);
       if (type == null) {
          ErrorHandling.printError("Error: invalid type in identifier");
          return false;
@@ -1584,7 +1584,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       return true;
    }
 
-   private Type getConcreteIDType2(AGLParser.IdentifierContext ctx, Type prevType) {
+   private Type getConcreteIDType(AGLParser.IdentifierContext ctx, Type prevType) {
 
       String id = ctx.ID().getText();
       Type type = null;
@@ -1645,7 +1645,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       if (!(type instanceof ObjectType)) {
          if (ctx.identifier() != null) {
             if (type instanceof ArrayType) {
-               type = getConcreteIDType2(ctx.identifier(), (ObjectType) ((ArrayType)type).getElementType());
+               type = getConcreteIDType(ctx.identifier(), (ObjectType) ((ArrayType)type).getElementType());
             } else {
                ErrorHandling.printError("Error: invalid attribute in simple statement");
                return null;
@@ -1686,228 +1686,13 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
             } 
          }
            
-         type = getConcreteIDType2(ctx.identifier(), type);
+         type = getConcreteIDType(ctx.identifier(), type);
 
       }
 
       return type;
 
 
-   }
-
-   // identifier : ID | ID '.' identifier | ID ('[' expression ']')+ ('.' identifier)? ;
-   // returns the type of the expression
-   private Type getConcreteIDType(AGLParser.IdentifierContext ctx) {  
-      if (true){
-         return getConcreteIDType2(ctx, null);
-      }
-      String id = ctx.ID().getText(); // current ID
-      Type type = null;
-      
-      if (currentModel != null) {
-         if (!currentModel.symbolModelTable.containsKey(id)) {
-            ErrorHandling.printError("Variable \"" + id + "\" does not exists in the model!");
-            return null;
-         }
-      } else {
-         if ( ! (prevObjectType != null && prevObjectType.getSymbolModelTable() != null )) {
-            if (!AGLParser.symbolTable.containsKey(id)) {
-               ErrorHandling.printError("*** Variable \"" + id + "\" does not exists!");
-               return null;
-            }   
-         }
-      }
-
-      String attributeName = null;
-       
-      if (ctx.expression(0) != null) { // ID '[' expression ']' ('.' identifier)?
-         Boolean res = visit(ctx.expression(0));
-         if (!res) {
-            ErrorHandling.printError("Error: invalid simple statement");
-         }
-
-         // expression must be a IntegerType
-         if (!ctx.expression(0).eType.conformsTo(integerType) ) {
-            ErrorHandling.printError("Error: invalid expression type in simple statement (must be integer!)");
-         }
-
-         Type elemType = null;
-         if (currentModel != null) {
-            elemType = currentModel.symbolModelTable.get(id).type();
-         } else {
-            if (prevObjectType != null && prevObjectType.getSymbolModelTable() != null) {
-               elemType = prevObjectType.getSymbolModelTable().get(id).type();
-            } else {
-               elemType = AGLParser.symbolTable.get(id).type();
-            }
-         }
-
-         // can be an array or a point
-         if (!(elemType instanceof ArrayType) && !(elemType instanceof PointType)) {
-            ErrorHandling.printError("Error: invalid type in simple statement (must be an array or a point!)");
-            return null;
-         } 
-
-         if (elemType instanceof PointType) {
-            return numberType;
-         }
-
-         // if type name don't have <Array> then it is a simple type
-         if (((ArrayType)elemType).getElementType().name().indexOf("Array") == -1) {
-            ObjectType current_type = new ObjectType(((ArrayType)elemType).getElementType().name());
-            
-            if (ctx.identifier() == null) {
-               return current_type;
-            }
-
-            attributeName = ctx.identifier().ID().getText();
-
-            List<Type> allowedTypes = current_type.getAttributes().get(ctx.identifier().ID().getText());
-            Type allowed = null;
-            if (allowedTypes == null || allowedTypes.isEmpty()) {
-               allowed = null;
-            } else {
-               allowed = allowedTypes.get(0);
-            }
-
-            return allowed;
-         }
-         
-
-         // return casted to ArrayType
-         return new ArrayType(((ArrayType)elemType).getElementType().name());
-      } 
-      
-      if (ctx.identifier() != null) { // ID '.' identifier
-
-         System.out.println("ID: " + id);
-         if (currentModel != null) {  
-            System.out.println("Current Model is not null"); 
-            type = currentModel.symbolModelTable.get(id).type();
-         } else {
-            System.out.println("Current Model is null");
-
-            if (prevObjectType != null && prevObjectType.getSymbolModelTable() != null) {
-               System.out.println("SymbolModelTable is not null");
-               type = prevObjectType.getSymbolModelTable().get(id).type();
-            } else {
-               System.out.println("SymbolModelTable is null");
-               type = AGLParser.symbolTable.get(id).type();
-            }
-
-            System.out.println("Type: " + type);
-         }
-         
-         // Probably wrong model type?
-         if (!(type instanceof ObjectType) && !(type instanceof ModelType)) {
-            ErrorHandling.printError("Variable \"" + id + " is not of object type or model type!");
-            return null;
-         }
-
-         
-
-         if (type instanceof ModelType) {
-            System.out.println("ModelType");
-            ModelType modelType = (ModelType) type;
-            System.out.println(type.hashCode());
-            System.out.println("SymbolModelTable size: " + modelType.symbolModelTable.size());
-
-
-            // MUST BE RECURSIVE
-            attributeName = ctx.identifier().ID().getText();
-            System.out.println("OLA");
-
-         } else {
-            System.out.println("ObjectType");
-            // ObjectType
-            ObjectType objectType = (ObjectType) type;
-            attributeName = ctx.identifier().ID().getText();
-            System.out.println("AttributeName: " + attributeName);
-
-            // objectType.checkAttributes(attributeName, type);
-
-            // symbolModelTable of the model
-            Map<String, Symbol> symbolModelTable = objectType.getSymbolModelTable();
-
-            if (symbolModelTable == null) {
-               
-               List<Type> allowedTypes = objectType.getAttributes().get(attributeName);
-               if (allowedTypes == null || allowedTypes.isEmpty()) {
-                  type = null;
-               } else {
-                  type = allowedTypes.get(0);
-               }
-               return type;
-            } else {
-
-               // elements of the symbolModelTable
-               // check if attributeName is a key of the symbolModelTable
-               
-               if (!symbolModelTable.containsKey(attributeName)) {
-                  ErrorHandling.printError("Attribute " + attributeName + " does not exist in type " + id);
-                  return null;
-               } else {
-                  System.out.println("Attribute: " + attributeName);
-                  System.out.println("Type: " + symbolModelTable.get(attributeName).type());
-                  type = symbolModelTable.get(attributeName).type();
-
-                  // return type if we are in the end of the identifier
-                  if (ctx.identifier().identifier() == null) {
-                     return type;
-                  }   
-               }
-
-            }
-
-            prevObjectType = objectType;
-            
-         }
-
-         // System.out.println(attributeName);
-         // System.out.println(type);
-
-         if (type == null) {
-             ErrorHandling.printError("Attribute " + attributeName + " does not exist in type " + id);
-             return null;
-         }
-
-         
-
-         if (ctx.identifier().identifier() != null) {
-            System.out.println("RECURSIVE");
-            System.out.println("ID: " + ctx.identifier().ID().getText());
-            Type recursiveType = getConcreteIDType(ctx.identifier());
-            System.out.println("Recursive Type: " + recursiveType);
-
-            // last element of the identifier
-            System.out.println("Last Element: " + ctx.identifier().identifier().ID().getText());
-            
-            prevObjectType = null;
-            return recursiveType;
-         }
-      }
-
-      // ID
-      Symbol sym = null;
-      if (currentModel != null) {
-         sym = currentModel.symbolModelTable.get(id);
-      } else {
-         sym = AGLParser.symbolTable.get(id);
-      }
-      
-      System.out.println("sym: " + sym);
-
-      if (!sym.valueDefined()) {
-         ErrorHandling.printError(ctx, "Variable \"" + id + "\" not defined!"); // type will be null
-         return null;
-      } else {
-         type = sym.type(); 
-      }
-      
-      System.out.println("AAAAAAAAAAAAAAAAAAAA");
-      System.out.println("Type " + type.name());
-      
-      return type;
    }
 
    private boolean identifierIsValid(String id, String value, Type valueType, String ID) {

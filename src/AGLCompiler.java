@@ -229,7 +229,7 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
                 // -> Model (because have a ID() in typeID)
                 ST model = templates.getInstanceOf("model");
             
-                model.add("modelName", ctx.typeID().getText());
+                model.add("modelName", "var__agl__" + ctx.typeID().getText());
                 value = newVarName();
                 model.add("var", value);
 
@@ -795,7 +795,7 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
     @Override public ST visitModelInstantiation(AGLParser.ModelInstantiationContext ctx) {
         ST res = templates.getInstanceOf("model_creation");
 
-        res.add("modelName", ctx.ID().getText());
+        res.add("modelName", "var__agl__" + ctx.ID().getText());
         
         for (AGLParser.ModelStatContext stat : ctx.modelStat()){
             

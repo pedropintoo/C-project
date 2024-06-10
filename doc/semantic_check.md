@@ -6,12 +6,12 @@ Implementação de um analisador semântico para a linguagem de programação AG
 
 ## Estrutura do Projeto
 
-- [`src/`](src/): Diretório contendo o código fonte.
-  - [`AGLSemanticCheck.java`](src/AGLSemanticCheck.java): Implementação do analisador semântico.
-  - [`tests/`](src/tests/): Diretório contendo os testes.
-    - [`ValidTests/`](src/tests/ValidTests/): Contém exemplos de programas AGL válidos.
-    - [`InvalidTests/`](src/tests/InvalidTests/): Contém exemplos de programas AGL com erros semânticos.
-    - [`run-tests.sh`](src/tests/run-tests.sh): Script shell para executar todos os testes.
+- [`../src/`](../src/): Diretório contendo o código fonte.
+  - [`AGLSemanticCheck.java`](../src/AGLSemanticCheck.java): Implementação do analisador semântico.
+  - [`tests/`](../src/tests/): Diretório contendo os testes.
+    - [`ValidTests/`](../src/tests/ValidTests/): Contém exemplos de programas AGL válidos.
+    - [`InvalidTests/`](../src/tests/InvalidTests/): Contém exemplos de programas AGL com erros semânticos.
+    - [`run-tests.sh`](../src/tests/run-tests.sh): Script shell para executar todos os testes.
 
 ## Verificações Semânticas Realizadas
 
@@ -22,7 +22,7 @@ O analisador semântico verifica os seguintes aspectos:
    - Não pode haver repetições nas declarações de variáveis.
    - Não podem ser declaradas variáveis com nomes reservados.
 
-Por exemplo, no ficheiro presente em [`InvalidTests/VariableDeclaration1.agl`](src/tests/InvalidTests/VariableDeclaration1.agl), temos um exemplo onde foi definida uma variável como Number e posteriormente foi tentado atribuir-lhe um valor do tipo String. O analisador semântico deteta este erro.
+Por exemplo, no ficheiro presente em [`InvalidTests/VariableDeclaration1.agl`](../src/tests/InvalidTests/VariableDeclaration1.agl), temos um exemplo onde foi definida uma variável como Number e posteriormente foi tentado atribuir-lhe um valor do tipo String. O analisador semântico deteta este erro.
 
 **Exemplo de `VariableDeclaration1.agl`:**
 ```agl
@@ -33,7 +33,7 @@ cellSize = 250; # OK
 cellSize = "Joao"; # Error. Expression type does not conform to variable type!
 ```
 
-Por outro lado, o analisador também deteta se o utilizador tentar definir uma variável que já se encontra declarada, reportando o erro, como no ficheiro [`InvalidTests/VariableDeclaration2.agl`](src/tests/InvalidTests/VariableDeclaration2.agl).
+Por outro lado, o analisador também deteta se o utilizador tentar definir uma variável que já se encontra declarada, reportando o erro, como no ficheiro [`InvalidTests/VariableDeclaration2.agl`](../src/tests/InvalidTests/VariableDeclaration2.agl).
 
 **Exemplo de `VariableDeclaration2.agl`:**
 ```agl
@@ -42,7 +42,7 @@ cellSize : Number = 200;
 cellSize : String = "Joao"; # Error. Variable "cellSize" already declared!
 ```
 
-Já no exemplo [`InvalidTests/TestInvalidId.agl`](src/tests/InvalidTests/TestInvalidId.agl), é declarada uma variável com nome 'length' porém esta não pode ser aceite porque já está reservada para ser utilizada na criação de tipos como Rectangle, Ellipse, etc. O analisador semântico deteta este erro e reporta-o.
+Já no exemplo [`InvalidTests/TestInvalidId.agl`](../src/tests/InvalidTests/TestInvalidId.agl), é declarada uma variável com nome 'length' porém esta não pode ser aceite porque já está reservada para ser utilizada na criação de tipos como Rectangle, Ellipse, etc. O analisador semântico deteta este erro e reporta-o.
 
 **Exemplo de `TestInvalidId.agl`:**
 ```agl
@@ -54,7 +54,7 @@ length : Number = 200; # Error: variable name "length" is a reserved word!
    - Verificação da validade das atribuições e operações entre variáveis.
    - Garantia de que os tipos de dados são compatíveis nas operações.
 
-Por exemplo, o ficheiro [`ValidTests/OperationsValid.agl`](src/tests/ValidTests/OperationsValid.agl) contém exemplos de operações válidas, como a soma de um ponto com um vetor, a multiplicação de um ponto por um inteiro, e a comparação entre um float e um inteiro com o mesmo valor.
+Por exemplo, o ficheiro [`ValidTests/OperationsValid.agl`](../src/tests/ValidTests/OperationsValid.agl) contém exemplos de operações válidas, como a soma de um ponto com um vetor, a multiplicação de um ponto por um inteiro, e a comparação entre um float e um inteiro com o mesmo valor.
 
 **Exemplo de `ValidTests/OperationsValid.agl`:**
 ```agl
@@ -69,7 +69,7 @@ t9: Number = (1:3)*(3:4) + 2; # Works, we can multiply two vectors
 t10: Boolean = 2.0 == 2; # Works, we can compare a float with an integer
 ```
 
-Por outro lado, o ficheiro [`InvalidTests/OperationsInvalid.agl`](src/tests/InvalidTests/OperationsInvalid.agl) contém exemplos de operações inválidas, como a tentativa de somar um ponto com um inteiro, a soma de dois pontos, ou a divisão de dois vetores. Nestes casos, o analisador semântico deteta e sinaliza os erros, garantindo que apenas operações válidas sejam permitidas no código AGL.
+Por outro lado, o ficheiro [`InvalidTests/OperationsInvalid.agl`](../src/tests/InvalidTests/OperationsInvalid.agl) contém exemplos de operações inválidas, como a tentativa de somar um ponto com um inteiro, a soma de dois pontos, ou a divisão de dois vetores. Nestes casos, o analisador semântico deteta e sinaliza os erros, garantindo que apenas operações válidas sejam permitidas no código AGL.
 
 **Exemplo de `InvalidTests/OperationsInvalid.agl`:**
 ```agl
@@ -84,7 +84,7 @@ t7: Vector = (1:3)*(3:4); # Error! Multiplying two vectors results in a number
 t8: Vector = (1:3)/(3:4); # Error! we cannot divide two vectors
 ```
 
-O analisador também verifica as operações entre variáveis do tipo 'Time', assegurando que estas sejam válidas. Por exemplo, no ficheiro [`ValidTests/OperationsTime.agl`](src/tests/ValidTests/OperationsTime.agl), operações entre variáveis do tipo Time resultam numa variável do tipo 'Time'. No entanto, operações entre variáveis do tipo Integer ou Number com variáveis do tipo Time resultam numa variável do tipo Number.
+O analisador também verifica as operações entre variáveis do tipo 'Time', assegurando que estas sejam válidas. Por exemplo, no ficheiro [`ValidTests/OperationsTime.agl`](../src/tests/ValidTests/OperationsTime.agl), operações entre variáveis do tipo Time resultam numa variável do tipo 'Time'. No entanto, operações entre variáveis do tipo Integer ou Number com variáveis do tipo Time resultam numa variável do tipo Number.
 
 **Exemplo de `ValidTests/OperationsTime.agl`:**
 ```agl
@@ -109,7 +109,7 @@ t9 : Number = t1 + t7; # OK
 t10 : Number = t1 + t8; # OK
 ```
 
-No ficheiro [`InvalidTests/OperationsTimeInvalid.agl`](src/tests/InvalidTests/OperationsInvalid.agl), foram realizadas tentativas de operações inválidas entre variáveis do tipo Time e variáveis de outros tipos, como String, e o analisador semântico detetou corretamente os erros.
+No ficheiro [`InvalidTests/OperationsTimeInvalid.agl`](../src/tests/InvalidTests/OperationsInvalid.agl), foram realizadas tentativas de operações inválidas entre variáveis do tipo Time e variáveis de outros tipos, como String, e o analisador semântico detetou corretamente os erros.
 
 **Exemplo de `InvalidTests/OperationsTimeInvalid.agl`:**
 ```agl
@@ -122,7 +122,7 @@ t5 : Time = t1 + t2; # Error: invalid type in arithmetic operation!
 t6 : Time = t1 * t2; # Error: invalid type in arithmetic operation!
 ```
 
-Além das operações mencionadas anteriormente, o analisador semântico também reporta um erro caso seja feita uma operação de divisão por zero, como é possível verificar no ficheiro [`InvalidTests/OperationsDivideByZero.agl`](src/tests/InvalidTests/OperationsDivideByZero.agl).
+Além das operações mencionadas anteriormente, o analisador semântico também reporta um erro caso seja feita uma operação de divisão por zero, como é possível verificar no ficheiro [`InvalidTests/OperationsDivideByZero.agl`](../src/tests/InvalidTests/OperationsDivideByZero.agl).
 
 **Exemplo de `InvalidTests/OperationsDivideByZero.agl`:**
 ```agl
@@ -133,7 +133,7 @@ b : Number = a / 0; # Error: division by zero!
 ### 3. **Propriedades dos Arrays**:
    - Consistência de Tipos de Arrays: verificação para garantir que o tipo de array a atribuir coincide com o tipo declarado.
 
-Por exemplo, os ficheiros [`InvalidTests/TestArray{1,2,3,4}.agl`](src/tests/InvalidTests/TestArray1.agl) contêm vários exemplos que ilustram estas verificações. No ficheiro [`InvalidTests/TestArray1.agl`](src/tests/InvalidTests/TestArray1.agl), tentou-se definir a variável "c" como um Array de Strings, mas como esta variável era um Array de um Array de Pontos, o analisador semântico detetou o erro. Outro exemplo, no ficheiro [`InvalidTests/TestArray2.agl`](src/tests/InvalidTests/TestArray2.agl), mostra uma tentativa de atribuir um valor do tipo String a um elemento de um Array de Pontos, que também foi corretamente identificado como erro pelo analisador.
+Por exemplo, os ficheiros [`InvalidTests/TestArray{1,2,3,4}.agl`](../src/tests/InvalidTests/TestArray1.agl) contêm vários exemplos que ilustram estas verificações. No ficheiro [`InvalidTests/TestArray1.agl`](../src/tests/InvalidTests/TestArray1.agl), tentou-se definir a variável "c" como um Array de Strings, mas como esta variável era um Array de um Array de Pontos, o analisador semântico detetou o erro. Outro exemplo, no ficheiro [`InvalidTests/TestArray2.agl`](../src/tests/InvalidTests/TestArray2.agl), mostra uma tentativa de atribuir um valor do tipo String a um elemento de um Array de Pontos, que também foi corretamente identificado como erro pelo analisador.
 
 **Exemplo de `InvalidTests/TestArray1.agl`:**
 ```agl
@@ -149,7 +149,7 @@ c : Array<Array<Point>> = [[(1,2), (3,4)], [(1,2), (3,4)]]; # correto.
 c[0] = "a"; # Error. Type: Array<Point> ; Assignment Type: String
 ```
 
-No ficheiro [`InvalidTests/TestArray4.agl`](src/tests/InvalidTests/TestArray4.agl), foram realizados diversos testes para verificar a consistência dos tipos de arrays atribuídos. Testou-se a atribuição correta e incorreta de valores a arrays de arrays de pontos, verificando-se que o analisador semântico deteta e sinaliza os erros adequadamente.
+No ficheiro [`InvalidTests/TestArray4.agl`](../src/tests/InvalidTests/TestArray4.agl), foram realizados diversos testes para verificar a consistência dos tipos de arrays atribuídos. Testou-se a atribuição correta e incorreta de valores a arrays de arrays de pontos, verificando-se que o analisador semântico deteta e sinaliza os erros adequadamente.
 
 **Exemplo de `InvalidTests/TestArray4.agl` (não foram incluídos todos os exemplos):**
 ```agl
@@ -163,7 +163,7 @@ f : Array<Array<Array<Point>>> = [c, c[0], c, c]; # Error: c[0] is of type Array
 
 ```
 
-No ficheiro [`ValidTests/TestArray1.agl`](src/tests/ValidTests/TestArray1.agl), encontram-se atribuições válidas como, por exemplo: atribuição de um array de inteiros; atribuição de um array de arrays de pontos, etc.
+No ficheiro [`ValidTests/TestArray1.agl`](../src/tests/ValidTests/TestArray1.agl), encontram-se atribuições válidas como, por exemplo: atribuição de um array de inteiros; atribuição de um array de arrays de pontos, etc.
 
 **Exemplo de `ValidTests/TestArray1.agl`:**
 ```agl
@@ -184,8 +184,8 @@ i : Array<Array<Point>> = [c[0], c[1]]; # correct.
 ### 4. **Propriedades dos Points e dos Vectors:**
    - Verificação dos tipos introduzidos num Point e num Vector.
 
-No ficheiro [`InvalidTests/TestInvalidPoint.agl`](src/tests/InvalidTests/TestInvalidPoint.agl), tentou-se definir um Point com um valor do tipo String, o que é inválido, e o erro é corretamente detetado pelo analisador semântico.
-De forma semelhante, se tentarmos definir um Vector com um valor do tipo String, o analisador semântico também deteta o erro, como é possível verificar no ficheiro [`InvalidTests/TestInvalidVector.agl`](src/tests/InvalidTests/TestInvalidVector.agl).
+No ficheiro [`InvalidTests/TestInvalidPoint.agl`](../src/tests/InvalidTests/TestInvalidPoint.agl), tentou-se definir um Point com um valor do tipo String, o que é inválido, e o erro é corretamente detetado pelo analisador semântico.
+De forma semelhante, se tentarmos definir um Vector com um valor do tipo String, o analisador semântico também deteta o erro, como é possível verificar no ficheiro [`InvalidTests/TestInvalidVector.agl`](../src/tests/InvalidTests/TestInvalidVector.agl).
 
 **Exemplo de `InvalidTests/TestInvalidPoint.agl`:**
 ```agl
@@ -202,10 +202,10 @@ abc : Vector = (1,"abc"); # Error. Requires numeric operands!
    - Verificação de Propriedades Válidas: O analisador semântico verifica se as propriedades atribuídas aos objetos gráficos existem e são válidas.
    - Verificação de Valores Válidos: o analisador garante que os valores atribuídos a estas propriedades sejam válidos e compatíveis com o esperado.
 
-Por exemplo, os ficheiros [`InvalidTests/TestAttributes{1,2,3}.agl`](src/tests/InvalidTests/TestAttributes1.agl) contêm exemplos que ilustram estas verificações. 
-No ficheiro [`InvalidTests/TestAttributes1.agl`](src/tests/InvalidTests/TestAttributes1.agl), tentou-se definir uma propriedade fill2 para um retângulo, mas esta propriedade não existe, e o analisador semântico detetou o erro. 
-Outro exemplo, no ficheiro [`InvalidTests/TestAttributes2.agl`](src/tests/InvalidTests/TestAttributes2.agl), mostra uma tentativa de atribuir um valor inválido à propriedade fill, isto é, uma cor inválida, o que também foi identificado como erro pelo analisador. 
-Já no ficheiro [`InvalidTests/TestAttributes3.agl`](src/tests/InvalidTests/TestAttributes3.agl), tentou-se definir a propriedade 'state' para um retângulo como "super", mas esta propriedade não é válida, e o erro foi corretamente detetado pelo analisador.
+Por exemplo, os ficheiros [`InvalidTests/TestAttributes{1,2,3}.agl`](../src/tests/InvalidTests/TestAttributes1.agl) contêm exemplos que ilustram estas verificações. 
+No ficheiro [`InvalidTests/TestAttributes1.agl`](../src/tests/InvalidTests/TestAttributes1.agl), tentou-se definir uma propriedade fill2 para um retângulo, mas esta propriedade não existe, e o analisador semântico detetou o erro. 
+Outro exemplo, no ficheiro [`InvalidTests/TestAttributes2.agl`](../src/tests/InvalidTests/TestAttributes2.agl), mostra uma tentativa de atribuir um valor inválido à propriedade fill, isto é, uma cor inválida, o que também foi identificado como erro pelo analisador. 
+Já no ficheiro [`InvalidTests/TestAttributes3.agl`](../src/tests/InvalidTests/TestAttributes3.agl), tentou-se definir a propriedade 'state' para um retângulo como "super", mas esta propriedade não é válida, e o erro foi corretamente detetado pelo analisador.
 
 **Exemplo de `InvalidTests/TestAttributes1.agl`:**
 ```agl
@@ -245,7 +245,7 @@ Esses exemplos mostram como o analisador semântico identifica propriedades inv�
    - Expressão de Tempo em Refresh: No caso da operação refresh, a expressão após after deve ser do tipo Integer, Number ou uma variável do tipo Time garantindo que o valor temporal fornecido seja válido.
    - Ação em cadeia: Ambas estas operações permitem um uso em 'cadeia' (por exemplo, refresh view1, view2), mantendo a lógica de que apenas se pode fazer refresh ou close de Views.
 
-Por exemplo, os ficheiros [`InvalidTests/TestRefresh1.agl`](src/tests/InvalidTests/TestRefresh1.agl) e [`InvalidTests/TestClose1.agl`](src/tests/InvalidTests/TestClose1.agl) contêm exemplos que ilustram estas verificações. No ficheiro [`InvalidTests/TestRefresh1.agl`](src/tests/InvalidTests/TestRefresh1.agl), a operação refresh é aplicada corretamente a uma variável do tipo View, mas falha ao ser aplicada a uma variável do tipo Integer, sendo este erro corretamente detetado pelo analisador semântico. De maneira similar, no ficheiro [`InvalidTests/TestClose1.agl`](src/tests/InvalidTests/TestClose1.agl), a operação close é corretamente aplicada a uma View, mas um erro é detetado quando se tenta aplicar close a uma variável do tipo Integer.
+Por exemplo, os ficheiros [`InvalidTests/TestRefresh1.agl`](../src/tests/InvalidTests/TestRefresh1.agl) e [`InvalidTests/TestClose1.agl`](../src/tests/InvalidTests/TestClose1.agl) contêm exemplos que ilustram estas verificações. No ficheiro [`InvalidTests/TestRefresh1.agl`](../src/tests/InvalidTests/TestRefresh1.agl), a operação refresh é aplicada corretamente a uma variável do tipo View, mas falha ao ser aplicada a uma variável do tipo Integer, sendo este erro corretamente detetado pelo analisador semântico. De maneira similar, no ficheiro [`InvalidTests/TestClose1.agl`](../src/tests/InvalidTests/TestClose1.agl), a operação close é corretamente aplicada a uma View, mas um erro é detetado quando se tenta aplicar close a uma variável do tipo Integer.
 
 **Exemplo de `InvalidTests/TestRefresh1.agl`:**
 ```agl
@@ -284,7 +284,7 @@ a : Integer = 0;
 close a; # Error: invalid type in close command (must be a view type!)
 ```
 
-Relativamente à expressão de tempo em Refresh, o ficheiro [`ValidTests/TestRefreshTimeExpression.agl`](src/tests/ValidTests/TestRefreshTimeExpression.agl) contém um exemplo que ilustra esta verificação. Neste ficheiro, temos duas operações refresh, uma com uma expressão de tempo do tipo Number e outra com uma expressão de tempo do tipo Time, ambas corretamente verificadas pelo analisador semântico.
+Relativamente à expressão de tempo em Refresh, o ficheiro [`ValidTests/TestRefreshTimeExpression.agl`](../src/tests/ValidTests/TestRefreshTimeExpression.agl) contém um exemplo que ilustra esta verificação. Neste ficheiro, temos duas operações refresh, uma com uma expressão de tempo do tipo Number e outra com uma expressão de tempo do tipo Time, ambas corretamente verificadas pelo analisador semântico.
 
 **Exemplo de `ValidTests/TestRefreshTimeExpression.agl`:**
 ```agl
@@ -302,7 +302,7 @@ for i in 1 .. 10 do {
 }
 ```
 
-Por outro lado, no ficheiro [`InvalidTests/TestRefreshTimeExpressionInvalid.agl`](src/tests/InvalidTests/TestRefreshTimeExpressionInvalid.agl), a expressão de tempo após after é do tipo String, o que é inválido, e o erro é corretamente detetado pelo analisador semântico.
+Por outro lado, no ficheiro [`InvalidTests/TestRefreshTimeExpressionInvalid.agl`](../src/tests/InvalidTests/TestRefreshTimeExpressionInvalid.agl), a expressão de tempo após after é do tipo String, o que é inválido, e o erro é corretamente detetado pelo analisador semântico.
 
 **Exemplo de `InvalidTests/TestRefreshTimeExpressionInvalid.agl`:**
 ```agl
@@ -320,7 +320,7 @@ for i in 1 .. 10 do {
 }
 ```
 
-O analisador também não permite que seja feita a operação refresh com um valor negativo, como é possível verificar no ficheiro [`InvalidTests/TestRefreshTimeExpressionInvalid2.agl`](src/tests/InvalidTests/TestRefreshTimeExpressionInvalid2.agl).
+O analisador também não permite que seja feita a operação refresh com um valor negativo, como é possível verificar no ficheiro [`InvalidTests/TestRefreshTimeExpressionInvalid2.agl`](../src/tests/InvalidTests/TestRefreshTimeExpressionInvalid2.agl).
 
 **Exemplo de `InvalidTests/TestRefreshTimeExpressionInvalid2.agl`:**
 ```agl
@@ -339,7 +339,7 @@ for i in 1 .. 10 do {
 ```
 
 
-No ficheiro [`ValidTests/hanoi.agl`](src/tests/ValidTests/hanoi.agl), podemos confirmar, na linha 170 que é possível fazer uma ação de refresh em cadeia. Podemos ainda confirmar que o uso destas expressões apenas para Views se mantém fiel, no exemplo [`InvalidTests/hanoi.agl`](src/tests/InvalidTests/hanoi.agl). Neste exemplo, a variável 'hasValues' é do tipo Boolean, e o analisador semântico deteta corretamente o erro.
+No ficheiro [`ValidTests/hanoi.agl`](../src/tests/ValidTests/hanoi.agl), podemos confirmar, na linha 170 que é possível fazer uma ação de refresh em cadeia. Podemos ainda confirmar que o uso destas expressões apenas para Views se mantém fiel, no exemplo [`InvalidTests/hanoi.agl`](../src/tests/InvalidTests/hanoi.agl). Neste exemplo, a variável 'hasValues' é do tipo Boolean, e o analisador semântico deteta corretamente o erro.
 
 
 **Exemplo de `InvalidTests/InvalidHanoi.agl`:**
@@ -356,7 +356,7 @@ No ficheiro [`ValidTests/hanoi.agl`](src/tests/ValidTests/hanoi.agl), podemos co
    - Tipos de ID em Move: Os IDs usados na operação de move podem ser objetos, do tipo model ou do tipo view.
    - Uso de "by" e "to": Quando a operação move utiliza by, deve ser seguida por um Point ou um Vector, permitindo movimentos relativos. Quando a operação move utiliza to, deve ser seguida por um elemento do tipo Point, especificando uma posição absoluta para o movimento.
 
-Por exemplo, o ficheiro [`InvalidTests/TestMoveInvalid1.agl`](src/tests/InvalidTests/TestMoveInvalid1.agl) contém um exemplo que ilustra esta verificação. Neste ficheiro, a operação move é aplicada a um Point, mas isso é inválido, pois Point não é considerado um objeto. Este erro é corretamente detetado pelo analisador semântico.
+Por exemplo, o ficheiro [`InvalidTests/TestMoveInvalid1.agl`](../src/tests/InvalidTests/TestMoveInvalid1.agl) contém um exemplo que ilustra esta verificação. Neste ficheiro, a operação move é aplicada a um Point, mas isso é inválido, pois Point não é considerado um objeto. Este erro é corretamente detetado pelo analisador semântico.
 
 **Exemplo de `InvalidTests/TestMoveInvalid1.agl`:**
 ```agl
@@ -366,7 +366,7 @@ pos : Point = wait mouse click; # instantiate a Point and waits for a mouse clic
 move pos to (0,0); # Error. Cannot move a Point to a position
 ```
 
-Por exemplo, no ficheiro [`InvalidTests/TestMoveInvalid2.agl`](src/tests/InvalidTests/TestMoveInvalid2.agl), a operação de move é realizada com um valor do tipo String, o que é inválido, e o erro é corretamente detetado pelo analisador semântico.
+Por exemplo, no ficheiro [`InvalidTests/TestMoveInvalid2.agl`](../src/tests/InvalidTests/TestMoveInvalid2.agl), a operação de move é realizada com um valor do tipo String, o que é inválido, e o erro é corretamente detetado pelo analisador semântico.
 
 **Exemplo de `InvalidTests/TestMoveInvalid2.agl`:**
 ```agl
@@ -385,7 +385,7 @@ for i in 1 .. 10 do {
 ### 8. **Verificação de estruturas de repetição:**
    - Verificação de expressões condicionais: O analisador semântico assegura que as expressões condicionais utilizadas nas estruturas de repetição (`while`, `repeat`) sejam válidas e do tipo booleano.
 
-Por exemplo, o ficheiro [`ValidTests/TestWhile.agl`](src/tests/ValidTests/TestWhile.agl) demonstra exemplos de verificações válidas para as estruturas de repetição. Neste ficheiro, as condições dentro das instruções `while` são corretamente verificadas pelo analisador semântico para garantir que sejam do tipo booleano.
+Por exemplo, o ficheiro [`ValidTests/TestWhile.agl`](../src/tests/ValidTests/TestWhile.agl) demonstra exemplos de verificações válidas para as estruturas de repetição. Neste ficheiro, as condições dentro das instruções `while` são corretamente verificadas pelo analisador semântico para garantir que sejam do tipo booleano.
 
 **Exemplo de `ValidTests/TestWhile.agl`:**
 ```agl
@@ -400,7 +400,7 @@ while 2>1 do {    # valid boolean condition
 }
 ```
 
-Para além disso, foi criado um exemplo [`InvalidTest/TestWhileFail.agl`](src/tests/InvalidTests/TestWhileFail.agl), que contém exemplos de estruturas `while` com expressões inválidas, como a expressão 'abc', que não é do tipo booleano. Estes testes ilustram a capacidade do analisador semântico de detetar erros em expressões condicionais inválidas.
+Para além disso, foi criado um exemplo [`InvalidTest/TestWhileFail.agl`](../src/tests/InvalidTests/TestWhileFail.agl), que contém exemplos de estruturas `while` com expressões inválidas, como a expressão 'abc', que não é do tipo booleano. Estes testes ilustram a capacidade do analisador semântico de detetar erros em expressões condicionais inválidas.
 
 **Exemplo de `InvalidTest/TestWhileFail.agl`:**
 ```agl
@@ -411,7 +411,7 @@ while abc do {    # invalid boolean condition
 }
 ```
 
-Adicionalmente, foi criado o teste [`ValidTest/TestRepeat.agl`](src/tests/ValidTests/TestRepeat.agl), que serve como exemplo de verificação bem-sucedida nas estruturas de repetição `repeat`. Da mesma forma que a condição é analisada para ser do tipo booleano na estrutura `while`, ela também é avaliada da mesma maneira nesta estrutura.
+Adicionalmente, foi criado o teste [`ValidTest/TestRepeat.agl`](../src/tests/ValidTests/TestRepeat.agl), que serve como exemplo de verificação bem-sucedida nas estruturas de repetição `repeat`. Da mesma forma que a condição é analisada para ser do tipo booleano na estrutura `while`, ela também é avaliada da mesma maneira nesta estrutura.
 
 **Exemplo de `ValidTest/TestRepeat.agl`:**
 ```agl
@@ -427,9 +427,9 @@ repeat {
    - Verificação de Instantiation: É também assegurado que não pode ser feita uma instanciação dentro de uma action.
    - Verificação de atributos: É assegurado também que é impossível fazer uma atribuição com um tipo de valores incorreto, ou a uma variável que não exista.
 
-Por exemplo nos ficheiros [`InvalidTests/TestAction1.agl`](src/tests/InvalidTests/TestAction1.agl), [`InvalidTests/TestAction2.agl`](src/tests/InvalidTests/TestAction2.agl), [`InvalidTests/TestAction3.agl`](src/tests/InvalidTests/TestAction3.agl) é possível confirmar que é impossível fazer uma action em atributos que não existem (TestAction1 e TestAction3) ou ainda em variáveis definidas fora do Model (TestAction3).
+Por exemplo nos ficheiros [`InvalidTests/TestAction1.agl`](../src/tests/InvalidTests/TestAction1.agl), [`InvalidTests/TestAction2.agl`](../src/tests/InvalidTests/TestAction2.agl), [`InvalidTests/TestAction3.agl`](../src/tests/InvalidTests/TestAction3.agl) é possível confirmar que é impossível fazer uma action em atributos que não existem (TestAction1 e TestAction3) ou ainda em variáveis definidas fora do Model (TestAction3).
 
-**Exemplo de `src/tests/TestInvalid/TestAction1.agl`:**
+**Exemplo de `../src/tests/TestInvalid/TestAction1.agl`:**
 
 ```agl
 (...)
@@ -451,9 +451,9 @@ Por exemplo nos ficheiros [`InvalidTests/TestAction1.agl`](src/tests/InvalidTest
 (...)
 ```
 
-No ficheiro [`InvalidTests/TestAction5.agl`](src/tests/InvalidTests/TestAction5.agl) confirmámos a impossibilidade de fazer uma instanciação dentro da Action.
+No ficheiro [`InvalidTests/TestAction5.agl`](../src/tests/InvalidTests/TestAction5.agl) confirmámos a impossibilidade de fazer uma instanciação dentro da Action.
 
-**Exemplo de `src/tests/TestInvalid/TestAction5.agl`:**
+**Exemplo de `../src/tests/TestInvalid/TestAction5.agl`:**
 
 ```agl
     action on mouth { 
@@ -465,9 +465,9 @@ No ficheiro [`InvalidTests/TestAction5.agl`](src/tests/InvalidTests/TestAction5.
 (...)
 ```
 
-No ficheiro [`InvalidTests/TestAction4.agl`](src/tests/InvalidTests/TestAction4.agl) outline não é um atributo do PieSlice face, logo é uma atribuição inválida. Também no ficheiro [`InvalidTests/TestAction6.agl`](src/tests/InvalidTests/TestAction6.agl) podemos confirmar que é inválido fazer uma atribuição à variável 'length' com um valor incorreto (deveria ser um Point).
+No ficheiro [`InvalidTests/TestAction4.agl`](../src/tests/InvalidTests/TestAction4.agl) outline não é um atributo do PieSlice face, logo é uma atribuição inválida. Também no ficheiro [`InvalidTests/TestAction6.agl`](../src/tests/InvalidTests/TestAction6.agl) podemos confirmar que é inválido fazer uma atribuição à variável 'length' com um valor incorreto (deveria ser um Point).
 
-**Exemplo de `src/tests/TestInvalid/TestAction6.agl`:**
+**Exemplo de `../src/tests/TestInvalid/TestAction6.agl`:**
 
 ```agl
     face : PieSlice at (0,0) with {
@@ -490,7 +490,7 @@ No ficheiro [`InvalidTests/TestAction4.agl`](src/tests/InvalidTests/TestAction4.
    - Verificação dos atributos: Para cada ObjectType (por exemplo "Blob", "Arc", ...) foi feita uma verificação dos possíveis atributos nessas estruturas.
    - Verificação das atribuições de variáveis: Para cada atribuição feita dentro de um ObjectType (por exemplo "outline", "fill", ...) foi feita uma verificação do tipo de variável possível para essa verificação.
 
-Por exemplo, o ficheiro [`InvalidTests/TestAttributes5.agl`](src/tests/InvalidTests/TestAttributes5.agl) demonstra que o atributo "origin" não é válido para a criação de uma View, e o analisador semântico deteta este erro.
+Por exemplo, o ficheiro [`InvalidTests/TestAttributes5.agl`](../src/tests/InvalidTests/TestAttributes5.agl) demonstra que o atributo "origin" não é válido para a criação de uma View, e o analisador semântico deteta este erro.
 
 **Exemplo de `InvalidTests/TestAttributes5.agl`:**
 ```agl
@@ -505,7 +505,7 @@ view : View with {
 }
 ```
 O analisador semântico também verifica se as variáveis atribuídas a um ObjectType são do tipo correto.
-Por exemplo, o ficheiro [`InvalidTests/TestAttributes4.agl`](src/tests/InvalidTests/TestAttributes4.agl) contém um exemplo onde a altura ('height') é atribuída a um ObjectType com um valor do tipo Point, o que é inválido, e o erro é corretamente detetado pelo analisador semântico.
+Por exemplo, o ficheiro [`InvalidTests/TestAttributes4.agl`](../src/tests/InvalidTests/TestAttributes4.agl) contém um exemplo onde a altura ('height') é atribuída a um ObjectType com um valor do tipo Point, o que é inválido, e o erro é corretamente detetado pelo analisador semântico.
 
 **Exemplo de `InvalidTests/TestAttributes4.agl`:**
 ```agl
@@ -524,9 +524,9 @@ view : View with {
 ### 11. **Verificação dos Operadores +, -, not**:
    - **Verificação dos Operadores**: Para cada operador (`+`, `-`, `not`), o analisador semântico verifica os tipos de variáveis que podem ser utilizados com esses operadores.
 
-O analisador semântico reporta um erro se o operador `not` for utilizado com um tipo de variável que não seja booleano. Por exemplo, no ficheiro [`InvalidTests/TestUnary1.agl`](src/tests/InvalidTests/TestUnary1.agl), o operador `not` é aplicado a uma variável do tipo `Integer`, o que é inválido, e o erro é corretamente detetado pelo analisador semântico.
+O analisador semântico reporta um erro se o operador `not` for utilizado com um tipo de variável que não seja booleano. Por exemplo, no ficheiro [`InvalidTests/TestUnary1.agl`](../src/tests/InvalidTests/TestUnary1.agl), o operador `not` é aplicado a uma variável do tipo `Integer`, o que é inválido, e o erro é corretamente detetado pelo analisador semântico.
 
-Quando são utilizados os operadores `+` e `-`, o analisador verifica se o tipo de dado é compatível para operações unárias. Os tipos válidos incluem tipos numéricos, `Point`, `Vector` e `BooleanType`. Se o tipo não for um desses, o analisador reporta um erro. Por exemplo, no ficheiro [`InvalidTests/TestUnary2.agl`](src/tests/InvalidTests/TestUnary2.agl), o operador `-` é aplicado a uma variável do tipo `String`, o que é inválido, e o erro é corretamente detetado pelo analisador semântico.
+Quando são utilizados os operadores `+` e `-`, o analisador verifica se o tipo de dado é compatível para operações unárias. Os tipos válidos incluem tipos numéricos, `Point`, `Vector` e `BooleanType`. Se o tipo não for um desses, o analisador reporta um erro. Por exemplo, no ficheiro [`InvalidTests/TestUnary2.agl`](../src/tests/InvalidTests/TestUnary2.agl), o operador `-` é aplicado a uma variável do tipo `String`, o que é inválido, e o erro é corretamente detetado pelo analisador semântico.
 
 #### Exemplos:
 
@@ -545,9 +545,9 @@ y : String = -x; # Error: Not an unary type!
 ### 12. **Verificação dos Operadores 'and' e 'or'**:
    - **Verificação dos Operadores**: Para os operadores `and` e `or`, o analisador semântico verifica se ambos os operandos são do tipo booleano.
 
-O analisador semântico reporta um erro se os operadores `and` ou `or` forem utilizados com operandos que não sejam booleanos. Por exemplo, no ficheiro [`InvalidTests/TestLogical1.agl`](src/tests/InvalidTests/TestLogical1.agl), o operador `and` é aplicado a uma variável do tipo `Boolean` e uma variável do tipo `Integer`, o que é inválido, e o erro é corretamente detetado pelo analisador semântico.
+O analisador semântico reporta um erro se os operadores `and` ou `or` forem utilizados com operandos que não sejam booleanos. Por exemplo, no ficheiro [`InvalidTests/TestLogical1.agl`](../src/tests/InvalidTests/TestLogical1.agl), o operador `and` é aplicado a uma variável do tipo `Boolean` e uma variável do tipo `Integer`, o que é inválido, e o erro é corretamente detetado pelo analisador semântico.
 
-Da mesma forma, se o operador `or` for utilizado com operandos que não sejam booleanos, o analisador reporta um erro. Por exemplo, no ficheiro [`InvalidTests/TestLogical2.agl`](src/tests/InvalidTests/TestLogical2.agl), o operador `or` é aplicado a duas variáveis, uma do tipo `Boolean` e outra do tipo `String`, o que também é inválido.
+Da mesma forma, se o operador `or` for utilizado com operandos que não sejam booleanos, o analisador reporta um erro. Por exemplo, no ficheiro [`InvalidTests/TestLogical2.agl`](../src/tests/InvalidTests/TestLogical2.agl), o operador `or` é aplicado a duas variáveis, uma do tipo `Boolean` e outra do tipo `String`, o que também é inválido.
 
 #### Exemplos:
 
@@ -573,17 +573,17 @@ Esta verificação assegura que os operadores lógicos `and` e `or` sejam utiliz
    - Verificação da expressão: Uma expressão (quando se define o lugar dessa variável) tem de ser do tipo Ponto.
    - Verificação de um assignment: Se for feito um assignment, este tem de estar em conformidade com o tipo do statement.
 
-Como se confirmar no ficheiro [`InvalidTests/TestInvalidType.agl`](src/tests/InvalidTests/TestInvalidType.agl), é impossível fazer uma instanciação com um tipo 'Integere' visto que não é um tipo válido.
+Como se confirmar no ficheiro [`InvalidTests/TestInvalidType.agl`](../src/tests/InvalidTests/TestInvalidType.agl), é impossível fazer uma instanciação com um tipo 'Integere' visto que não é um tipo válido.
 
-**Exemplo de `src/tests/TestInvalid/TestInvalidType.agl`:**
+**Exemplo de `../src/tests/TestInvalid/TestInvalidType.agl`:**
 
 ```agl
 a: Integere = 0;
 ```
 
-Por exemplo, no ficheiro [`InvalidTests/TestInvalidType1.agl`](src/tests/InvalidTests/TestInvalidType1.agl) à variável 'a' que é do tipo Integer, não é possível atribuir-lhe o valor "aa" que é uma String.
+Por exemplo, no ficheiro [`InvalidTests/TestInvalidType1.agl`](../src/tests/InvalidTests/TestInvalidType1.agl) à variável 'a' que é do tipo Integer, não é possível atribuir-lhe o valor "aa" que é uma String.
 
-**Exemplo de `src/tests/TestInvalid/TestInvalidType1.agl`:**
+**Exemplo de `../src/tests/TestInvalid/TestInvalidType1.agl`:**
 
 ```agl
 a: Integer = "aa";
@@ -594,9 +594,9 @@ a: Integer = "aa";
    - Tipo da expressão: A expressão dentro de um if statement tem de ser do tipo booleano.
    - Stat: Dentro de cada stat (isto é, dentro de cada bloco de 'if' ou 'else') não pode existir uma expressão vazia.
 
-Por exemplo, no ficheiro [`InvalidTests/TestInvalidIf.agl`](src/tests/InvalidTests/TestInvalidIf.agl), podemos observar que não podemos definir usar uma String para definir a expressão dentro do if.
+Por exemplo, no ficheiro [`InvalidTests/TestInvalidIf.agl`](../src/tests/InvalidTests/TestInvalidIf.agl), podemos observar que não podemos definir usar uma String para definir a expressão dentro do if.
 
-**Exemplo de `src/tests/TestInvalid/TestInvalidIf.agl`:**
+**Exemplo de `../src/tests/TestInvalid/TestInvalidIf.agl`:**
 
 ```agl
 # Error: the expression in the if statement has to be a boolean
@@ -616,9 +616,9 @@ else do
 
    - Stat: Não pode haver uma expressão vazia dentro de um ciclo for.
 
-Por exemplo, o ficheiro [`InvalidTests/TestInvalidForLoop.agl`](src/tests/InvalidTests/TestInvalidForLoop.agl), onde podemos confirmar que não é possível definir um range com uma String.
+Por exemplo, o ficheiro [`InvalidTests/TestInvalidForLoop.agl`](../src/tests/InvalidTests/TestInvalidForLoop.agl), onde podemos confirmar que não é possível definir um range com uma String.
 
-**Exemplo de `src/tests/TestInvalid/TestInvalidForLoop.agl`:**
+**Exemplo de `../src/tests/TestInvalid/TestInvalidForLoop.agl`:**
 
 ```agl
 # Error: invalid expression type in for statement (must be integer!)
@@ -631,7 +631,7 @@ for i in "aa" .. 10 do {
 ### 16. **Operação de rotate**
 - Verificação dos tipos de objetos permitidos a utilizarem a funcionalidade `rotate`.
 
-Por exemplo, no ficheiro [`ValidTests/curve_figures_rotate.agl`](src/tests/ValidTests/curve_figures_rotate.agl) foram criados diversos objetos diferentes que podem utilizar esta funcionalidade. Por outro lado, no ficheiro [`InvalidTests/TestRotate_Invalid.agl`](src/tests/InvalidTests/TestRotate_Invalid.agl), há a tentativa de fazer `rotate` de uma 'View', o que não é semanticamente correto na linguagem AGL e que é corretamente identificado pelo analisador.
+Por exemplo, no ficheiro [`ValidTests/curve_figures_rotate.agl`](../src/tests/ValidTests/curve_figures_rotate.agl) foram criados diversos objetos diferentes que podem utilizar esta funcionalidade. Por outro lado, no ficheiro [`InvalidTests/TestRotate_Invalid.agl`](../src/tests/InvalidTests/TestRotate_Invalid.agl), há a tentativa de fazer `rotate` de uma 'View', o que não é semanticamente correto na linguagem AGL e que é corretamente identificado pelo analisador.
 
 **Exemplo de `ValidTests/curve_figures_rotate.agl`:**
 
@@ -684,9 +684,9 @@ rotate view by 0.1; # Error. Can't rotate views
 ### 17. **Expressão DeepCopy**
    - Tipo da expressão: O tipo da expressão tem de ser obrigatoriamente um ponto, uma vez que apenas se pode fazer uma cópia para um determinado ponto (não se pode copiar um elemento para uma String, por exemplo).
 
-Como podemos observar no ficheiro [`InvalidTests/TestInvalidDeepCopy.agl`](src/tests/InvalidTests/TestInvalidDeepCopy.agl) não é permitido fazer uma 'deepcopy' para um valor do tipo Integer.
+Como podemos observar no ficheiro [`InvalidTests/TestInvalidDeepCopy.agl`](../src/tests/InvalidTests/TestInvalidDeepCopy.agl) não é permitido fazer uma 'deepcopy' para um valor do tipo Integer.
 
-**Exemplo de `src/tests/InvalidTests/TestInvalidDeepCopy.agl`:**
+**Exemplo de `../src/tests/InvalidTests/TestInvalidDeepCopy.agl`:**
 
 ```agl
 Pacman :: Model {
@@ -704,7 +704,7 @@ pacman2 : Pacman = deepcopy pacman to 200; # Error: invalid expression type in d
    - Verificação do tipo de objeto permitido na operação `play`.
 
 A operação `play` apenas pode ser utilizada com objetos do tipo `Script`. Se tentarmos utilizar esta operação com um objeto de outro tipo, o analisador semântico deteta o erro.
-Por exemplo, no ficheiro [`InvalidTests/TestPlayInvalid.agl`](src/tests/InvalidTests/TestPlayInvalid.agl) tentou-se utilizar a operação `play` com um objeto do tipo `Number`, o que é inválido e é corretamente detetado pelo analisador.
+Por exemplo, no ficheiro [`InvalidTests/TestPlayInvalid.agl`](../src/tests/InvalidTests/TestPlayInvalid.agl) tentou-se utilizar a operação `play` com um objeto do tipo `Number`, o que é inválido e é corretamente detetado pelo analisador.
 
 **Exemplo de `InvalidTests/TestPlayInvalid.agl`:**
 
@@ -747,9 +747,9 @@ O analisador semântico realiza várias verificações para garantir que as expr
 
 #### Exemplos:
 
-No ficheiro [`InvalidTests/TestRelational1.agl`](src/tests/InvalidTests/TestRelational1.agl), tentou-se comparar um inteiro com um booleano, o que é inválido, e o erro é corretamente detetado pelo analisador semântico.
+No ficheiro [`InvalidTests/TestRelational1.agl`](../src/tests/InvalidTests/TestRelational1.agl), tentou-se comparar um inteiro com um booleano, o que é inválido, e o erro é corretamente detetado pelo analisador semântico.
 
-Considerámos que não faria sentido comparar pontos nem vectores. Por exemplo, no ficheiro [`InvalidTests/TestRelational2.agl`](src/tests/InvalidTests/TestRelational2.agl), tentou-se comparar dois pontos e o erro foi detetado.
+Considerámos que não faria sentido comparar pontos nem vectores. Por exemplo, no ficheiro [`InvalidTests/TestRelational2.agl`](../src/tests/InvalidTests/TestRelational2.agl), tentou-se comparar dois pontos e o erro foi detetado.
 
 **Exemplo de `InvalidTests/TestRelational1.agl`:**
 ```agl
@@ -791,7 +791,7 @@ Dentro do diretório `src`:
    ```
 O script irá executar todos os testes presentes nos diretórios `ValidTests` e `InvalidTests`, verificando se o comportamento esperado é obtido. Através da execução do script, é possível verificar se o analisador semântico está a detetar corretamente os erros semânticos nos programas AGL.
 
-Como podemos ver, o analisador semântico deteta tanto os programas válidos como os inválidos, reportando os erros encontrados. Neste caso, os programas válidos não apresentam erros ('OK'), enquanto os programas inválidos apresentam erros semânticos, estando portanto sinalizados com 'FAIL'.
+Como podemos ver, o analisador semântico deteta tanto os programas válidos como os inválidos, reportando os erros encontrados. Neste caso, os programas válidos não apresentam erros (`OK`), enquanto os programas inválidos apresentam erros semânticos, estando portanto sinalizados com `FAIL`.
 
 <div style="display: flex; justify-content: space-around;">
   <img src="Images/validTests.png" alt="Valid Tests" style="max-width: 45%; height: auto;">

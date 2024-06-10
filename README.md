@@ -1,17 +1,10 @@
 # Tema **AGL**, grupo **agl-gg04**
 
-## <span style="color:red">[TO DO]</span>
-
- - __agl__ nos modelos!
- - Default values for agl vars.                         
- - Join all versions of interpreter / semantic analysis and compiler in one branch.
- - deepcopy for all objects. (ST is fixed to Pacman(). Must create a createObject for each and copyAttributesTo)
-
 ## Documentação extra
 
- - Análise semântica - [doc/semantic_check.md](doc/semantic_check.md)  <span style="color:red">[POR COMPLETAR!!!]</span>
- - Exemplos AGL e xAGL - [doc/examples](doc/examples/) <span style="color:red">[POR COMPLETAR!!!]</span>
- - Tutorial de execução - [doc/running.md](doc/running.md) <span style="color:red">[POR COMPLETAR!!!]</span>
+ - Análise semântica - [doc/semantic_check.md](doc/semantic_check.md)
+ - Exemplos AGL e xAGL - [doc/examples](doc/examples/)
+ - Tutorial de execução - [doc/running.md](doc/running.md)
 
 ## Estrutura do repositório
 O repositório está organizado da seguinte forma:
@@ -559,6 +552,10 @@ object: Rectangle at (10,10) with {
     fill = "orange";
 }
 
+# simular mudanças de propriedades
+object.length = (100,100);
+object.fill = "blue";
+
 object2 : Rectangle = deepcopy object to (20,20);
 object3 : Rectangle = deepcopy object to (30,30);
 object4 : Rectangle = deepcopy object to (40,40);
@@ -581,8 +578,6 @@ object5 : Rectangle = deepcopy object to (50,50);
 
 Para este trabalho, o nosso grupo dividiu-o nos seguintes tópicos e distribui os mesmos pelos elementos do grupo da seguinte forma:
 
-<span style="color:red">[POR COMPLETAR!!!]</span>
-
   - Construção da gramática AGL:
     - Pedro Pinto - 115304
     - João Pinto - 104384
@@ -592,13 +587,14 @@ Para este trabalho, o nosso grupo dividiu-o nos seguintes tópicos e distribui o
     - Guilherme Santos - 113893
     - Giovanni Santos - 115637
   - Análise semântica (AGL):
+    - Pedro Pinto - 115304
     - João Pinto - 104384
     - João Monteiro - 114547
     - Jorge Domingues - 113278
   - Interpretador (xAGL):
     - Giovanni Santos - 115637  
   - Análise semântica (xAGL):
-    - ...
+    - Giovanni Santos - 115637
   - Testes:
     - Pedro Pinto - 115304
     - João Pinto - 104384
@@ -607,5 +603,7 @@ Para este trabalho, o nosso grupo dividiu-o nos seguintes tópicos e distribui o
   - Documentação:
     - Pedro Pinto - 115304
     - Guilherme Santos - 113893
-    - ...
+    - João Pinto - 104384
+    - João Monteiro - 114547
+    - Jorge Domingues - 113278
   
