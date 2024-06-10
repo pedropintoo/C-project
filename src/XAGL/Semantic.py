@@ -274,7 +274,7 @@ class Semantic(XAGLParserVisitor):
                   if ctx.AFTER():
                      delay = self.visit(ctx.expression())
                      if not self.error:
-                        if not delay.isNumeric():
+                        if not delay.isDelay():
                            self.SemanticError("Error: invalid expression type in refresh command (must be a number, integer or time type!)")
                else:
                   self.SemanticError("Error: invalid type in refresh command (must be a view type!)")

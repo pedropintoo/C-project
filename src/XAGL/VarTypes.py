@@ -44,9 +44,6 @@ class Var():
         elif type(var) == numpy.ndarray:
             return Type.Point
         
-        elif type(var) == str and re.fullmatch(r"\d+ m?s", var):
-            return Type.Time
-        
         elif type(var) == str:
             return Type.String
         
@@ -126,6 +123,7 @@ class Var():
                type1 == Type.Array and type2 == Type.Array and self.element.type == var.element.type or
                type1 == type2 and type1 != Type.Enum and type1 != Type.Array or
                type1 == Type.Number and type2 == Type.Integer or    # Number pode receber Number ou Integer
+               type1 == Type.Time and var.isNumeric() or
                type1 == Type.Point and type2 == Type.ImplicitPoint or # ImplicitPoint pode ser atribuido em Point e Vector
                type1 == Type.Vector and type2 == Type.ImplicitPoint
             )
@@ -152,6 +150,11 @@ class Var():
     def isModel(self):
         return (self.type in (View, Line, Rectangle, Ellipse, Arc, ArcChord, PieSlice, Polygon, Spline, Polygon, Blob, Text, Dot, Type.Model)
                 )
+    
+    def isDelay(self):
+        return (self.type == Type.Integer or
+                self.type == Type.Number or
+                self.type == Type.Time)
     
     def sum_sub(self, var):
         type1 = self.type

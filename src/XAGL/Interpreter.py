@@ -64,9 +64,8 @@ class Interpreter(XAGLParserVisitor):
          if '[' in id:
                self.array_SetValue(id, value, var.Dict())
          else:
-            d = var.Dict()
-            d.update({id: value})
-            print(var.Dict())
+            d = var.__dict__
+            d.update({"var__agl__"+id: value})
 
    def array_SetValue(self, array, value, dict):
       array = re.split(r'\[|\]', array)
