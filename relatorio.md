@@ -44,12 +44,10 @@ No ficheiro `ValidTests/TestArray1.agl`, encontram-se atribuições válidas com
    - Verificação de Propriedades Válidas: O analisador semântico verifica se as propriedades atribuídas aos objetos gráficos existem e são válidas.
    - Verificação de Valores Válidos: o analisador garante que os valores atribuídos a estas propriedades sejam válidos e compatíveis com o esperado.
 
-Por exemplo, os ficheiros `InvalidTests/TestAttributes{1,2,3,4,5}.agl` contêm exemplos que ilustram estas verificações. 
+Por exemplo, os ficheiros `InvalidTests/TestAttributes{1,2,3}.agl` contêm exemplos que ilustram estas verificações. 
 No ficheiro InvalidTests/TestAttributes1.agl, tentou-se definir uma propriedade fill2 para um retângulo, mas esta propriedade não existe, e o analisador semântico detetou o erro. 
 Outro exemplo, no ficheiro InvalidTests/TestAttributes2.agl, mostra uma tentativa de atribuir um valor inválido à propriedade fill, que não é uma cor reconhecida pelo Tkinter, o que também foi identificado como erro pelo analisador. 
-Já no ficheiro InvalidTests/TestAttributes3.agl, tentou-se definir a propriedade 'state' para um retângulo como "super", mas esta propriedade não é válida, e o erro foi corretamente detetado pelo analisador. 
-No ficheiro InvalidTest/TestAttributes4.agl, tentou-se atribuir un tipo inválido a um atributo. Neste caso, criou-se um valor 'height' e tentou-se atribuir a ele um 'Point', o que não é válido na linguagem AGL.
-Por fim, no ficheiro InvalidTests/TestAttributes5.agl, tentou-se criar um atributo 'origin' numa view, o que não é semanticamente correto na linguagem AGL.
+Já no ficheiro InvalidTests/TestAttributes3.agl, tentou-se definir a propriedade 'state' para um retângulo como "super", mas esta propriedade não é válida, e o erro foi corretamente detetado pelo analisador.
 
 5. **Operação de refresh/close**:
    - Tipo de ID em Refresh/Close: Todas as IDs usadas nas operações de refresh e close devem ser do tipo View.
@@ -86,6 +84,9 @@ Para além disso, foi criado um exemplo `InvalidTest/TestWhileFail.agl`, que con
 Por exemplo, o ficheiro `InvalidTests/TestAttributes5.agl` demontra que numa View não pode haver a definição de uma "origin".
 
 Por exemplo, o ficheiro `InvalidTests/TestAttributes4.agl` demontra que à variável "height" não pode ser atribuido um ponto (uma vez que tem de ser um inteiro).
+
+
+10. **Olá**
 
 ## Como Executar
 
