@@ -224,12 +224,9 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
             value = ctx.assignment().varName;
 
         } else { 
-            value = "DEFAULT_VALUE";  // TODO: TO_BE_IMPLEMENTED
-            // Also to Line ...
-            // TODO: "var__agl__"
 
             if (ctx.typeID().ID() != null) {
-                // -> Model
+                // -> Model (because have a ID() in typeID)
                 ST model = templates.getInstanceOf("model");
             
                 model.add("modelName", ctx.typeID().getText());
@@ -242,7 +239,44 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
                 }
 
                 res.add("stat", model.render()); // render the return value!
-            } 
+            } else {
+                value = "0"; // Integer
+                // Normal default values
+                switch (ctx.typeID().getText().split("<")[0]) {
+                    case "Number":
+                        value = "0";
+                        break;
+                    case "String":
+                        value = "\"\"";
+                        break;
+                    case "Point":
+                        value = "(0, 0)";
+                        break;
+                    case "Vector":
+                        value = "(0.0, 0.0)";
+                        break;
+                    case "Boolean":
+                        value = "False";
+                        break;
+                    case "Array":
+                        int numberOfChains = ctx.typeID().getText().split("<").length - 1;
+                        if (numberOfChains > 0) {
+                            value = "";
+                            for (int i = 0; i < numberOfChains; i++) {
+                                value += "[";
+                            }
+                            for (int i = 0; i < numberOfChains; i++) {
+                                value += "]";
+                            }
+                        } else {
+                            value = "[]";
+                        }
+                        break;
+                    case "Time":
+                        value = "0";
+                        break;
+                }
+            }
         } 
 
         String id = newVarName();

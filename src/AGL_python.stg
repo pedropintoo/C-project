@@ -18,6 +18,7 @@ mouseX = None
 mouseY = None
 model = None
 action = None
+#################################################################
 def get_nested_attribute(obj, attr_path, local_dict):
     if obj is None:
         return None

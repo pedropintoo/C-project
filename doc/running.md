@@ -47,6 +47,26 @@ Após o **antlr4-build**, ainda dentro de `src`, pode experimentar qualquer prog
 ./run /doc/examples/extra/rotate_models.agl
 ###...
 ```
+## Testar a Análise Semântica
+De modo a testar a **Análise Semântica** do **Compilador**, foram desenvolvidos alguns testes que avaliam, tanto se análise semântica **validou** corretamente um programa, como também se **invalidou** corretamente um programa:
+
+Entre no diretório `src/`:
+```
+cd src 
+```
+Experimente os testes:
+
+```
+./tests/run-tests.sh
+```
+#### Resultados
+Os resultados dos testes devem ser apresentados no terminal. A confirmação de que os testes correram da maneira desejada é dada pela sua cor devido ás verificações de **validação** ou **invalidação** referidos anteriormente. Assim, os testes de **validação** estão corretos se aparecer [**<span style="color:green">OK</span>**], e os testes de **invalidação** estão corretos se aparecer [**<span style="color:green">FAIL</span>**].
+
+Qualquer outro *output* como, **<span style="color:red">OK</span>** ou **<span style="color:red">FAIL</span>** a **vermelho**, significa que a análise semântica falhou pois, ou validou algo que não devia ser validado ou falhou um teste que devia ter sido validado, respetivamente.
+
 
 ## Limpar os Ficheiros de Compilação
-Para limpar os ficheiros gerados quando se fez o **build**, pode usar o script `clean` para esse efeito.
+Para limpar os ficheiros gerados quando se fez o **build**, pode usar o script `clean` caso não queira fazer mais testes:
+```
+./clean
+```

@@ -1,0 +1,19 @@
+
+a : Integer;    # 0
+print a;
+
+b : Number;     # 0.0
+print b;
+
+c : String;     # ""
+print c;
+
+d : Boolean;    # False
+print d;
+
+e : Array<Integer>;     # []
+print e;
+
+f : Array<Array<Array<Integer>>>;      # [[[]]]
+print f;
+
