@@ -123,7 +123,8 @@ class Var():
       type1 = self.type
       type2 = var.type
       return ( type1 == Type.Enum and type2 == Type.Enum and type(var1) == type(var2) or # verificar se os enums são do mesmo tipo
-               type1 == type2 and type1 != Type.Enum or
+               type1 == Type.Array and type2 == Type.Array and self.element.type == var.element.type or
+               type1 == type2 and type1 != Type.Enum and type1 != Type.Array or
                type1 == Type.Number and type2 == Type.Integer or    # Number pode receber Number ou Integer
                type1 == Type.Point and type2 == Type.ImplicitPoint or # ImplicitPoint pode ser atribuido em Point e Vector
                type1 == Type.Vector and type2 == Type.ImplicitPoint

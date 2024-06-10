@@ -15,12 +15,12 @@ class Pacman(Model):
       super().__init__(root, view, state, origin)
          
       class mouth(Enum):
-         Open = auto()
-         Close = auto()
+         var__agl__Open = auto()
+         var__agl__Close = auto()
 
       class color(Enum):
-         Red = auto()
-         Blue = auto()
+         var__agl__Red = auto()
+         var__agl__Blue = auto()
 
       # print([mouth(id.value) for id in mouth])
       x = mouth(1)
@@ -28,13 +28,13 @@ class Pacman(Model):
       self.attributes = {"mouth":x, "color":y}
 
 def main():
-   root = Root()
+   root = Root(views=[], last_view=None)
    v = View(root, 0, 0, height=500, width=500,)
    m = Rectangle(root,length=(50,50), fill='white', origin=(0,0))
    m1 = Pacman()
    m1.add_object(m)
    
-   file = "../../examples/new_examples/s1.xagl"
+   file = "../../doc/examples/s1.xagl"
    vars0 = {"m":Var(m1), "v":Var(v)}
    vars1 = {"root":root, "m":m1 , "v":v}
    visitor0 = Semantic(vars0)

@@ -17,13 +17,13 @@ class Interpreter(XAGLParserVisitor):
       for value in self.vars.values():
          if issubclass(type(value), Enum):
             for member in value.__class__:
-               temp[member.name] = member
+               temp[member.name.replace("var__agl__", "")] = member
 
          if issubclass(type(value), Model):
             for attr in value.Dict().values():
                if issubclass(type(attr), Enum):
                   for member in attr.__class__:
-                     temp[member.name] = member
+                     temp[member.name.replace("var__agl__", "")] = member
 
       self.vars.update(temp)
 

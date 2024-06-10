@@ -105,7 +105,7 @@ typeID
     | 'Vector'
     | 'Time'
     | 'Boolean'
-    | 'Array'
+    | 'Array' '<' typeID '>'
     ;
 
 identifier

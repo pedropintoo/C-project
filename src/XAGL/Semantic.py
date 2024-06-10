@@ -16,13 +16,13 @@ class Semantic(XAGLParserVisitor):
       for value in self.vars.values():
          if value.type == Type.Enum:
             for member in value.var.__class__:
-               temp[member.name] = Var(member)
+               temp[member.name.replace("var__agl__", "")] = Var(member)
 
          if value.type == Type.Model:
             for attr in value.Dict().values():
                if attr.type == Type.Enum:
                   for member in attr.var.__class__:
-                     temp[member.name] = Var(member)
+                     temp[member.name.replace("var__agl__", "")] = Var(member)
 
       self.vars.update(temp)
 
@@ -108,8 +108,8 @@ class Semantic(XAGLParserVisitor):
                value = self.visit(ctx.assignment())
                if not self.error:
                   if type.canAssign(value):
-                     return type if value.type != Type.Array else value
-                  self.SemanticError(f"Can not assign a '{value}' object to a '{type}' object")
+                     return type
+                  self.SemanticError(f"Can not assign a '{value.type}' object to a '{type.type}' object")
             else:
                return type
 
@@ -390,22 +390,23 @@ class Semantic(XAGLParserVisitor):
    def visitTypeID(self, ctx:XAGLParser.TypeIDContext):
       if not self.error:
          if ctx.INTEGER():
-            type = Type.Integer
+            type = Var(Type.Integer)
          elif ctx.STRING_():
-            type = Type.String
+            type = Var(Type.String)
          elif ctx.POINT():
-            type = Type.Point
+            type = Var(Type.Point)
          elif ctx.VECTOR():
-            type = Type.Vector
+            type = Var(Type.Vector)
          elif ctx.NUMBER():
-            type = Type.Number
+            type = Var(Type.Number)
          elif ctx.BOOLEAN_():
-            type = Type.Boolean
+            type = Var(Type.Boolean)
          elif ctx.TIME():
-            type = Type.Time
+            type = Var(Type.Time)
          elif ctx.ARRAY():
-            type = Type.Array
-         return Var(type)
+            type = Var(Type.Array)
+            type.element = self.visit(ctx.typeID())
+         return type
 
    def visitIdentifier(self, ctx:XAGLParser.IdentifierContext):
       if not self.error:
