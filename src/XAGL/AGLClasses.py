@@ -222,9 +222,7 @@ class Model(Object):
         self.attributes[attr] = value
 
     def Dict(self):
-        dic = vars(self)
-        dic.update(self.attributes)
-        return dic   
+        return self.attributes   
 
     def copyAttributesTo(self, new_model):
         new_model.objects = []
