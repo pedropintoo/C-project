@@ -235,9 +235,9 @@ class Interpreter(XAGLParserVisitor):
       e2 = self.visit(ctx.expression(1))
       if ctx.expression(2):
          e3 = self.visit(ctx.expression(2))
-         rnge = range(e1,e2+1,e3)
+         rnge = range(e1,e2,e3)
       else:
-         rnge = range(e1,e2+1)
+         rnge = range(e1,e2)
       return rnge
 
    def visitWhileStatement(self, ctx:XAGLParser.WhileStatementContext):
