@@ -16,7 +16,7 @@ pip install -r requirements.txt
 ## Teste Simples da Gramática
 Entre dentro do diretório root `agl-gg04/`. 
 
-Em primeiro lugar, compile o projeto **antlr4** usando o script `build.sh` que vai dar o *build* necessário, tanto aos ficheiros para a gramática principal $AG_L$, como aos da secundária $xAG_L$:
+Em primeiro lugar, compile o projeto **antlr4** usando o script `build` que vai dar o *build* necessário, tanto aos ficheiros para a gramática principal $AG_L$, como aos da secundária $xAG_L$:
 ```
 ./build
 ```
@@ -31,7 +31,7 @@ antlr4-test AGL program -gui ../doc/examples/ex06.agl
 ```
 
 ## Experimentar programas em $AG_L$
-Após o **antlr4-build**, ainda dentro de `src`, pode experimentar qualquer programa em $AG_L$ usando o script `run.sh`:
+Após o **antlr4-build**, ainda dentro de `src`, pode experimentar qualquer programa em $AG_L$ usando o script `run`:
 ```
 ./run /doc/examples/ex01.agl                                
 ./run /doc/examples/ex02.agl                                
@@ -44,7 +44,9 @@ Após o **antlr4-build**, ainda dentro de `src`, pode experimentar qualquer prog
 ./run /doc/examples/extra/curve_figures_rotate.agl
 ./run /doc/examples/extra/ifStatement.agl  
 ./run /doc/examples/extra/model_with_deps.agl
+./run /doc/examples/extra/rotate_models.agl
 ###...
 ```
 
-## Limpar o Ambiente
+## Limpar os Ficheiros de Compilação
+Para limpar os ficheiros gerados quando se fez o **build**, pode usar o script `clean` para esse efeito.
