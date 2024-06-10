@@ -65,7 +65,8 @@ class Interpreter(XAGLParserVisitor):
                self.array_SetValue(id, value, var.Dict())
          else:
             d = var.__dict__
-            d.update({"var__agl__"+id: value})
+            id = "var__agl__"+id if issubclass(type(value), Enum) else id
+            d.update({id: value})
 
    def array_SetValue(self, array, value, dict):
       array = re.split(r'\[|\]', array)
