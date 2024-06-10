@@ -479,7 +479,7 @@ pacman1.origin = (10,10);
 
 ### Nível adicional
 
-> Neste nível, o nosso grupo focou-se na implementação dos requisitos adicionais, tendo em conta a rotação de objetos gráficos e a suporte para várias vistas como também a implementação do tipo de dados Enum.
+> Neste nível, o nosso grupo focou-se na implementação dos requisitos adicionais, tendo em conta a rotação de objetos gráficos e a suporte para várias vistas como também a implementação do tipo de dados Enum e a funcionalidade *deepcopy*.
 
 #### __Adicionado Novo Tipo de Dados__
 Neste nível, foi implementado o tipo de dados **Enum**. O **Enum** é um tipo de dado que permite a definição de um conjunto de valores nomeados constantes e globais. A variável associada fica com o primeiro valor do **Enum**:
@@ -561,10 +561,6 @@ refresh view;
 ```
 ![Rotate.gif](doc/examples/demo/Rotate.gif)
 
-### Nível extra
-
-> Neste nível, o nosso grupo focou-se na implementação dos requisitos extra, tendo em conta a criação de uma animação interativa que permita a um utilizador resolver as torres de Hanoi, a falicitação na criação de modelos predefinidos atribuindo valores default a propriedades e a facilitação na duplicação de objetos gráficos complicados com a funcionalidade *deepcopy*.
-
 #### __Acrescentada a Funcionalidade DeepCopy__
 ---
 Como funcionalidade extra, decidiu-se dar a possibilidade ao utilizador de fazer uma cópia exata de um objeto de modo a facilitar a contrução de elementos com as mesmas propriedades sem que resultasse na repetição de código, o que oferece ao programador a facilidade em criar estruturas complexas sem tornar o seu código extenso/complexo demais. No caso de um **Model**, o **deepcopy** vai copiar todos os objetos que o compõem e as suas propriedades.
@@ -586,6 +582,22 @@ object3 : Rectangle = deepcopy object to (30,30);
 object4 : Rectangle = deepcopy object to (40,40);
 object5 : Rectangle = deepcopy object to (50,50);
 ```
+
+### Desafio
+
+> Neste desafio, após cumprirem todos os requisitos anteriores, o nosso grupo focou-se na implementação de uma animação interativa que permite a um utilizador resolver as torres de Hanoi.
+
+#### __Torres de Hanoi__
+
+O problema das Torres de Hanoi é um problema matemático e de lógica que consiste em uma torre com discos de diferentes tamanhos encaixados em um pino, de forma que um disco maior nunca fique em cima de um disco menor. O objetivo é mover todos os discos para outro pino, mantendo a mesma ordem. Para isso, é possível mover um disco de cada vez para outro pino, desde que ele não fique em cima de um disco menor.
+
+Para a resolução deste problema, foi criado um **Model** que representa um torre e um **Model** que representa o jogo. O **Model** da torre contém uma **Array** de discos. O **Model** do jogo é responsável por criar as torres e mover os discos entre elas.
+
+> Código completo em [doc/examples/hanoi.agl](doc/examples/hanoi.agl)
+
+
+**Torres de Hanoi**: demonstra a facilidade na criação de programas complexos em $AG_L$. Utilizando multiplas vistas e modelos que facilitam a criação de animações complexas. 
+![Intro.gif](doc/examples/demo/Intro.gif)
 
 
 ## Constituição dos grupos e participação individual global
