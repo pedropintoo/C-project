@@ -1,7 +1,7 @@
 from antlr4 import *
-from XAGLParser import XAGLParser
-from XAGLParserVisitor import XAGLParserVisitor
-from AGLClasses import *
+from src.XAGL.XAGLParser import XAGLParser
+from src.XAGL.XAGLParserVisitor import XAGLParserVisitor
+from src.XAGL.AGLClasses import *
 import numpy as np
 import re
 from enum import Enum

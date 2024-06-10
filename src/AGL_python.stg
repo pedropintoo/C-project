@@ -6,6 +6,12 @@ import time, os, sys
 import copy
 from enum import Enum, auto
 import numpy as np
+from antlr4 import *
+from src.XAGL.XAGLLexer import XAGLLexer
+from src.XAGL.XAGLParser import XAGLParser
+from src.XAGL.Interpreter import Interpreter
+from src.XAGL.Semantic import Semantic
+from src.XAGL.VarTypes import *
 
 #################################################################
 ## Auxiliar
@@ -53,6 +59,12 @@ def get_nested_attribute(obj, attr_path, local_dict):
         return get_nested_attribute(obj, attr_path, local_dict) 
     else:
         return obj
+def transform_dict(original_dict):
+    new_dict = {}
+    for key, value in original_dict.items():
+        if (key != 'root'):
+            new_dict[key] = Var(value)
+    return new_dict        
 #################################################################
 
 if __name__ == "__main__":
@@ -278,9 +290,7 @@ properties2(field) ::= <<
 <if(field)><field: {field | action.<field>}; separator="\n"><endif>
 >>
 
-elements(field) ::= <<
-<if(field)><field; separator=","><endif>
->>
+
 
 deepcopy(stat, var, object, origin) ::= <<
 <stats(stat)>
@@ -294,4 +304,31 @@ if model is not None:
     model.add_object(<var>) # add object to model
 else:
     root.add_object(<var>)
+>>
+
+play(stat, file, field) ::= <<
+<stats(stat)>
+
+# Play with XAGL file
+file = <file>
+vars1 = {"root":root, <elements(field)>}
+vars0 = transform_dict(vars1)
+
+#visitor0 = Semantic(vars0)
+visitor1 = Interpreter(vars1)
+input_stream = FileStream(file)
+lexer = XAGLLexer(input_stream)
+stream = CommonTokenStream(lexer)
+parser = XAGLParser(stream)
+
+tree = parser.program()
+if parser.getNumberOfSyntaxErrors() == 0:
+    #visitor0.visit(tree)
+    #if not visitor0.error:
+    visitor1.visit(tree)
+
+>>
+
+elements(field) ::= <<
+<if(field)><field; separator=","><endif>
 >>

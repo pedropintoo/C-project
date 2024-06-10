@@ -1,5 +1,5 @@
 from enum import Enum
-from AGLClasses import *
+from src.XAGL.AGLClasses import *
 import re
 import numpy
 

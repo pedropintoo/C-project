@@ -267,14 +267,48 @@ for i in 0..10..3 {
 ```
 ### Análise Semântica
 ---
-```
-[TODO]
-```
+ - Análise semântica - [doc/semantic_check.md](doc/semantic_check.md) 
 
 ### Linguagem Secundária $xAG_L$
 ---
+Para complementar a linguagem $AG_L$, foi desenvolvida a linguagem secundária $xAG_L$ que permite, em *runtime*, criar/usar *scripts* `.xagl` de forma a auxiliar a linguagem principal de alguma maneira, como por exemplo, mover objetos, com a importação de descrições $xAG_L$.
+
+Para usar a linguagem $xAG_L$ foi criado o tipo **Script** e existem duas opções:
+- Usar a instrução **load** para carregar um *script* `.xagl`;
+- Usar a instrução **input** para pedir ao utilizador que insira descrições $xAG_L$
+
+Para usar variáveis do tipo **Script** é necessário recorrer á operação **play**:
+
 ```
-[TODO]
+### s0.xagl
+move m by (100,0);
+refresh v after 500 ms;
+move m by (100,0);
+refresh v after 500 ms;
+```
+```
+view : View with {
+    width = 401;
+    height = 401;
+    title = "Title";
+    background = "alice blue";
+}
+object : Rectangle at (10, 20) with {
+  length = (30, 40);
+  fill = "blue";
+}
+### Por load
+s1 : Script = load "doc/examples/s0.xagl";
+play s1 with {
+    m = object;
+    v = view;
+}
+### Por input
+s2 : Script = input "Insere um script para mover o objeto 200 para a direita";
+play s2 with {
+    m = object;
+    v = view;
+}
 ```
 
 
@@ -430,7 +464,7 @@ pacman1 : Pacman;  #pacman1 é do tipo Pacman
 > Neste nível, o nosso grupo focou-se na implementação dos requisitos adicionais, tendo em conta a rotação de objetos gráficos e a suporte para várias vistas como também a implementação do tipo de dados Enum.
 
 #### __Adicionado Novo Tipo de Dados__
-Neste nível, foi implementado o tipo de dados **Enum**, onde a variável associada fica com o primeiro valor do **Enum**:
+Neste nível, foi implementado o tipo de dados **Enum**. O **Enum** é um tipo de dado que permite a definição de um conjunto de valores nomeados constantes e globais. A variável associada fica com o primeiro valor do **Enum**:
 ```
 porta : Enum in { Aberta, Fechada } # porta = Aberta
 

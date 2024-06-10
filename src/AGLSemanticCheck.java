@@ -813,16 +813,12 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
                ErrorHandling.printError(ctx, "Error: must be the same type in relational expression!");
                return false;
             }
-            
-            if (ctx.e1.eType instanceof BooleanType) {
-               ErrorHandling.printError(ctx, "Error: invalid relational expression (boolean type)");
-               return false;
-            }
+  
+         }
 
-            if (ctx.e1.eType instanceof PointType || ctx.e1.eType instanceof VectorType) {
-               ErrorHandling.printError(ctx, "Error: invalid relational expression (point or vector type)");
-               return false;
-            }
+         if (ctx.e1.eType instanceof PointType || ctx.e1.eType instanceof VectorType) {
+            ErrorHandling.printError(ctx, "Error: invalid relational expression (point or vector type)");
+            return false;
          }
 
          
@@ -1170,6 +1166,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       if (!(ctx.number_range().expression(0).eType instanceof IntegerType
             && ctx.number_range().expression(1).eType instanceof IntegerType)) {
          ErrorHandling.printError("Error: invalid expression type in for statement (must be integer!)");
+         return false;
       }
 
       // third expression
@@ -1182,6 +1179,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
          // expression must be integer
          if (!(ctx.number_range().expression(2).eType instanceof IntegerType)) {
             ErrorHandling.printError("Error: invalid expression type in for statement (must be integer!)");
+            return false;
          }
       }
 
