@@ -22,6 +22,8 @@ O repositório está organizado da seguinte forma:
 ### Introdução
 Este documento apresenta o relatório do projeto final do grupo AGL-gg04 para a disciplina de Compiladores do ano letivo 2023/2024, focado na criação da linguagem de programação **$AG_L$ (*animated graphics language*)**. 
 
+Acreditamos que conseguimos cumprir todos os requisitos propostos, tendo em conta os níveis mínimo, desejável, adicional e extra.
+
 - O objetivo geral deste trabalho foi o desenvolvimento de um ambiente de programação, constituído pela linguagem de programação $AG_L$ (*animated graphics language*) e correspondentes ferramentas de compilação, que permite a criação de programas na linguagem de programação genérica *Python3*, usando a biblioteca *tkinter*, que, quando executados, permitem a visualização, com possível animação e interação, de *gráficos 2D*.
 
 - A linguagem assume (implicitamente) a existência de uma área de desenho, *canvas*, com dimensões ilimitadas, sobre a qual se podem instanciar (desenhar) figuras gráficas 2D. Podem também ser instanciadas vistas (*View*), que permitem capturar o estado do *canvas* numa dada região, com um determinado zoom e num determinado instante no tempo. Há um conjunto base de modelos gráficos pré-definidos, mas a linguagem possui mecanismos construtivos que permitem definir outros. As instâncias dos modelos gráficos podem, ao longo do tempo, mudar a sua posição e as suas propriedades, mas, apenas quando uma vista é *refrescada* é que as alterações são capturadas por essa vista.
@@ -59,12 +61,12 @@ Foram definidos 4 níveis para a realização deste projeto:
   - Possibilidade de aplicar as ações move, refresh e close diretamente a uma lista de objetos.
 
 
-#### Nível adicional  [<span style="color:green">DONE</span>]
+#### Nível adicional  [<span style="color:green">DONE++</span>]
 
   - Suporte para a rotação de objetos gráficos. Neste nível, houve a necessidade de redefinir internamente a forma como os objetos gráficos são representados (para permitir rotação de TODOS os objetos). Considerámos também a rotação de modelos que contêm outros modelos através do seu ponto de referência.
   - Suporte para várias vistas.
   - Suporte para a operação *deepcopy*, que permite a *cópia profunda* de objetos gráficos. Facilitação na duplicação de objetos gráficos complicados.
-  - Definição de palavras reservadas para a linguagem principal $AG_L$. As palavras reservadas da linguagem destino (neste caso *Python3*) não são um subconjunto das palavras reservadas da linguagem principal $AG_L$. (Por exemplo, a palavra *return* é uma palavra reservada da linguagem destino, mas não da linguagem principal $AG_L$).
+  - Definição de palavras reservadas para a linguagem principal $AG_L$. As palavras reservadas da linguagem destino (neste caso *Python3*) **não são** um subconjunto das palavras reservadas da linguagem principal $AG_L$. (Por exemplo, a palavra *return* é uma palavra reservada da linguagem destino, mas não da linguagem principal $AG_L$).
   - O tipo de dados *Enum* e a manipulação de variáveis enumeradas.
 
 #### Desafios  [<span style="color:green">DONE</span>]
@@ -158,7 +160,7 @@ A *View* suporta ações como **move** *(explicado mais á frente)*, **refresh**
 | :---: | :---: |
 | ```refresh view after 100 ms``` | Atualiza a **View** após 100 milissegundos, ou seja, quaisquer alterações em objetos são mostradas após o tempo definido em milissegundos |
 | ```refresh view after 10 s``` | Faz **refresh** da **View** após 10 segundos | 
-| ```p : Point = wait mouse click``` | Espera um click pelo utilizador na **View** e atribui as coordenadas a ao ponto **p** | 
+| ```p : Point = wait mouse click``` | Espera um click pelo utilizador na **View** e atribui as coordenadas ao ponto **p** | 
 | ```close view``` | Fecha a janela da **View** | 
 
 
@@ -293,13 +295,13 @@ object : Rectangle at (10, 20) with {
   length = (30, 40);
   fill = "blue";
 }
-### Por load
+# Atraves de load
 s1 : Script = load "doc/examples/s0.xagl";
 play s1 with {
     m = object;
     v = view;
 }
-### Por input
+# Atraves de input
 s2 : Script = input "Insere um script para mover o objeto 200 para a direita";
 play s2 with {
     m = object;
@@ -344,7 +346,7 @@ vetor : Vector = 50:10;
 ```
 #### __Suporte para Construção Condicional__
 ---
-- **If-Else**: Permite a execução de um bloco de código se uma condição **Boolean** for verdade dentro do **if** e executa o bloco de código dentro do **else** caso contrário
+- **If-Else**: Permite a execução de um bloco de código se uma condição **Boolean** for verdade dentro do **if** e executa o bloco de código dentro do **else** caso contrário. Os `{` e `}` são opcionais quando o bloco de código tem apenas uma linha. (um único `stat`)
 ```
 # Exemplo de If-Else
 var : Integer = 5;
@@ -354,15 +356,15 @@ if var < 10 do {
   print "O valor de var é maior ou igual a 10";
 }
 # Ifs encadeados
-if var < 5 do {
+if var < 5 do 
   print "O valor de var é menor que 5";
-} else do {
+else do 
   if var < 10 do {
     print "O valor de var é menor que 10";
   } else do {
     print "O valor de var é maior que 10";
   }
-}
+
 ```
 #### __Definição de Novas Estruturas de Repetição__
 ---
@@ -420,7 +422,15 @@ blob : Blob at (10, 20) with {
   outline = "blue";
 }
 ```
-- **Model**: Possibilita a definição de novos "tipos" de objeto complexos, ou seja, constituídos por um conjunto de outros objetos como propriedades. Também possibilita a ação **action** em qualquer propriedade, que executa algum conjunto de operações caso essa propriedade sofra alguma alteração:
+
+- **Model**: Possibilita a definição de novos "tipos" de objeto complexos, ou seja, constituídos por um conjunto de outros objetos como propriedades. Também possibilita a ação **action** em qualquer propriedade, que executa algum conjunto de operações caso essa propriedade sofra alguma alteração.
+Com o **Model** vêm associadas as operações **move**, **rotate** e **deepcopy** que permitem mover, rodar e copiar um objeto respetivamente. Para além disso, dentro dos modelos é possível criar **actions** que são funções que utilizam propriedades do modelo e que são executadas quando uma propriedade específica é alterada.
+
+> Nota: Para exemplos mais complexos utilizando **Model**: ver os exemplos em [doc/examples/extra/](doc/examples/extra/). 
+> Por exemplo, [doc/examples/extra/model_with_deps.agl](doc/examples/extra/model_with_deps.agl).
+
+Um exemplo simples (simplificado) de um **Model** seria:
+
 ```
 Pacman :: Model {
     face : PieSlice at (0,0) with {
@@ -454,10 +464,22 @@ Pacman :: Model {
 pacman1 : Pacman;  #pacman1 é do tipo Pacman
 ```
 
+Intuitivamente, as propriedades do **Model** podem ser acedidas e alteradas. Para além disso, contêm as mesmas propriedades base dos objetos gráficos, como **state** 
+```
+pacman1.open = True; # abre a boca do pacman
+pacman1.face.fill = "yellow"; # muda a cor do pacman
+
+if pacman1.open do 
+  print "Pacman está com a boca aberta!";
+
+pacman1.state = "hidden";
+pacman1.origin = (10,10);
+```
+
 
 ### Nível adicional
 
-> Neste nível, o nosso grupo focou-se na implementação dos requisitos adicionais, tendo em conta a rotação de objetos gráficos e a suporte para várias vistas como também a implementação do tipo de dados Enum.
+> Neste nível, o nosso grupo focou-se na implementação dos requisitos adicionais, tendo em conta a rotação de objetos gráficos e a suporte para várias vistas como também a implementação do tipo de dados Enum e a funcionalidade *deepcopy*.
 
 #### __Adicionado Novo Tipo de Dados__
 Neste nível, foi implementado o tipo de dados **Enum**. O **Enum** é um tipo de dado que permite a definição de um conjunto de valores nomeados constantes e globais. A variável associada fica com o primeiro valor do **Enum**:
@@ -539,10 +561,6 @@ refresh view;
 ```
 ![Rotate.gif](doc/examples/demo/Rotate.gif)
 
-### Nível extra
-
-> Neste nível, o nosso grupo focou-se na implementação dos requisitos extra, tendo em conta a criação de uma animação interativa que permita a um utilizador resolver as torres de Hanoi, a falicitação na criação de modelos predefinidos atribuindo valores default a propriedades e a facilitação na duplicação de objetos gráficos complicados com a funcionalidade *deepcopy*.
-
 #### __Acrescentada a Funcionalidade DeepCopy__
 ---
 Como funcionalidade extra, decidiu-se dar a possibilidade ao utilizador de fazer uma cópia exata de um objeto de modo a facilitar a contrução de elementos com as mesmas propriedades sem que resultasse na repetição de código, o que oferece ao programador a facilidade em criar estruturas complexas sem tornar o seu código extenso/complexo demais. No caso de um **Model**, o **deepcopy** vai copiar todos os objetos que o compõem e as suas propriedades.
@@ -564,6 +582,27 @@ object3 : Rectangle = deepcopy object to (30,30);
 object4 : Rectangle = deepcopy object to (40,40);
 object5 : Rectangle = deepcopy object to (50,50);
 ```
+
+### Desafio
+
+> Neste desafio, após cumprirem todos os requisitos anteriores, o nosso grupo focou-se na implementação de uma animação interativa que permite a um utilizador resolver as torres de Hanoi.
+
+#### __Torres de Hanoi__
+
+O problema das Torres de Hanoi é um problema matemático e de lógica que consiste em uma torre com discos de diferentes tamanhos encaixados em um pino, de forma que um disco maior nunca fique em cima de um disco menor. O objetivo é mover todos os discos para outro pino, mantendo a mesma ordem. Para isso, é possível mover um disco de cada vez para outro pino, desde que ele não fique em cima de um disco menor.
+
+Para a resolução deste problema, foi criado:
+  - **Model** da base que representa a estrutura da torre
+  - **Model** da torre que contém uma **Array** de discos
+  - **Model** do jogo que é responsável por criar as torres e verificar se o jogo foi resolvido
+  - **3 Views** que representam as 3 torres em locais diferentes do canvas
+  - Para além disso, foi feita a lógica (utilizando **actions**) para ativar discos **(cor azul)** e mover os mesmos entre as torres (com as respetivas regras do jogo)
+
+> Código completo em [doc/examples/hanoi.agl](doc/examples/hanoi.agl)
+
+
+**Torres de Hanoi**: demonstra a facilidade na criação de programas complexos em $AG_L$. Utilizando multiplas vistas e modelos que facilitam a criação de animações complexas. 
+![Intro.gif](doc/examples/demo/Intro.gif)
 
 
 ## Constituição dos grupos e participação individual global
