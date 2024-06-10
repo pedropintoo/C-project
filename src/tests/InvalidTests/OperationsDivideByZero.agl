@@ -1,0 +1,2 @@
+a : Number = 3.0;
+b : Number = a / 0; # Error: division by zero!

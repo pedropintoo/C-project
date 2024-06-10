@@ -2,5 +2,5 @@ cellSize : Number = 200;
 
 Rectangle at (0,cellSize) with {
     length = (50,50);
-    fill = "orangeaaaaa"; # erro. Não é uma cor existente no tkinter.
+    fill = "orangeaaaaa"; # Error: invalid color
 }

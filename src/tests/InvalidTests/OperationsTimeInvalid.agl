@@ -2,10 +2,10 @@ t1 : Time = 0.8;
 
 t2 : String = "joao";
 
-# t4 : Time = t1 - t2; # Error: invalid type in arithmetic operation!
+t4 : Time = t1 - t2; # Error: invalid type in arithmetic operation!
 
-# t5 : Time = t1 + t2; # Error: invalid type in arithmetic operation!
+t5 : Time = t1 + t2; # Error: invalid type in arithmetic operation!
 
-# t6 : Time = t1 * t2; # Error: invalid type in arithmetic operation!
+t6 : Time = t1 * t2; # Error: invalid type in arithmetic operation!
 
 t7 : Time = t1 / t2; # Error: invalid type in arithmetic operation!

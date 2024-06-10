@@ -1,6 +1,6 @@
 from antlr4 import *
-from XAGLParserParser import XAGLParserParser
-from XAGLParserVisitor import XAGLParserVisitor
+from src.XAGL.XAGLParserParser import XAGLParserParser
+from src.XAGL.XAGLParserVisitor import XAGLParserVisitor
 
 class XAGL(XAGLParserVisitor):
    def visitProgram(self, ctx:XAGLParser.ProgramContext):

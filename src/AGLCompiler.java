@@ -748,11 +748,24 @@ public class AGLCompiler extends AGLParserBaseVisitor<ST> {
 
 //* modelStatement   
     @Override public ST visitPlayStatement(AGLParser.PlayStatementContext ctx) {
-        ST res = templates.getInstanceOf("stats");
+        ST res = templates.getInstanceOf("play");
 
-        // define the id used in propertiesAssignment (hierarchy attribute)
-        ctx.propertiesAssignment().idToAssign = ctx.ID().getText();
-        res.add("stat", visit(ctx.propertiesAssignment()).render()); // render the return value!
+        res.add("file", "var__agl__" + ctx.ID().getText());
+
+        for (AGLParser.LongAssignmentContext longAssign : ctx.propertiesAssignment().longAssignment()){
+            // define the id used in propertiesAssignment (hierarchy attribute)
+            String toAssign = getConcreteId(longAssign.identifier(), res);
+            
+            ST prop = templates.getInstanceOf("assign");
+            String id = newVarName();
+            
+            prop.add("stat", visit(longAssign.assignment()).render()); // render the return value!
+            prop.add("value", longAssign.assignment().varName);
+            prop.add("var", id);
+            
+            res.add("stat", prop.render()); // render the return value!
+            res.add("field", "\"" + toAssign.replace("var__agl__", "") + "\":" + id);
+        }
 
         return res;
     }

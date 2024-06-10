@@ -46,7 +46,7 @@ Pacman :: Model {
     # properties and how they reshape children's properties
     mouth : Enum in { Open, Close } # the first value is the default
     action on mouth { 
-        face.length = "aa";
+        face.length = "aa"; 
         if mouth == Open do
             with face do {
                 start = 30;

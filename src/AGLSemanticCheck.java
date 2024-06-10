@@ -803,8 +803,6 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
             return true;
          }
-         System.out.println("«««««« Type: " + ctx.e1.eType.name() + " »»»»»»");
-         System.out.println("«««««« Type: " + ctx.e2.eType.name() + " »»»»»»");
 
          if (!ctx.e1.eType.conformsTo(ctx.e2.eType)) {
             // If eType is number may be integer or number
@@ -813,20 +811,13 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
                ErrorHandling.printError(ctx, "Error: must be the same type in relational expression!");
                return false;
             }
-            
-            if (ctx.e1.eType instanceof BooleanType) {
-               ErrorHandling.printError(ctx, "Error: invalid relational expression (boolean type)");
-               return false;
-            }
-
-            if (ctx.e1.eType instanceof PointType || ctx.e1.eType instanceof VectorType) {
-               ErrorHandling.printError(ctx, "Error: invalid relational expression (point or vector type)");
-               return false;
-            }
+  
          }
 
-         
-
+         if (ctx.e1.eType instanceof PointType || ctx.e1.eType instanceof VectorType) {
+            ErrorHandling.printError(ctx, "Error: invalid relational expression (point or vector type)");
+            return false;
+         }
          ctx.eType = booleanType;
       } else {
          ErrorHandling.printError(ctx, "Error: invalid relational expression");
@@ -1170,6 +1161,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       if (!(ctx.number_range().expression(0).eType instanceof IntegerType
             && ctx.number_range().expression(1).eType instanceof IntegerType)) {
          ErrorHandling.printError("Error: invalid expression type in for statement (must be integer!)");
+         return false;
       }
 
       // third expression
@@ -1182,6 +1174,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
          // expression must be integer
          if (!(ctx.number_range().expression(2).eType instanceof IntegerType)) {
             ErrorHandling.printError("Error: invalid expression type in for statement (must be integer!)");
+            return false;
          }
       }
 
@@ -1423,10 +1416,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
          idType = AGLParser.symbolTable.get(id).type();
       }
 
-    // Check if the action is on a valid property
-      System.out.println("Old Type: " + getConcreteIDType(ctx.identifier()));
-      System.out.println("New Type: " + getConcreteIDType2(ctx.identifier(), null));
-      System.out.println(ctx.identifier().getText());
+      // Check if the action is on a valid property
 
       Type type = getConcreteIDType(ctx.identifier());
       if (type == null) {
@@ -1434,29 +1424,9 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
          return false;
       } 
 
-      // AGLParser.IdentifierContext currentIdentifierContext = ctx.identifier();
-      // while (currentIdentifierContext.identifier() != null) {
-      //    String propertyId = currentIdentifierContext.identifier().ID().getText();
-
-      //    // System.out.println("Property: " + propertyId);
-
-      //    ObjectType objectType = (ObjectType) idType;
-      //    List<Type> allowedTypes = objectType.getAttributes().get(propertyId);
-
-      //    if (allowedTypes == null || allowedTypes.isEmpty()) {
-      //          ErrorHandling.printError("Error: \"" + propertyId + "\" is not a valid property of \"" + id + "\"");
-      //          return false;
-      //    }
-
-      //    // Mudar para o próximo nível do identificador
-      //    idType = allowedTypes.get(0);
-      //    currentIdentifierContext = currentIdentifierContext.identifier();
-      // }
-
       inAction = true;
 
       res = visit(ctx.stat());
-      System.out.println("***************** End Action");
       inAction = false;
 
       if (!res) {
@@ -1619,8 +1589,6 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       String id = ctx.ID().getText();
       Type type = null;
 
-      System.out.println("Checking identifier: " + id);
-
       if (prevType == null) {
          if (currentModel == null) {
             if (!AGLParser.symbolTable.containsKey(id)) {
@@ -1691,14 +1659,11 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       String attributeName;
       
       if (ctx.identifier() != null) {
-         System.out.println("Attribute type " + ctx.identifier().getText() + " in " + type.name());
          String nextId = ctx.identifier().ID().getText(); // next ID in the chain   
          
          if (type instanceof ObjectType) {
-            System.out.println("ObjectType");
             ObjectType objectType = (ObjectType) type;
             if (objectType.symbolModelTable != null) {
-               System.out.println("In symbolModelTable of " + objectType.name() +" we have " + nextId);
                if (!objectType.symbolModelTable.containsKey(nextId)) {
                   List<Type> allowedTypes = objectType.getAttributes().get(nextId);
                   if (allowedTypes == null || allowedTypes.isEmpty()) {
@@ -1709,7 +1674,6 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
                } else {
                   type = objectType.symbolModelTable.get(nextId).type();
                }
-               System.out.println("Type: " + type.name());
                
             } else {
                List<Type> allowedTypes = objectType.getAttributes().get(nextId);
@@ -1731,7 +1695,6 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
    }
 
-
    // identifier : ID | ID '.' identifier | ID ('[' expression ']')+ ('.' identifier)? ;
    // returns the type of the expression
    private Type getConcreteIDType(AGLParser.IdentifierContext ctx) {  
@@ -1741,25 +1704,12 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       String id = ctx.ID().getText(); // current ID
       Type type = null;
       
-      System.out.println("Checking identifier: " + id);
-  
-
       if (currentModel != null) {
          if (!currentModel.symbolModelTable.containsKey(id)) {
             ErrorHandling.printError("Variable \"" + id + "\" does not exists in the model!");
             return null;
          }
       } else {
-         // if ( prevObjectType != null && prevObjectType.getSymbolModelTable() != null) {
-            
-         //    if (!prevObjectType.getSymbolModelTable().containsKey(id)) {
-         //       ErrorHandling.printError("Variable \"" + id + "\" does not exists!");
-         //       return null;
-         //    }
-         // } else if (!AGLParser.symbolTable.containsKey(id)) {
-         //    ErrorHandling.printError("*** Variable \"" + id + "\" does not exists!");
-         //    return null;
-         // }
          if ( ! (prevObjectType != null && prevObjectType.getSymbolModelTable() != null )) {
             if (!AGLParser.symbolTable.containsKey(id)) {
                ErrorHandling.printError("*** Variable \"" + id + "\" does not exists!");
@@ -1771,8 +1721,6 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       String attributeName = null;
        
       if (ctx.expression(0) != null) { // ID '[' expression ']' ('.' identifier)?
-         System.out.println("Array type");
-         System.out.println("ID: " + id);
          Boolean res = visit(ctx.expression(0));
          if (!res) {
             ErrorHandling.printError("Error: invalid simple statement");
@@ -1782,9 +1730,6 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
          if (!ctx.expression(0).eType.conformsTo(integerType) ) {
             ErrorHandling.printError("Error: invalid expression type in simple statement (must be integer!)");
          }
-
-         // System.out.println(ctx.expression(0).eType.name());
-         // System.out.println("ID: " + id);
 
          Type elemType = null;
          if (currentModel != null) {
@@ -1808,7 +1753,6 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
          }
 
          // if type name don't have <Array> then it is a simple type
-         System.out.println( "OI " + ((ArrayType)elemType).getElementType().name() );
          if (((ArrayType)elemType).getElementType().name().indexOf("Array") == -1) {
             ObjectType current_type = new ObjectType(((ArrayType)elemType).getElementType().name());
             
@@ -1826,7 +1770,6 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
                allowed = allowedTypes.get(0);
             }
 
-
             return allowed;
          }
          
@@ -1836,7 +1779,6 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
       } 
       
       if (ctx.identifier() != null) { // ID '.' identifier
-         System.out.println("Attribute type");
 
          System.out.println("ID: " + id);
          if (currentModel != null) {  
@@ -1971,7 +1913,6 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
    private boolean identifierIsValid(String id, String value, Type valueType, String ID) {
       List<String> colorsList = Arrays.asList(COLORS);
       List<String> statesList = Arrays.asList(STATES);
-      
 
       if (id.equals("fill")) {
          String valueString = value.substring(1, value.length() - 1);
@@ -1986,7 +1927,6 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
             return false;
          }
       }
-
 
       if (id.equals("fill") || id.equals("length") || id.equals("origin") || id.equals("state") || id.equals("start") || id.equals("extent") || id.equals("outline") || id.equals("points") || id.equals("text") || id.equals("width") || id.equals("height") || id.equals("title") || id.equals("Ox") || id.equals("Oy") || id.equals("background")) {
 
@@ -2027,8 +1967,7 @@ public class AGLSemanticCheck extends AGLParserBaseVisitor<Boolean> {
 
       return false;
    }
-
-
+   
       String[] COLORS = {
          "snow", "ghost white", "white smoke", "gainsboro", "floral white", "old lace", "white", "black", "wheat",
          "linen", "antique white", "papaya whip", "blanched almond", "bisque", "peach puff",
