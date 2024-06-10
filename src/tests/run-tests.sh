@@ -10,7 +10,8 @@ else
 fi
 
 echo "Building.."
-antlr4-build 2>&1 > /dev/null
+antlr4-build -python XAGL/XAGL 2>&1 > /dev/null
+antlr4-build AGL 2>&1 > /dev/null
 
 echo "tests/ValidTests:"
 for file in tests/ValidTests/*.agl; do
@@ -35,3 +36,4 @@ done
 cd .. 
 echo "Cleaning up.."
 antlr4-clean 2>&1 > /dev/null
+antlr4-clean -python 2>&1 > /dev/null
