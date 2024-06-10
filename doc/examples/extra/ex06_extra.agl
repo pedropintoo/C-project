@@ -1,0 +1,60 @@
+
+Pacman :: Model {
+
+    face : PieSlice at (0,0) with {
+        length = (50,50);
+        fill = "pink";
+        start = 30;
+        extent = 300;
+    }
+
+    Ellipse at (20,35) with {
+        fill = "black";
+        length = (5,5);
+    }
+
+    mouth : Enum in { Open, Close } # the first value is the default
+    action on mouth {
+        if mouth == Open do
+            with face do {
+                start = 30;
+                extent = 300;
+            }
+        else do # has to be Close, since there are only two possible values
+            with face do {
+                start = 1;
+                extent = 359;
+            }
+    }
+}
+
+Rectangle at (0,0) with {
+    length = (1000,70);
+    fill = "blue";
+}
+
+view : View with {
+    Ox = -450;
+    Oy = 0;
+    width = 401;
+    height = 401;
+    title = "Simple animation";
+    background = "lavender";
+}
+
+pacman : Pacman at (-450, 0);
+
+refresh view;
+pos : Point = wait mouse click;
+s1 : Script = load "doc/examples/extra/s3.xagl";
+play s1 with {
+    m = pacman;
+    v = view;
+}
+
+print "Press any mouse button to quit";
+pos = wait mouse click; # instantiate a Point and waits for a mouse click
+
+close view;
+
+

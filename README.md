@@ -268,33 +268,14 @@ for i in 0..10..3 {
 ---
 Para complementar a linguagem $AG_L$, foi desenvolvida a linguagem secundária $xAG_L$ que permite, em *runtime*, criar/usar *scripts* `.xagl` de forma a auxiliar a linguagem principal de alguma maneira, como por exemplo, mover objetos, com a importação de descrições $xAG_L$.
 
+A linguagem $xAG_L$ permite a maioria das instruções de $AG_L$ com a exceção de criação de objetos **Script**, **Model**, **Views** e **Enum**, mas permite as ações que eles suportam.
+Para usar o **play**, qualquer nome de variável é possível, mesmo que não esteja presente no script $xAG_L$. Para além disso, foi desenvolvido um analisador semântico que verifica se as variáveis usadas no $xAG_L$ têm sentido semântico, ou seja, se existem e se estão a ser usadas corretamente. O analisador semântico verifica se uma variável em $xAG_L$ foi instanciada ou se lhe foi atribuído um valor pelo **play**.
+
 Para usar a linguagem $xAG_L$ foi criado o tipo **Script** e existem duas opções:
 - Usar a instrução **load** para carregar um *script* `.xagl`;
 - Usar a instrução **input** para pedir ao utilizador que insira descrições $xAG_L$
 
-Para usar variáveis do tipo **Script** é necessário recorrer á operação **play**:
-
-A linguagem $xAG_L$ permite a maioria das instruções da $AG_L$ com a exceção de criação de objetos **Script**, **Model**, **Views** e **Enum**, mas permite as ações que eles suportam.
-Para usar o **play** qualquer nome de variável é possível mesmo que ele não esteja no script $xAG_L$, mas o analisador semântico verifica caso uma variável no $xAG_L$ foi instanciado ou se foi atribuído pelo **play**.
-
 ```
-### s0.xagl
-move m by (100,0);
-refresh v after 500 ms;
-move m by (100,0);
-refresh v after 500 ms;
-```
-```
-view : View with {
-    width = 401;
-    height = 401;
-    title = "Title";
-    background = "alice blue";
-}
-object : Rectangle at (10, 20) with {
-  length = (30, 40);
-  fill = "blue";
-}
 # Atraves de load
 s1 : Script = load "doc/examples/s0.xagl";
 play s1 with {
@@ -303,11 +284,64 @@ play s1 with {
 }
 # Atraves de input
 s2 : Script = input "Insere um script para mover o objeto 200 para a direita";
+```
+
+Para usar variáveis do tipo **Script** é necessário recorrer á operação **play**:
+
+```
+play s1 with {
+    m = object;
+    v = view;
+}
+
 play s2 with {
     m = object;
     v = view;
 }
 ```
+
+Um exemplo de um script $xAG_L$ seria:
+
+```
+### s0.xagl
+move m by (100,0);
+refresh v after 500 ms;
+move m by (100,0);
+refresh v after 500 ms;
+
+m.face.fill = "red"; # Altera a cor do pacman (analisador semantico verifica se face existe)
+refresh v after 500 ms;
+```
+
+Com base nestes exemplo é possível ver a facilidade em criar scripts que auxiliam a linguagem principal $AG_L$. Um exemplo concreto, que utiliza funcionalidades explicadas mais à frente, baseado nos exemplos anteriores, seria: [doc/examples/extra/ex06_extra.agl](doc/examples/extra/ex06_extra.agl).
+
+Utilizando o script $xAG_L$:
+```
+for i in 1 .. 7 do {
+    m.mouth = Close;
+    refresh v after 0.3 s;
+    m.mouth = Open;
+    refresh v after 0.3 s;
+    move m by (10,0);       # the 'by' makes the movement relative; the argument is a vector
+    refresh v;
+}
+
+rotate m by 180;
+refresh v after 1 s;
+
+for i in 1 .. 7 do {
+    m.mouth = Close;
+    refresh v after 0.3 s;
+    m.mouth = Open;
+    refresh v after 0.3 s;
+    move m by (-10,0);       # the 'by' makes the movement relative; the argument is a vector
+    refresh v;
+}
+```
+
+![Script.gif](doc/examples/demo/xagl1.gif)
+
+Outro exemplo mais complexo, assumindo outros argumentos no play, seria: [doc/examples/extra/ex07_extra.agl](doc/examples/extra/ex07_extra.agl).
 
 
 ### Nível desejável
@@ -609,12 +643,12 @@ Para a resolução deste problema, foi criado:
 
 | NMec | Nome | Participação |
 |:---:|:---|:---:|
-| 115637 | GIOVANNI PEREIRA SANTOS | 0.0% |
-| 113893 | GUILHERME FERREIRA SANTOS | 0.0% |
-| 104384 | JOÃO PEDRO AZEVEDO PINTO | 0.0% |
-| 114547 | JOÃO PEDRO FERREIRA MONTEIRO | 0.0% |
-| 113278 | JORGE GUILHERME CONCEIÇÃO DOMINGUES | 0.0% |
-| 115304 | PEDRO MIGUEL AZEVEDO PINTO | 0.0% |
+| 115637 | GIOVANNI PEREIRA SANTOS | 16.7% |
+| 113893 | GUILHERME FERREIRA SANTOS | 16.6% |
+| 104384 | JOÃO PEDRO AZEVEDO PINTO | 16.7% |
+| 114547 | JOÃO PEDRO FERREIRA MONTEIRO | 16.6% |
+| 113278 | JORGE GUILHERME CONCEIÇÃO DOMINGUES | 16.4% |
+| 115304 | PEDRO MIGUEL AZEVEDO PINTO | 17.0% |
 
 ## Contribuições
 
