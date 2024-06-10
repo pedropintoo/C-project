@@ -1,0 +1,3 @@
+# Neste exemplo, deve dar erro pois não existe o tipo Integere
+
+a: Integere = 0;

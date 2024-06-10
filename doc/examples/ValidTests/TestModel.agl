@@ -1,0 +1,77 @@
+Fire :: Model {
+    flame : Rectangle at (75, 0) with {
+        length = (15, 2);
+        fill = "red";
+        state = "hidden";
+    }
+
+    color: Enum in {red, blue}
+
+    action on flame.state {
+        print "The flame is ";
+        print flame.state;
+        if flame.state == "normal" do {
+            if color == blue  do {
+                flame.fill = "red";
+                color = red;
+            }
+            else do {
+                flame.fill = "blue";
+                color = blue;
+            }
+        }
+        
+    }
+}
+
+Pacman :: Model {
+
+    face : PieSlice with {
+        length = (50,50);
+        fill = "pink";
+        start = 30;
+        extent = 300;
+    }
+
+    # the eye, without a reference
+    eye : Ellipse at (20,35) with {
+        fill = "black";
+        length = (5,5);
+    }
+    
+    fire : Fire;
+
+    action on fire.flame.state {
+        if fire.flame.state == "normal" do {
+            with eye do {
+                fill = "red";
+                length = (10,10)
+            }
+        }
+        else do {
+            with eye do {
+                fill = face.fill;
+                length = (5,5)
+            }
+        }
+    }
+
+    # properties and how they reshape children's properties
+    mouth : Enum in { Open, Close } # the first value is the default
+    action on mouth {
+        if mouth == Open do {
+            with face do {
+                start = 30;
+                extent = 300;
+            }
+            fire.flame.state = "normal";
+        }
+        else do {# has to be Close, since there are only two possible values
+            with face do {
+                start = 1;
+                extent = 359;
+            }
+            fire.flame.state = "hidden";
+        }
+    }
+}
