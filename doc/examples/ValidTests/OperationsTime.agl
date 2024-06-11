@@ -1,0 +1,19 @@
+t1 : Time = 0.8;
+
+t2 : Time = 0.5;
+
+t3 : Time = t1 + t2; # OK
+
+t4 : Time = t1 - t2; # OK
+
+t5 : Time = t1 * t2; # OK
+
+t6 : Time = t1 / t2; # OK
+
+t7 : Integer = 5; 
+
+t8 : Number = 3.3;
+
+t9 : Number = t1 + t7; # OK
+
+t10 : Number = t1 + t8; # OK

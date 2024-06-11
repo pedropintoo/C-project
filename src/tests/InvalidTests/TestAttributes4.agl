@@ -1,0 +1,11 @@
+# 'rotate' identifier (',' identifier)* 'by' expression ';'
+
+view : View with {
+    Ox = -450;
+    Oy = 0;
+    width = 401;
+    height = (401, 401);   # erro, não pode ser um ponto
+    title = "Illustrating a moving pacman";
+    background = "alice blue";
+}
+

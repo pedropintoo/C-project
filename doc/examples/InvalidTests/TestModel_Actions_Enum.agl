@@ -1,0 +1,48 @@
+# Objetivo do ficheiro: #TODO
+
+# Este bloco deve funcinar, apenas estamos a definir um modelo de um pacman
+Pacman :: Model {
+    # The main pacman shape, with a reference for future use
+    face : PieSlice at (0,0) with {
+        length = (50,50);
+        fill = "pink";
+        start = 30;
+        extent = 300;
+    }
+
+    # the eye, without a reference
+    Ellipse at (20,35) with {
+        fill = "black";
+        length = (5,5);
+    }
+
+    # properties and how they reshape children's properties
+    mouth : Enum in { Open, Close } # the first value is the default
+    mouth2 : Enum in { Opened, Closed } # the first value is the default
+    action on mouth {
+        if mouth == Open do 
+            print "Pacman is eating";
+    }
+}    
+
+# This is the instance of the model
+a : Pacman at (100,100);
+
+# Aqui estamos a alterar as propriedades do modelo
+a.face.length = (100,100);
+
+a.face.fill = "yellow";
+
+# Deve dar erro, pois não existe a propriedade fill2
+a.face.fill2 = "yellow";
+
+# Deve dar erro, pois o fill é uma string e não um inteiro
+a.face.fill = 2;
+
+# Deve dar erro, length apenas pode ser um vector
+face : PieSlice at (0,0) with {
+    length = "asdadasdasdas";
+    fill = "pink";
+    start = 30;
+    extent = 300;
+}

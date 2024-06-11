@@ -1,0 +1,3 @@
+a : Boolean = False;
+b : String = "hello";
+c : Boolean = a or b; # Error: Both operands of 'or' must be boolean!

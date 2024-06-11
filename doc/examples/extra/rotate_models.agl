@@ -1,0 +1,127 @@
+model1 :: Model {
+
+    cellSize : Number = 50;
+
+    rec: Rectangle at (0,cellSize) with {
+        length = (50,50);
+        fill = "orange";
+    }
+
+    ell: Ellipse at (cellSize,cellSize) with {
+        length = (60,40);
+        fill = "blue";
+    }
+
+    arc: Arc at (-cellSize, -cellSize) with {
+        start = 30;
+        extent = 90;
+        length = (60,40);
+        outline = "green";
+    }
+
+    arcchord: ArcChord at (cellSize, -cellSize) with {
+        start = 30;
+        extent = 200;
+        length = (60,40);
+        fill = "red";
+        outline = "blue";
+    }
+}
+
+model2 :: Model {
+
+    cellSize : Number = 100;
+
+    rec: Rectangle at (0,cellSize) with {
+        length = (50,50);
+        fill = "orange";
+    }
+
+    ell: Ellipse at (cellSize,cellSize) with {
+        length = (60,40);
+        fill = "blue";
+    }
+
+    arc: Arc at (-cellSize, -cellSize) with {
+        start = 30;
+        extent = 90;
+        length = (60,40);
+        outline = "green";
+    }
+
+    arcchord: ArcChord at (cellSize, -cellSize) with {
+        start = 30;
+        extent = 200;
+        length = (60,40);
+        fill = "red";
+        outline = "blue";
+    }
+}
+
+model3 :: Model {
+
+    cellSize : Number = 200;
+
+    rec: Rectangle at (0,cellSize) with {
+        length = (50,50);
+        fill = "orange";
+    }
+
+    ell: Ellipse at (cellSize,cellSize) with {
+        length = (60,40);
+        fill = "blue";
+    }
+
+    arc: Arc at (-cellSize, -cellSize) with {
+        start = 30;
+        extent = 90;
+        length = (60,40);
+        outline = "green";
+    }
+
+    arcchord: ArcChord at (cellSize, -cellSize) with {
+        start = 30;
+        extent = 200;
+        length = (60,40);
+        fill = "red";
+        outline = "blue";
+    }
+}
+
+model_compose :: Model {
+
+    Model1: model1;
+    Model2: model2;
+    Model3: model3;
+}
+
+
+view : View with {
+    width = 800;
+    height = 600;
+    background = "black";
+}
+
+model_test : model_compose;
+
+refresh view;
+
+p : Point = wait mouse click;
+for i in 1..720 do {
+    rotate model_test by 1;
+    rotate model_test.Model2 by -3;
+    rotate model_test.Model3 by 1;
+
+    rotate model_test.Model2.rec by 4;
+    rotate model_test.Model2.arc by -3;
+    rotate model_test.Model3.arcchord by -5;
+    rotate model_test.Model1.rec by -5;
+
+    refresh view after 0.01 s;
+}
+refresh view;
+
+p = wait mouse click;
+
+
+close view;

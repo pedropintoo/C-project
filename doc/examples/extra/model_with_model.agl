@@ -1,0 +1,138 @@
+
+
+Fire :: Model {
+    flame : Rectangle at (75, 0) with {
+        length = (15, 2);
+        fill = "red";
+        state = "hidden";
+    }
+
+    color: Enum in {red, blue}
+
+    action on flame.state {
+        print "The flame is ";
+        print flame.state;
+        if flame.state == "normal" do {
+            if color == blue  do {
+                flame.fill = "red";
+                color = red;
+            }
+            else do {
+                flame.fill = "blue";
+                color = blue;
+            }
+        }
+        
+    }
+}
+
+Pacman :: Model {
+
+    face : PieSlice with {
+        length = (50,50);
+        fill = "pink";
+        start = 30;
+        extent = 300;
+    }
+
+    # the eye, without a reference
+    eye : Ellipse at (20,35) with {
+        fill = "black";
+        length = (5,5);
+    }
+    
+    fire : Fire;
+
+    action on fire.flame.state {
+        if fire.flame.state == "normal" do {
+            with eye do {
+                fill = "red";
+                length = (10,10)
+            }
+        }
+        else do {
+            with eye do {
+                fill = face.fill;
+                length = (5,5)
+            }
+        }
+    }
+
+    # properties and how they reshape children's properties
+    mouth : Enum in { Open, Close } # the first value is the default
+    action on mouth {
+        if mouth == Open do {
+            with face do {
+                start = 30;
+                extent = 300;
+            }
+            fire.flame.state = "normal";
+        }
+        else do {# has to be Close, since there are only two possible values
+            with face do {
+                start = 1;
+                extent = 359;
+            }
+            fire.flame.state = "hidden";
+        }
+    }
+}
+
+
+Rectangle with {
+    length = (1000,70);
+    fill = "blue";
+}
+
+view : View with {
+    Ox = -450;
+    Oy = 0;
+    width = 401;
+    height = 401;
+    title = "1";
+    background = "alice blue";
+}
+
+
+pacman : Pacman at (-450, 0);
+
+move pacman by (0,100);
+
+view2 : View with {
+    Ox = -450;
+    Oy = 0;
+    width = 401;
+    height = 401;
+    title = "2";
+    background = "alice blue";
+}
+
+pacman2 : Pacman = deepcopy pacman to (-450,-100);
+
+pacman2.face.fill = "wheat";
+
+refresh view;
+refresh view2;
+
+for i in 1 .. 10 do {
+    pacman.mouth = Close;
+    refresh view2;
+    refresh view after 25 ms;
+    
+    pacman.mouth = Open;
+    refresh view2;
+    refresh view after 25 ms;
+    
+    move pacman by (10,0);    # the 'by' makes the movement relative; the argument is a vector
+    move view by (10,0);    # the 'by' makes the movement relative; the argument is a vector
+    move view2 by (10,0);    # the 'by' makes the movement relative; the argument is a vector
+    refresh view after 25 ms;
+    refresh view2 after 25 ms;  
+}
+
+print "Press any mouse button to quit";
+pos : Point = wait mouse click; # instantiate a Point and waits for a mouse click
+
+close view;
+
+

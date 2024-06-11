@@ -1,0 +1,6 @@
+view : View with {
+    width = 401;
+    height = 401;
+    title = "Illustrating the rectangle shape";
+    background = "wheat";
+}

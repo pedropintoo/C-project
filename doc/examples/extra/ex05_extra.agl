@@ -1,0 +1,187 @@
+
+
+Fire :: Model {
+    flame : Rectangle at (75, 0) with {
+        length = (15, 2);
+        fill = "red";
+        state = "hidden";
+    }
+
+    color: Enum in {red, blue}
+
+    action on flame.state {
+        print "The flame is ";
+        print flame.state;
+        if flame.state == "normal" do {
+            if color == blue  do {
+                flame.fill = "red";
+                color = red;
+            }
+            else do {
+                flame.fill = "blue";
+                color = blue;
+            }
+        }
+        
+    }
+}
+
+Pacman :: Model {
+
+    face : PieSlice with {
+        length = (50,50);
+        fill = "pink";
+        start = 30;
+        extent = 300;
+    }
+
+    # the eye, without a reference
+    eye : Ellipse at (20,35) with {
+        fill = "black";
+        length = (5,5);
+    }
+    
+    fire : Fire;
+
+    action on fire.flame.state {
+        if fire.flame.state == "normal" do {
+            with eye do {
+                fill = "red";
+                length = (10,10)
+            }
+        }
+        else do {
+            with eye do {
+                fill = face.fill;
+                length = (5,5)
+            }
+        }
+    }
+
+    # properties and how they reshape children's properties
+    mouth : Enum in { Open, Close } # the first value is the default
+    action on mouth {
+        if mouth == Open do {
+            with face do {
+                start = 30;
+                extent = 300;
+            }
+            fire.flame.state = "normal";
+        }
+        else do {# has to be Close, since there are only two possible values
+            with face do {
+                start = 1;
+                extent = 359;
+            }
+            fire.flame.state = "hidden";
+        }
+    }
+}
+
+
+Rectangle with {
+    length = (650,70);
+    fill = "blue";
+}
+
+view : View with {
+    Ox = 30;
+    Oy = 0;
+    width = 1800;
+    height = 401;
+    title = "1";
+    background = "alice blue";
+}
+
+
+pacman : Pacman at (-650, 0);
+
+move pacman by (0,100);
+
+view2 : View with {
+    Ox = -450;
+    Oy = 0;
+    width = 200;
+    height = 200;
+    title = "2";
+    background = "alice blue";
+}
+
+move view2 to pacman.origin;
+
+pacman2 : Pacman = deepcopy pacman to (-650,-100);
+pacman2.face.fill = "wheat";
+
+refresh view,view2;
+
+print "Press any mouse button to start the first animation";
+pos : Point = wait mouse click; # instantiate a Point and waits for a mouse click
+
+walk_vector : Vector = (0:13);
+
+repeat {
+    pacman.mouth = Close;
+    refresh view,view2 after 1 ms;
+    
+    pacman.mouth = Open;
+    refresh view,view2 after 1 ms;
+    
+    move pacman, view2 by walk_vector;    # the 'by' makes the movement relative; the argument is a vector
+    refresh view, view2 after 1 ms;
+    print pacman.origin;
+} until pacman.origin[0] >= 650;
+
+print "Press any mouse button to start the second animation";
+pos = wait mouse click; # instantiate a Point and waits for a mouse click
+
+move view2 to pacman2.origin;
+
+refresh view,view2;
+
+repeat {
+    pacman2.mouth = Close;
+    refresh view,view2 after 1 ms;
+    
+    pacman2.mouth = Open;
+    refresh view,view2 after 1 ms;
+    
+    move pacman2, view2 by walk_vector;    # the 'by' makes the movement relative; the argument is a vector
+    refresh view, view2 after 1 ms;
+} until pacman2.origin[0] >= 650;
+
+print "Press any mouse button to rotate the pacmans";
+pos = wait mouse click;
+
+rotate pacman, pacman2 by 180;
+
+walk_vector = -walk_vector;
+
+refresh view,view2;
+
+print "Press any mouse button to start the third animation";
+pos = wait mouse click;
+
+repeat {
+    pacman2.mouth = Close;
+    pacman.mouth = Close;
+    refresh view,view2 after 1 ms;
+    
+    pacman2.mouth = Open;
+    pacman.mouth = Open;
+    refresh view,view2 after 1 ms;
+    
+    move pacman2, pacman, view2 by walk_vector;    # the 'by' makes the movement relative; the argument is a vector
+    refresh view, view2 after 1 ms;
+} until pacman2.origin[0] <= -650;
+
+print "Press any mouse button to quit";
+pos = wait mouse click; # instantiate a Point and waits for a mouse click
+
+close view2;
+
+print "Press any mouse button to quit";
+pos = wait mouse click; # instantiate a Point and waits for a mouse click
+
+close view;
+
+

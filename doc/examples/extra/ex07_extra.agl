@@ -1,0 +1,43 @@
+
+Square :: Model {
+
+    rec : Rectangle at (0,0) with {
+        length = (50,50);
+        fill = "red";
+    }
+
+    color : Enum in {Red, Blue}
+
+    action on color {
+        if color == Red do rec.fill = "red";
+        else do rec.fill = "blue";
+    }
+
+}
+
+view : View with {
+    width = 401;
+    height = 401;
+}
+
+square : Square at (0,0);
+
+refresh view;
+
+s1 : Script = load "doc/examples/extra/s4.xagl" ;
+
+delay : Time = 500;
+
+loops : Integer = 10;
+
+play s1 with {
+    v = view;
+    object = square;
+    t = delay;
+    n = loops;
+}
+
+print "Press any mouse button to quit";
+pos : Point = wait mouse click; # instantiate a Point and waits for a mouse click
+
+close view;

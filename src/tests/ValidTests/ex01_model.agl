@@ -1,0 +1,178 @@
+
+view : View with {
+    width = 601;
+    height = 601;
+    title = "All";
+    background = "alice blue";
+}
+
+view2 : View with {
+    width = 200;
+    height = 200;
+    title = "Line";
+    background = "alice blue";
+}
+
+view3 : View with {
+    width = 200;
+    height = 200;
+    title = "Rectangle";
+    background = "alice blue";
+}
+
+view4 : View with {
+    width = 200;
+    height = 200;
+    title = "Ellipse";
+    background = "alice blue";
+}
+
+view5 : View with {
+    width = 200;
+    height = 200;
+    title = "Text";
+    background = "alice blue";
+}
+
+view6 : View with {
+    width = 200;
+    height = 200;
+    title = "Arc";
+    background = "alice blue";
+}
+
+view7 : View with {
+    width = 200;
+    height = 200;
+    title = "ArcChord";
+    background = "alice blue";
+}
+
+view8 : View with {
+    width = 200;
+    height = 200;
+    title = "PieSlice";
+    background = "alice blue";
+}
+
+view9 : View with {
+    width = 200;
+    height = 200;
+    title = "Dot";
+    background = "alice blue";
+}
+
+Ex1 :: Model {
+
+    cellSize : Number = 200;
+
+    line : Line at (-cellSize,cellSize) with {
+        length = (50,50);
+        fill = "red";
+    }
+
+    rec : Rectangle at (0,cellSize) with {
+        length = (50,50);
+        fill = "orange";
+    }
+
+    ell : Ellipse at (cellSize,cellSize) with {
+        length = (60,40);
+        fill = "blue";
+    }
+
+    text2 : Text at (0, -cellSize) with {
+        text = "Bla bla ...";
+        fill = "purple";
+    }
+
+    arc : Arc at (-cellSize,0) with {
+        length = (50,50);
+        start = 30;
+        extent = 100;
+        outline = "tomato";
+    }
+
+    arcC : ArcChord at (cellSize,0) with {
+        length = (50,50);
+        start = 30;
+        extent = 150;
+        fill = "cyan";
+    }
+
+    pieS : PieSlice at (-cellSize,-cellSize) with {
+        length = (50,50);
+        start = 30;
+        extent = 300;
+        fill = "blue";
+    }
+
+    dot : Dot at (cellSize, -cellSize) with {
+        fill = "black";
+    }
+
+}
+
+ex1 : Ex1;
+
+refresh view, view2, view3, view4, view5, view6, view7, view8, view9 after 0.5 s;
+
+for i in 1..10 do {
+    rotate ex1 by 1;
+    move view2 to ex1.line.origin;
+    move view3 to ex1.rec.origin;
+    move view4 to ex1.ell.origin;
+    move view5 to ex1.text2.origin;
+    move view6 to ex1.arc.origin;
+    move view7 to ex1.arcC.origin;
+    move view8 to ex1.pieS.origin;
+    move view9 to ex1.dot.origin;
+    refresh view, view2, view3, view4, view5, view6, view7, view8, view9 after 10 ms;
+}
+
+print "Press any mouse button to quit";
+
+p : Point = wait mouse click; # instantiate a Point and waits for a mouse click
+print p;
+
+close view;
+
+p = wait mouse click; # waits for another mouse click
+print p;
+
+close view2;
+
+p = wait mouse click; # waits for another mouse click
+print p;
+
+close view3;
+
+p = wait mouse click; # waits for another mouse click
+print p;
+
+close view4;
+
+p = wait mouse click; # waits for another mouse click
+print p;
+
+close view5;
+
+p = wait mouse click; # waits for another mouse click
+print p;
+
+close view6;
+
+p = wait mouse click; # waits for another mouse click
+print p;
+
+close view7;
+
+p = wait mouse click; # waits for another mouse click
+print p;
+
+close view8;
+
+p = wait mouse click; # waits for another mouse click
+print p;
+
+close view9;

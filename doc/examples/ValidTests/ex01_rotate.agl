@@ -1,0 +1,76 @@
+
+view : View with {
+    width = 601;
+    height = 601;
+    title = "All";
+    background = "alice blue";
+}
+
+
+Ex1 :: Model {
+
+    cellSize : Number = 200;
+
+    Line at (-cellSize,cellSize) with {
+    length = (50,50);
+    fill = "red";
+    }
+
+    Rectangle at (0,cellSize) with {
+        length = (50,50);
+        fill = "orange";
+    }
+
+    Ellipse at (cellSize,cellSize) with {
+        length = (60,40);
+        fill = "blue";
+    }
+
+    Arc at (-cellSize,0) with {
+        length = (50,50);
+        start = 30;
+        extent = 100;
+        outline = "tomato";
+    }
+
+    ArcChord at (cellSize,0) with {
+        length = (50,50);
+        start = 30;
+        extent = 150;
+        fill = "cyan";
+    }
+
+    PieSlice at (-cellSize,-cellSize) with {
+        length = (50,50);
+        start = 30;
+        extent = 300;
+        fill = "blue";
+    }
+
+    Text at (0, -cellSize) with {
+        text = "Bla bla ...";
+        fill = "purple";
+    }
+
+    Dot at (cellSize, -cellSize) with {
+        fill = "black";
+    }
+
+}
+
+ex1 : Ex1;
+
+refresh view after 0.5 s;
+
+for i in 1..1000 do {
+    rotate ex1 by 1;
+    refresh view after 10 ms;
+}
+
+print "Press any mouse button to quit";
+
+p : Point = wait mouse click; # instantiate a Point and waits for a mouse click
+print p;
+
+close view;
+

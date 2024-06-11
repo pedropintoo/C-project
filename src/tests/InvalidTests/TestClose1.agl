@@ -1,0 +1,17 @@
+#
+# create an instance of a View, at the beginning of the strip
+#
+view : View with {
+    Ox = -450;
+    Oy = 0;
+    width = 401;
+    height = 401;
+    title = "Illustrating a moving pacman";
+    background = "alice blue";
+}
+
+close view;
+
+a : Integer = 0;
+
+close a; # Error: invalid type in close command (must be a view type!)

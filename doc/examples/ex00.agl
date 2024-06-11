@@ -1,0 +1,28 @@
+
+a : Integer;                            # 0
+print a;
+
+b : Number;                             # 0.0
+print b;
+
+c : String;                             # ""
+print c;
+
+d : Boolean;                            # False
+print d;
+
+e : Array<Integer>;                     # []
+print e;
+
+f : Array<Array<Array<Integer>>>;       # [[[]]]
+print f;
+
+g : Point;                              # (0, 0)
+print g;
+
+h : Vector;                             # (0.0, 0.0)
+print h;
+
+i : Time;                               # 0
+print i;
+

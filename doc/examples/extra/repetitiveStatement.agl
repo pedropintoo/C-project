@@ -1,0 +1,16 @@
+a : Number = 2;
+b : Number = 3;
+
+while not (a + b >= 10) do {
+    a = a + 1;
+    print a;
+}
+
+a = 2;
+repeat {
+    a = a + 1;
+    print a;
+} until (a + b >= 10);
+
+
+

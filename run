@@ -1,0 +1,76 @@
+#!/bin/bash
+
+usage() {   echo "Usage: $0 <file.agl> [-s]"
+            echo -e "\nRun inside the agl-gg04 (root) directory!"
+            echo -e "Options:"
+            echo -e "\t-s\tSkip semantic check and run the parser and compiler only."
+        1>&2; exit 1; }
+
+semCheck="true"
+
+# Check if at least one argument is passed
+if [ $# -eq 0 ]; then
+    usage
+fi
+
+while true; do
+    case $2 in
+        -s) 
+            semCheck="false"
+            break
+            ;;
+        -*)
+            echo "Error: Unknown option $2"
+            usage
+            ;;
+        *) 
+            break
+            ;;
+    esac
+done
+
+
+# Shift out the options processed by getopts
+shift $((OPTIND-1))
+
+# Check if there is at least one remaining argument (the required file)
+if [ $# -eq 0 ]; then
+    usage
+fi
+
+# Check if the file has the correct extension .agl
+file="$1"
+if [[ $file != *.agl ]]; then
+    echo "Error: File must have a .agl extension."
+    exit 1
+fi
+
+if [ ! -f $file ]; then
+    echo "File not found!"
+    usage
+    exit 1
+fi
+
+file="../$file" # Prepend the path to the file
+cd src
+# Processing logic based on the presence of -s flag
+if [ $semCheck = "false" ]; then
+    java AGLMain $file > ../__agl__run.py
+    cd ..
+    python3 __agl__run.py
+    exit 0
+fi    
+
+if cat $file | java RunSemTests 2>&1 | grep -q "Semantic check passed."; then
+    echo -e "\e[32m $(basename "$file"): Semantic Test OK\e[0m"
+    java AGLMain $file > ../__agl__run.py
+    cd ..
+    python3 __agl__run.py
+else
+    echo -e "\e[31m $(basename "$file"): Semantic Test FAIL\e[0m" 
+    cat $file | java RunSemTests
+    cd ..
+fi
+
+exit 0
+

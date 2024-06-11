@@ -1,0 +1,5 @@
+# Deve funcionar. Deve permitir declarar Number e multiplicar um float com um inteiro ou multiplicar dois inteiros ou dois floats.
+
+a : Number = 2.0*3;
+b : Number = 2*3;
+c : Number = 2.0*3.0;

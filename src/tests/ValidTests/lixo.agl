@@ -1,0 +1,42 @@
+Pacman :: Model {
+    # A Pacman is composed of a pie slice plus an ellipse representing an eye.
+    # Its reference frame is at the center of the circle circumscribing the pie slice.
+    #
+    # Models can have their own properties, in which case a way to represent how they
+    # reshape the graphical object is mandatory
+
+    # The main pacman shape, with a reference for future use
+    face : PieSlice at (0,0) with {
+        length = (50,50);
+        fill = "pink";
+        start = 30;
+        extent = 300;
+    }
+
+    # the eye, without a reference
+    Ellipse at (20,35) with {
+        fill = "black";
+        length = (5,5);
+    }
+
+    # properties and how they reshape children's properties
+    mouth : Enum in { Open, Close } # the first value is the default
+    action on mouth {
+        if mouth == Open do
+            with face do {
+                start = 30;
+                extent = 300;
+            }
+        else do # has to be Close, since there are only two possible values
+            with face do {
+                start = 1;
+                extent = 359;
+            }
+    }
+}
+
+
+p : Pacman;
+
+p.face.fill = "yellow";
+

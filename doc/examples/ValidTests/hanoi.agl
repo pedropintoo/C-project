@@ -1,0 +1,228 @@
+Base :: Model {
+    rec : Rectangle with {
+        length = (200,20);
+        fill = "brown";
+    }
+
+    Text with {
+        text = "Base";
+    }
+
+    solved : Text at (0, -50) with {
+        text = "Solved!!!";
+        state = "hidden";
+    }
+
+    stick: Rectangle at (0,120) with {
+        length = (10,100);
+        fill = "brown";
+    }
+}
+
+Tower :: Model {
+    base : Base;
+    
+    diskS : Rectangle with {
+        length = (75,15);
+        fill = "brown";
+    }
+
+    diskM : Rectangle with {
+        length = (100,15);
+        fill = "brown";
+    }
+
+    diskL : Rectangle with {
+        length = (125,15);
+        fill = "brown";
+    }
+
+    inc : Number = 0;
+    disks : Array<Rectangle> = [diskL, diskM, diskS]; # Array<Rectangle>
+    
+    action on disks {
+        inc = 0;
+        for d in 0..3 do {
+            if disks[d].state == "normal" do {
+                inc = inc + 1;
+                move disks[d] to (base.origin[0], (inc+1)*30 - 75);
+            }
+        }
+    }
+
+    active : Boolean = False;
+    action on active {
+        inc = 0;
+        if (active) do 
+            for d in 2..-1..-1 do {
+                if inc == 0 and disks[d].state == "normal" do {
+                    disks[d].fill = "blue";
+                    inc = inc + 1;
+                }
+            }
+        else do
+            for d in 2..-1..-1 do {
+                disks[d].fill = "brown";
+            }
+    }
+}
+
+Game :: Model {
+    tower1 : Tower at (0,-50);
+    tower2 : Tower at (500, -50);
+    tower3 : Tower at (1000, -50);
+
+    towersToCheck : Array<Tower> = [tower2, tower3];
+
+    isSolved : Boolean = False;
+    checkWin : Boolean = False;
+
+    action on checkWin {
+        # check win
+        for t in 0..2 do {
+            if not checkWin do 
+                checkWin = True;
+                for d in 2..-1..-1 do {
+                    if towersToCheck[t].disks[d].state != "normal" do
+                        checkWin = False;
+                }
+                if checkWin do {
+                    print "Solved!!!";
+                    towersToCheck[t].base.solved.state = "normal";
+                    isSolved = True;
+                }
+        }
+
+        checkWin = False;
+    }
+
+}
+
+view1: View with {
+    width = 500;
+    height = 500;
+    title = "Tower 1";
+    background = "wheat";
+}
+
+view2: View with {
+    Ox = 500;
+    width = 500;
+    height = 500;
+    title = "Tower 2";
+    background = "wheat";
+}
+
+view3: View with {
+    Ox = 1000;
+    width = 500;
+    height = 500;
+    title = "Tower 3";
+    background = "wheat";
+}
+
+game : Game;
+
+for d in 0..3 do {
+    game.tower2.disks[d].state = "hidden";
+    game.tower3.disks[d].state = "hidden";
+}
+
+refresh view1;
+refresh view2;
+refresh view3;
+
+from_tower : Tower;
+from_tower.state = "hidden"; # only to store the value
+to_tower : Tower;
+to_tower.state = "hidden"; # only to store the value
+
+toChange : Integer = 0;
+
+repeat {
+    
+    p1 : Point = wait mouse click;
+
+    # Ativa algum disco de alguma torre
+    if p1[0] < 250 do {
+        print "From Tower 1";
+        game.tower1.active = True;
+        game.tower2.active = False;
+        game.tower3.active = False;
+        from_tower = game.tower1;
+    }
+    else do 
+        if p1[0] < 750 do {
+            print "From Tower 2";
+            game.tower2.active = True;
+            game.tower1.active = False;
+            game.tower3.active = False;
+            from_tower = game.tower2;
+        }
+        else do {
+            print "From Tower 3";
+            game.tower3.active = True;
+            game.tower1.active = False;
+            game.tower2.active = False;
+            from_tower = game.tower3;
+        }
+
+    refresh view1, view2, view3;
+
+    p2 : Point = wait mouse click;
+    if p2[0] < 250 do {
+        print "To Tower 1";  
+        to_tower = game.tower1;
+    }
+    else do 
+        if p2[0] < 750 do {
+            print "To Tower 2";
+            to_tower = game.tower2;
+        }
+        else do {
+            print "To Tower 3";
+            to_tower = game.tower3;
+        }
+
+    if from_tower != to_tower do {
+
+        for d in 2..-1..-1 do {
+            if from_tower.disks[d].fill == "blue" do
+                toChange = d;
+        }
+
+        hasValues : Boolean = False;
+        # is transaction valid?
+        for d in 2..-1..-1 do {
+            if to_tower.disks[d].state == "normal" and hasValues == False do {
+                print from_tower.disks[toChange].length[0];
+                print to_tower.disks[d].length[0];
+                if from_tower.disks[toChange].length[0] < to_tower.disks[d].length[0] do {
+                    from_tower.disks[toChange].state = "hidden";
+                    to_tower.disks[toChange].state = "normal";
+                    from_tower.active = False;
+                }
+                hasValues = True;
+            }
+        }
+
+        if not hasValues do {
+            from_tower.disks[toChange].state = "hidden";
+            to_tower.disks[toChange].state = "normal";
+            from_tower.active = False;
+        }
+
+        game.checkWin = True;        
+        refresh view1, view2, view3;
+
+    } else do {
+        print "Invalid transaction";
+        from_tower.active = False;
+        refresh view1, view2, view3;
+    }
+} until game.isSolved;
+
+
+p : Point = wait mouse click;
+
+close view1, view2, view3;

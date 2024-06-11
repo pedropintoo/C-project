@@ -1,0 +1,25 @@
+
+
+view : View with {
+    width = 601;
+    height = 601;
+    title = "Illustrating the minimum level graphical models";
+    background = "black";
+}
+
+view.background = "white";
+
+# 
+# AGL holds a set of primitive data types, every one with a default value:
+# - Integer [0] - integer number
+# - Number [0.0] - integer or real number
+# - String [""] - sequence of characters
+# - Point [(0.0,0.0)] - a point in canvas coordinates
+# - Vector [(0.0,0.0)] - the difference between two points
+# - Vector [(0:1)] - a vector may also be defined using polar coordinates (angle:length).
+# Here, we are instanciating a 'Number'
+#
+cellSize : Number = 200;
+
+p : Point = wait mouse click; # instantiate a Point and waits for a mouse click
+print p;
