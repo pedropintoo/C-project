@@ -160,6 +160,7 @@ close(view, stat) ::= <<
 <view>.close(); views.remove(<view>) if last_view != <view> else None
 last_view = (views.pop(-1) if len(views) > 0 else None) if last_view == <view> else last_view
 root.last_view = last_view
+root.views = views
 >>
 
 assign(stat,var,value, varIfModel) ::= <<
@@ -203,7 +204,11 @@ else:
     <var> = <type>(root = root)
 <if(origin)><var>.origin = <origin><endif>
 <if(update_lastView)>if last_view is not None:
-    views.append(last_view)    
+    views.append(last_view)  
+    root.views = views  
+else: 
+    root.views = []
+    views = []    
 last_view = <var>
 root.last_view = last_view
 <endif>

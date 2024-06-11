@@ -543,6 +543,9 @@ if porta == Aberta do {
 #### __Adicionada a Suporte para várias vistas__
 ---
 Também foi adicionada a possibilidade de se usarem várias views o que fez com que o método **wait mouse click** se aplique agora a todas as **Views**;
+
+> Um exemplo complexo de utilização de várias views, com **close**/**criação** seguindo uma ordem anormal, seria: [doc/examples/extra/model_with_different_views.agl](doc/examples/extra/model_with_different_views.agl).
+
 ```
 view1: View with {
     width = 500;
