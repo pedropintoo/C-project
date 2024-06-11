@@ -274,7 +274,6 @@ class Model(Object):
         for o in self.objects:
             o.rotate(angle, origin)
 
-# TODO: override move_relative and move_absolute
 
 class Line(Object):
 
