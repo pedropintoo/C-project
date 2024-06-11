@@ -205,7 +205,9 @@ else:
 <if(origin)><var>.origin = <origin><endif>
 <if(update_lastView)>if last_view is not None:
     views.append(last_view)  
-    root.views = views  
+    # remove duplicates 
+    root.views = list(dict.fromkeys(views))
+    views = root.views
 else: 
     root.views = []
     views = []    
