@@ -1,3 +1,19 @@
+# 2ano/2semestre/C/C-project
+
+# Nota: 19
+
+Pedro Pinto (115304)
+
+Giovanni Santos (115637)
+
+Guilherme Santos (113893)
+
+João Pinto (104384)
+
+João Monteiro (114547)
+
+Jorge Domingues (113278)
+
 # Tema **AGL**, grupo **agl-gg04**
 
 ## Documentação extra
